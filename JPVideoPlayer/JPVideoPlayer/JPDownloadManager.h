@@ -36,6 +36,9 @@
 @end
 
 
+// 存储路径
+static NSString *jp_tempPath = @"/JPVideoPlayer_temp";
+static NSString *jp_savePath = @"/JPVideoPlayer_save";
 @interface JPDownloadManager : NSObject
 
 @property (nonatomic, strong, readonly) NSURL *url;
@@ -48,7 +51,7 @@
 
 @property (nonatomic, strong, readonly) NSString *mimeType;
 
-@property (nonatomic, assign)BOOL  isFinishLoad;
+@property (nonatomic, assign)BOOL isFinishLoad;
 
 @property(nonatomic, weak)id<JPDownloadManagerDelegate> delegate;
 

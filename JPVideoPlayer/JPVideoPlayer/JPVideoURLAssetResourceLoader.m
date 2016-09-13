@@ -1,21 +1,24 @@
 //
-//  JPLoaderURLConnection.m
+//  JPVideoURLAssetResourceLoader.m
 //  JPVideoPlayer
 //
-//  Created by Chris on 16/8/21.
+//  Created by lava on 16/9/13.
 //  Copyright © 2016年 lavaMusic. All rights reserved.
 //
 
-#import "JPLoaderURLConnection.h"
+#import "JPVideoURLAssetResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPDownloadManager.h"
 
+@interface JPVideoURLAssetResourceLoader()<JPDownloadManagerDelegate>
 
-@interface JPLoaderURLConnection()<JPDownloadManagerDelegate>
+/** 下载器 */
+@property (nonatomic, strong)JPDownloadManager *manager;
 
-@property (nonatomic, strong) NSMutableArray *pendingRequests;
+/** 请求队列 */
+@property (nonatomic, strong)NSMutableArray *pendingRequests;
 
-@property (nonatomic, copy  ) NSString *videoPath;
+@property (nonatomic, strong)NSString *videoPath;
 
 /** 文件名 */
 @property(nonatomic, strong)NSString *suggestFileName;
@@ -23,7 +26,7 @@
 @end
 
 
-@implementation JPLoaderURLConnection
+@implementation JPVideoURLAssetResourceLoader
 
 - (instancetype)init{
     self = [super init];
@@ -63,7 +66,7 @@
 - (NSURL *)getSchemeVideoURL:(NSURL *)url{
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     components.scheme = @"streaming";
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:@"/LAVideo_cache"];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
     NSString *suggestFileName = [[url absoluteString]lastPathComponent];
     path = [path stringByAppendingPathComponent:suggestFileName];
     _videoPath = path;
@@ -192,6 +195,5 @@
         [self.delegate didFailLoadingWithManager:manager WithError:errorCode];
     }
 }
+
 @end
-
-

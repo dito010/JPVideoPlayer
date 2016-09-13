@@ -1,22 +1,28 @@
 //
-//  JPPlayer.m
+//  JPVideoPlayer.m
 //  JPVideoPlayer
 //
-//  Created by Chris on 16/8/21.
+//  Created by lava on 16/9/13.
 //  Copyright © 2016年 lavaMusic. All rights reserved.
 //
 
-#import "JPPlayer.h"
-#import "JPLoaderURLConnection.h"
+#import "JPVideoPlayer.h"
+#import "JPVideoURLAssetResourceLoader.h"
 #import "JPDownloadManager.h"
 
-@interface JPPlayer()<JPLoaderURLConnectionDelegate>
+@interface JPVideoPlayer()<JPVideoURLAssetResourceLoaderDelegate>
 
-@property(nonatomic, strong)JPLoaderURLConnection *resourceLoader;
+/** 数据源 */
+@property(nonatomic, strong)JPVideoURLAssetResourceLoader *resourceLoader;
+
+/** asset */
 @property(nonatomic, strong)AVURLAsset *videoURLAsset;
-@property (nonatomic, strong) JPLoaderURLConnection *resouerLoader;
-@property (nonatomic, strong) AVPlayerItem   *currentPlayerItem;
-@property (nonatomic, strong) AVPlayerLayer  *currentPlayerLayer;
+
+/** 当前正在播放的Item */
+@property (nonatomic, strong) AVPlayerItem *currentPlayerItem;
+
+/** 当前图像层 */
+@property (nonatomic, strong) AVPlayerLayer *currentPlayerLayer;
 
 /** 视频显示的View */
 @property (nonatomic, weak)   UIView *showView;
@@ -30,7 +36,7 @@
 @end
 
 
-@implementation JPPlayer
+@implementation JPVideoPlayer
 
 #pragma mark --------------------------------------------------
 #pragma mark INITIALIZER
@@ -93,9 +99,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-        
+    
     // 将播放器请求数据的代理设为缓存中间区
-    JPLoaderURLConnection *resourceLoader = [JPLoaderURLConnection new];
+    JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
     self.resourceLoader = resourceLoader;
     resourceLoader.delegate = self;
     NSURL *playUrl = [resourceLoader getSchemeVideoURL:url];
@@ -232,4 +238,6 @@
 -(void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath{
     NSLog(@"下载完成");
 }
+
+
 @end

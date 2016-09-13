@@ -1,13 +1,13 @@
 //
-//  JPLoaderURLConnection.h
+//  JPVideoURLAssetResourceLoader.h
 //  JPVideoPlayer
 //
-//  Created by Chris on 16/8/21.
+//  Created by lava on 16/9/13.
 //  Copyright © 2016年 lavaMusic. All rights reserved.
 //
 
+
 /// 这个connenction的功能是把task缓存到本地的临时数据根据播放器需要的 offset和length去取数据并返回给播放器
-/// 如果视频文件比较小，就没有必要存到本地，直接用一个变量存储即可
 
 
 #import <Foundation/Foundation.h>
@@ -15,7 +15,7 @@
 
 @class JPDownloadManager;
 
-@protocol JPLoaderURLConnectionDelegate <NSObject>
+@protocol JPVideoURLAssetResourceLoaderDelegate <NSObject>
 
 @optional
 
@@ -31,11 +31,10 @@
 @end
 
 
-@interface JPLoaderURLConnection : NSURLConnection<AVAssetResourceLoaderDelegate>
 
-@property (nonatomic, strong)JPDownloadManager *manager;
+@interface JPVideoURLAssetResourceLoader : NSURLConnection<AVAssetResourceLoaderDelegate>
 
-@property (nonatomic, weak  ) id<JPLoaderURLConnectionDelegate> delegate;
+@property (nonatomic, weak  ) id<JPVideoURLAssetResourceLoaderDelegate> delegate;
 
 - (NSURL *)getSchemeVideoURL:(NSURL *)url;
 

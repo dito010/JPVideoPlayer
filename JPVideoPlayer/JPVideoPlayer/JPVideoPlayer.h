@@ -1,12 +1,12 @@
 //
-//  JPPlayer.h
+//  JPVideoPlayer.h
 //  JPVideoPlayer
 //
-//  Created by Chris on 16/8/21.
+//  Created by lava on 16/9/13.
 //  Copyright © 2016年 lavaMusic. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 FOUNDATION_EXPORT NSString *const kJPPlayerStateChangedNotification;
@@ -14,10 +14,9 @@ FOUNDATION_EXPORT NSString *const kJPPlayerProgressChangedNotification;
 FOUNDATION_EXPORT NSString *const kJPPlayerLoadProgressChangedNotification;
 
 
-@interface JPPlayer : NSObject
+@interface JPVideoPlayer : NSObject
 
-@property (nonatomic, assign) BOOL stopWhenAppDidEnterBackground;// default is YES
-
+@property (nonatomic, assign) BOOL stopWhenAppDidEnterBackground; // default is YES
 
 + (instancetype)sharedInstance;
 

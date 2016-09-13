@@ -36,6 +36,22 @@
 
 @implementation JPDownloadManager
 
+#pragma mark --------------------------------------------------
+#pragma mark Public
+
+-(void)cancel{
+    [self.session invalidateAndCancel];
+}
+
+- (void)clearData
+{
+    [self.session invalidateAndCancel];
+    [self.outputStream close];
+    self.outputStream = nil;
+    //移除文件
+    [[NSFileManager defaultManager] removeItemAtPath:_tempPath error:nil];
+}
+
 - (void)setUrl:(NSURL *)url offset:(NSUInteger)offset{
     _url = url;
     _offset = offset;
@@ -76,10 +92,11 @@
     [dataTask resume];
 }
 
+
 #pragma mark --------------------------------------------------
 #pragma mark NSURLSessionDataDelegate
 
-//1.接收到服务器响应的时候
+// 1.接收到服务器响应的时候
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler{
     
     NSLog(@"开始下载");
@@ -105,7 +122,6 @@
     self.videoLength = videoLength;
     self.mimeType = @"video/mp4";
     
-    
     if ([self.delegate respondsToSelector:@selector(manager:didReceiveVideoLength:mimeType:)]) {
         [self.delegate manager:self didReceiveVideoLength:self.videoLength mimeType:self.mimeType];
     }
@@ -119,14 +135,13 @@
     completionHandler(NSURLSessionResponseAllow);
 }
 
-//2.接收到服务器返回数据的时候调用,会调用多次
+// 2.接收到服务器返回数据的时候调用,会调用多次
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data{
     
+    _downLoadingOffset += data.length;
     [self.outputStream write:data.bytes maxLength:data.length];
     
 //    NSLog(@"%lf", 1.0 * _downLoadingOffset / self.videoLength);
-    
-    _downLoadingOffset += data.length;
     
     if ([self.delegate respondsToSelector:@selector(manager:didReceiveData:downloadOffset:tempFilePath:)]) {
         [self.delegate manager:self didReceiveData:data downloadOffset:_downLoadingOffset tempFilePath:_tempPath];
@@ -166,7 +181,7 @@
 //服务器内部错误：-1004
 //找不到服务器：-1003
 -(void)downloadFailedWithURLSession:(NSURLSession *)session task:(NSURLSessionTask *)task error:(NSError *)error{
-    if (error.code == -1001 && !_once) { //网络超时，重连一次
+    if (error.code == -1001 && !_once) { // 网络超时，重连一次
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self continueLoading];
         });
@@ -195,26 +210,16 @@
     [dataTask resume];
 }
 
--(void)cancel{
-    [self.session invalidateAndCancel];
-}
 
-
-- (void)clearData
-{
-    [self.session invalidateAndCancel];
-    [self.outputStream close];
-    self.outputStream = nil;
-    //移除文件
-    [[NSFileManager defaultManager] removeItemAtPath:_tempPath error:nil];
-}
+#pragma mark --------------------------------------------------
+#pragma mark Private
 
 // 缓存存储路径
 -(NSString *)fileCachePath{
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:@"/LAVideo_cache"];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
     
     // 创建文件夹
     if (![fileManager fileExistsAtPath:path]) {
@@ -237,7 +242,7 @@
 -(NSString *)fileSavePath{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:@"/LAVideo_save"];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_savePath];
     // 创建文件夹
     if (![fileManager fileExistsAtPath:path]) {
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];

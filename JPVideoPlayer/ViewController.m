@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "JPVideoPlayer/JPPlayer.h"
+#import "JPVideoPlayer/JPVideoPlayer.h"
 #import "JPVideoPlayerCell.h"
 
 // 滚动类型
@@ -220,11 +220,11 @@ const CGFloat rowHeight = 210;
     
     // 注意, 如果正在播放的cell和finnalCell是同一个cell, 不应该在播放
     if (self.playingCell != finnalCell && finnalCell != nil) {
-        [[JPPlayer sharedInstance]stop];
-        [[JPPlayer sharedInstance]playWithUrl:[NSURL URLWithString:finnalCell.videoPath] showView:finnalCell.containerView];
+        [[JPVideoPlayer sharedInstance]stop];
+        [[JPVideoPlayer sharedInstance]playWithUrl:[NSURL URLWithString:finnalCell.videoPath] showView:finnalCell.containerView];
         self.playingCell = finnalCell;
         self.currentVideoPath = finnalCell.videoPath;
-        [JPPlayer sharedInstance].mute = YES;
+        [JPVideoPlayer sharedInstance].mute = YES;
         return;
     }
     
@@ -255,7 +255,7 @@ const CGFloat rowHeight = 210;
     if (videoCell) {
         self.playingCell = videoCell;
         self.currentVideoPath = videoCell.videoPath;
-        JPPlayer *player = [JPPlayer sharedInstance];
+        JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
         [player playWithUrl:[NSURL URLWithString:videoCell.videoPath] showView:videoCell.containerView];
         player.mute = YES;
     }
@@ -286,7 +286,7 @@ const CGFloat rowHeight = 210;
 
 // 停止播放
 -(void)stopPlay{
-    [[JPPlayer sharedInstance] stop];
+    [[JPVideoPlayer sharedInstance] stop];
     self.playingCell = nil;
     self.currentVideoPath = nil;
 }
