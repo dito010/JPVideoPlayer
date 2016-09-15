@@ -45,10 +45,6 @@ typedef NS_ENUM(NSUInteger, ScrollDerection) {
 @end
 
 /*
-    当有永远到不了屏幕中心的cell, 并且这种类型的cell不止一个, 需要播放视频的时候
-    向上拖动一次, 播放靠近中心的cell的视频
-    再向上拖动一次, 播放cell更下面的cell的视频, 并以此类推
-    向下拖动也是一样的处理逻辑
     每屏cell个数           4 3 2
     不能播放视频的cell个数   1 1 0
  */

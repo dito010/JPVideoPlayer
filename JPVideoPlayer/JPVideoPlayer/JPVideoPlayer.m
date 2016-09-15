@@ -46,11 +46,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _shareInstance = [[self alloc]init];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     });
     return _shareInstance;
 }
@@ -59,6 +54,10 @@
     self = [super init];
     if (self) {
         _stopWhenAppDidEnterBackground = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
 }
@@ -98,7 +97,9 @@
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView{
     self.playPathURL = url;
     _showView = showView;
-    [self.player pause];
+    
+    // 释放之前的配置
+    [self stop];
     
     // 将播放器请求数据的代理设为缓存中间区
     JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
@@ -220,7 +221,12 @@
 #pragma mark JPLoaderURLConnectionDelegate
 
 -(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath{
+    
     NSLog(@"文件已存在, 从本地读取播放");
+    
+    // 释放之前的配置
+    [self stop];
+    
     // 直接从本地读取数据进行播放
     NSURL *playPathURL = [NSURL fileURLWithPath:filePath];
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playPathURL options:nil];

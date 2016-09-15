@@ -73,22 +73,28 @@
     }
 
     
-    // 类似NSURL, 可以动态修改scheme
+    // 替代NSMutableURL, 可以动态修改scheme
     NSURLComponents *actualURLComponents = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     actualURLComponents.scheme = @"http";
 
+    // 创建请求
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[actualURLComponents URL] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0];
     
+    // 修改请求数据范围
     if (offset > 0 && self.videoLength > 0) {
         [request addValue:[NSString stringWithFormat:@"bytes=%ld-%ld",(unsigned long)offset, (unsigned long)self.videoLength - 1] forHTTPHeaderField:@"Range"];
     }
     
+    // 重置
     [self.session invalidateAndCancel];
     
+    // 创建Session，并设置代理
     self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     
+    // 创建会话对象
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithRequest:request];
     
+    // 开始下载
     [dataTask resume];
 }
 
@@ -149,7 +155,7 @@
     
 }
 
-//3.请求结束的时候调用(成功|失败),如果失败那么error有值
+// 3.请求结束的时候调用(成功|失败),如果失败那么error有值
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
     if (!error) { // 下载成功
         [self downloadSuccessWithURLSession:session task:task];

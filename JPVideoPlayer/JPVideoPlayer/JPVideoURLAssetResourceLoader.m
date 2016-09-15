@@ -38,6 +38,21 @@
 
 
 #pragma mark -----------------------------------------
+#pragma mark Publish
+
+- (NSURL *)getSchemeVideoURL:(NSURL *)url{
+    // NSURLComponents用来替代NSMutableURL，可以readwrite修改URL，这里通过更改请求策略，将容量巨大的连续媒体数据进行分段，分割为数量众多的小文件进行传递。采用了一个不断更新的轻量级索引文件来控制分割后小媒体文件的下载和播放，可同时支持直播和点播
+    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
+    components.scheme = @"streaming";
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
+    NSString *suggestFileName = [[url absoluteString]lastPathComponent];
+    path = [path stringByAppendingPathComponent:suggestFileName];
+    _videoPath = path;
+    return [components URL];
+}
+
+
+#pragma mark -----------------------------------------
 #pragma mark AVAssetResourceLoaderDelegate
 
 /**
@@ -57,20 +72,6 @@
 
 -(void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     [self.pendingRequests removeObject:loadingRequest];
-}
-
-
-#pragma mark -----------------------------------------
-#pragma mark Publish
-
-- (NSURL *)getSchemeVideoURL:(NSURL *)url{
-    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
-    components.scheme = @"streaming";
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
-    NSString *suggestFileName = [[url absoluteString]lastPathComponent];
-    path = [path stringByAppendingPathComponent:suggestFileName];
-    _videoPath = path;
-    return [components URL];
 }
 
 
@@ -100,26 +101,29 @@
 }
 
 - (void)processPendingRequests{
+    
     NSMutableArray *requestsCompleted = [NSMutableArray array];  //请求完成的数组
-    //每次下载一块数据都是一次请求，把这些请求放到数组，遍历数组
+    
+    // 每次下载一块数据都是一次请求，把这些请求放到数组，遍历数组
     for (AVAssetResourceLoadingRequest *loadingRequest in self.pendingRequests) {
         
-        //对每次请求加上长度，文件类型等信息
+        // 对每次请求加上长度，文件类型等信息
         [self fillInContentInformation:loadingRequest.contentInformationRequest];
+        
         //判断此次请求的数据是否处理完全, 和填充数据
         BOOL didRespondCompletely = [self respondWithDataForRequest:loadingRequest.dataRequest];
         
-        //如果完整，把此次请求放进 请求完成的数组
+        // 如果完整，把此次请求放进 请求完成的数组
         if (didRespondCompletely) {
             [requestsCompleted addObject:loadingRequest];
             [loadingRequest finishLoading];
         }
     }
-    //在所有请求的数组中移除已经完成的
+    // 在所有请求的数组中移除已经完成的
     [self.pendingRequests removeObjectsInArray:[requestsCompleted copy]];
 }
 
-//判断此次请求的数据是否处理完全, 和填充数据
+// 判断此次请求的数据是否处理完全, 和填充数据
 - (BOOL)respondWithDataForRequest:(AVAssetResourceLoadingDataRequest *)dataRequest{
     // 请求起始点
     long long startOffset = dataRequest.requestedOffset;
@@ -150,7 +154,7 @@
     return didRespondFully;
 }
 
-//对每次请求加上长度，文件类型等信息
+// 对每次请求加上长度，文件类型等信息
 -(void)fillInContentInformation:(AVAssetResourceLoadingContentInformationRequest *)contentInformationRequest{
     NSString *mimetype = self.manager.mimeType;
     CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef _Nonnull)(mimetype), NULL);

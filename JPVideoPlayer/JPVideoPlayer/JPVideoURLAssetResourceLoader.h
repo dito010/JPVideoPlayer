@@ -32,7 +32,7 @@
 
 
 
-@interface JPVideoURLAssetResourceLoader : NSURLConnection<AVAssetResourceLoaderDelegate>
+@interface JPVideoURLAssetResourceLoader : NSObject<AVAssetResourceLoaderDelegate>
 
 @property (nonatomic, weak  ) id<JPVideoURLAssetResourceLoaderDelegate> delegate;
 
