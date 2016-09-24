@@ -87,6 +87,10 @@
     if (self.currentPlayerLayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
     }
+    self.currentPlayerItem = nil;
+    self.currentPlayerLayer = nil;
+    self.player = nil;
+    self.playPathURL = nil;
 }
 
 -(void)setMute:(BOOL)mute{
