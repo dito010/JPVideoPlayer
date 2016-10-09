@@ -86,9 +86,9 @@
     [self.player cancelPendingPrerolls];
     if (self.currentPlayerLayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
+        self.currentPlayerLayer = nil;
     }
     self.currentPlayerItem = nil;
-    self.currentPlayerLayer = nil;
     self.player = nil;
     self.playPathURL = nil;
 }
