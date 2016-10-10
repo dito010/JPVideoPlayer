@@ -9,7 +9,7 @@
 #### 03.不阻塞线程，不卡顿，滑动如丝顺滑，这是保证用户体验最重要的一点。
 #### 04.当tableView滚动时，以什么样的策略，来确定究竟哪一个cell应该播放视频。
 
-![JPVideoPlayer.png](http://upload-images.jianshu.io/upload_images/2122663-1c7d85122b7a61e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+<img src="Images/JPVideoPlayer.png">
 
 #### 我为这个框架写了两篇文章，专门用来讲述我的实现思路：
 
