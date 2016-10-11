@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JPVideoPlayer"
-  s.version      = “1.0.1”
+  s.version      = “1.1.0”
   s.summary      = "Automatic play video in UITableView like Weibo home page in main thread and never block main thread."
 
   # This description is used to generate tags and improve search results.
@@ -52,7 +52,7 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author             = { “NewPan” => “13246884282@163.com” }
+  # s.author             = { “NewPan” => “13246884282@163.com” }
   # Or just: s.author    = ""
   # s.authors            = { "" => "" }
   # s.social_media_url   = "http://twitter.com/"
