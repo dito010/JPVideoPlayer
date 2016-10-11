@@ -3,8 +3,8 @@
 //  JPVideoPlayer
 //
 //  Created by lava on 16/9/13.
-//  Copyright © 2016年 lavaMusic. All rights reserved.
-//
+//  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
+
 
 #import "JPVideoURLAssetResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -38,16 +38,22 @@
 
 
 #pragma mark -----------------------------------------
-#pragma mark Publish
+#pragma mark Public
 
 - (NSURL *)getSchemeVideoURL:(NSURL *)url{
-    // NSURLComponents用来替代NSMutableURL，可以readwrite修改URL，这里通过更改请求策略，将容量巨大的连续媒体数据进行分段，分割为数量众多的小文件进行传递。采用了一个不断更新的轻量级索引文件来控制分割后小媒体文件的下载和播放，可同时支持直播和点播
+    
+    // NSURLComponents用来替代NSMutableURL，可以readwrite修改URL
+    // 这里通过更改请求策略，将容量巨大的连续媒体数据进行分段，分割为数量众多的小文件进行传递.
+    // 采用了一个不断更新的轻量级索引文件来控制分割后小媒体文件的下载和播放，可同时支持直播和点播.
+    
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     components.scheme = @"streaming";
+    
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
     NSString *suggestFileName = [[url absoluteString]lastPathComponent];
     path = [path stringByAppendingPathComponent:suggestFileName];
     _videoPath = path;
+    
     return [components URL];
 }
 
@@ -60,7 +66,6 @@
  *  这里会出现很多个loadingRequest请求， 需要为每一次请求作出处理
  *  @param resourceLoader 资源管理器
  *  @param loadingRequest 每一小块数据的请求
- *
  */
 -(BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     
@@ -79,6 +84,7 @@
 #pragma mark Private
 
 - (void)dealLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
+  
     NSURL *interceptedURL = [loadingRequest.request URL];
     NSRange range = NSMakeRange(loadingRequest.dataRequest.currentOffset, MAXFLOAT);
     
@@ -86,10 +92,10 @@
         if (self.manager.downLoadingOffset > 0)
             [self processPendingRequests];
         
-        // 如果新的rang的起始位置比当前缓存的位置还大300k，则重新按照range请求数据
-        if (self.manager.offset + self.manager.downLoadingOffset + 1024*300 < range.location
-            // 如果往回拖也重新请求
-            || self.manager.offset > range.location) {
+        // If the new location is greater than the total length of cached file
+        // Then request new region data
+        // 如果新的rang的起始位置比当前缓存的位置还大，则重新按照range请求数据
+        if (self.manager.offset + self.manager.downLoadingOffset + 1024*300 < range.location) {
             [self.manager setUrl:interceptedURL offset:range.location];
         }
     }
@@ -102,84 +108,70 @@
 
 - (void)processPendingRequests{
     
-    NSMutableArray *requestsCompleted = [NSMutableArray array];  //请求完成的数组
+    // Enumerate all loadingRequest
+    // For every singal loadingRequest, combine response-data length and file mimeType
+    // Then judge the download file data is contain the loadingRequest's data or not, if Yes, take out the request's data and return to loadingRequest, next to colse this loadingRequest. if No, continue wait for download finished.
+    // 遍历所有的请求, 为每个请求加上请求的数据长度和文件类型等信息.
+    // 在判断当前下载完的数据长度中有没有要请求的数据, 如果有,就把这段数据取出来,并且把这段数据填充给请求, 然后关闭这个请求
+    // 如果没有, 继续等待下载完成.
     
-    // 每次下载一块数据都是一次请求，把这些请求放到数组，遍历数组
+    NSMutableArray *requestsCompleted = [NSMutableArray array];
     for (AVAssetResourceLoadingRequest *loadingRequest in self.pendingRequests) {
         
-        // 对每次请求加上长度，文件类型等信息
         [self fillInContentInformation:loadingRequest.contentInformationRequest];
-        
-        //判断此次请求的数据是否处理完全, 和填充数据
         BOOL didRespondCompletely = [self respondWithDataForRequest:loadingRequest.dataRequest];
         
-        // 如果完整，把此次请求放进 请求完成的数组
         if (didRespondCompletely) {
             [requestsCompleted addObject:loadingRequest];
             [loadingRequest finishLoading];
         }
     }
-    // 在所有请求的数组中移除已经完成的
     [self.pendingRequests removeObjectsInArray:[requestsCompleted copy]];
 }
 
-// 判断此次请求的数据是否处理完全, 和填充数据
 - (BOOL)respondWithDataForRequest:(AVAssetResourceLoadingDataRequest *)dataRequest{
-    // 请求起始点
-    long long startOffset = dataRequest.requestedOffset;
     
-    // 当前请求点
+    long long startOffset = dataRequest.requestedOffset;
     if (dataRequest.currentOffset != 0)
         startOffset = dataRequest.currentOffset;
     
-    // 播放器拖拽后大于已经缓存的数据
-    if (startOffset > (self.manager.offset + self.manager.downLoadingOffset))
-        return NO;
-    
-    // 播放器拖拽后小于已经缓存的数据
-    if (startOffset < self.manager.offset)
-        return NO;
-    
     NSData *fileData = [NSData dataWithContentsOfFile:_videoPath options:NSDataReadingMappedIfSafe error:nil];
-    
     NSInteger unreadBytes = self.manager.downLoadingOffset - self.manager.offset - (NSInteger)startOffset;
     NSUInteger numberOfBytesToRespondWith = MIN((NSUInteger)dataRequest.requestedLength, unreadBytes);
-    
     [dataRequest respondWithData:[fileData subdataWithRange:NSMakeRange((NSUInteger)startOffset- self.manager.offset, (NSUInteger)numberOfBytesToRespondWith)]];
     
-    long long endOffset = startOffset + dataRequest.requestedOffset;
-    
+    // Thank for @DrunkenMouse(http://www.jianshu.com/users/5d853d21f7da/latest_articles) submmit a bug that my mistake of calculate "endOffset".
+    long long endOffset = startOffset + dataRequest.requestedLength;
     BOOL didRespondFully = (self.manager.offset + self.manager.downLoadingOffset) >= endOffset;
     
     return didRespondFully;
 }
 
-// 对每次请求加上长度，文件类型等信息
 -(void)fillInContentInformation:(AVAssetResourceLoadingContentInformationRequest *)contentInformationRequest{
     NSString *mimetype = self.manager.mimeType;
     CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef _Nonnull)(mimetype), NULL);
-    
     contentInformationRequest.byteRangeAccessSupported = YES;
     contentInformationRequest.contentType = CFBridgingRelease(contentType);
-    contentInformationRequest.contentLength = self.manager.videoLength;
+    contentInformationRequest.contentLength = self.manager.fileLength;
 }
 
 
 #pragma mark -----------------------------------------
 #pragma mark JPDownloadManagerDelegate
+
 -(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath{
+    
+    // File existed, so close and remove all request
+    // 移除所有请求
+    
+    [self.pendingRequests enumerateObjectsUsingBlock:^(AVAssetResourceLoadingRequest * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj finishLoading];
+        [self.pendingRequests removeObject:obj];
+    }];
+    
     if ([self.delegate respondsToSelector:@selector(manager:fileExistedWithPath:)]) {
-        // 移除所有请求
-        [self.pendingRequests enumerateObjectsUsingBlock:^(AVAssetResourceLoadingRequest * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [obj finishLoading];
-            [self.pendingRequests removeObject:obj];
-        }];
         [self.delegate manager:manager fileExistedWithPath:filePath];
     }
-}
-
--(void)manager:(JPDownloadManager *)manager didReceiveVideoLength:(NSUInteger)ideoLength mimeType:(NSString *)mimeType{
-    
 }
 
 -(void)manager:(JPDownloadManager *)manager didReceiveData:(NSData *)data downloadOffset:(NSInteger)offset tempFilePath:(NSString *)filePath{
@@ -187,7 +179,10 @@
 }
 
 -(void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath{
-    // 此时文件下载完成, 已经将临时文件存储到filePath中了
+    
+    // File download success, and the downloaded file be auto move to cache path, so must change the _videoPath from temporary path to cache path
+    // 此时文件下载完成, 已经将临时文件存储到filePath中了, 所以需要调转获取视频数据的路径到存储完整视频的路径
+    
     _videoPath = filePath;
     if ([self.delegate respondsToSelector:@selector(didFinishLoadingWithManager:fileSavePath:)]) {
         [self.delegate didFinishLoadingWithManager:manager fileSavePath:filePath];

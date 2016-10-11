@@ -3,8 +3,8 @@
 //  JPVideoPlayer
 //
 //  Created by lava on 16/8/18.
-//  Copyright © 2016年 lavaMusic. All rights reserved.
-//
+//  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
+
 
 #import "AppDelegate.h"
 
@@ -16,7 +16,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    // 启动图片延时: 2 秒
+    [NSThread sleepForTimeInterval:2];
+    
     return YES;
 }
 

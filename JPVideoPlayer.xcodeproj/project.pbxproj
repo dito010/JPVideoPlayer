@@ -17,8 +17,6 @@
 		5FE2C0641D65B8E400649AAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FE2C0621D65B8E400649AAE /* Main.storyboard */; };
 		5FE2C0661D65B8E400649AAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FE2C0651D65B8E400649AAE /* Assets.xcassets */; };
 		5FE2C0691D65B8E400649AAE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FE2C0671D65B8E400649AAE /* LaunchScreen.storyboard */; };
-		5FE2C0741D65B8E400649AAE /* JPVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FE2C0731D65B8E400649AAE /* JPVideoPlayerTests.m */; };
-		5FE2C07F1D65B8E400649AAE /* JPVideoPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FE2C07E1D65B8E400649AAE /* JPVideoPlayerUITests.m */; };
 		5FE2C08F1D65B9CF00649AAE /* JPDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FE2C08E1D65B9CF00649AAE /* JPDownloadManager.m */; };
 /* End PBXBuildFile section */
 
@@ -58,11 +56,7 @@
 		5FE2C0681D65B8E400649AAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5FE2C06A1D65B8E400649AAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FE2C06F1D65B8E400649AAE /* JPVideoPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JPVideoPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FE2C0731D65B8E400649AAE /* JPVideoPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerTests.m; sourceTree = "<group>"; };
-		5FE2C0751D65B8E400649AAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FE2C07A1D65B8E400649AAE /* JPVideoPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JPVideoPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FE2C07E1D65B8E400649AAE /* JPVideoPlayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerUITests.m; sourceTree = "<group>"; };
-		5FE2C0801D65B8E400649AAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FE2C08D1D65B9CF00649AAE /* JPDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPDownloadManager.h; sourceTree = "<group>"; };
 		5FE2C08E1D65B9CF00649AAE /* JPDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPDownloadManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,8 +90,6 @@
 			isa = PBXGroup;
 			children = (
 				5FE2C0581D65B8E400649AAE /* JPVideoPlayer */,
-				5FE2C0721D65B8E400649AAE /* JPVideoPlayerTests */,
-				5FE2C07D1D65B8E400649AAE /* JPVideoPlayerUITests */,
 				5FE2C0571D65B8E400649AAE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -138,24 +130,6 @@
 				5FE2C05A1D65B8E400649AAE /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		5FE2C0721D65B8E400649AAE /* JPVideoPlayerTests */ = {
-			isa = PBXGroup;
-			children = (
-				5FE2C0731D65B8E400649AAE /* JPVideoPlayerTests.m */,
-				5FE2C0751D65B8E400649AAE /* Info.plist */,
-			);
-			path = JPVideoPlayerTests;
-			sourceTree = "<group>";
-		};
-		5FE2C07D1D65B8E400649AAE /* JPVideoPlayerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				5FE2C07E1D65B8E400649AAE /* JPVideoPlayerUITests.m */,
-				5FE2C0801D65B8E400649AAE /* Info.plist */,
-			);
-			path = JPVideoPlayerUITests;
 			sourceTree = "<group>";
 		};
 		5FE2C08C1D65B90000649AAE /* JPVideoPlayer */ = {
@@ -238,7 +212,7 @@
 				TargetAttributes = {
 					5FE2C0551D65B8E400649AAE = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 95B6T5443Y;
+						DevelopmentTeam = TBX22VE2Q6;
 					};
 					5FE2C06E1D65B8E400649AAE = {
 						CreatedOnToolsVersion = 7.2;
@@ -319,7 +293,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FE2C0741D65B8E400649AAE /* JPVideoPlayerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +300,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FE2C07F1D65B8E400649AAE /* JPVideoPlayerUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,7 +424,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 95B6T5443Y;
+				DEVELOPMENT_TEAM = TBX22VE2Q6;
 				INFOPLIST_FILE = JPVideoPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -468,7 +440,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 95B6T5443Y;
+				DEVELOPMENT_TEAM = TBX22VE2Q6;
 				INFOPLIST_FILE = JPVideoPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

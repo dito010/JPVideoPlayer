@@ -3,7 +3,7 @@
 //  JPVideoPlayer
 //
 //  Created by lava on 16/9/13.
-//  Copyright © 2016年 lavaMusic. All rights reserved.
+//  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
 //
 
 #import "JPVideoPlayer.h"
@@ -12,25 +12,42 @@
 
 @interface JPVideoPlayer()<JPVideoURLAssetResourceLoaderDelegate>
 
-/** 数据源 */
+/**
+ * Video data provider
+ * 数据源
+ */
 @property(nonatomic, strong)JPVideoURLAssetResourceLoader *resourceLoader;
 
 /** asset */
 @property(nonatomic, strong)AVURLAsset *videoURLAsset;
 
-/** 当前正在播放的Item */
+/**
+ * The Item of playing video
+ * 当前正在播放视频的Item
+ */
 @property (nonatomic, strong) AVPlayerItem *currentPlayerItem;
 
-/** 当前图像层 */
+/**
+ * The current picture player
+ * 当前图像层
+ */
 @property (nonatomic, strong) AVPlayerLayer *currentPlayerLayer;
 
-/** 视频显示的View */
+/** 
+ * The view of video will play on
+ * 视频图像载体View
+ */
 @property (nonatomic, weak)   UIView *showView;
 
-/** 播放视频源 */
+/** 
+ * video url
+ * 播放视频url
+ */
 @property(nonatomic, strong)NSURL *playPathURL;
 
-/** player */
+/** 
+ * player
+ */
 @property(nonatomic, strong)AVPlayer *player;
 
 @end
@@ -42,10 +59,14 @@
 #pragma mark INITIALIZER
 
 +(instancetype)sharedInstance{
+    return [[self alloc]init];
+}
+
++(instancetype)allocWithZone:(struct _NSZone *)zone{
     static id _shareInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _shareInstance = [[self alloc]init];
+        _shareInstance = [super allocWithZone:zone];
     });
     return _shareInstance;
 }
@@ -69,6 +90,32 @@
 
 #pragma mark --------------------------------------------------
 #pragma mark Public
+
+- (void)playWithUrl:(NSURL *)url showView:(UIView *)showView{
+    self.playPathURL = url;
+    _showView = showView;
+    
+    // Release all configuration before
+    // 释放之前的配置
+    [self stop];
+    
+    // Re-create all all configuration agian.
+    // Make the "resourceLoader" become the delegate of "videoURLAsset", and provide data to the player.
+    // 将播放器请求数据的代理设为缓存中间区
+    JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
+    self.resourceLoader = resourceLoader;
+    resourceLoader.delegate = self;
+    NSURL *playUrl = [resourceLoader getSchemeVideoURL:url];
+    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playUrl options:nil];
+    self.videoURLAsset = videoURLAsset;
+    [self.videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
+    self.currentPlayerItem = playerItem;
+    
+    self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+    self.currentPlayerLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+}
 
 - (void)resume{
     if (!self.currentPlayerItem) return;
@@ -98,37 +145,12 @@
     self.player.muted = mute;
 }
 
-- (void)playWithUrl:(NSURL *)url showView:(UIView *)showView{
-    self.playPathURL = url;
-    _showView = showView;
-    
-    // 释放之前的配置
-    [self stop];
-    
-    // 将播放器请求数据的代理设为缓存中间区
-    JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
-    self.resourceLoader = resourceLoader;
-    resourceLoader.delegate = self;
-    NSURL *playUrl = [resourceLoader getSchemeVideoURL:url];
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playUrl options:nil];
-    self.videoURLAsset = videoURLAsset;
-    [self.videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
-    self.currentPlayerItem = playerItem;
-    
-    // 每次都重新创建播放器
-    self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    self.currentPlayerLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
-}
-
-
 
 #pragma mark -----------------------------------------
 #pragma mark Observer
 
 -(void)receiveMemoryWarning{
-    NSLog(@"内存警告");
+    NSLog(@"receiveMemoryWarning, 内存警告");
     [self stop];
 }
 
@@ -143,6 +165,7 @@
 }
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification{
+    // Seek the start point of file data and repeat play, this handle have no Memory surge
     // 重复播放, 从起点开始重播, 没有内存暴涨
     __weak typeof(self) weak_self = self;
     [self.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
@@ -158,16 +181,16 @@
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
             case AVPlayerItemStatusUnknown:{
-                
             }
                 break;
                 
             case AVPlayerItemStatusReadyToPlay:{
+                
+                // When get ready to play note, we can go to play, and can add the video picture on show view.
+                // 显示图像逻辑
                 [self.player play];
                 self.player.muted = self.mute;
-                // 显示图像逻辑
                 [self handleShowViewSublayers];
-                
             }
                 break;
                 
@@ -186,13 +209,14 @@
 #pragma mark Private
 
 -(void)handleShowViewSublayers{
+    
+    // Here have a fade in animation
     [UIView animateWithDuration:0.4 animations:^{
         _showView.alpha = 0;
     } completion:^(BOOL finished) {
         for (CALayer *layer in _showView.subviews) {
             [layer removeFromSuperlayer];
         }
-        // 添加视图
         [_showView.layer addSublayer:self.currentPlayerLayer];
         
         [UIView animateWithDuration:0.5 animations:^{
@@ -200,16 +224,16 @@
             
         } completion:nil];
     }];
-    
 }
 
 -(void)setCurrentPlayerItem:(AVPlayerItem *)currentPlayerItem{
-    // 先移除监听者
+    
     if (_currentPlayerItem) {
         [_currentPlayerItem removeObserver:self forKeyPath:@"status"];
     }
+    
     _currentPlayerItem = currentPlayerItem;
-    // 添加监听
+    
     [_currentPlayerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
 }
 
@@ -226,11 +250,13 @@
 
 -(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath{
     
-    NSLog(@"文件已存在, 从本地读取播放");
+    NSLog(@"File already existed, we play video from disk, 文件已存在, 从本地读取播放");
     
+    // Release all configuration before.
     // 释放之前的配置
     [self stop];
     
+    // Play video from disk.
     // 直接从本地读取数据进行播放
     NSURL *playPathURL = [NSURL fileURLWithPath:filePath];
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playPathURL options:nil];
@@ -246,7 +272,7 @@
 }
 
 -(void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath{
-    NSLog(@"下载完成");
+    NSLog(@"Download finished, 下载完成");
 }
 
 

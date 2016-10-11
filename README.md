@@ -1,20 +1,136 @@
-# JPVideoPlayer
 
-#### 仿微博首页列表视频自动播放，在主线程播放，不卡顿主线程，性能极佳。
+<p align="center" >
+<img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
+</p>
 
-### 主要的功能点：
+This library provides an video player with cache support in `UITableView`.
 
-#### 01.必须是边下边播。
-#### 02.如果缓存好的视频是完整的，就要把这个视频保存起来，下次再次加载这个视频的时候，就先检查本地有没有缓存好的视频。这一点对于节省用户流量，提升用户体验很重要。
-#### 03.不阻塞线程，不卡顿，滑动如丝顺滑，这是保证用户体验最重要的一点。
-#### 04.当tableView滚动时，以什么样的策略，来确定究竟哪一个cell应该播放视频。
+## Features
 
-<img src="Images/JPVideoPlayer.png">
+- [x] Cache video data at playing
+- [x] Handle play or stop video in mian-thread
+- [x] Excellent performance!
+- [x] Always play the video of the `UITableViewCell` in screen center when scrolling   
+- [x] A guarantee that the same URL won't be downloaded several times
+- [x] A guarantee that main thread will never be blocked
 
-#### 我为这个框架写了两篇文章，专门用来讲述我的实现思路：
 
-### [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
+## Requirements
 
-### [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
+- iOS 8.0 or later
+- Xcode 7.3 or later
 
-## 如果喜欢我的文章，请帮忙点个👍👍👍。
+
+## Getting Started
+
+- Read the [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
+- Read the [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
+- Try the example by downloading the project from Github
+
+
+## Communication
+
+- If you **found a bug**, open an issue.
+- If you **have a feature request**, open an issue.
+- If you **want to contribute**, submit a pull request.
+
+
+## Installation
+
+## How To Use
+
+```objective-c
+Objective-C:
+
+#import <JPVideoPlayer/JPVideoPlayer.h>
+...
+JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
+[player playWithUrl:[NSURL URLWithString:videoCell.videoPath] showView:videoCell.containerView];
+```
+
+Installation
+------------
+
+There are two ways to use JPVideoPlayer in your project:
+- using CocoaPods
+- by cloning the project into your repository
+
+### Installation with CocoaPods
+
+[CocoaPods](http://cocoapods.org/) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries in your projects. See the [Get Started](http://cocoapods.org/#get_started) section for more details.
+
+#### Podfile
+```
+platform :ios, '8.0'
+pod 'JPVideoPlayer', '~>1.0.0'
+```
+
+## Licenses
+
+All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/master/LICENSE).
+
+
+
+如果你在天朝
+------------
+
+## 特性
+
+- [x] 视频播放边下边播
+- [x] 主线程处理切换视频
+- [x] 不阻塞线程，不卡顿，滑动如丝顺滑
+- [x] 当滚屏时采取总是播放处在屏幕中心的那个cell的视频的策略
+- [x] 保证同一个URL的视频不会重复下载
+- [x] 保证不会阻塞线程
+
+
+## 组件要求
+
+- iOS 8.0 +
+- Xcode 7.3 +
+
+
+## 如何使用
+
+- 阅读我的简书文章 [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
+- 阅读我的简书文章 [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
+- 下载我Github上的demo
+
+
+## 联系
+
+- 如果你发现了bug, 请帮我提交issue
+- 如果你有好的建议, 请帮我提交issue
+- 如果你想贡献代码, 请提交请求
+
+
+## 如何使用
+
+```objective-c
+Objective-C:
+
+#import <JPVideoPlayer/JPVideoPlayer.h>
+...
+JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
+[player playWithUrl:[NSURL URLWithString:videoCell.videoPath] showView:videoCell.containerView];
+```
+
+## 如何安装
+
+两种选择把框架集成到你的项目:
+- 使用 CocoaPods
+- 下载我的demo, 把'JPVideoPlayer'文件夹拽到你的项目中
+
+### 使用 CocoaPods 安装
+
+#### Podfile
+```
+platform :ios, '8.0'
+pod 'JPVideoPlayer', '~>1.0.0'
+```
+
+## 证书
+
+[MIT License](https://github.com/Chris-Pan/JPVideoPlayer/master/LICENSE)
+
+## 如果喜欢我的文章，请帮忙点个👍。
