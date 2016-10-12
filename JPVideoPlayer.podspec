@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   # s.tvos.deployment_target = "9.0"
 
 
-  s.source       = { :git => 'https://github.com/Chris-Pan/JPVideoPlayer.git', :tag => s.version.to_s }
+  s.source       = { :git => 'https://github.com/Chris-Pan/JPVideoPlayer.git', :tag => s.version }
   s.source_files  = 'JPVideoPlayer/**/*.{h,m}'
   s.frameworks = 'Foundation', 'UIKit', 'AVFoundation', 'MobileCoreServices'
   s.requires_arc = true
