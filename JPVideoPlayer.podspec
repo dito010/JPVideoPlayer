@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JPVideoPlayer"
-  s.version      = "1.1.0"
+  s.version      = "1.0.0"
   s.summary      = "Automatic play video in UITableView like Weibo home page in main thread and never block main thread."
 
   # This description is used to generate tags and improve search results.
