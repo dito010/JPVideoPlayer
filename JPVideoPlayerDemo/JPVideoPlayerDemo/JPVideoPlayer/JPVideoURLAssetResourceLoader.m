@@ -86,7 +86,7 @@
 - (void)dealLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
   
     NSURL *interceptedURL = [loadingRequest.request URL];
-    NSRange range = NSMakeRange(loadingRequest.dataRequest.currentOffset, MAXFLOAT);
+    NSRange range = NSMakeRange((NSUInteger)loadingRequest.dataRequest.currentOffset, MAXFLOAT);
     
     if (self.manager) {
         if (self.manager.downLoadingOffset > 0)

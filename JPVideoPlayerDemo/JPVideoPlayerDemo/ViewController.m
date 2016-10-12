@@ -367,7 +367,7 @@ const CGFloat rowHeight = 210;
     CGFloat radius = [UIScreen mainScreen].bounds.size.height / rowHeight;
     NSUInteger maxNumOfVisiableCells = ceil(radius);
     if (maxNumOfVisiableCells >= 3) {
-        self.maxNumCannotPlayVideoCells =  [[self.dictOfVisiableAndNotPlayCells valueForKey:[NSString stringWithFormat:@"%ld", maxNumOfVisiableCells]] integerValue];
+        self.maxNumCannotPlayVideoCells =  [[self.dictOfVisiableAndNotPlayCells valueForKey:[NSString stringWithFormat:@"%ld", (unsigned long)maxNumOfVisiableCells]] integerValue];
     }
 }
 
