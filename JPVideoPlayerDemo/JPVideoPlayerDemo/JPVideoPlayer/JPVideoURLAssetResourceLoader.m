@@ -86,7 +86,7 @@
 - (void)dealLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
   
     NSURL *interceptedURL = [loadingRequest.request URL];
-    NSRange range = NSMakeRange((NSUInteger)loadingRequest.dataRequest.currentOffset, MAXFLOAT);
+    long long loc = (NSUInteger)loadingRequest.dataRequest.currentOffset;
     
     if (self.manager) {
         if (self.manager.downLoadingOffset > 0)
@@ -95,8 +95,8 @@
         // If the new location is greater than the total length of cached file
         // Then request new region data
         // 如果新的rang的起始位置比当前缓存的位置还大，则重新按照range请求数据
-        if (self.manager.offset + self.manager.downLoadingOffset + 1024*300 < range.location) {
-            [self.manager setUrl:interceptedURL offset:range.location];
+        if (self.manager.offset + self.manager.downLoadingOffset + 1024*300 < loc) {
+            [self.manager setUrl:interceptedURL offset:loc];
         }
     }
     else{

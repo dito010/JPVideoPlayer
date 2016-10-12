@@ -118,7 +118,7 @@ static NSString *jp_savePath = @"/JPVideoPlayer_save"; // complete file(完成�
  * @param url       The url of network file
  * @param offset    The value of start download position, it can be 0
  */
-- (void)setUrl:(NSURL *)url offset:(NSUInteger)offset;
+- (void)setUrl:(NSURL *)url offset:(long long)offset;
 
 /**
  * Cancel current download task

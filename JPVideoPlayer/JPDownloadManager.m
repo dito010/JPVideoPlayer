@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSURL *url;
 
-@property (nonatomic) NSUInteger offset;
+@property (nonatomic, assign) long long curOffset;
 
 @property (nonatomic) NSUInteger fileLength;
 
@@ -42,10 +42,10 @@
 #pragma mark --------------------------------------------------
 #pragma mark Public
 
-- (void)setUrl:(NSURL *)url offset:(NSUInteger)offset{
+- (void)setUrl:(NSURL *)url offset:(long long)offset{
     
     _url = url;
-    _offset = offset;
+    _curOffset = offset;
     _downLoadingOffset = 0;
     
     // Check is already exist cache of this file(url) or not
@@ -260,8 +260,8 @@
     
     // fix offset of request
     // 修改请求数据范围
-    if (_offset > 0 && self.fileLength > 0) {
-        [request addValue:[NSString stringWithFormat:@"bytes=%ld-%ld",(unsigned long)_offset, (unsigned long)self.fileLength - 1] forHTTPHeaderField:@"Range"];
+    if (_curOffset > 0 && self.fileLength > 0) {
+        [request addValue:[NSString stringWithFormat:@"bytes=%ld-%ld",(unsigned long)_curOffset, (unsigned long)self.fileLength - 1] forHTTPHeaderField:@"Range"];
     }
     
     // Reset
