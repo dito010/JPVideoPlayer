@@ -62,12 +62,12 @@ There are two ways to use JPVideoPlayer in your project:
 #### Podfile
 ```
 platform :ios, '8.0'
-pod 'JPVideoPlayer', '~>1.1.0'
+pod 'JPVideoPlayer', '~> 1.0.0'
 ```
 
 ## Licenses
 
-All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/master/LICENSE).
+All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/LICENSE).
 
 
 
@@ -126,11 +126,11 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 #### Podfile
 ```
 platform :ios, '8.0'
-pod 'JPVideoPlayer', '~>1.1.0'
+pod 'JPVideoPlayer', '~> 1.0.0'
 ```
 
 ## 证书
 
-[MIT License](https://github.com/Chris-Pan/JPVideoPlayer/master/LICENSE)
+[MIT License](https://github.com/Chris-Pan/JPVideoPlayer/LICENSE)
 
 ## 如果喜欢我的文章，请帮忙点个👍。
