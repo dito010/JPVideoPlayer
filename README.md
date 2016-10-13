@@ -67,7 +67,7 @@ pod 'JPVideoPlayer', '~> 1.0.0'
 
 ## Licenses
 
-All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/LICENSE).
+All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/blob/master/LICENSE).
 
 
 
@@ -131,6 +131,6 @@ pod 'JPVideoPlayer', '~> 1.0.0'
 
 ## 证书
 
-[MIT License](https://github.com/Chris-Pan/JPVideoPlayer/LICENSE)
+[MIT License](https://github.com/Chris-Pan/JPVideoPlayer/blob/master/LICENSE)
 
 ## 如果喜欢我的文章，请帮忙点个👍。
