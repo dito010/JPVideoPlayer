@@ -33,22 +33,28 @@
  */
 @property (nonatomic, strong) AVPlayerLayer *currentPlayerLayer;
 
-/** 
+/**
  * The view of video will play on
  * 视频图像载体View
  */
 @property (nonatomic, weak)   UIView *showView;
 
-/** 
+/**
  * video url
  * 播放视频url
  */
 @property(nonatomic, strong)NSURL *playPathURL;
 
-/** 
+/**
  * player
  */
 @property(nonatomic, strong)AVPlayer *player;
+
+/**
+ * Is self observer the notification
+ * 是否添加了监听
+ */
+@property(nonatomic, assign)BOOL isAddObserver;
 
 @end
 
@@ -75,10 +81,11 @@
     self = [super init];
     if (self) {
         _stopWhenAppDidEnterBackground = YES;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        
+        // Avoid notification center add self as observer again and again that lead to block.
+        // 避免重复添加监听导致监听方法被重复调起, 导致的卡顿. 感谢简书@菜先生 http://www.jianshu.com/users/475fdcde8924/latest_articles提醒
+        [self addObserverOnce];
+        
     }
     return self;
 }
@@ -207,6 +214,17 @@
 
 #pragma mark -----------------------------------------
 #pragma mark Private
+
+-(void)addObserverOnce{
+    if (!_isAddObserver) {
+        // 添加监听
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    }
+    _isAddObserver = YES;
+}
 
 -(void)handleShowViewSublayers{
     
