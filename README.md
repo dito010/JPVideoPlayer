@@ -62,7 +62,9 @@ There are two ways to use JPVideoPlayer in your project:
 #### Podfile
 ```
 platform :ios, '8.0'
-pod 'JPVideoPlayer', '~> 1.0.0'
+target “YourProjectName” do
+pod 'JPVideoPlayer', '~> 1.1.0'
+end
 ```
 
 ## Licenses
@@ -126,7 +128,9 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 #### Podfile
 ```
 platform :ios, '8.0'
-pod 'JPVideoPlayer', '~> 1.0.0'
+target “你的项目名称” do
+pod 'JPVideoPlayer', '~> 1.1.0'
+end
 ```
 
 ## 证书
