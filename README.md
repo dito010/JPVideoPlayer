@@ -8,7 +8,7 @@ This library provides an video player with cache support in `UITableView`.
 ## Features
 
 - [x] Cache video data at playing
-- [x] Handle play or stop video in mian-thread
+- [x] Handle play or stop video in main thread
 - [x] Excellent performance!
 - [x] Always play the video of the `UITableViewCell` in screen center when scrolling   
 - [x] A guarantee that the same URL won't be downloaded several times
