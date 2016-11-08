@@ -290,8 +290,8 @@ const CGFloat rowHeight = 210;
     // If the found cell is the cell playing video, this situation cannot play video again.
     // 注意, 如果正在播放的cell和finnalCell是同一个cell, 不应该在播放
     if (self.playingCell != finnalCell && finnalCell != nil) {
-        [[JPVideoPlayer sharedInstance]stop];
-        [[JPVideoPlayer sharedInstance]playWithUrl:[NSURL URLWithString:finnalCell.videoPath] showView:finnalCell.containerView];
+        NSURL *url = [NSURL URLWithString:finnalCell.videoPath];
+        [[JPVideoPlayer sharedInstance]playWithUrl:url showView:finnalCell.containerView];
         self.playingCell = finnalCell;
         self.currentVideoPath = finnalCell.videoPath;
         [JPVideoPlayer sharedInstance].mute = YES;

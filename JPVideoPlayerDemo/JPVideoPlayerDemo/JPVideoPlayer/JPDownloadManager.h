@@ -43,12 +43,6 @@
 - (void)didFailLoadingWithManager:(JPDownloadManager *)manager WithError:(NSError *)errorCode;
 
 /**
- * The file to load is already existed(pass the filePath)
- * 已经存在下载好的这个文件了(传递文件路径)
- */
--(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath;
-
-/**
  * It is loading file from network(pass the data received and downloaded position and the path of temporary file)
  * 正在下载(传递获取到的数据和下载的偏移量以及临时文件存储路径)
  */
@@ -57,12 +51,6 @@
 @end
 
 
-/**
- * Save path
- * 存储路径
- */
-static NSString *jp_tempPath = @"/JPVideoPlayer_temp"; // temporary file(临时文件)
-static NSString *jp_savePath = @"/JPVideoPlayer_save"; // complete file(完成文件)
 @interface JPDownloadManager : NSObject
 
 /**
@@ -124,6 +112,6 @@ static NSString *jp_savePath = @"/JPVideoPlayer_save"; // complete file(完成�
  * Cancel current download task
  * 取消当前下载进程
  */
-- (void)cancel;
+- (void)invalidateAndCancel;
 
 @end

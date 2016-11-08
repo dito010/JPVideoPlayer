@@ -9,6 +9,7 @@
 #import "JPVideoURLAssetResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPDownloadManager.h"
+#import "JPVideoCachePathTool.h"
 
 @interface JPVideoURLAssetResourceLoader()<JPDownloadManagerDelegate>
 
@@ -57,6 +58,11 @@
     return [components URL];
 }
 
+-(void)invalidDownload{
+    [self.manager invalidateAndCancel];
+    self.manager = nil;
+}
+
 
 #pragma mark -----------------------------------------
 #pragma mark AVAssetResourceLoaderDelegate
@@ -69,9 +75,11 @@
  */
 -(BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     
-    [self.pendingRequests addObject:loadingRequest];
-    [self dealLoadingRequest:loadingRequest];
-    
+    if (resourceLoader && loadingRequest) {
+        [self.pendingRequests addObject:loadingRequest];
+        [self dealLoadingRequest:loadingRequest];
+    }
+   
     return YES;
 }
 
@@ -158,21 +166,6 @@
 
 #pragma mark -----------------------------------------
 #pragma mark JPDownloadManagerDelegate
-
--(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath{
-    
-    // File existed, so close and remove all request
-    // 移除所有请求
-    
-    [self.pendingRequests enumerateObjectsUsingBlock:^(AVAssetResourceLoadingRequest * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj finishLoading];
-        [self.pendingRequests removeObject:obj];
-    }];
-    
-    if ([self.delegate respondsToSelector:@selector(manager:fileExistedWithPath:)]) {
-        [self.delegate manager:manager fileExistedWithPath:filePath];
-    }
-}
 
 -(void)manager:(JPDownloadManager *)manager didReceiveData:(NSData *)data downloadOffset:(NSInteger)offset tempFilePath:(NSString *)filePath{
     [self processPendingRequests];

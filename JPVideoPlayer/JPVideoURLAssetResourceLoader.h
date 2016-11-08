@@ -33,12 +33,6 @@
  */
 - (void)didFailLoadingWithManager:(JPDownloadManager *)manager WithError:(NSError *)errorCode;
 
-/**
- * The file to load is already existed(pass the filePath)
- * 已经存在下载好的这个文件了(传递文件路径)
- */
--(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath;
-
 @end
 
 
@@ -58,5 +52,12 @@
  * @return      Fixed url
  */
 - (NSURL *)getSchemeVideoURL:(NSURL *)url;
+
+/**
+ * For invalid download operation, release download manager after invalid.
+ * It can avoid multiple download request run at the same time.
+ * 取消当前下载工具的下载操作, 并且释放下载工具, 避免多个下载请求同时并存
+ */
+-(void)invalidDownload;
 
 @end

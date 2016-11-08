@@ -7,6 +7,7 @@
 
 
 #import "JPDownloadManager.h"
+#import "JPVideoCachePathTool.h"
 
 @interface JPDownloadManager()<NSURLSessionDataDelegate>
 
@@ -48,28 +49,13 @@
     _curOffset = offset;
     _downLoadingOffset = 0;
     
-    // Check is already exist cache of this file(url) or not
-    // 检查有没有缓存
     NSString *urlString = [url absoluteString];
     self.suggestFileName = [urlString lastPathComponent];
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSString *savePath = [self fileSavePath];
-    savePath = [savePath stringByAppendingPathComponent:self.suggestFileName];
-    if ([manager fileExistsAtPath:savePath]) {
-        
-        // If cache is existed, then return the save path by Delegate-Method
-        // 已经存在这个下载好的文件了, 返回文件地址
-        
-        if ([self.delegate respondsToSelector:@selector(manager:fileExistedWithPath:)]) {
-            [self.delegate manager:self fileExistedWithPath:savePath];
-        }
-        return;
-    }
 
     [self startLoading];
 }
 
--(void)cancel{
+-(void)invalidateAndCancel{
     [self.session invalidateAndCancel];
 }
 
@@ -87,7 +73,7 @@
     
     // Combine temporary file save path
     // 拼接临时文件存储路径
-    self.tempPath = [self fileCachePath];
+    self.tempPath = [self getFileCachePath];
     
     // Get the total length of file
     // 获取文件总长度. 如果响应头里有文件长度数据, 就取这个长度; 如果没有, 就取代理方法返回给我们的长度
@@ -121,13 +107,18 @@
 // 接收到服务器返回数据的时候调用,会调用多次
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data{
     
-    _downLoadingOffset += data.length;
-    [self.outputStream write:data.bytes maxLength:data.length];
-    
-    // For Test NSLog(@"%lf", 1.0 * _downLoadingOffset / self.videoLength);
-    
-    if ([self.delegate respondsToSelector:@selector(manager:didReceiveData:downloadOffset:tempFilePath:)]) {
-        [self.delegate manager:self didReceiveData:data downloadOffset:_downLoadingOffset tempFilePath:_tempPath];
+    if (data.length>0) {
+        _downLoadingOffset += data.length;
+        [self.outputStream write:data.bytes maxLength:data.length];
+        
+        // For Test
+        // NSLog(@"loading ... 正在下载");
+        // NSLog(@"Download progress --- %0.2lf", 1.0 * _downLoadingOffset / self.fileLength);
+        // NSLog(@"DownloadManagerInstance %@", self);
+        
+        if ([self.delegate respondsToSelector:@selector(manager:didReceiveData:downloadOffset:tempFilePath:)]) {
+            [self.delegate manager:self didReceiveData:data downloadOffset:_downLoadingOffset tempFilePath:_tempPath];
+        }
     }
 }
 
@@ -152,7 +143,7 @@
     // 如果下载完成, 就把文件移到缓存文件夹
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *savePath = [self fileSavePath];
+    NSString *savePath = [JPVideoCachePathTool fileSavePath];
     savePath = [savePath stringByAppendingPathComponent:self.suggestFileName];
     
     if ([fileManager fileExistsAtPath:self.tempPath]) {
@@ -196,21 +187,11 @@
 #pragma mark --------------------------------------------------
 #pragma mark Private
 
-// Combine temporary file path
-// 拼接临时文件缓存存储路径
--(NSString *)fileCachePath{
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
-    
-    // Make folder
-    // 创建文件夹
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
+-(NSString *)getFileCachePath{
+    NSString *path = [JPVideoCachePathTool fileCachePath];
     path = [path stringByAppendingPathComponent:self.suggestFileName];
     
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:path] && !self.once) {
         [fileManager removeItemAtPath:path error:nil];
         [fileManager createFileAtPath:path contents:nil attributes:nil];
@@ -218,22 +199,6 @@
     else {
         [fileManager createFileAtPath:path contents:nil attributes:nil];
     }
-    return path;
-}
-
-// Combine complete file path
-// 拼接完整文件存储路径
--(NSString *)fileSavePath{
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_savePath];
-    
-    // Make folder
-    // 创建文件夹
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
     return path;
 }
 

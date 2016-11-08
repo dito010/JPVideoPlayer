@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F2C55AF1DD193C600311DEA /* JPVideoCachePathTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2C55AE1DD193C500311DEA /* JPVideoCachePathTool.m */; };
 		5F6705681DADE88F001EBFAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6705671DADE88F001EBFAF /* main.m */; };
 		5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67056A1DADE88F001EBFAF /* AppDelegate.m */; };
 		5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F6705721DADE88F001EBFAF /* Assets.xcassets */; };
@@ -21,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F2C55AD1DD193C500311DEA /* JPVideoCachePathTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoCachePathTool.h; sourceTree = "<group>"; };
+		5F2C55AE1DD193C500311DEA /* JPVideoCachePathTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoCachePathTool.m; sourceTree = "<group>"; };
 		5F6705631DADE88F001EBFAF /* JPVideoPlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JPVideoPlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F6705671DADE88F001EBFAF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5F6705691DADE88F001EBFAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 			children = (
 				5F67057E1DADE8F4001EBFAF /* JPDownloadManager.h */,
 				5F67057F1DADE8F4001EBFAF /* JPDownloadManager.m */,
+				5F2C55AD1DD193C500311DEA /* JPVideoCachePathTool.h */,
+				5F2C55AE1DD193C500311DEA /* JPVideoCachePathTool.m */,
 				5F6705801DADE8F4001EBFAF /* JPVideoPlayer.h */,
 				5F6705811DADE8F4001EBFAF /* JPVideoPlayer.m */,
 				5F6705821DADE8F4001EBFAF /* JPVideoURLAssetResourceLoader.h */,
@@ -184,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F67058B1DADE994001EBFAF /* ViewController.m in Sources */,
+				5F2C55AF1DD193C600311DEA /* JPVideoCachePathTool.m in Sources */,
 				5F6705861DADE8F4001EBFAF /* JPVideoURLAssetResourceLoader.m in Sources */,
 				5F67058F1DADE99D001EBFAF /* JPVideoPlayerCell.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
@@ -302,7 +308,7 @@
 				DEVELOPMENT_TEAM = 95B6T5443Y;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -314,7 +320,7 @@
 				DEVELOPMENT_TEAM = 95B6T5443Y;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

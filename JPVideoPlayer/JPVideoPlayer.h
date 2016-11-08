@@ -66,7 +66,6 @@
  */
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView;
 
-
 - (void)resume;
 - (void)pause;
 - (void)stop;

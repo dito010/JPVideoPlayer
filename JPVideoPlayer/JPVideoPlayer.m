@@ -4,11 +4,11 @@
 //
 //  Created by lava on 16/9/13.
 //  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
-//
 
 #import "JPVideoPlayer.h"
 #import "JPVideoURLAssetResourceLoader.h"
 #import "JPDownloadManager.h"
+#import "JPVideoCachePathTool.h"
 
 @interface JPVideoPlayer()<JPVideoURLAssetResourceLoaderDelegate>
 
@@ -102,26 +102,56 @@
     self.playPathURL = url;
     _showView = showView;
     
-    // Release all configuration before
+    // Release all configuration before.
     // 释放之前的配置
     [self stop];
     
-    // Re-create all all configuration agian.
-    // Make the "resourceLoader" become the delegate of "videoURLAsset", and provide data to the player.
-    // 将播放器请求数据的代理设为缓存中间区
-    JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
-    self.resourceLoader = resourceLoader;
-    resourceLoader.delegate = self;
-    NSURL *playUrl = [resourceLoader getSchemeVideoURL:url];
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playUrl options:nil];
-    self.videoURLAsset = videoURLAsset;
-    [self.videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
-    self.currentPlayerItem = playerItem;
     
-    self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    self.currentPlayerLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+    // Check is already exist cache of this file(url) or not.
+    // If existed, we play video from disk.
+    // If not exist, we request data from network.
+    // 检查有没有缓存, 如果有缓存, 直接读取缓存文件, 如果没有缓存, 就去请求下载
+    // 这里感谢简书作者 @老孟(http://www.jianshu.com/users/9f6960a40be6/timeline), 他帮我测试了多数的真机设备, 包括iPhone 5s 国行 系统9.3.5  iPhone 6plus 港行 系统10.0.2 iPhone 6s 国行 系统9.3.2  iPhone 6s plus 港行 系统10.0.0 iPhone 7plus 国行 系统10.1.1, 我之前由于手上设备有限, 只测试了 iPhone 6s 和 iPhone 6s plus, 但是 @老孟发 现在较旧设备上有卡顿的现象, 具体表现为播放本地已经缓存的视频的时候会出现2-3秒的假死, 其实是阻塞了主线程. 现在经过修改过后的版本修复了这个问题, 并且以上设备都测试通过, 没有出现卡顿情况.
+    
+    NSString *suggestFileName = [url.absoluteString lastPathComponent];
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *path = [JPVideoCachePathTool fileSavePath];
+    path = [path stringByAppendingPathComponent:suggestFileName];
+    if ([manager fileExistsAtPath:path]) {
+        
+        // Play video from disk.
+        // 直接从本地读取数据进行播放
+        
+        NSLog(@"File already existed, we play video from disk, 文件已存在, 从本地读取播放");
+        
+        NSURL *playPathURL = [NSURL fileURLWithPath:path];
+        AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playPathURL options:nil];
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
+        self.currentPlayerItem = playerItem;
+        self.player = [AVPlayer playerWithPlayerItem:playerItem];
+        self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        self.currentPlayerLayer.frame = CGRectMake(0, 0, _showView.bounds.size.width, _showView.bounds.size.height);
+    }
+    else{
+      
+        // Re-create all all configuration agian.
+        // Make the "resourceLoader" become the delegate of "videoURLAsset", and provide data to the player.
+        // 将播放器请求数据的代理设为缓存中间区
+        
+        JPVideoURLAssetResourceLoader *resourceLoader = [JPVideoURLAssetResourceLoader new];
+        self.resourceLoader = resourceLoader;
+        resourceLoader.delegate = self;
+        NSURL *playUrl = [resourceLoader getSchemeVideoURL:url];
+        AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playUrl options:nil];
+        self.videoURLAsset = videoURLAsset;
+        [self.videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
+        self.currentPlayerItem = playerItem;
+        
+        self.player = [AVPlayer playerWithPlayerItem:playerItem];
+        self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        self.currentPlayerLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+    }
 }
 
 - (void)resume{
@@ -135,16 +165,20 @@
 }
 
 - (void)stop{
-    if (!self.currentPlayerItem) return;
+    if (!self.player) return;
     [self.player pause];
     [self.player cancelPendingPrerolls];
     if (self.currentPlayerLayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
         self.currentPlayerLayer = nil;
     }
+    [self.videoURLAsset.resourceLoader setDelegate:nil queue:dispatch_get_main_queue()];
+    self.videoURLAsset = nil;
     self.currentPlayerItem = nil;
     self.player = nil;
     self.playPathURL = nil;
+    [self.resourceLoader invalidDownload];
+    self.resourceLoader = nil;
 }
 
 -(void)setMute:(BOOL)mute{
@@ -172,8 +206,10 @@
 }
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification{
+    
     // Seek the start point of file data and repeat play, this handle have no Memory surge
     // 重复播放, 从起点开始重播, 没有内存暴涨
+    
     __weak typeof(self) weak_self = self;
     [self.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
         __strong typeof(weak_self) strong_self = weak_self;
@@ -265,25 +301,6 @@
 
 #pragma mark -----------------------------------------
 #pragma mark JPLoaderURLConnectionDelegate
-
--(void)manager:(JPDownloadManager *)manager fileExistedWithPath:(NSString *)filePath{
-    
-    NSLog(@"File already existed, we play video from disk, 文件已存在, 从本地读取播放");
-    
-    // Release all configuration before.
-    // 释放之前的配置
-    [self stop];
-    
-    // Play video from disk.
-    // 直接从本地读取数据进行播放
-    NSURL *playPathURL = [NSURL fileURLWithPath:filePath];
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playPathURL options:nil];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
-    self.currentPlayerItem = playerItem;
-    self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    self.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    self.currentPlayerLayer.frame = CGRectMake(0, 0, _showView.bounds.size.width, _showView.bounds.size.height);
-}
 
 -(void)didFailLoadingWithManager:(JPDownloadManager *)manager WithError:(NSError *)errorCode{
     
