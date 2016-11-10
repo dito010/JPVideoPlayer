@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "JPVideoPlayer/JPVideoPlayer.h"
 #import "JPVideoPlayerCell.h"
-
+#import "JPPlaySingleVideoVC.h"
 
 /*
  * The scroll derection of tableview.
@@ -28,9 +28,9 @@ typedef NS_ENUM(NSUInteger, ScrollDerection) {
  */
 @property(nonatomic, strong)NSArray *pathStrings;
 
-/** 
+/**
  * The cell of playing video.
- * 正在播放视频的cell 
+ * 正在播放视频的cell
  */
 @property(nonatomic, strong)JPVideoPlayerCell *playingCell;
 
@@ -40,19 +40,19 @@ typedef NS_ENUM(NSUInteger, ScrollDerection) {
  */
 @property(nonatomic, strong)NSString *currentVideoPath;
 
-/** 
+/**
  * The scroll derection of tableview before.
- * 之前滚动方向类型 
+ * 之前滚动方向类型
  */
 @property(nonatomic, assign)ScrollDerection preDerection;
 
-/** 
+/**
  * The scroll derection of tableview now.
  * 当前滚动方向类型
  */
 @property(nonatomic, assign)ScrollDerection currentDerection;
 
-/** 
+/**
  * For calculate the scroll derection of tableview, we need record the offset-Y of tableview when begain drag.
  * 刚开始拖拽时scrollView的偏移量Y值, 用来判断滚动方向
  */
@@ -114,24 +114,24 @@ const CGFloat rowHeight = 210;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerCell class]) bundle:nil] forCellReuseIdentifier:reuseID];
     
     self.pathStrings = @[
-                     @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_03.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_04.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_05.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_06.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_07.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_08.mp4",
-                     // To simulate the cell have no video to play.
-                     // 模拟有些cell没有视频
-                     // @"",
-                     @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
-                     @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
-                     ];
+                         @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_03.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_04.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_05.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_06.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_07.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_08.mp4",
+                         // To simulate the cell have no video to play.
+                         // 模拟有些cell没有视频
+                         // @"",
+                         @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
+                         @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
+                         ];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -139,7 +139,7 @@ const CGFloat rowHeight = 210;
     
     // Find the first cell need to play video in visiable cells.
     // 在可见cell中找第一个有视频的进行播放
-    [self playVideoInVisiableCells];
+        [self playVideoInVisiableCells];
 }
 
 -(BOOL)prefersStatusBarHidden{
@@ -186,6 +186,13 @@ const CGFloat rowHeight = 210;
 #pragma mark -----------------------------------------
 #pragma mark TableView Delegate
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    JPPlaySingleVideoVC *single = [JPPlaySingleVideoVC new];
+    [self presentViewController:single animated:YES completion:nil];
+    JPVideoPlayerCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    single.videoPath = cell.videoPath;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     // To calculate the number of cells cannot stop in screen center.
@@ -199,10 +206,10 @@ const CGFloat rowHeight = 210;
  * 松手时已经静止, 只会调用scrollViewDidEndDragging
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-  
+    
     if (decelerate == NO) {
         // scrollView已经完全静止
-        [self handleScrollStop];
+                [self handleScrollStop];
     }
 }
 
@@ -213,7 +220,7 @@ const CGFloat rowHeight = 210;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
     // scrollView已经完全静止
-    [self handleScrollStop];
+        [self handleScrollStop];
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -259,7 +266,7 @@ const CGFloat rowHeight = 210;
                     CGRect windowRect = self.view.window.bounds;
                     BOOL isContain = CGRectContainsPoint(windowRect, coorPoint);
                     if (isContain) {
-                         finnalCell = cell;
+                        finnalCell = cell;
                     }
                 }
                 else if (cell.cellStyle == PlayUnreachCellStyleDown){

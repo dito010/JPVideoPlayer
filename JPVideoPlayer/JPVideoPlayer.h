@@ -36,17 +36,6 @@
 + (instancetype)sharedInstance;
 
 /**
- * Default is YES
- */
-@property (nonatomic, assign) BOOL stopWhenAppDidEnterBackground;
-
-/**
- * mute
- * 静音
- */
-@property(nonatomic, assign)BOOL mute;
-
-/**
  * Play video method.
  * Through pass in video url(network url only) and the view of video will play on, it can auto play video on the view passed in.
  * It also have the function that play video and save the downloaded video srouce at the same time.
@@ -65,6 +54,18 @@
  * 播放逻辑是, 先从本地缓存中查找有缓存没有, 如果有, 就从本地读取数据播放. 如果没有, 再从网络加载数据播放.
  */
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView;
+
+
+/**
+ * Default is YES
+ */
+@property (nonatomic, assign) BOOL stopWhenAppDidEnterBackground;
+
+/**
+ * mute
+ * 静音
+ */
+@property(nonatomic, assign)BOOL mute;
 
 - (void)resume;
 - (void)pause;

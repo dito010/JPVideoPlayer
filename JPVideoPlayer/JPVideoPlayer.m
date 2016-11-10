@@ -9,6 +9,7 @@
 #import "JPVideoURLAssetResourceLoader.h"
 #import "JPDownloadManager.h"
 #import "JPVideoCachePathTool.h"
+#import "UIView+JPObserveDealloc.h"
 
 @interface JPVideoPlayer()<JPVideoURLAssetResourceLoaderDelegate>
 
@@ -25,19 +26,25 @@
  * The Item of playing video
  * 当前正在播放视频的Item
  */
-@property (nonatomic, strong) AVPlayerItem *currentPlayerItem;
+@property (nonatomic, strong)AVPlayerItem *currentPlayerItem;
 
 /**
  * The current picture player
  * 当前图像层
  */
-@property (nonatomic, strong) AVPlayerLayer *currentPlayerLayer;
+@property (nonatomic, strong)AVPlayerLayer *currentPlayerLayer;
 
 /**
  * The view of video will play on
  * 视频图像载体View
  */
-@property (nonatomic, weak)   UIView *showView;
+@property (nonatomic, weak)UIView *showView;
+
+/** 
+ * The hash value of showView
+ * showView的hash值
+ */
+@property(nonatomic, assign)NSUInteger showViewHash;
 
 /**
  * video url
@@ -99,8 +106,11 @@
 #pragma mark Public
 
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView{
+    
     self.playPathURL = url;
     _showView = showView;
+    _showViewHash = [showView hash];
+    _showView.isShowView = YES;
     
     // Release all configuration before.
     // 释放之前的配置
@@ -251,13 +261,31 @@
 #pragma mark -----------------------------------------
 #pragma mark Private
 
+-(void)viewDealloc:(NSNotification *)note{
+    
+    UIView *deallocView = note.object;
+    NSUInteger hash = [deallocView hash];
+    if (hash == _showViewHash) {
+        
+        // The showView was dealloc, should stop play video right now.
+        // 播放视频的view已经释放, 所以应该关闭视频播放
+        
+        self.showView = nil;
+        [self stop];
+    }
+}
+
 -(void)addObserverOnce{
     if (!_isAddObserver) {
+      
+        // Add observer.
         // 添加监听
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(viewDealloc:) name:@"kViewDeallocNote" object:nil];
     }
     _isAddObserver = YES;
 }

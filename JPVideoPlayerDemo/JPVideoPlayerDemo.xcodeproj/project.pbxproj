@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F169D921DD4AA6B007D3E5A /* JPPlaySingleVideoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F169D901DD4AA6B007D3E5A /* JPPlaySingleVideoVC.m */; };
+		5F169D931DD4AA6B007D3E5A /* JPPlaySingleVideoVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F169D911DD4AA6B007D3E5A /* JPPlaySingleVideoVC.xib */; };
+		5F169D961DD4AE3A007D3E5A /* UIView+JPObserveDealloc.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F169D951DD4AE3A007D3E5A /* UIView+JPObserveDealloc.m */; };
 		5F2C55AF1DD193C600311DEA /* JPVideoCachePathTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2C55AE1DD193C500311DEA /* JPVideoCachePathTool.m */; };
 		5F6705681DADE88F001EBFAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6705671DADE88F001EBFAF /* main.m */; };
 		5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67056A1DADE88F001EBFAF /* AppDelegate.m */; };
@@ -22,6 +25,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F169D8F1DD4AA6B007D3E5A /* JPPlaySingleVideoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPPlaySingleVideoVC.h; sourceTree = "<group>"; };
+		5F169D901DD4AA6B007D3E5A /* JPPlaySingleVideoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPPlaySingleVideoVC.m; sourceTree = "<group>"; };
+		5F169D911DD4AA6B007D3E5A /* JPPlaySingleVideoVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPPlaySingleVideoVC.xib; sourceTree = "<group>"; };
+		5F169D941DD4AE3A007D3E5A /* UIView+JPObserveDealloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+JPObserveDealloc.h"; sourceTree = "<group>"; };
+		5F169D951DD4AE3A007D3E5A /* UIView+JPObserveDealloc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+JPObserveDealloc.m"; sourceTree = "<group>"; };
 		5F2C55AD1DD193C500311DEA /* JPVideoCachePathTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoCachePathTool.h; sourceTree = "<group>"; };
 		5F2C55AE1DD193C500311DEA /* JPVideoCachePathTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoCachePathTool.m; sourceTree = "<group>"; };
 		5F6705631DADE88F001EBFAF /* JPVideoPlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JPVideoPlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +91,9 @@
 				5F67058C1DADE99D001EBFAF /* JPVideoPlayerCell.h */,
 				5F67058D1DADE99D001EBFAF /* JPVideoPlayerCell.m */,
 				5F67058E1DADE99D001EBFAF /* JPVideoPlayerCell.xib */,
+				5F169D8F1DD4AA6B007D3E5A /* JPPlaySingleVideoVC.h */,
+				5F169D901DD4AA6B007D3E5A /* JPPlaySingleVideoVC.m */,
+				5F169D911DD4AA6B007D3E5A /* JPPlaySingleVideoVC.xib */,
 				5F6705721DADE88F001EBFAF /* Assets.xcassets */,
 				5F6705871DADE97E001EBFAF /* Main.storyboard */,
 				5F6705741DADE88F001EBFAF /* LaunchScreen.storyboard */,
@@ -111,6 +122,8 @@
 				5F6705811DADE8F4001EBFAF /* JPVideoPlayer.m */,
 				5F6705821DADE8F4001EBFAF /* JPVideoURLAssetResourceLoader.h */,
 				5F6705831DADE8F4001EBFAF /* JPVideoURLAssetResourceLoader.m */,
+				5F169D941DD4AE3A007D3E5A /* UIView+JPObserveDealloc.h */,
+				5F169D951DD4AE3A007D3E5A /* UIView+JPObserveDealloc.m */,
 			);
 			path = JPVideoPlayer;
 			sourceTree = "<group>";
@@ -178,6 +191,7 @@
 				5F6705881DADE97E001EBFAF /* Main.storyboard in Resources */,
 				5F6705761DADE88F001EBFAF /* LaunchScreen.storyboard in Resources */,
 				5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */,
+				5F169D931DD4AA6B007D3E5A /* JPPlaySingleVideoVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +203,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F67058B1DADE994001EBFAF /* ViewController.m in Sources */,
+				5F169D921DD4AA6B007D3E5A /* JPPlaySingleVideoVC.m in Sources */,
+				5F169D961DD4AE3A007D3E5A /* UIView+JPObserveDealloc.m in Sources */,
 				5F2C55AF1DD193C600311DEA /* JPVideoCachePathTool.m in Sources */,
 				5F6705861DADE8F4001EBFAF /* JPVideoURLAssetResourceLoader.m in Sources */,
 				5F67058F1DADE99D001EBFAF /* JPVideoPlayerCell.m in Sources */,
