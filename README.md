@@ -63,7 +63,7 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 1.2.0'
+pod 'JPVideoPlayer', '~> 1.2.1'
 end
 ```
 
@@ -129,7 +129,7 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 1.2.0'
+pod 'JPVideoPlayer', '~> 1.2.1'
 end
 ```
 
