@@ -35,4 +35,8 @@
     [JPVideoPlayer sharedInstance].mute = !sw.on;
 }
 
+-(BOOL)prefersStatusBarHidden{
+    return YES;
+}
+
 @end

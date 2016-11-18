@@ -98,7 +98,8 @@
     self.outputStream = [[NSOutputStream alloc]initToFileAtPath:_tempPath append:YES];
     [self.outputStream open];
     
-    // For Test  NSLog(@"%@", self.tempPath);
+    // For Test
+    // NSLog(@"%@", self.tempPath);
     
     completionHandler(NSURLSessionResponseAllow);
 }
@@ -113,7 +114,7 @@
         
         // For Test
         // NSLog(@"loading ... 正在下载");
-        // NSLog(@"Download progress --- %0.2lf", 1.0 * _downLoadingOffset / self.fileLength);
+        //  NSLog(@"Download progress --- %0.2lf", 1.0 * _downLoadingOffset / self.fileLength);
         // NSLog(@"DownloadManagerInstance %@", self);
         
         if ([self.delegate respondsToSelector:@selector(manager:didReceiveData:downloadOffset:tempFilePath:)]) {
@@ -147,13 +148,19 @@
     savePath = [savePath stringByAppendingPathComponent:self.suggestFileName];
     
     if ([fileManager fileExistsAtPath:self.tempPath]) {
-        [fileManager moveItemAtPath:self.tempPath toPath:savePath error:nil];
-        if ([self.delegate respondsToSelector:@selector(didFinishLoadingWithManager:fileSavePath:)]) {
-            [self.delegate didFinishLoadingWithManager:self fileSavePath:savePath];
-        }
-        [self.outputStream close];
-        self.outputStream = nil;
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            
+             [fileManager moveItemAtPath:self.tempPath toPath:savePath error:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(didFinishLoadingWithManager:fileSavePath:)]) {
+                    [self.delegate didFinishLoadingWithManager:self fileSavePath:savePath];
+                }
+            });
+        });
     }
+    
+    [self.outputStream close];
+    self.outputStream = nil;
 }
 
 -(void)downloadFailedWithURLSession:(NSURLSession *)session task:(NSURLSessionTask *)task error:(NSError *)error{

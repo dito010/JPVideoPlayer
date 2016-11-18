@@ -107,6 +107,14 @@
 
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView{
     
+    if (url.absoluteString.length==0) {
+        return;
+    }
+    if ([url isKindOfClass:[NSURL class]]) {
+//        NSException *exc = [NSException exceptionWithName:@"PathError" reason:@"The path is not a URL path" userInfo:nil];
+//        [exc raise];
+    }
+    
     self.playPathURL = url;
     _showView = showView;
     _showViewHash = [showView hash];
@@ -133,7 +141,7 @@
         // 直接从本地读取数据进行播放
         
         NSLog(@"File already existed, we play video from disk, 文件已存在, 从本地读取播放");
-        
+        NSLog(@"%@", path);
         NSURL *playPathURL = [NSURL fileURLWithPath:path];
         AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:playPathURL options:nil];
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
@@ -196,6 +204,18 @@
     self.player.muted = mute;
 }
 
+-(void)clearVideoCacheForUrl:(NSURL *)url{
+    [JPCacheManager clearVideoCacheForUrl:url];
+}
+
+-(void)clearAllVideoCache{
+    [JPCacheManager clearAllVideoCache];
+}
+
+-(void)getSize:(JPCacheQueryCompletedBlock)completedOperation{
+    [JPCacheManager getSize:completedOperation];
+}
+
 
 #pragma mark -----------------------------------------
 #pragma mark Observer
@@ -241,6 +261,7 @@
                 
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 // 显示图像逻辑
+                
                 [self.player play];
                 self.player.muted = self.mute;
                 [self handleShowViewSublayers];

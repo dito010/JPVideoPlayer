@@ -48,7 +48,7 @@
     // 采用了一个不断更新的轻量级索引文件来控制分割后小媒体文件的下载和播放，可同时支持直播和点播.
     
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
-    components.scheme = @"streaming";
+    components.scheme = @"systemcannotrecognition";
     
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
     NSString *suggestFileName = [[url absoluteString]lastPathComponent];
@@ -94,18 +94,10 @@
 - (void)dealLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
   
     NSURL *interceptedURL = [loadingRequest.request URL];
-    long long loc = (NSUInteger)loadingRequest.dataRequest.currentOffset;
     
     if (self.manager) {
         if (self.manager.downLoadingOffset > 0)
             [self processPendingRequests];
-        
-        // If the new location is greater than the total length of cached file
-        // Then request new region data
-        // 如果新的rang的起始位置比当前缓存的位置还大，则重新按照range请求数据
-        if (self.manager.offset + self.manager.downLoadingOffset + 1024*300 < loc) {
-            [self.manager setUrl:interceptedURL offset:loc];
-        }
     }
     else{
         self.manager = [JPDownloadManager new];
@@ -149,6 +141,7 @@
     [dataRequest respondWithData:[fileData subdataWithRange:NSMakeRange((NSUInteger)startOffset- self.manager.offset, (NSUInteger)numberOfBytesToRespondWith)]];
     
     // Thank for @DrunkenMouse(http://www.jianshu.com/users/5d853d21f7da/latest_articles) submmit a bug that my mistake of calculate "endOffset".
+    
     long long endOffset = startOffset + dataRequest.requestedLength;
     BOOL didRespondFully = (self.manager.offset + self.manager.downLoadingOffset) >= endOffset;
     

@@ -118,6 +118,9 @@ const CGFloat rowHeight = 210;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerCell class]) bundle:nil] forCellReuseIdentifier:reuseID];
     
     self.pathStrings = @[
+                         @"http://123.103.15.164:8880/myVirtualImages/14266942.mp4",
+                         // This video save in amazon, maybe load sowly.
+                         @"http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_03.mp4",
@@ -132,6 +135,14 @@ const CGFloat rowHeight = 210;
                          @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
                          ];
+    
+    
+    // Count all cache size.
+    // 计算缓存大小
+    
+    [[JPVideoPlayer sharedInstance] getSize:^(NSUInteger totalSize) {
+        NSLog(@"Total cache size缓存总大小: %ld / Byte, 你可以使用框架提供的方法, 清除所有缓存或指定的缓存.", (unsigned long)totalSize);
+    }];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
