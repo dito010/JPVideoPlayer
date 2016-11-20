@@ -5,6 +5,11 @@
 
 This library provides an video player with cache support in `UITableView`.
 
+<p align="center" >
+<img src="Images/JPVideoPlayer.gif" title="JPVideoPlayer Demo" float=left>
+</p>
+
+
 ## Features
 
 - [x] Cache video data at playing
