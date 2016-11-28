@@ -49,9 +49,9 @@
     _curOffset = offset;
     _downLoadingOffset = 0;
     
-    NSString *urlString = [url absoluteString];
-    self.suggestFileName = [urlString lastPathComponent];
-
+//    NSString *urlString = [url absoluteString];
+//    self.suggestFileName = [urlString lastPathComponent];
+    self.suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     [self startLoading];
 }
 

@@ -40,6 +40,12 @@
  */
 @property (nonatomic, weak)UIView *showView;
 
+/**
+ * The loading view before video play
+ * 视频加载载体View
+ */
+//@property (nonatomic,strong) UIView<JPVideoPlayerLoadingDelegate> *loadingView;
+
 /** 
  * The hash value of showView
  * showView的hash值
@@ -88,6 +94,7 @@
     self = [super init];
     if (self) {
         _stopWhenAppDidEnterBackground = YES;
+        _showActivityWhenLoading = YES;
         
         // Avoid notification center add self as observer again and again that lead to block.
         // 避免重复添加监听导致监听方法被重复调起, 导致的卡顿. 感谢简书@菜先生 http://www.jianshu.com/users/475fdcde8924/latest_articles提醒
@@ -124,14 +131,18 @@
     // 释放之前的配置
     [self stop];
     
-    
+
+    // Show Loading Animation
+    // 显示加载动画
+    [self startLoadingInView:showView];
+
     // Check is already exist cache of this file(url) or not.
     // If existed, we play video from disk.
     // If not exist, we request data from network.
     // 检查有没有缓存, 如果有缓存, 直接读取缓存文件, 如果没有缓存, 就去请求下载
     // 这里感谢简书作者 @老孟(http://www.jianshu.com/users/9f6960a40be6/timeline), 他帮我测试了多数的真机设备, 包括iPhone 5s 国行 系统9.3.5  iPhone 6plus 港行 系统10.0.2 iPhone 6s 国行 系统9.3.2  iPhone 6s plus 港行 系统10.0.0 iPhone 7plus 国行 系统10.1.1, 我之前由于手上设备有限, 只测试了 iPhone 6s 和 iPhone 6s plus, 但是 @老孟发 现在较旧设备上有卡顿的现象, 具体表现为播放本地已经缓存的视频的时候会出现2-3秒的假死, 其实是阻塞了主线程. 现在经过修改过后的版本修复了这个问题, 并且以上设备都测试通过, 没有出现卡顿情况.
     
-    NSString *suggestFileName = [url.absoluteString lastPathComponent];
+    NSString *suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     NSFileManager *manager = [NSFileManager defaultManager];
     NSString *path = [JPVideoCachePathTool fileSavePath];
     path = [path stringByAppendingPathComponent:suggestFileName];
@@ -197,6 +208,9 @@
     self.playPathURL = nil;
     [self.resourceLoader invalidDownload];
     self.resourceLoader = nil;
+    if (self.showActivityWhenLoading && self.loadingView) {
+        [self.loadingView removeFromSuperview];
+    }
 }
 
 -(void)setMute:(BOOL)mute{
@@ -265,6 +279,7 @@
                 [self.player play];
                 self.player.muted = self.mute;
                 [self handleShowViewSublayers];
+                [self stopLoading];
             }
                 break;
                 
@@ -275,7 +290,14 @@
             default:
                 break;
         }
+    }else if ([keyPath isEqualToString:@"playbackBufferEmpty"]){
+        if (self.currentPlayerItem.playbackBufferEmpty) {
+            [self startLoadingInView:self.showView];
+        }else{
+            [self stopLoading];
+        }
     }
+
 }
 
 
@@ -305,8 +327,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(viewDealloc:) name:@"kViewDeallocNote" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewDealloc:) name:@"kViewDeallocNote" object:nil];
     }
     _isAddObserver = YES;
 }
@@ -317,9 +339,14 @@
     [UIView animateWithDuration:0.4 animations:^{
         _showView.alpha = 0;
     } completion:^(BOOL finished) {
-        for (CALayer *layer in _showView.subviews) {
-            [layer removeFromSuperlayer];
+//        for (CALayer *layer in _showView.subviews) {
+//            [layer removeFromSuperlayer];
+//        }
+//        
+        for (UIView *view in _showView.subviews) {
+            [view removeFromSuperview];
         }
+        
         [_showView.layer addSublayer:self.currentPlayerLayer];
         
         [UIView animateWithDuration:0.5 animations:^{
@@ -333,11 +360,13 @@
     
     if (_currentPlayerItem) {
         [_currentPlayerItem removeObserver:self forKeyPath:@"status"];
+        [_currentPlayerItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
     }
     
     _currentPlayerItem = currentPlayerItem;
     
     [_currentPlayerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    [_currentPlayerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 -(void)setCurrentPlayerLayer:(AVPlayerLayer *)currentPlayerLayer{
@@ -357,6 +386,42 @@
 
 -(void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath{
     NSLog(@"Download finished, 下载完成");
+}
+
+#pragma mark ---------------------------------------
+#pragma mark JPVideoPlayerLoading
+
+- (void)startLoadingInView:(UIView *)showView{
+    
+    if (!self.showActivityWhenLoading) return;
+
+    if(!self.loadingView){
+        UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [showView addSubview:loading];
+        loading.frame = CGRectMake((showView.bounds.size.width-loading.bounds.size.width) / 2, (showView.bounds.size.height-loading.bounds.size.height) / 2, loading.bounds.size.width, loading.bounds.size.height);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+        self.loadingView = loading;
+#pragma clang diagnostic pop
+    }
+    
+    if (!self.loadingView.superview) {
+        [showView addSubview:self.loadingView];
+        self.loadingView.frame = CGRectMake((showView.bounds.size.width-self.loadingView.bounds.size.width) / 2, (showView.bounds.size.height-self.loadingView.bounds.size.height) / 2, self.loadingView.bounds.size.width, self.loadingView.bounds.size.height);
+    }
+    
+    if ([self.loadingView respondsToSelector:@selector(startAnimating)]) {
+        [self.loadingView performSelector:@selector(startAnimating)];
+    }
+}
+
+- (void)stopLoading{
+    
+    if (!self.showActivityWhenLoading) return;
+    
+    if ([self.loadingView respondsToSelector:@selector(stopAnimating)]) {
+        [self.loadingView performSelector:@selector(stopAnimating)];
+    }
 }
 
 
