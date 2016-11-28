@@ -376,6 +376,16 @@
     _currentPlayerLayer = currentPlayerLayer;
 }
 
+- (void)checkDiskSize{
+    
+    [self getSize:^(NSUInteger cacheTotalSize) {
+        //大于1G
+        if (cacheTotalSize > 1024 * 1024 * 1024) {
+
+            [self clearAllVideoCache];
+        }
+    }];
+}
 
 #pragma mark -----------------------------------------
 #pragma mark JPLoaderURLConnectionDelegate
@@ -386,6 +396,7 @@
 
 -(void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath{
     NSLog(@"Download finished, 下载完成");
+    [self checkDiskSize];
 }
 
 #pragma mark ---------------------------------------
@@ -397,8 +408,6 @@
 
     if(!self.loadingView){
         UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [showView addSubview:loading];
-        loading.frame = CGRectMake((showView.bounds.size.width-loading.bounds.size.width) / 2, (showView.bounds.size.height-loading.bounds.size.height) / 2, loading.bounds.size.width, loading.bounds.size.height);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
         self.loadingView = loading;

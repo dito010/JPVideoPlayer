@@ -83,4 +83,12 @@
     });
 }
 
++ (unsigned long long)getDiskFreeSize{
+    
+    NSDictionary *systemAttributes = [[NSFileManager defaultManager] fileSystemAttributesAtPath:NSHomeDirectory()];
+//    NSString *diskTotalSize = [systemAttributes objectForKey:@"NSFileSystemSize"]; 
+    NSString *diskFreeSize = [systemAttributes objectForKey:NSFileSystemFreeSize];
+    return [diskFreeSize longLongValue];
+}
+
 @end

@@ -36,4 +36,7 @@ typedef void(^JPCacheQueryCompletedBlock)(NSUInteger);
  */
 +(void)getSize:(JPCacheQueryCompletedBlock)completedOperation;
 
+
++(unsigned long long )getDiskFreeSize;
+
 @end
