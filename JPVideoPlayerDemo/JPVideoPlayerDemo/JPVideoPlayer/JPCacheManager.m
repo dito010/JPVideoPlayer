@@ -13,9 +13,10 @@
 @implementation JPCacheManager
 
 +(void)clearVideoCacheForUrl:(NSURL *)url{
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *savePa = [JPVideoCachePathTool fileSavePath];
-    NSString *suggestFileName = [[url absoluteString]lastPathComponent];
+    NSString *suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     savePa = [savePa stringByAppendingPathComponent:suggestFileName];
     if ([fileManager fileExistsAtPath:savePa]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -80,6 +81,14 @@
             }
         });
     });
+}
+
++ (unsigned long long)getDiskFreeSize{
+    
+    NSDictionary *systemAttributes = [[NSFileManager defaultManager] fileSystemAttributesAtPath:NSHomeDirectory()];
+//    NSString *diskTotalSize = [systemAttributes objectForKey:@"NSFileSystemSize"]; 
+    NSString *diskFreeSize = [systemAttributes objectForKey:NSFileSystemFreeSize];
+    return [diskFreeSize longLongValue];
 }
 
 @end

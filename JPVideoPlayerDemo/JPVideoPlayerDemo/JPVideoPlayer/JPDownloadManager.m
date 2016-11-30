@@ -8,6 +8,7 @@
 
 #import "JPDownloadManager.h"
 #import "JPVideoCachePathTool.h"
+#import "JPCacheManager.h"
 
 @interface JPDownloadManager()<NSURLSessionDataDelegate>
 
@@ -49,9 +50,9 @@
     _curOffset = offset;
     _downLoadingOffset = 0;
     
-    NSString *urlString = [url absoluteString];
-    self.suggestFileName = [urlString lastPathComponent];
-
+//    NSString *urlString = [url absoluteString];
+//    self.suggestFileName = [urlString lastPathComponent];
+    self.suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     [self startLoading];
 }
 
@@ -91,6 +92,13 @@
     }
     self.fileLength = fileLength;
     
+    // Compare DiskFreeSize and fileLength
+    // 剩余空间与请求长度的判断
+    if (![self checkDiskFreeSize:fileLength]) {
+        completionHandler(NSURLSessionResponseCancel);
+        return;
+    }
+
     if ([self.delegate respondsToSelector:@selector(manager:didReceiveVideoLength:mimeType:)]) {
         [self.delegate manager:self didReceiveVideoLength:self.fileLength mimeType:self.mimeType];
     }
@@ -251,6 +259,18 @@
     // Start download
     // 开始下载
     [dataTask resume];
+}
+
+- (BOOL)checkDiskFreeSize:(NSUInteger)length{
+
+    NSUInteger freeDiskSize = [JPCacheManager getDiskFreeSize];
+    
+    if (freeDiskSize < length) {
+//        [AlertBox showMessage:@"手机存储空间不足,请清理后再试." hideAfter:2];
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

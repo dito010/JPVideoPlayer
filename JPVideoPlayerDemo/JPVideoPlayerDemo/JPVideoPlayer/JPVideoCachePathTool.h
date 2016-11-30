@@ -32,4 +32,9 @@ static NSString *jp_savePath = @"/JPVideoPlayer_save"; // complete file(完成�
  */
 +(NSString *)fileSavePath;
 
+/**
+ * cache file Name
+ * 缓存的文件名字
+ */
++(NSString *)suggestFileNameWithURL:(NSURL*)url;
 @end

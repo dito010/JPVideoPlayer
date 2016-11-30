@@ -36,5 +36,13 @@
     return path;
 }
 
+// cache file Name
+// 缓存的文件名字
++(NSString *)suggestFileNameWithURL:(NSURL*)url{
+    
+//    return url.absoluteString.lastPathComponent;
+    return [url.absoluteString.lastPathComponent componentsSeparatedByString:@"?"].firstObject;
+    
+}
 
 @end

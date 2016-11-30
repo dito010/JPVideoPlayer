@@ -212,6 +212,14 @@ const CGFloat rowHeight = 210;
     return rowHeight;
 }
 
+//建议使用 willDisplayCell: 代替 scrollViewDidScroll
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    // Handle cyclic utilization
+    // 处理循环利用
+    [self handleQuickScroll];
+}
+
 /**
  * Called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
  * 松手时已经静止, 只会调用scrollViewDidEndDragging
@@ -238,12 +246,11 @@ const CGFloat rowHeight = 210;
     self.contentOffsetY = scrollView.contentOffset.y;
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    // Handle cyclic utilization
-    // 处理循环利用
-    [self handleQuickScroll];
-}
-
+//-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//    // Handle cyclic utilization
+//    // 处理循环利用
+//    [self handleQuickScroll];
+//}
 
 #pragma mark --------------------------------------------------
 #pragma mark Private
