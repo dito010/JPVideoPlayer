@@ -139,7 +139,7 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 1.4.1'
+pod 'JPVideoPlayer', '~> 1.4.0'
 end
 ```
 
