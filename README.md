@@ -2,6 +2,7 @@
 <p align="center" >
 <img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
 </p>
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-1.4.0-brightgreen.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-ff69b4.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-blue.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 
 This library provides an video player with cache support in `UITableView`.
 
@@ -9,6 +10,8 @@ This library provides an video player with cache support in `UITableView`.
 <img src="Images/JPVideoPlayer.gif" title="JPVideoPlayer Demo" float=left>
 </p>
 
+## Watch out
+You may download my demo to know how to play video in UITableViewController, this framework just provides a player cache video data at playing.
 
 ## Features
 
@@ -68,7 +71,7 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 1.3.1'
+pod 'JPVideoPlayer', '~> 1.4.0'
 end
 ```
 
@@ -80,6 +83,8 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 如果你在天朝
 ------------
+## 注意:
+如果你需要在UITableViewController中滑动播放视频, 请下载我的完整demo, 这个框架只提供一个边下边缓存视频数据的播放器.
 
 ## 特性
 
@@ -134,7 +139,7 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 1.3.1'
+pod 'JPVideoPlayer', '~> 1.4.1'
 end
 ```
 
