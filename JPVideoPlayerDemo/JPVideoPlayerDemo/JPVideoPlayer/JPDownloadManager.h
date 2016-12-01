@@ -54,62 +54,62 @@
 @interface JPDownloadManager : NSObject
 
 /**
- * The url of network file
+ * The url of network file.
  * 要下载的文件的URL
  */
 @property (nonatomic, strong, readonly) NSURL *url;
 
 /**
- * The value of start download position
+ * The value of start download position.
  * 下载位置的偏移量
  */
 @property (nonatomic, readonly) NSUInteger offset;
 
 /**
- * The total length of file
+ * The total length of file.
  * 文件总长度
  */
 @property (nonatomic, readonly) NSUInteger fileLength;
 
 /**
- * The current length of downloaded file
+ * The current length of downloaded file.
  * 当前下载了的文件的位置
  */
 @property (nonatomic, readonly) NSUInteger downLoadingOffset;
 
 /**
- * The mimeType of the downloading file
+ * The mimeType of the downloading file.
  * mineType 类型
  */
 @property (nonatomic, strong, readonly) NSString *mimeType;
 
 /**
- * Query is finished download
+ * Query is finished download.
  * 查询是否已经下载完成
  */
 @property (nonatomic, assign)BOOL isFinishLoad;
 
 /**
- * To be the delegate, It can pass the statu of download by Delegate-Method
- * @see JPDownloadManagerDelegate
+ * To be the delegate, It can pass the statu of download by Delegate-Method.
+ * @see JPDownloadManagerDelegate.
  * 成为代理, 就能获得下载状态
  */
 @property(nonatomic, weak)id<JPDownloadManagerDelegate> delegate;
 
 
 /**
- * It be used to save data as temporary file when requesting data from network
- * It also can auto move temporary file to the path you assigned when the temporary file is a complete file (mean that the length of temporary file is equal to the file in network) after request finished or canceled
- * And it will delete the temporary file if the temporary file is not a complete file after request finish or cancel
+ * It be used to save data as temporary file when requesting data from network.
+ * It also can auto move temporary file to the path you assigned when the temporary file is a complete file (mean that the length of temporary file is equal to the file in network) after request finished or canceled.
+ * And it will delete the temporary file if the temporary file is not a complete file after request finish or cancel.
  * 传递要下载的文件的URL和下载初始偏移量, 这个方法功能是从网络请求数据，并把数据保存到本地的一个临时文件.
  * 当网络请求结束或取消的时候，如果数据完整，则把数据缓存到指定的路径，不完整就删除
- * @param url       The url of network file
- * @param offset    The value of start download position, it can be 0
+ * @param url       The url of network file.
+ * @param offset    The value of start download position, it can be 0.
  */
 - (void)setUrl:(NSURL *)url offset:(long long)offset;
 
 /**
- * Cancel current download task
+ * Cancel current download task.
  * 取消当前下载进程
  */
 - (void)invalidateAndCancel;

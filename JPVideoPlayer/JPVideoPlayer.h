@@ -28,10 +28,24 @@
 #import <UIKit/UIKit.h>
 #import "JPCacheManager.h"
 
+
+/**
+ * Use custom loading need implement this protocol.
+ * 使用自定义的loading时, 需实现此协议
+ */
+@protocol JPVideoPlayerLoadingDelegate<NSObject>
+
+@required
+- (void)startAnimating;
+- (void)stopAnimating;
+
+@end
+
+
 @interface JPVideoPlayer : NSObject
 
 /**
- * Singleton
+ * Singleton.
  * 单例
  */
 + (instancetype)sharedInstance;
@@ -56,14 +70,25 @@
  */
 - (void)playWithUrl:(NSURL *)url showView:(UIView *)showView;
 
+/**
+ * Default is YES.
+ */
+@property (nonatomic, assign) BOOL showActivityWhenLoading;
 
 /**
- * Default is YES
+ * The loading view before video play.
+ * 视频加载视图, 默认为系统UIActivityIndicatorView
+ * Default is UIActivityIndicatorView
+ */
+@property (nonatomic,strong) UIView<JPVideoPlayerLoadingDelegate> *loadingView;
+
+/**
+ * Default is YES.
  */
 @property (nonatomic, assign) BOOL stopWhenAppDidEnterBackground;
 
 /**
- * mute
+ * Mute.
  * 静音
  */
 @property(nonatomic, assign)BOOL mute;
@@ -71,6 +96,12 @@
 -(void)resume;
 -(void)pause;
 -(void)stop;
+
+/** 
+ * The maximum disk cache. 1GB default, automatic clear all cache when the size of cache > 1GB.
+ * 最大磁盘缓存. 默认为 1G, 超过 1G 将自动清空所有视频磁盘缓存.
+ */
+@property(nonatomic, assign)unsigned long long  maxCacheSize;
 
 /**
  * Clear video cache for the given url asynchronously.
@@ -92,3 +123,4 @@
 -(void)getSize:(JPCacheQueryCompletedBlock)completedOperation;
 
 @end
+

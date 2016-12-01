@@ -9,6 +9,8 @@
 #import "JPCacheManager.h"
 #import "JPVideoCachePathTool.h"
 #import "JPVideoURLAssetResourceLoader.h"
+#include <sys/param.h>
+#include <sys/mount.h>
 
 @implementation JPCacheManager
 
@@ -84,11 +86,12 @@
 }
 
 + (unsigned long long)getDiskFreeSize{
-    
-    NSDictionary *systemAttributes = [[NSFileManager defaultManager] fileSystemAttributesAtPath:NSHomeDirectory()];
-//    NSString *diskTotalSize = [systemAttributes objectForKey:@"NSFileSystemSize"]; 
-    NSString *diskFreeSize = [systemAttributes objectForKey:NSFileSystemFreeSize];
-    return [diskFreeSize longLongValue];
+    struct statfs buf;
+   unsigned long long freespace = -1;
+    if(statfs("/var", &buf) >= 0){
+        freespace = (long long)(buf.f_bsize * buf.f_bfree);
+    }
+    return freespace;
 }
 
 @end

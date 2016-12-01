@@ -13,7 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^JPCacheQueryCompletedBlock)(NSUInteger);
+typedef void(^JPCacheQueryCompletedBlock)(unsigned long long);
 
 @interface JPCacheManager : NSObject
 
@@ -35,5 +35,11 @@ typedef void(^JPCacheQueryCompletedBlock)(NSUInteger);
  * 获取缓存总大小(异步), 包括完整视频文件和临时视频文件.
  */
 +(void)getSize:(JPCacheQueryCompletedBlock)completedOperation;
+
+/**
+ * Get the free size of device.
+ * 获取磁盘剩余存储空间
+ */
++(unsigned long long )getDiskFreeSize;
 
 @end

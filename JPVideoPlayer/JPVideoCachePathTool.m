@@ -9,14 +9,13 @@
 
 @implementation JPVideoCachePathTool
 
-// Combine temporary file path
+// Combine temporary file path.
 // 拼接临时文件缓存存储路径
 +(NSString *)fileCachePath{
     return [self getFilePathWithAppendingString:jp_tempPath];
 }
 
-
-// Combine complete file path
+// Combine complete file path.
 // 拼接完整文件存储路径
 +(NSString *)fileSavePath{
     return [self getFilePathWithAppendingString:jp_savePath];
@@ -27,7 +26,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:apdStr];
     
-    // Make folder
+    // Make folder.
     // 创建文件夹
     if (![fileManager fileExistsAtPath:path]) {
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
@@ -36,5 +35,10 @@
     return path;
 }
 
+// cache file Name.
+// 缓存的文件名字
++(NSString *)suggestFileNameWithURL:(NSURL*)url{
+    return [url.absoluteString.lastPathComponent componentsSeparatedByString:@"?"].firstObject;
+}
 
 @end

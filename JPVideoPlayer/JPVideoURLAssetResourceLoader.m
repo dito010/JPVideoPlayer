@@ -53,7 +53,7 @@
     components.scheme = @"systemCannotRecognition";
     
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
-    NSString *suggestFileName = [[url absoluteString]lastPathComponent];
+    NSString *suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     path = [path stringByAppendingPathComponent:suggestFileName];
     _videoPath = path;
     

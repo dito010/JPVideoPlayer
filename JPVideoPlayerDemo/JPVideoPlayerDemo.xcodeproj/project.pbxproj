@@ -159,12 +159,12 @@
 		5F67055B1DADE88F001EBFAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = NewPan;
 				TargetAttributes = {
 					5F6705621DADE88F001EBFAF = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = TBX22VE2Q6;
+						DevelopmentTeam = E9YZ298CQ4;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -253,6 +253,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -300,6 +301,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -327,10 +329,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TBX22VE2Q6;
+				DEVELOPMENT_TEAM = E9YZ298CQ4;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lavatea.www;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -339,10 +341,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TBX22VE2Q6;
+				DEVELOPMENT_TEAM = E9YZ298CQ4;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NewPan.JPVideoPlayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lavatea.www;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

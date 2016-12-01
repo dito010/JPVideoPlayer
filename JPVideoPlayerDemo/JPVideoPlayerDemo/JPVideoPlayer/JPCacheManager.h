@@ -13,7 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^JPCacheQueryCompletedBlock)(NSUInteger);
+typedef void(^JPCacheQueryCompletedBlock)(unsigned long long);
 
 @interface JPCacheManager : NSObject
 
@@ -36,7 +36,10 @@ typedef void(^JPCacheQueryCompletedBlock)(NSUInteger);
  */
 +(void)getSize:(JPCacheQueryCompletedBlock)completedOperation;
 
-
+/**
+ * Get the free size of device.
+ * 获取磁盘剩余存储空间
+ */
 +(unsigned long long )getDiskFreeSize;
 
 @end

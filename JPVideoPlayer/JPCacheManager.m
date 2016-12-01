@@ -9,13 +9,16 @@
 #import "JPCacheManager.h"
 #import "JPVideoCachePathTool.h"
 #import "JPVideoURLAssetResourceLoader.h"
+#include <sys/param.h>
+#include <sys/mount.h>
 
 @implementation JPCacheManager
 
 +(void)clearVideoCacheForUrl:(NSURL *)url{
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *savePa = [JPVideoCachePathTool fileSavePath];
-    NSString *suggestFileName = [[url absoluteString]lastPathComponent];
+    NSString *suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];
     savePa = [savePa stringByAppendingPathComponent:suggestFileName];
     if ([fileManager fileExistsAtPath:savePa]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -80,6 +83,15 @@
             }
         });
     });
+}
+
++ (unsigned long long)getDiskFreeSize{
+    struct statfs buf;
+   unsigned long long freespace = -1;
+    if(statfs("/var", &buf) >= 0){
+        freespace = (long long)(buf.f_bsize * buf.f_bfree);
+    }
+    return freespace;
 }
 
 @end

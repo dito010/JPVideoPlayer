@@ -2,7 +2,6 @@
 //  ViewController.m
 //  JPVideoPlayer
 //
-//  Created by lava on 16/8/18.
 //  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
 //
 
@@ -119,7 +118,7 @@ const CGFloat rowHeight = 210;
     
     self.pathStrings = @[
                          @"http://123.103.15.164:8880/myVirtualImages/14266942.mp4",
-                         // This video save in amazon, maybe load sowly.
+                         // This video saved in amazon, maybe load sowly.
                          @"http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
@@ -140,9 +139,13 @@ const CGFloat rowHeight = 210;
     // Count all cache size.
     // 计算缓存大小
     
-    [[JPVideoPlayer sharedInstance] getSize:^(NSUInteger totalSize) {
-        NSLog(@"Total cache size缓存总大小: %ld / Byte, 你可以使用框架提供的方法, 清除所有缓存或指定的缓存.", (unsigned long)totalSize);
+    [[JPVideoPlayer sharedInstance]getSize:^(unsigned long long totalSize) {
+                NSLog(@"Total cache size 缓存总大小: %0.2f / MB, 你可以使用框架提供的方法, 清除所有缓存或指定的缓存.", (unsigned long)totalSize/1024./1024);
     }];
+    
+    // Clear all cache.
+    // 清空缓存
+    [[JPVideoPlayer sharedInstance]clearAllVideoCache];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -150,7 +153,7 @@ const CGFloat rowHeight = 210;
     
     // Find the first cell need to play video in visiable cells.
     // 在可见cell中找第一个有视频的进行播放
-        [self playVideoInVisiableCells];
+    [self playVideoInVisiableCells];
 }
 
 -(BOOL)prefersStatusBarHidden{
@@ -186,13 +189,6 @@ const CGFloat rowHeight = 210;
     return cell;
 }
 
--(UIColor*)randomColor{
-    float red = arc4random_uniform(256) / 255.0;
-    float green = arc4random_uniform(256) / 255.0;
-    float blue = arc4random_uniform(256) / 255.0;
-    return [UIColor colorWithRed:red green:green blue:blue alpha:1];
-}
-
 
 #pragma mark -----------------------------------------
 #pragma mark TableView Delegate
@@ -212,7 +208,7 @@ const CGFloat rowHeight = 210;
     return rowHeight;
 }
 
-//建议使用 willDisplayCell: 代替 scrollViewDidScroll
+// 建议使用 willDisplayCell: 代替 scrollViewDidScroll
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     
     // Handle cyclic utilization
@@ -228,7 +224,7 @@ const CGFloat rowHeight = 210;
     
     if (decelerate == NO) {
         // scrollView已经完全静止
-                [self handleScrollStop];
+        [self handleScrollStop];
     }
 }
 
@@ -239,7 +235,7 @@ const CGFloat rowHeight = 210;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
     // scrollView已经完全静止
-        [self handleScrollStop];
+    [self handleScrollStop];
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -251,6 +247,7 @@ const CGFloat rowHeight = 210;
 //    // 处理循环利用
 //    [self handleQuickScroll];
 //}
+
 
 #pragma mark --------------------------------------------------
 #pragma mark Private
@@ -395,5 +392,13 @@ const CGFloat rowHeight = 210;
         self.maxNumCannotPlayVideoCells =  [[self.dictOfVisiableAndNotPlayCells valueForKey:[NSString stringWithFormat:@"%ld", (unsigned long)maxNumOfVisiableCells]] integerValue];
     }
 }
+
+-(UIColor*)randomColor{
+    float red = arc4random_uniform(256) / 255.0;
+    float green = arc4random_uniform(256) / 255.0;
+    float blue = arc4random_uniform(256) / 255.0;
+    return [UIColor colorWithRed:red green:green blue:blue alpha:1];
+}
+
 
 @end
