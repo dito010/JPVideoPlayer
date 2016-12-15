@@ -9,7 +9,6 @@
 #import "JPVideoURLAssetResourceLoader.h"
 #import "JPDownloadManager.h"
 #import "JPVideoCachePathTool.h"
-#import "UIView+JPObserveDealloc.h"
 
 @interface JPVideoPlayer()<JPVideoURLAssetResourceLoaderDelegate>
 
@@ -40,12 +39,6 @@
  */
 @property (nonatomic, weak)UIView *showView;
 
-/** 
- * The hash value of showView.
- * showView的hash值
- */
-@property(nonatomic, assign)NSUInteger showViewHash;
-
 /**
  * video url.
  * 播放视频url
@@ -69,9 +62,18 @@
  */
 @property(nonatomic, assign)BOOL isBuffering;
 
+/** 
+ * The timer to check the showView is release or not.
+ * 定时器, 用来检查 showView 是否已经销毁了.
+ */
+@property(nonatomic, strong)NSTimer *timer;
+
 @end
 
 
+// The time (second) of check the showView is release or not.
+// 检查showView是否销毁的频率(时间间隔).
+const CGFloat CheckShowStatusRate = 0.01; // Second
 @implementation JPVideoPlayer
 
 #pragma mark --------------------------------------------------
@@ -107,6 +109,7 @@
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [self stopTimer];
 }
 
 
@@ -132,12 +135,17 @@
         self.playPathURL = [NSURL URLWithString:s];
     }
     
+    
     if (!showView) {
         return;
     }
     _showView = showView;
-    _showViewHash = [showView hash];
-    _showView.isShowView = YES;
+    
+    
+    // Add timer to check the status of showView.
+    // 添加showView状态监测计时器
+    [self stopTimer];
+    [self addTimerToCheckShowViewStatus];
     
     
     // Release all configuration before.
@@ -366,6 +374,36 @@
 }
 
 
+#pragma mark --------------------------------------------------
+#pragma mark Timer Event
+
+-(void)addTimerToCheckShowViewStatus{
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:CheckShowStatusRate target:self selector:@selector(timeChanged:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop]addTimer:timer forMode:NSRunLoopCommonModes];
+    self.timer = timer;
+}
+
+-(void)stopTimer{
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+-(void)timeChanged:(NSTimer *)timer{
+    
+    if (!self.showView) {
+        
+        // The showView was dealloc, should stop play video right now.
+        // 播放视频的view已经释放, 所以应该关闭视频播放
+        
+        self.showView = nil;
+        [self stop];
+        [self stopTimer];
+    }
+}
+
+
 #pragma mark -----------------------------------------
 #pragma mark Private
 
@@ -387,21 +425,6 @@
     
 }
 
-
--(void)viewDealloc:(NSNotification *)note{
-    
-    UIView *deallocView = note.object;
-    NSUInteger hash = [deallocView hash];
-    if (hash == _showViewHash) {
-        
-        // The showView was dealloc, should stop play video right now.
-        // 播放视频的view已经释放, 所以应该关闭视频播放
-        
-        self.showView = nil;
-        [self stop];
-    }
-}
-
 -(void)addObserverOnce{
     if (!_isAddObserver) {
         
@@ -412,7 +435,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewDealloc:) name:@"kViewDeallocNote" object:nil];
     }
     _isAddObserver = YES;
 }

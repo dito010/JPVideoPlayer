@@ -16,6 +16,22 @@
 
 +(void)clearVideoCacheForUrl:(NSURL *)url{
     
+    // Safety testing
+    // 安全性检测
+    
+    if ([url isKindOfClass:[NSURL class]]) {
+        if (url.absoluteString.length==0) {
+            return;
+        }
+    }
+    else if ([url isKindOfClass:[NSString class]]) {
+        NSString *s = (NSString *)url;
+        if (s.length==0) {
+            return;
+        }
+        url = [NSURL URLWithString:s];
+    }
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *savePa = [JPVideoCachePathTool fileSavePath];
     NSString *suggestFileName = [JPVideoCachePathTool suggestFileNameWithURL:url];

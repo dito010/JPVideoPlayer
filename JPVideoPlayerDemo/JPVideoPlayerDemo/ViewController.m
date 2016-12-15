@@ -145,7 +145,7 @@ const CGFloat rowHeight = 210;
     
     // Clear all cache.
     // 清空缓存
-    [[JPVideoPlayer sharedInstance]clearAllVideoCache];
+    // [[JPVideoPlayer sharedInstance]clearAllVideoCache];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
