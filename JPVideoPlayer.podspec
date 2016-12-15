@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = 'JPVideoPlayer'
-  s.version      = '1.4.1'
+  s.version      = '1.4.2'
   s.summary      = 'Automatic play video in UITableView like Weibo home page in main thread and never block main thread.'
 
   s.description  = 'This library provides an video player with cache support in UITableView.'\
