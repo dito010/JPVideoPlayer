@@ -33,6 +33,7 @@ You may download my demo to know how to play video in UITableViewController, thi
 
 - Read the [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
 - Read the [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
+- Read the [[iOS]从使用 KVO 监听 readonly 属性说起](http://www.jianshu.com/p/abd238407e0d)
 - Try the example by downloading the project from Github
 
 
@@ -106,6 +107,7 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 - 阅读我的简书文章 [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
 - 阅读我的简书文章 [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
+- 阅读我的简书文章 [[iOS]从使用 KVO 监听 readonly 属性说起](http://www.jianshu.com/p/abd238407e0d)
 - 下载我Github上的demo
 
 
