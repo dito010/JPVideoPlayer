@@ -479,5 +479,4 @@ const CGFloat CheckShowStatusRate = 0.01; // Second
     }];
 }
 
-
 @end

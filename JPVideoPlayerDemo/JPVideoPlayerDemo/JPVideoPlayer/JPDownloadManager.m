@@ -229,7 +229,7 @@
     // Fix scheme
     // 替代NSMutableURL, 可以动态修改scheme
     NSURLComponents *actualURLComponents = [[NSURLComponents alloc] initWithURL:_url resolvingAgainstBaseURL:NO];
-    actualURLComponents.scheme = @"http";
+    actualURLComponents.scheme = self.scheme;
     
     // Create request
     // 创建请求

@@ -13,16 +13,36 @@
 
 @interface JPVideoURLAssetResourceLoader()<JPDownloadManagerDelegate>
 
-/** 下载器 */
+/** 
+ The download tool for video file.
+ *下载器 
+ */
 @property (nonatomic, strong)JPDownloadManager *manager;
 
-/** 请求队列 */
+/**
+ * The request queue.
+ * It save the request wait for being given video data.
+ * 请求队列 
+ */
 @property (nonatomic, strong)NSMutableArray *pendingRequests;
 
+/**
+ * The video path to play.
+ * 视频路径
+ */
 @property (nonatomic, strong)NSString *videoPath;
 
-/** 文件名 */
+/** 
+ * File name.
+ * 文件名 
+ */
 @property(nonatomic, strong)NSString *suggestFileName;
+
+/**
+ * The scheme of the video' url.
+ * 视频路径的 scheme
+ */
+@property(nonatomic, strong)NSString *scheme;
 
 @end
 
@@ -50,6 +70,7 @@
     // 所以我们又要通过一些方法来曲线解决这个问题，把我们目标视频URL地址的scheme替换为系统不能识别的scheme
     
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
+    self.scheme = components.scheme;
     components.scheme = @"systemCannotRecognition";
     
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:jp_tempPath];
@@ -104,6 +125,7 @@
     else{
         self.manager = [JPDownloadManager new];
         self.manager.delegate = self;
+        self.manager.scheme = self.scheme;
         [self.manager setUrl:interceptedURL offset:0];
     }
 }

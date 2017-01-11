@@ -12,10 +12,10 @@
  * The style of cell cannot stop in screen center.
  * 播放滑动不可及cell的类型
  */
-typedef NS_ENUM(NSUInteger, PlayUnreachCellStyle) {
-    PlayUnreachCellStyleUp = 1, // top 顶部不可及
-    PlayUnreachCellStyleDown = 2, // bottom 底部不可及
-    PlayUnreachCellStyleNone = 3 // normal 播放滑动可及cell
+typedef NS_OPTIONS(NSInteger, JPPlayUnreachCellStyle) {
+    JPPlayUnreachCellStyleNone = 1 << 0,  // normal 播放滑动可及cell
+    JPPlayUnreachCellStyleUp = 1 << 1,    // top 顶部不可及
+    JPPlayUnreachCellStyleDown = 1<< 2    // bottom 底部不可及
 };
 
 @interface JPVideoPlayerCell : UITableViewCell
@@ -29,6 +29,6 @@ typedef NS_ENUM(NSUInteger, PlayUnreachCellStyle) {
 @property(nonatomic, strong)NSIndexPath *indexPath;
 
 /** cell类型 */
-@property(nonatomic, assign)PlayUnreachCellStyle cellStyle;
+@property(nonatomic, assign)JPPlayUnreachCellStyle cellStyle;
 
 @end

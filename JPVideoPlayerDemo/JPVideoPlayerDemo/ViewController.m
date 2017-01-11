@@ -117,7 +117,10 @@ const CGFloat rowHeight = 210;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerCell class]) bundle:nil] forCellReuseIdentifier:reuseID];
     
     self.pathStrings = @[
+                         // This path is a https.
+                         @"https://bb-bang.com:9002/Test/Vedio/20170110/f49601b6bfe547e0a7d069d9319388f4.mp4",
                          @"http://123.103.15.164:8880/myVirtualImages/14266942.mp4",
+                         
                          // This video saved in amazon, maybe load sowly.
                          @"http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
@@ -128,9 +131,10 @@ const CGFloat rowHeight = 210;
                          @"http://120.25.226.186:32812/resources/videos/minion_06.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_07.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_08.mp4",
+                         
                          // To simulate the cell have no video to play.
                          // 模拟有些cell没有视频
-                         // @"",
+                          @"",
                          @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
                          ];
@@ -176,13 +180,13 @@ const CGFloat rowHeight = 210;
     
     if (self.maxNumCannotPlayVideoCells > 0) {
         if (indexPath.row <= self.maxNumCannotPlayVideoCells-1) {
-            cell.cellStyle = PlayUnreachCellStyleUp;
+            cell.cellStyle = JPPlayUnreachCellStyleUp;
         }
         else if (indexPath.row >= self.pathStrings.count-self.maxNumCannotPlayVideoCells){
-            cell.cellStyle = PlayUnreachCellStyleDown;
+            cell.cellStyle = JPPlayUnreachCellStyleDown;
         }
         else{
-            cell.cellStyle = PlayUnreachCellStyleNone;
+            cell.cellStyle = JPPlayUnreachCellStyleNone;
         }
     }
     
@@ -269,11 +273,11 @@ const CGFloat rowHeight = 210;
             
             // Find the cell cannot stop in screen center first.
             // 优先查找滑动不可及cell
-            if (cell.cellStyle != PlayUnreachCellStyleNone) {
+            if (cell.cellStyle != JPPlayUnreachCellStyleNone) {
                 
                 // Must the all area of the cell is visiable.
                 // 并且不可及cell要全部露出
-                if (cell.cellStyle == PlayUnreachCellStyleUp) {
+                if (cell.cellStyle == JPPlayUnreachCellStyleUp) {
                     CGPoint cellLeftUpPoint = cell.frame.origin;
                     // 不要在边界上
                     cellLeftUpPoint.y += 1;
@@ -284,7 +288,7 @@ const CGFloat rowHeight = 210;
                         finnalCell = cell;
                     }
                 }
-                else if (cell.cellStyle == PlayUnreachCellStyleDown){
+                else if (cell.cellStyle == JPPlayUnreachCellStyleDown){
                     CGPoint cellLeftUpPoint = cell.frame.origin;
                     cellLeftUpPoint.y += cell.bounds.size.height;
                     // 不要在边界上
@@ -298,7 +302,7 @@ const CGFloat rowHeight = 210;
                 }
                 
             }
-            else if(!finnalCell || finnalCell.cellStyle == PlayUnreachCellStyleNone){
+            else if(!finnalCell || finnalCell.cellStyle == JPPlayUnreachCellStyleNone){
                 CGPoint coorCentre = [cell.superview convertPoint:cell.center toView:nil];
                 CGFloat delta = fabs(coorCentre.y-[UIScreen mainScreen].bounds.size.height*0.5);
                 if (delta < gap) {
@@ -399,6 +403,5 @@ const CGFloat rowHeight = 210;
     float blue = arc4random_uniform(256) / 255.0;
     return [UIColor colorWithRed:red green:green blue:blue alpha:1];
 }
-
 
 @end

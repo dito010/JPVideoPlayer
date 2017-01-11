@@ -25,19 +25,19 @@
 @optional
 
 /**
- * Start load data(pass data-length and data-mineType)
+ * Start load data(pass data-length and data-mineType).
  * 开始下载数据(传递长度和类型)
  */
 - (void)manager:(JPDownloadManager *)manager didReceiveVideoLength:(NSUInteger)videoLength mimeType:(NSString *)mimeType;
 
 /**
- * Finished load(pass the save path of file)
+ * Finished load(pass the save path of file).
  * 完成下载(传递文件的路径)
  */
 - (void)didFinishLoadingWithManager:(JPDownloadManager *)manager fileSavePath:(NSString *)filePath;
 
 /**
- * Fail load(pass error)
+ * Fail load(pass error).
  * 下载失败(传递错误码)
  */
 - (void)didFailLoadingWithManager:(JPDownloadManager *)manager WithError:(NSError *)errorCode;
@@ -49,7 +49,6 @@
 -(void)manager:(JPDownloadManager *)manager didReceiveData:(NSData *)data downloadOffset:(NSInteger)offset tempFilePath:(NSString *)filePath;
 
 @end
-
 
 @interface JPDownloadManager : NSObject
 
@@ -96,6 +95,11 @@
  */
 @property(nonatomic, weak)id<JPDownloadManagerDelegate> delegate;
 
+/** 
+ * The scheme of the video' url.
+ * 视频路径的 scheme 
+ */
+@property(nonatomic, strong)NSString *scheme;
 
 /**
  * It be used to save data as temporary file when requesting data from network.
