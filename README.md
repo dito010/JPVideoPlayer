@@ -2,7 +2,7 @@
 <p align="center" >
 <img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
 </p>
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-1.4.2-brightgreen.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-ff69b4.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-blue.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-1.5.0-brightgreen.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-ff69b4.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-blue.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 
 This library provides an video player with cache support in `UITableView`.
 
@@ -72,7 +72,7 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 1.4.2'
+pod 'JPVideoPlayer', '~> 1.5.0'
 end
 ```
 
@@ -141,7 +141,7 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 1.4.2'
+pod 'JPVideoPlayer', '~> 1.5.0'
 end
 ```
 
