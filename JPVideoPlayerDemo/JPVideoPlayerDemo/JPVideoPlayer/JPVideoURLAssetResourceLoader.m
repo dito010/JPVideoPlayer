@@ -166,6 +166,31 @@
     
     // Thank for @DrunkenMouse(http://www.jianshu.com/users/5d853d21f7da/latest_articles) submmit a bug that my mistake of calculate "endOffset".
     
+    /* Nick Xu Mark  
+     针对这个计算
+     long long endOffset = startOffset + dataRequest.requestedLength;
+     
+     经过测试发现这一句是有bug的 ，每次调用这个方法的时候 ，由于存在
+     if (dataRequest.currentOffset != 0) {
+     startOffset = dataRequest.currentOffset;
+     }
+     这个逻辑，对与同一个dataRequest
+     dataRequest.currentOffset是实时在增长的，
+     dataRequest.requestedLength这个是不变的，
+     导致下边计算endOffset会出现问题。我理解的endOffset对于一个dataReqeust来说，应该是不变的
+     
+     所以，应该用
+     long long endOffset = dataRequest.requestedOffset + dataRequest.requestedLength;
+     替代
+     
+     经过测试:使用你原来的计算方法，在下载完一个视频后，pendingRequests里没有remove掉所有的request(我这边通过一个140M左右的视频测试)
+     替换了我的计算方法，在下载完一个视频后，pendingRequests的所有reqeust成功remove
+     
+     这里我不直接修改代码，仅供你参考。
+     
+     最近也看了很多边下边播的帖子，基本都是错误的计算方法。
+     */
+
     long long endOffset = startOffset + dataRequest.requestedLength;
     BOOL didRespondFully = (self.manager.offset + self.manager.downLoadingOffset) >= endOffset;
     
