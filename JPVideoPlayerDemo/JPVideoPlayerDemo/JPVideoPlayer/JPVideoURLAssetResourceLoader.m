@@ -191,7 +191,9 @@
      最近也看了很多边下边播的帖子，基本都是错误的计算方法。
      */
 
-    long long endOffset = startOffset + dataRequest.requestedLength;
+//    long long endOffset = startOffset + dataRequest.requestedLength;
+    long long endOffset = dataRequest.requestedOffset + dataRequest.requestedLength;
+
     BOOL didRespondFully = (self.manager.offset + self.manager.downLoadingOffset) >= endOffset;
     
     return didRespondFully;
