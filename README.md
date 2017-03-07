@@ -22,7 +22,8 @@ You may download my demo to know how to play video in UITableViewController, thi
 - [x] Always play the video of the `UITableViewCell` in screen center when scrolling   
 - [x] A guarantee that the same URL won't be downloaded several times
 - [x] A guarantee that main thread will never be blocked
-
+- [x] Location video play support
+- [x] HTTPS support
 
 ## Requirements
 
@@ -49,14 +50,85 @@ You may download my demo to know how to play video in UITableViewController, thi
 
 ## How To Use
 
+#### Play video, and play audio.
 ```objective-c
 Objective-C:
 
-#import <JPVideoPlayer/JPVideoPlayer.h>
+#import <UIView+WebVideoCache.h>
+
 ...
-JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
-[player playWithUrl:[NSURL URLWithString:videoCell.videoPath] showView:videoCell.containerView];
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoWithURL:url];
 ```
+
+#### Play video muted.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoMutedWithURL:url];
+```
+
+#### Play video, and play audio, display status view.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoDisplayStatusViewWithURL:url];
+```
+
+#### Play video muted, display status view.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoMutedDisplayStatusViewWithURL:url];
+```
+
+#### Custom progress view.
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview perfersProgressViewColor:[UIColor redColor]];
+[aview perfersProgressViewBackgroundColor:[UIColor grayColor]];
+```
+
+#### Player control.
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview stopPlay];
+[aview setPlayerMute:YES];
+```
+
+#### Cache manage.
+```Objective-C:
+
+#import <JPVideoPlayerCache.h>
+
+...
+[[JPVideoPlayerCache sharedImageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+     // do something.
+}];
+
+[[JPVideoPlayerCache sharedImageCache] clearDiskOnCompletion:^{
+    // do something
+}];
+```
+
 
 Installation
 ------------
@@ -73,7 +145,7 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 1.5.0'
+pod 'JPVideoPlayer', '~> 2.0.0'
 end
 ```
 
@@ -93,10 +165,11 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 - [x] 视频播放边下边播
 - [x] 主线程处理切换视频
 - [x] 不阻塞线程，不卡顿，滑动如丝顺滑
-- [x] 当滚屏时采取总是播放处在屏幕中心的那个cell的视频的策略
+- [x] 当滚屏时采取总是播放处在屏幕中心的那个 cell 的视频的策略
 - [x] 保证同一个URL的视频不会重复下载
 - [x] 保证不会阻塞线程
-
+- [x] 支持播放本地视频
+- [x] HTTPS 支持
 
 ## 组件要求
 
@@ -121,14 +194,85 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 ## 如何使用
 
+#### 播放音视频.
 ```objective-c
 Objective-C:
 
-#import <JPVideoPlayer/JPVideoPlayer.h>
+#import <UIView+WebVideoCache.h>
+
 ...
-JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
-[player playWithUrl:[NSURL URLWithString:videoCell.videoPath] showView:videoCell.containerView];
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoWithURL:url];
 ```
+
+#### 静音播放视频.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoMutedWithURL:url];
+```
+
+#### 播放音视频, 并且显示下载进度和缓冲状态.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoDisplayStatusViewWithURL:url];
+```
+
+#### 静音播放视频, 并且显示下载进度和缓冲状态.
+```objective-c
+Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
+[aview jp_playVideoMutedDisplayStatusViewWithURL:url];
+```
+
+#### 自定义进度展示控件.
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview perfersProgressViewColor:[UIColor redColor]];
+[aview perfersProgressViewBackgroundColor:[UIColor grayColor]];
+```
+
+#### 播放控制.
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview stopPlay];
+[aview setPlayerMute:YES];
+```
+
+#### 缓存查询管理.
+```Objective-C:
+
+#import <JPVideoPlayerCache.h>
+
+...
+[[JPVideoPlayerCache sharedImageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+     // do something.
+}];
+
+[[JPVideoPlayerCache sharedImageCache] clearDiskOnCompletion:^{
+    // do something
+}];
+```
+
 
 ## 如何安装
 
@@ -142,7 +286,7 @@ JPVideoPlayer *player = [JPVideoPlayer sharedInstance];
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 1.5.0'
+pod 'JPVideoPlayer', '~> 2.0.0'
 end
 ```
 
