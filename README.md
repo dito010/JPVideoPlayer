@@ -293,5 +293,3 @@ end
 ## 证书
 
 [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/blob/master/LICENSE)
-
-## 如果喜欢我的文章，请帮忙点个👍。
