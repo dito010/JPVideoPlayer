@@ -153,6 +153,8 @@ end
 
 All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/blob/master/LICENSE).
 
+## Architecture
+
 <p align="left" >
 <img src="Images/JPVideoPlayerSequenceDiagram.PNG" title="JPVideoPlayerSequenceDiagram" float=left>
 </p>
