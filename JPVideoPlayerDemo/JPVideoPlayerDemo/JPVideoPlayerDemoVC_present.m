@@ -22,6 +22,8 @@
 
 @end
 
+#warning 注意: 播放视频的工具类是单例, 单例生命周期为整个应用生命周期, 故而须在 `-viewWillDisappear:`(建议)或其他方法里 调用 `stopPlay` 方法来停止视频播放.
+
 @implementation JPVideoPlayerDemoVC_present
 
 -(void)viewDidAppear:(BOOL)animated{

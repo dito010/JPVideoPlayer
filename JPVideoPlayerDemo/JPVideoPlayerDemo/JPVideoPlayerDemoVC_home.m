@@ -72,7 +72,7 @@ typedef NS_ENUM(NSUInteger, JPVideoPlayerDemoScrollDerection) {
 
 @end
 
-#warning 注意: 必须在 `-viewWillDisappear:` 方法里调用 `stopPlay` 方法来停止视频播放.
+#warning 注意: 播放视频的工具类是单例, 单例生命周期为整个应用生命周期, 故而须在 `-viewWillDisappear:`(建议)或其他方法里 调用 `stopPlay` 方法来停止视频播放.
 
 CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
 static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
