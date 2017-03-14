@@ -46,12 +46,12 @@
 
 @interface JPVideoPlayerCache()
 
-@property (nonatomic, nullable) dispatch_queue_t ioQueue;
+@property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
 
 /**
  * OutputStreams.
  */
-@property(nonatomic, strong)NSMutableArray<JPVideoPlayerCacheToken *> *outputStreams;
+@property(nonatomic, strong, nonnull)NSMutableArray<JPVideoPlayerCacheToken *> *outputStreams;
 
 /**
  * completionBlock can be call or not.
@@ -189,6 +189,7 @@
                 if (targetToken.receivedVideoSize==expectedSize) {
                     [targetToken.outputStream close];
                     [self.outputStreams removeObject:targetToken];
+                    self.completionBlockEnable = NO;
                 }
             });
         }
@@ -199,6 +200,7 @@
 - (void)cancel:(nullable JPVideoPlayerCacheToken *)token{
     if (token) {
         [self.outputStreams removeObject:token];
+        [self cancelCurrentComletionBlock];
     }
 }
 

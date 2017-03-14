@@ -10,7 +10,7 @@
  */
 
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "JPVideoPlayerDownloader.h"
 #import "JPVideoPlayerCache.h"
 #import "JPVideoPlayerOperation.h"
@@ -100,6 +100,9 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
 
 @property (strong, nonatomic, readonly, nullable) JPVideoPlayerDownloader *videoDownloader;
 
+
+#pragma mark - Singleton and initialization
+
 /**
  * Returns global JPVideoPlayerManager instance.
  *
@@ -113,10 +116,14 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  */
 - (nonnull instancetype)initWithCache:(nonnull JPVideoPlayerCache *)cache downloader:(nonnull JPVideoPlayerDownloader *)downloader NS_DESIGNATED_INITIALIZER;
 
+
+# pragma mark - Video Data Load And Play Video Options
+
 /**
  * Downloads the video for the given URL if not present in cache or return the cached version otherwise.
  
  * @param url            The URL to the video.
+ * @param showView       The view of video layer display on.
  * @param options        A mask to specify options to use for this request.
  * @param progressBlock  A block called while image is downloading.
  * @param completedBlock A block called when operation has been completed.
@@ -132,7 +139,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return Returns an NSObject conforming to JPVideoPlayerOperation. Should be an instance of JPVideoPlayerDownloaderOperation.
  */
-- (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+- (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url showOnView:(nullable UIView *)showView options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
 
 /**
  * Cancels all download operations in the queue.
@@ -143,5 +150,27 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  * Return the cache key for a given URL.
  */
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url;
+
+
+# pragma mark - Play Control
+
+/**
+ * Call this method to stop play video.
+ */
+-(void)stopPlay;
+
+/**
+ * Call this method to play or pause audio of current video.
+ *
+ * @param mute the audio status will change to.
+ */
+-(void)setPlayerMute:(BOOL)mute;
+
+/**
+ * Call this method to get the audio statu for current player.
+ *
+ * @return the audio status for current player.
+ */
+-(BOOL)playerIsMute;
 
 @end

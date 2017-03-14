@@ -48,6 +48,7 @@ static char activityIndicatorViewKey;
 }
 
 -(void)showProgressView{
+    self.progressView.progress = 0;
     self.progressView.hidden = NO;
 }
 

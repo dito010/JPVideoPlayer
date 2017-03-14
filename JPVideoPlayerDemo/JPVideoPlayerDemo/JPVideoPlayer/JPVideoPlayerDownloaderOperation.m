@@ -266,7 +266,6 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 }
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
-    
     @synchronized(self) {
         self.dataTask = nil;
         

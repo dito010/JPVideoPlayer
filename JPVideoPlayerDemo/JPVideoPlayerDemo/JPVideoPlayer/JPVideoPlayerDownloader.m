@@ -147,8 +147,6 @@
 
 - (void)cancelAllDownloads {
     [self.downloadQueue cancelAllOperations];
-    if (self.URLOperations.count)
-        [self.URLOperations removeAllObjects];
 }
 
 
@@ -177,10 +175,11 @@
             operation.completionBlock = ^{
                 JPVideoPlayerDownloaderOperation *soperation = woperation;
                 if (!soperation) return;
-                
-                if (self.URLOperations[url] == soperation) {
-                    [self.URLOperations removeObjectForKey:url];
-                };
+                if (self.URLOperations.allKeys.count>0) {
+                    if (self.URLOperations[url] == soperation) {
+                        [self.URLOperations removeObjectForKey:url];
+                    };
+                }
             };
         }
         id downloadOperationCancelToken = [operation addHandlersForProgress:progressBlock error:errorBlock];

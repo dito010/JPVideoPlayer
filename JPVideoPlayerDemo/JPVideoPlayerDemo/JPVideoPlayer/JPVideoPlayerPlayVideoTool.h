@@ -14,7 +14,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "JPVideoPlayerManager.h"
 
-extern NSString * _Nonnull const JPVideoPlayerVideoViewDeallocNotification;
 extern CGFloat const JPVideoPlayerLayerFrameY;
 
 @interface JPVideoPlayerPlayVideoToolItem : NSObject

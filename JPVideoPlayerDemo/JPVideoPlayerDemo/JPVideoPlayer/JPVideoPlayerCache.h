@@ -16,14 +16,21 @@
 @class JPVideoPlayerCacheConfig;
 
 typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType) {
+   
     /**
      * The video wasn't available the JPVideoPlayer caches, but was downloaded from the web.
      */
     JPVideoPlayerCacheTypeNone,
+    
     /**
      * The video was obtained from the disk cache.
      */
     JPVideoPlayerCacheTypeDisk,
+    
+    /**
+     * The video was obtained from local file.
+     */
+    JPVideoPlayerCacheTypeLocation
 };
 
 typedef void(^JPVideoPlayerCacheQueryCompletedBlock)(NSString * _Nullable videoPath, JPVideoPlayerCacheType cacheType);

@@ -14,6 +14,11 @@
 
 @interface UIView (WebVideoCacheOperation)
 
+/** 
+ * The url of current playing video data. 
+ */
+@property(nonatomic, nullable)NSURL *currentPlayingURL;
+
 /**
  *  Set the video load operation (storage in a UIView based dictionary).
  *

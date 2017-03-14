@@ -14,8 +14,8 @@
 #import "JPVideoPlayerResourceLoader.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "JPVideoPlayerDownloaderOperation.h"
+#import "JPVideoPlayerCompat.h"
 
-NSString * _Nonnull const JPVideoPlayerVideoViewDeallocNotification = @"JPVideoPlayerVideoViewDeallocNotification";
 CGFloat const JPVideoPlayerLayerFrameY = 2;
 
 @interface JPVideoPlayerPlayVideoToolItem()
@@ -80,10 +80,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     
     self.cancelled = YES;
     
-    [self reset];
-    
     [self.unownShowView hideProgressView];
     [self.unownShowView hideActivityIndicatorView];
+    
+    [self reset];
 }
 
 -(void)pausePlayVideo{
@@ -95,7 +95,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 }
 
 -(void)reset{
-    
     // remove video layer from superlayer.
     if (self.currentPlayerLayer.superlayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
@@ -123,7 +122,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 @interface JPVideoPlayerPlayVideoTool()
 
-@property(nonatomic, strong, nullable)JPVideoPlayerPlayVideoToolItem *currentPlayVideoItem;
+@property(nonatomic, strong, nonnull)NSMutableArray<JPVideoPlayerPlayVideoToolItem *> *playVideoItems;
 
 @end
 
@@ -134,9 +133,17 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     static id instance;
     dispatch_once(&onceItem, ^{
         instance = [self new];
-        [(JPVideoPlayerPlayVideoTool *)instance addObserverOnce];
     });
     return instance;
+}
+
+-(instancetype)init{
+    self = [super init];
+    if (self) {
+        [self addObserverOnce];
+        _playVideoItems = [NSMutableArray array];
+    }
+    return self;
 }
 
 
@@ -144,11 +151,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 #pragma mark Public
 
 -(nullable JPVideoPlayerPlayVideoToolItem *)playExistedVideoWithURL:(NSURL * _Nullable)url fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath options:(JPVideoPlayerOptions)options showOnView:(UIView * _Nullable)showView error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error{
-    
-    // reset.
-    if (self.currentPlayVideoItem) {
-        [self.currentPlayVideoItem reset];
-    }
     
     if (fullVideoCachePath.length==0) {
         if (error) error([NSError errorWithDomain:@"the file path is disable" code:0 userInfo:nil]);
@@ -195,16 +197,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         item.player.muted = YES;
     }
     
+    @synchronized (self) {
+        [self.playVideoItems addObject:item];
+    }
     self.currentPlayVideoItem = item;
+    
     return item;
 }
 
 -(nullable JPVideoPlayerPlayVideoToolItem *)playVideoWithURL:(NSURL * _Nullable)url tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath options:(JPVideoPlayerOptions)options videoFileExceptSize:(NSUInteger)exceptSize videoFileReceivedSize:(NSUInteger)receivedSize showOnView:(UIView * _Nullable)showView error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error{
-    
-    // reset.
-    if (self.currentPlayVideoItem) {
-        [self.currentPlayVideoItem reset];
-    }
     
     if (tempVideoCachePath.length==0) {
         if (error) error([NSError errorWithDomain:@"the file path is disable" code:0 userInfo:nil]);
@@ -260,6 +261,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         item.player.muted = YES;
     }
     
+    @synchronized (self) {
+        [self.playVideoItems addObject:item];
+    }
+    self.currentPlayVideoItem = item;
+    
     // play.
     [self.currentPlayVideoItem.resourceLoader didReceivedDataCacheInDiskByTempPath:tempVideoCachePath videoFileExceptSize:exceptSize videoFileReceivedSize:receivedSize];
     
@@ -286,9 +292,13 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 }
 
 -(void)stopPlay{
-    if (self.currentPlayVideoItem) {
-        [self.currentPlayVideoItem stopPlayVideo];
-        self.currentPlayVideoItem = nil;
+    self.currentPlayVideoItem = nil;
+    for (JPVideoPlayerPlayVideoToolItem *item in self.playVideoItems) {
+        [item stopPlayVideo];
+    }
+    @synchronized (self) {
+        if (self.playVideoItems)
+            [self.playVideoItems removeAllObjects];
     }
 }
 
@@ -303,7 +313,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appReceivedMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startDownload) name:JPVideoPlayerDownloadStartNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedDownload) name:JPVideoPlayerDownloadFinishNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showViewDealloc) name:JPVideoPlayerVideoViewDeallocNotification object:nil];
 }
 
 -(void)appReceivedMemoryWarning{
@@ -316,13 +325,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (void)appDidEnterPlayGround{
     [self.currentPlayVideoItem resumePlayVideo];
-}
-
--(void)showViewDealloc{
-    if (self.currentPlayVideoItem.unownShowView) {
-        [self.currentPlayVideoItem stopPlayVideo];
-        self.currentPlayVideoItem = nil;
-    }
 }
 
 
@@ -391,7 +393,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 }
 
 -(void)showActivaityIndicatorView{
-    
     if (self.currentPlayVideoItem.playerOptions&JPVideoPlayerShowActivityIndicatorView)
         [self.currentPlayVideoItem.unownShowView showActivityIndicatorView];
 }
@@ -414,7 +415,9 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 }
 
 -(void)displayVideoPicturesOnShowLayer{
-    [self.currentPlayVideoItem.unownShowView.layer addSublayer:self.currentPlayVideoItem.currentPlayerLayer];
+    if (!self.currentPlayVideoItem.isCancelled) {
+        [self.currentPlayVideoItem.unownShowView.layer addSublayer:self.currentPlayVideoItem.currentPlayerLayer];
+    }
 }
 
 @end

@@ -15,6 +15,7 @@
 #import "JPVideoPlayerOperation.h"
 
 static char loadOperationKey;
+static char currentPlayingURLKey;
 
 typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
 
@@ -22,6 +23,14 @@ typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
 
 #pragma mark -----------------------------------------
 #pragma mark Public
+
+-(void)setCurrentPlayingURL:(NSURL *)currentPlayingURL{
+    objc_setAssociatedObject(self, &currentPlayingURLKey, currentPlayingURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(NSURL *)currentPlayingURL{
+    return objc_getAssociatedObject(self, &currentPlayingURLKey);
+}
 
 -(void)jp_setVideoLoadOperation:(id)operation forKey:(NSString *)key{
     if (key) {

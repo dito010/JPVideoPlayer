@@ -38,6 +38,16 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
      * Useful for testing purposes. Use with caution in production.
      */
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
+    
+    /**
+     * Use this flag to display progress view when play video from web.
+     */
+    JPVideoPlayerDownloaderShowProgressView = 1 << 4,
+    
+    /**
+     * Use this flag to display activity indicator view when video player is buffering.
+     */
+    JPVideoPlayerDownloaderShowActivityIndicatorView = 1 << 5,
 };
 
 typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString *_Nullable tempCachedVideoPath, NSURL * _Nullable targetURL);

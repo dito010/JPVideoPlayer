@@ -67,7 +67,6 @@
  *
  * @param url            The url for the video.
  * @param options        The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param operationKey   A string to be used as the operation key. If nil, will use the class name.
  * @param progressBlock  A block called while video is downloading.
  *                       @note the progress block is executed on a background queue.
  * @param completedBlock A block called when operation has been completed. This block has no return value 
@@ -78,7 +77,6 @@
  */
 - (void)jp_playVideoWithURL:(nullable NSURL *)url
                            options:(JPVideoPlayerOptions)options
-                      operationKey:(nullable NSString *)operationKey
                           progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
                          completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
 

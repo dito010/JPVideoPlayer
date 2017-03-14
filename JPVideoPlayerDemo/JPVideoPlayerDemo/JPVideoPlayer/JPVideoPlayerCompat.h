@@ -19,3 +19,8 @@
     }
 #endif
 
+#ifdef DEBUG
+#define JPLog(FORMAT, ...); fprintf(stderr,"%s\n",[[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+#else
+#define JPLog(...);
+#endif
