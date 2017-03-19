@@ -158,7 +158,7 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 ## Architecture
 
 <p align="left" >
-<img src="Images/JPVideoPlayerSequenceDiagram.PNG" title="JPVideoPlayerSequenceDiagram" float=left>
+<img src="Images/JPVIdeoPlayerSequenceDiagram.PNG" title="JPVideoPlayerSequenceDiagram" float=left>
 </p>
 
 
