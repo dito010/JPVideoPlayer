@@ -15,7 +15,7 @@
 #import "JPVideoPlayerDemoCell.h"
 #import "JPVideoPlayerDemoVC_present.h"
 #import "JPVideoPlayerCache.h"
-#import "JPVideoPlayerDemoVC_home+VideoPlay.h"
+#import "UITableView+VideoPlay.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -55,14 +55,16 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    if (!self.playingCell) {
+    if (!self.tableView.playingCell) {
+        
         // Find the first cell need to play video in visiable cells.
         // 在可见cell中找第一个有视频的进行播放.
-        [self playVideoInVisiableCells];
+        [self.tableView playVideoInVisiableCells];
     }
     else{
-        NSURL *url = [NSURL URLWithString:self.playingCell.videoPath];
-        [self.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
+        
+        NSURL *url = [NSURL URLWithString:self.tableView.playingCell.videoPath];
+        [self.tableView.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
     }
     
     self.tableViewRange.hidden = NO;
@@ -71,8 +73,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
-    if (self.playingCell) {
-        [self.playingCell.videoImv stopPlay];
+    if (self.tableView.playingCell) {
+        [self.tableView.playingCell.videoImv stopPlay];
     }
     
     self.tableViewRange.hidden = YES;
@@ -88,15 +90,17 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     JPVideoPlayerDemoCell *cell = [tableView dequeueReusableCellWithIdentifier:JPVideoPlayerDemoReuseID forIndexPath:indexPath];
     cell.videoPath = self.pathStrings[indexPath.row];
     cell.indexPath = indexPath;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    if (self.maxNumCannotPlayVideoCells > 0) {
-        if (indexPath.row <= self.maxNumCannotPlayVideoCells-1) { // 上不可及
+    
+    if (self.tableView.maxNumCannotPlayVideoCells > 0) {
+        if (indexPath.row <= self.tableView.maxNumCannotPlayVideoCells-1) { // 上不可及
             cell.cellStyle = JPPlayUnreachCellStyleUp;
         }
-        else if (indexPath.row >= self.pathStrings.count-self.maxNumCannotPlayVideoCells){ // 下不可及
+        else if (indexPath.row >= self.pathStrings.count-self.tableView.maxNumCannotPlayVideoCells){ // 下不可及
             cell.cellStyle = JPPlayUnreachCellStyleDown;
         }
         else{
@@ -133,7 +137,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     
     if (decelerate == NO)
         // scrollView已经完全静止
-        [self handleScrollStop];
+        [self.tableView handleScrollStop];
 }
 
 /**
@@ -143,7 +147,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
     // scrollView已经完全静止
-    [self handleScrollStop];
+    [self.tableView handleScrollStop];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -153,7 +157,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     
     // Handle cyclic utilization
     // 处理循环利用
-    [self handleQuickScroll];
+    [self.tableView handleQuickScroll];
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -161,7 +165,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 -(void)handleScrollDerectionWithOffset:(CGFloat)offsetY{
-    self.currentDerection = (offsetY-self.offsetY_last>0) ? JPVideoPlayerDemoScrollDerectionUp : JPVideoPlayerDemoScrollDerectionDown;
+    self.tableView.currentDerection = (offsetY-self.offsetY_last>0) ? JPVideoPlayerDemoScrollDerectionUp : JPVideoPlayerDemoScrollDerectionDown;
     self.offsetY_last = offsetY;
 }
 
@@ -214,7 +218,11 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          // 模拟有些cell没有视频
                          // @"",
                          @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
-                         @"http://120.25.226.186:32812/resources/videos/minion_11.mp4"
+                         @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
+                         @"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4",
+                         @"http://lavaweb-10015286.video.myqcloud.com/lava-guitar-creation-2.mp4",
+                         @"http://lavaweb-10015286.video.myqcloud.com/hong-song-mei-gui-mu-2.mp4",
+                         @"http://lavaweb-10015286.video.myqcloud.com/ideal-pick-2.mp4",
                          ];
     
     

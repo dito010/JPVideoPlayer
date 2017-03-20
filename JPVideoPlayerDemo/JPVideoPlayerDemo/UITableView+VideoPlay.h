@@ -1,16 +1,12 @@
-/*
- * This file is part of the JPVideoPlayer package.
- * (c) NewPan <13246884282@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Click https://github.com/Chris-Pan
- * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
- */
+//
+//  UITableView+VideoPlay.h
+//  JPVideoPlayerDemo
+//
+//  Created by lava on 2017/3/20.
+//  Copyright © 2017年 NewPan. All rights reserved.
+//
 
-
-#import "JPVideoPlayerDemoVC_home.h"
+#import <UIKit/UIKit.h>
 
 @class JPVideoPlayerDemoCell;
 
@@ -27,7 +23,7 @@ typedef NS_ENUM(NSUInteger, JPVideoPlayerDemoScrollDerection) {
     JPVideoPlayerDemoScrollDerectionDown = 2 // 向下滚动
 };
 
-@interface JPVideoPlayerDemoVC_home (VideoPlay)
+@interface UITableView (VideoPlay)
 
 /**
  * The cell of playing video.

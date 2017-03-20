@@ -1,26 +1,23 @@
-/*
- * This file is part of the JPVideoPlayer package.
- * (c) NewPan <13246884282@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Click https://github.com/Chris-Pan
- * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
- */
+//
+//  UITableView+VideoPlay.m
+//  JPVideoPlayerDemo
+//
+//  Created by lava on 2017/3/20.
+//  Copyright © 2017年 NewPan. All rights reserved.
+//
 
-
-#import "JPVideoPlayerDemoVC_home+VideoPlay.h"
+#import "UITableView+VideoPlay.h"
 #import "JPVideoPlayerDemoCell.h"
 #import <objc/runtime.h>
 #import "UIView+WebVideoCache.h"
 
+
 CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
-@implementation JPVideoPlayerDemoVC_home (VideoPlay)
+@implementation UITableView (VideoPlay)
 
 -(void)playVideoInVisiableCells{
     
-    NSArray *visiableCells = [self.tableView visibleCells];
+    NSArray *visiableCells = [self visibleCells];
     
     // Find first cell need play video in visiable cells.
     // 在可见cell中找到第一个有视频的cell
@@ -97,14 +94,14 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
     // 找到下一个要播放的cell(最在屏幕中心的).
     
     JPVideoPlayerDemoCell *finnalCell = nil;
-    NSArray *visiableCells = [self.tableView visibleCells];
+    NSArray *visiableCells = [self visibleCells];
     CGFloat gap = MAXFLOAT;
     
     for (JPVideoPlayerDemoCell *cell in visiableCells) {
         
         @autoreleasepool {
             
-            CGRect windowRect = self.view.window.bounds;
+            CGRect windowRect = self.window.bounds;
             windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
             windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
             
@@ -169,7 +166,7 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
         // 不要在边界上.
         cellLeftUpPoint.y -= 1;
         CGPoint coorPoint = [self.playingCell.superview convertPoint:cellLeftDownPoint toView:nil];
-        CGRect windowRect = self.view.window.bounds;
+        CGRect windowRect = self.window.bounds;
         // because have UINavigationBar here.
         windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
         windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
@@ -182,7 +179,7 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
         // 不要在边界上.
         cellLeftUpPoint.y += 1;
         CGPoint coorPoint = [self.playingCell.superview convertPoint:cellLeftUpPoint toView:nil];
-        CGRect windowRect = self.view.window.bounds;
+        CGRect windowRect = self.window.bounds;
         // because have UINavigationBar here.
         windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
         windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
@@ -254,10 +251,10 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
     NSDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (!dict) {
         dict = @{
-                                           @"4" : @"1",
-                                           @"3" : @"1",
-                                           @"2" : @"0"
-                                           };
+                 @"4" : @"1",
+                 @"3" : @"1",
+                 @"2" : @"0"
+                 };
         objc_setAssociatedObject(self, @selector(setDictOfVisiableAndNotPlayCells:), dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return dict;
