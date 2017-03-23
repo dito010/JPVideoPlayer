@@ -3,7 +3,7 @@
 <img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
 </p>
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-2.0.1-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-2.0.2-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 ![pod](https://img.shields.io/travis/rust-lang/rust/master.svg)
 
 This library provides an video player with cache support in `UITableView`.
@@ -122,11 +122,11 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 #import <JPVideoPlayerCache.h>
 
 ...
-[[JPVideoPlayerCache sharedImageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+[[JPVideoPlayerCache sharedCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
      // do something.
 }];
 
-[[JPVideoPlayerCache sharedImageCache] clearDiskOnCompletion:^{
+[[JPVideoPlayerCache sharedCache] clearDiskOnCompletion:^{
     // do something
 }];
 ```
@@ -147,7 +147,7 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 2.0.1'
+pod 'JPVideoPlayer', '~> 2.0.2'
 end
 ```
 
@@ -272,11 +272,11 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 #import <JPVideoPlayerCache.h>
 
 ...
-[[JPVideoPlayerCache sharedImageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+[[JPVideoPlayerCache sharedCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
      // do something.
 }];
 
-[[JPVideoPlayerCache sharedImageCache] clearDiskOnCompletion:^{
+[[JPVideoPlayerCache sharedCache] clearDiskOnCompletion:^{
     // do something
 }];
 ```
@@ -294,7 +294,7 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 2.0.1'
+pod 'JPVideoPlayer', '~> 2.0.2'
 end
 ```
 
