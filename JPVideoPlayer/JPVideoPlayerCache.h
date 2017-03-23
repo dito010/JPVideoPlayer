@@ -66,7 +66,7 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *
  * @return JPVideoPlayerCache global instance.
  */
-+ (nonnull instancetype)sharedImageCache;
++ (nonnull instancetype)sharedCache;
 
 
 # pragma mark - Store Video Options

@@ -88,7 +88,7 @@
     return self;
 }
 
-+ (nonnull instancetype)sharedImageCache {
++ (nonnull instancetype)sharedCache {
     static dispatch_once_t once;
     static id instance;
     dispatch_once(&once, ^{
@@ -294,7 +294,7 @@
 -(void)removeTempCacheForKey:(NSString * _Nonnull)key withCompletion:(nullable JPVideoPlayerNoParamsBlock)completion{
     dispatch_async(self.ioQueue, ^{
         NSString *path = [JPVideoPlayerCachePathTool videoCachePathForAllTemporaryFile];
-        path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedImageCache] cacheFileNameForKey:key]];
+        path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedCache] cacheFileNameForKey:key]];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if ([fileManager fileExistsAtPath:path]) {
             [fileManager removeItemAtPath:path error:nil];

@@ -33,7 +33,7 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
     NSString *path = [self videoCachePathForAllTemporaryFile];
     if (path.length!=0) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedImageCache] cacheFileNameForKey:key]];
+        path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedCache] cacheFileNameForKey:key]];
         if (![fileManager fileExistsAtPath:path]) {
             [fileManager createFileAtPath:path contents:nil attributes:nil];
             // For Test
@@ -45,7 +45,7 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 
 +(nonnull NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
     NSString *path = [self videoCachePathForAllFullFile];
-    path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedImageCache] cacheFileNameForKey:key]];
+    path = [path stringByAppendingPathComponent:[[JPVideoPlayerCache sharedCache] cacheFileNameForKey:key]];
     return path;
 }
 

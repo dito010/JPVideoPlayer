@@ -228,7 +228,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     
     // Count all cache size.
     // 计算缓存大小
-    [[JPVideoPlayerCache sharedImageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+    [[JPVideoPlayerCache sharedCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
         printf("Total cache size, 总缓存大小: %0.2f/MB, 总缓存文件数: %ld, 你可以使用框架提供的方法, 清除所有缓存或指定的缓存, 具体请查看 `JPVideoPlayerCache`\n", (unsigned long)totalSize/1024./1024., (unsigned long)fileCount);
     }];
     

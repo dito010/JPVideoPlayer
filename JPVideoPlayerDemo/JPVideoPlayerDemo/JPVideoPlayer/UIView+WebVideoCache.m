@@ -67,7 +67,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 }
 
 -(void)stopPlay{
-    [[JPVideoPlayerCache sharedImageCache] cancelCurrentComletionBlock];
+    [[JPVideoPlayerCache sharedCache] cancelCurrentComletionBlock];
     [[JPVideoPlayerDownloader sharedDownloader] cancelAllDownloads];
     [[JPVideoPlayerManager sharedManager]stopPlay];
 }

@@ -204,7 +204,7 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
             for (JPVideoPlayerDownloaderProgressBlock progressBlock in [self callbacksForKey:kProgressCallbackKey]) {
                 
                 // May the free size of the device less than the expected size of the video data.
-                if (![[JPVideoPlayerCache sharedImageCache] haveFreeSizeToCacheFileWithSize:expected]) {
+                if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
                     if (completionHandler) {
                         completionHandler(NSURLSessionResponseCancel);
                     }

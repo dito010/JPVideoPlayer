@@ -85,7 +85,7 @@
 }
 
 - (nonnull instancetype)init {
-    JPVideoPlayerCache *cache = [JPVideoPlayerCache sharedImageCache];
+    JPVideoPlayerCache *cache = [JPVideoPlayerCache sharedCache];
     JPVideoPlayerDownloader *downloader = [JPVideoPlayerDownloader sharedDownloader];
     return [self initWithCache:cache downloader:downloader];
 }
