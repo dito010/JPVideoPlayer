@@ -14,7 +14,37 @@
 #import "JPVideoPlayerManager.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 
-@interface UIView (WebVideoCache)
+@protocol JPVideoPlayerDelegate <NSObject>
+
+@optional
+
+/** 
+ * Controls which video should be downloaded when the video is not found in the cache.
+ *
+ * @param   videoURL the url of the video to be download.
+ *
+ * @return Return NO to prevent the downloading of the video on cache misses. If not implemented, YES is implied.
+ */
+-(BOOL)shouldDownloadVideoForURL:(nonnull NSURL *)videoURL;
+
+/**
+ * Controls which video should automatic replay when the video is play completed.
+ *
+ * @param videoURL  the url of the video to be play.
+ *
+ * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
+ */
+-(BOOL)shouldAutoReplayAfterPlayCompleteForURL:(nonnull NSURL *)videoURL;
+
+@end
+
+@interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
+
+#pragma mark - Property
+
+@property(nonatomic, nullable)id<JPVideoPlayerDelegate> videoPlayerDelegate;
+
+#pragma mark - Play Video Methods
 
 /**
  * Play `video` with an `url` on the view.
@@ -79,6 +109,8 @@
                            options:(JPVideoPlayerOptions)options
                           progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
                          completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+
+#pragma mark - Play Control
 
 /**
  * Call this method to stop play video.

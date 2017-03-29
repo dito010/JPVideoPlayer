@@ -13,11 +13,13 @@
 #import "JPVideoPlayerDemoVC_present.h"
 #import "UIView+WebVideoCache.h"
 
-@interface JPVideoPlayerDemoVC_present ()
+@interface JPVideoPlayerDemoVC_present ()<JPVideoPlayerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *videoImv;
 
-@property (weak, nonatomic) IBOutlet UISwitch *sw;
+@property (weak, nonatomic) IBOutlet UISwitch *muteSwitch;
+
+@property (weak, nonatomic) IBOutlet UISwitch *autoReplaySwitch;
 
 @end
 
@@ -25,12 +27,18 @@
 
 @implementation JPVideoPlayerDemoVC_present
 
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    
+    self.videoImv.videoPlayerDelegate = self;
+}
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
     [self.videoImv jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
     [self.videoImv perfersProgressViewColor:[UIColor redColor]];
-    self.sw.on = ![self.videoImv playerIsMute];
+    self.muteSwitch.on = ![self.videoImv playerIsMute];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -39,16 +47,29 @@
     [self.videoImv stopPlay];
 }
 
-- (IBAction)muteSwitch:(UISwitch *)sw {
-    [self.videoImv setPlayerMute:!sw.on];
-}
-
 -(BOOL)prefersStatusBarHidden{
     return YES;
+}
+
+
+#pragma mark --------------------------------------------------
+#pragma mark Click Events
+
+- (IBAction)muteSwitch:(UISwitch *)sw {
+    [self.videoImv setPlayerMute:!sw.on];
 }
 
 - (IBAction)closeBtnClick:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+
+#pragma mark --------------------------------------------------
+#pragma mark JPVideoPlayerDelegate
+
+-(BOOL)shouldAutoReplayAfterPlayCompleteForURL:(NSURL *)videoURL{
+    return self.autoReplaySwitch.on;
+}
+
 
 @end

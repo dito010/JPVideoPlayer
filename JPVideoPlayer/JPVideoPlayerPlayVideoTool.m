@@ -20,6 +20,11 @@ CGFloat const JPVideoPlayerLayerFrameY = 2;
 
 @interface JPVideoPlayerPlayVideoToolItem()
 
+/** 
+ * The playing URL
+ */
+@property(nonatomic, strong, nullable)NSURL *url;
+
 /**
  * The Player to play video.
  */
@@ -168,6 +173,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:videoPathURL options:nil];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
     {
+        item.url = url;
         item.currentPlayerItem = playerItem;
         [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
         [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
@@ -228,6 +234,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
     {
+        item.url = url;
         item.currentPlayerItem = playerItem;
         [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
         [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
@@ -332,6 +339,14 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 #pragma mark AVPlayer Observer
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification{
+    
+    // ask need automatic replay or not.
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:shouldAutoReplayVideoForURL:)]) {
+        if (![self.delegate playVideoTool:self shouldAutoReplayVideoForURL:self.currentPlayVideoItem.url]) {
+            return;
+        }
+    }
+    
     // Seek the start point of file data and repeat play, this handle have no memory surge.
     __weak typeof(self.currentPlayVideoItem) weak_Item = self.currentPlayVideoItem;
     [self.currentPlayVideoItem.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {

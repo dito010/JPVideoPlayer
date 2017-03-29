@@ -17,6 +17,7 @@
 #import "JPVideoPlayerDownloaderOperation.h"
 #import "UIView+WebVideoCacheOperation.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
+#import "UIView+WebVideoCache.h"
 
 @interface JPVideoPlayerCombinedOperation : NSObject <JPVideoPlayerOperation>
 
@@ -57,7 +58,7 @@
 @end
 
 
-@interface JPVideoPlayerManager()
+@interface JPVideoPlayerManager()<JPVideoPlayerPlayVideoToolDelegate>
 
 @property (strong, nonatomic, readwrite, nonnull) JPVideoPlayerCache *videoCache;
 
@@ -158,6 +159,7 @@
                     completedBlock(nil, error, JPVideoPlayerCacheTypeLocation, url);
                 }
             }];
+            [JPVideoPlayerPlayVideoTool sharedTool].delegate = self;
         }
         else{
             [self callCompletionBlockForOperation:operation completion:completedBlock videoPath:nil error:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil] cacheType:JPVideoPlayerCacheTypeNone url:url];
@@ -223,6 +225,7 @@
                                                 }
                                             }
                                         }];
+                                        [JPVideoPlayerPlayVideoTool sharedTool].delegate = self;
                                     }
                                     else{
                                         NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:targetURL];
@@ -315,6 +318,7 @@
                             completedBlock(nil, error, JPVideoPlayerCacheTypeDisk, url);
                         }
                     }];
+                    [JPVideoPlayerPlayVideoTool sharedTool].delegate = self;
                 }
                 
                 [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:videoPath error:nil cacheType:JPVideoPlayerCacheTypeDisk url:url];
@@ -373,6 +377,17 @@
 
 -(BOOL)playerIsMute{
     return self.mute;
+}
+
+
+#pragma mark --------------------------------------------------
+#pragma mark JPVideoPlayerPlayVideoToolDelegate
+
+-(BOOL)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(NSURL *)videoURL{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
+        return [self.delegate videoPlayerManager:self shouldAutoReplayForURL:videoURL];
+    }
+    return YES;
 }
 
 
