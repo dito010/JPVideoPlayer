@@ -1,0 +1,12 @@
+PODS:
+  - JPVideoPlayer (2.0.3)
+
+DEPENDENCIES:
+  - JPVideoPlayer (~> 2.0.3)
+
+SPEC CHECKSUMS:
+  JPVideoPlayer: 627c8cd7ffc22fdf760ab4c7306c64eb713f3ab0
+
+PODFILE CHECKSUM: a2284e77196a73e41c5419a6b1e7ecb8b30fbe1d
+
+COCOAPODS: 1.2.0

@@ -1,0 +1,644 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		000AAB72065C14EF4C7417243FAC577D /* JPVideoPlayerDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = E26C0514B01C0EAAD160EB2BB1E09684 /* JPVideoPlayerDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		057DF5A63C017C6BCA13931B1E127570 /* JPVideoPlayerPlayVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E862A5D87D035F219C566F00548DA395 /* JPVideoPlayerPlayVideoTool.m */; };
+		0B43B9D28F47D0D34BABF1B815994DB8 /* JPVideoPlayerActivityIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = FE1628F2ED3BDDAAF562A83FC43A1434 /* JPVideoPlayerActivityIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0F7E5624F282812DFAADEA1A7272DD11 /* JPVideoPlayerCacheConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C764A6D3544482C7951482C374F0C23 /* JPVideoPlayerCacheConfig.m */; };
+		113E7CE2AB063637CAC963790CAF5FEB /* JPVideoPlayerResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 382CD3EBD1C94F38DFC2CF564ECBFA44 /* JPVideoPlayerResourceLoader.m */; };
+		137A0119E97D4AEE19254E370269F8A5 /* UIView+WebVideoCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D5BE21D08AA0A28F2AE9FAE62802EA0 /* UIView+WebVideoCacheOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		17A1EE2DF065C577C6E94C6464B18544 /* JPVideoPlayerPlayVideoTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 657C7B035A32A69B779DCCE3C65D9966 /* JPVideoPlayerPlayVideoTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		271C1E356B1982D73331CAB2CC7B3D83 /* JPVideoPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEDA2315A70EACCEAE683B4BB926C41 /* JPVideoPlayerManager.m */; };
+		2FCBB886C96E49242C8B8207E2547775 /* JPVideoPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B40DAE545615D488B94BAF4F7BC393 /* JPVideoPlayerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		316A57E2FE8477196CB7CB3DF67F74BF /* UIView+WebVideoCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CF268490B3DD63FE51342463B077139 /* UIView+WebVideoCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		346E78B548E239C8A5E0ECF6C51D33CC /* JPVideoPlayerCacheConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = C9F7099D232CCAAC5C8582FF2B98C51F /* JPVideoPlayerCacheConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		38E43B79FA82D6512A9B4F60963F7F30 /* Pods-JPVideoPlayerDemo_swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD3708B0E0448A24DAE05674D25759 /* Pods-JPVideoPlayerDemo_swift-dummy.m */; };
+		508A73AC7D7BCA2936800FA58349C350 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */; };
+		50D61F05A8374A2EA0396FA114F5FD5B /* JPVideoPlayerDownloaderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E393358A9196C8CFCBACC0BD7145652 /* JPVideoPlayerDownloaderOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53497EE6E8C3BD42B16AA36FF2504B18 /* JPVideoPlayerCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 188DE670D9BEF9357838C78D041D24E5 /* JPVideoPlayerCache.m */; };
+		5E6140715095CC4E32D6A980FF9B00AC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */; };
+		62F85980574606A0B045F32C51B65962 /* JPVideoPlayerActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 60468ED2D47CE76CBEDD44660BD7558A /* JPVideoPlayerActivityIndicator.m */; };
+		6A599CF24777C014D466C6A6C985DE3C /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C359D0D8FA8185499D2E00FF599C9C2 /* UIView+PlayerStatusAndDownloadIndicator.m */; };
+		6B2162BFE135FFA3CBA73E76A29255EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
+		6BEE9C2BDF9B8735E72D318DAC8C40D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
+		6C52FB6CC559D51D991FEBAACF3E0573 /* UIView+WebVideoCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC121E407E1FAD0C607424274DEB200 /* UIView+WebVideoCacheOperation.m */; };
+		6CE6406227971FA49DD6182768FD4046 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */; };
+		7633EE35FC1E047F6B6563F926F0ACF3 /* JPVideoPlayerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = C7CB4BBA1A57168FD72DD81EC5DA79A9 /* JPVideoPlayerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DF5A44913D52705747BCBFDAB6A422D /* JPVideoPlayerDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A55302F5C61BF3BF81C0052C994F1C /* JPVideoPlayerDownloader.m */; };
+		9083DC840E155CBBB405DFDB0DFE24EA /* JPVideoPlayer-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2264DBBFD3CA9C50AD044BA9F39425AF /* JPVideoPlayer-dummy.m */; };
+		A12478D23DEAD6D6D3119F83F08EA73F /* JPVideoPlayerCachePathTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 46E732B401A4CC903ACBBE8CDB3AB564 /* JPVideoPlayerCachePathTool.m */; };
+		A5731395804DB6381C9046BD1AEA86B8 /* JPVideoPlayerCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 35AB53F59D16714B9E37550CCC0E36C3 /* JPVideoPlayerCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B18CF98A546AE24A442C1DC05E7D1004 /* UIView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D64F577E1AF48FE08BF9946B34023FC9 /* UIView+WebVideoCache.m */; };
+		C3F971B22711E0A9013AC2ACA9634E4B /* Pods-JPVideoPlayerDemo_swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B8784309D20B1A18ADAD4D8A0003A49 /* Pods-JPVideoPlayerDemo_swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D63D668813523E0EBD2407A7E5C80BDF /* JPVideoPlayerDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88CA18EC681B0B0F43216BB1DFEE9329 /* JPVideoPlayerDownloaderOperation.m */; };
+		D6E57FF8ACBBBA1DEFAE9E5A1D9E8964 /* JPVideoPlayerOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9440A0606A96513AFA6543338E482A /* JPVideoPlayerOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D841087A766AC1B3DB88E6296CC99C47 /* JPVideoPlayerCachePathTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B424C661B44253742E1081D26DC0C89 /* JPVideoPlayerCachePathTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E3D1E49885D7481E4B5D2A57B02DEA37 /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6DEB2BF22150DFE2604CC8D7CB2B12 /* UIView+PlayerStatusAndDownloadIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E8CD8FEE21D70F743713E96E8E704F25 /* JPVideoPlayer-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FBDECAA20DF8221BD780D828D8D0BA93 /* JPVideoPlayer-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FFFEBD4274B14837C78FC8462D4F497D /* JPVideoPlayerResourceLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 35F4FB31F2BA2252D75354D728703FB8 /* JPVideoPlayerResourceLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A171005B343B3FFACA93AF349617E971 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7349C64BD55863429921A487451396F4;
+			remoteInfo = JPVideoPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0708B70863240F1080A188C7EEDDB31F /* Pods-JPVideoPlayerDemo_swift-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo_swift-frameworks.sh"; sourceTree = "<group>"; };
+		0B6DEB2BF22150DFE2604CC8D7CB2B12 /* UIView+PlayerStatusAndDownloadIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+PlayerStatusAndDownloadIndicator.h"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.h"; sourceTree = "<group>"; };
+		0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
+		10715C7D2A02704B48E1D823B79B1473 /* JPVideoPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JPVideoPlayer.framework; path = JPVideoPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		188DE670D9BEF9357838C78D041D24E5 /* JPVideoPlayerCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCache.m; path = JPVideoPlayer/JPVideoPlayerCache.m; sourceTree = "<group>"; };
+		1E393358A9196C8CFCBACC0BD7145652 /* JPVideoPlayerDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloaderOperation.h; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.h; sourceTree = "<group>"; };
+		2264DBBFD3CA9C50AD044BA9F39425AF /* JPVideoPlayer-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPVideoPlayer-dummy.m"; sourceTree = "<group>"; };
+		28E672DB1F97453DB995936C84FE94F9 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34B40DAE545615D488B94BAF4F7BC393 /* JPVideoPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerManager.h; path = JPVideoPlayer/JPVideoPlayerManager.h; sourceTree = "<group>"; };
+		35AB53F59D16714B9E37550CCC0E36C3 /* JPVideoPlayerCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCache.h; path = JPVideoPlayer/JPVideoPlayerCache.h; sourceTree = "<group>"; };
+		35F4FB31F2BA2252D75354D728703FB8 /* JPVideoPlayerResourceLoader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerResourceLoader.h; path = JPVideoPlayer/JPVideoPlayerResourceLoader.h; sourceTree = "<group>"; };
+		37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		382CD3EBD1C94F38DFC2CF564ECBFA44 /* JPVideoPlayerResourceLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerResourceLoader.m; path = JPVideoPlayer/JPVideoPlayerResourceLoader.m; sourceTree = "<group>"; };
+		3CF268490B3DD63FE51342463B077139 /* UIView+WebVideoCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCache.h"; path = "JPVideoPlayer/UIView+WebVideoCache.h"; sourceTree = "<group>"; };
+		46E732B401A4CC903ACBBE8CDB3AB564 /* JPVideoPlayerCachePathTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCachePathTool.m; path = JPVideoPlayer/JPVideoPlayerCachePathTool.m; sourceTree = "<group>"; };
+		4B13C58F66C2879837245F1E6D8AE215 /* JPVideoPlayer.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = JPVideoPlayer.modulemap; sourceTree = "<group>"; };
+		5C359D0D8FA8185499D2E00FF599C9C2 /* UIView+PlayerStatusAndDownloadIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+PlayerStatusAndDownloadIndicator.m"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.m"; sourceTree = "<group>"; };
+		5E9104F130FC3087616CE55269765E90 /* Pods-JPVideoPlayerDemo_swift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-JPVideoPlayerDemo_swift.modulemap"; sourceTree = "<group>"; };
+		60468ED2D47CE76CBEDD44660BD7558A /* JPVideoPlayerActivityIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerActivityIndicator.m; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.m; sourceTree = "<group>"; };
+		657C7B035A32A69B779DCCE3C65D9966 /* JPVideoPlayerPlayVideoTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerPlayVideoTool.h; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.h; sourceTree = "<group>"; };
+		6B424C661B44253742E1081D26DC0C89 /* JPVideoPlayerCachePathTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCachePathTool.h; path = JPVideoPlayer/JPVideoPlayerCachePathTool.h; sourceTree = "<group>"; };
+		7B8784309D20B1A18ADAD4D8A0003A49 /* Pods-JPVideoPlayerDemo_swift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JPVideoPlayerDemo_swift-umbrella.h"; sourceTree = "<group>"; };
+		7C764A6D3544482C7951482C374F0C23 /* JPVideoPlayerCacheConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCacheConfig.m; path = JPVideoPlayer/JPVideoPlayerCacheConfig.m; sourceTree = "<group>"; };
+		7D5BE21D08AA0A28F2AE9FAE62802EA0 /* UIView+WebVideoCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCacheOperation.h"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.h"; sourceTree = "<group>"; };
+		7EEDA2315A70EACCEAE683B4BB926C41 /* JPVideoPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerManager.m; path = JPVideoPlayer/JPVideoPlayerManager.m; sourceTree = "<group>"; };
+		85178BEE0B43B9EDF90FCE29D2126EA2 /* Pods-JPVideoPlayerDemo_swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo_swift.release.xcconfig"; sourceTree = "<group>"; };
+		85381758AB02D1DBC407C1CD32B7DBD4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88BF64299F6D7817FE0336192FB130F4 /* JPVideoPlayer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPVideoPlayer.xcconfig; sourceTree = "<group>"; };
+		88CA18EC681B0B0F43216BB1DFEE9329 /* JPVideoPlayerDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloaderOperation.m; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.m; sourceTree = "<group>"; };
+		8EC121E407E1FAD0C607424274DEB200 /* UIView+WebVideoCacheOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCacheOperation.m"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.m"; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9C06E7AF7920BFEAD623C0CFCAE490C7 /* Pods-JPVideoPlayerDemo_swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo_swift.debug.xcconfig"; sourceTree = "<group>"; };
+		A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		ABB1103ABB0EB940A2CA8707E697A80B /* Pods_JPVideoPlayerDemo_swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JPVideoPlayerDemo_swift.framework; path = "Pods-JPVideoPlayerDemo_swift.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B00BD966BECAB0A0BE723A31ABF4F33D /* Pods-JPVideoPlayerDemo_swift-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JPVideoPlayerDemo_swift-acknowledgements.markdown"; sourceTree = "<group>"; };
+		C7CB4BBA1A57168FD72DD81EC5DA79A9 /* JPVideoPlayerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCompat.h; path = JPVideoPlayer/JPVideoPlayerCompat.h; sourceTree = "<group>"; };
+		C9F7099D232CCAAC5C8582FF2B98C51F /* JPVideoPlayerCacheConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCacheConfig.h; path = JPVideoPlayer/JPVideoPlayerCacheConfig.h; sourceTree = "<group>"; };
+		CB9440A0606A96513AFA6543338E482A /* JPVideoPlayerOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerOperation.h; path = JPVideoPlayer/JPVideoPlayerOperation.h; sourceTree = "<group>"; };
+		D180048B8C308DBCC76A544CEEAA497B /* Pods-JPVideoPlayerDemo_swift-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo_swift-resources.sh"; sourceTree = "<group>"; };
+		D22347F322DEB69F0974C1E343BF532E /* Pods-JPVideoPlayerDemo_swift-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JPVideoPlayerDemo_swift-acknowledgements.plist"; sourceTree = "<group>"; };
+		D64F577E1AF48FE08BF9946B34023FC9 /* UIView+WebVideoCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCache.m"; path = "JPVideoPlayer/UIView+WebVideoCache.m"; sourceTree = "<group>"; };
+		D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		DADD3708B0E0448A24DAE05674D25759 /* Pods-JPVideoPlayerDemo_swift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JPVideoPlayerDemo_swift-dummy.m"; sourceTree = "<group>"; };
+		E26C0514B01C0EAAD160EB2BB1E09684 /* JPVideoPlayerDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloader.h; path = JPVideoPlayer/JPVideoPlayerDownloader.h; sourceTree = "<group>"; };
+		E7A55302F5C61BF3BF81C0052C994F1C /* JPVideoPlayerDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloader.m; path = JPVideoPlayer/JPVideoPlayerDownloader.m; sourceTree = "<group>"; };
+		E862A5D87D035F219C566F00548DA395 /* JPVideoPlayerPlayVideoTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerPlayVideoTool.m; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.m; sourceTree = "<group>"; };
+		E8689DCA58411666E8AEEEB81449269B /* JPVideoPlayer-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-prefix.pch"; sourceTree = "<group>"; };
+		FBDECAA20DF8221BD780D828D8D0BA93 /* JPVideoPlayer-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-umbrella.h"; sourceTree = "<group>"; };
+		FE1628F2ED3BDDAAF562A83FC43A1434 /* JPVideoPlayerActivityIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerActivityIndicator.h; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		813AB27ED9A68C1C51BB1022AABF22C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B2162BFE135FFA3CBA73E76A29255EB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BC1ECDA0C17FD8BF195597CC8AC1BCB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				508A73AC7D7BCA2936800FA58349C350 /* AVFoundation.framework in Frameworks */,
+				6BEE9C2BDF9B8735E72D318DAC8C40D4 /* Foundation.framework in Frameworks */,
+				6CE6406227971FA49DD6182768FD4046 /* MobileCoreServices.framework in Frameworks */,
+				5E6140715095CC4E32D6A980FF9B00AC /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06064954CA8B75E767965C83BE190844 /* JPVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				FE1628F2ED3BDDAAF562A83FC43A1434 /* JPVideoPlayerActivityIndicator.h */,
+				60468ED2D47CE76CBEDD44660BD7558A /* JPVideoPlayerActivityIndicator.m */,
+				35AB53F59D16714B9E37550CCC0E36C3 /* JPVideoPlayerCache.h */,
+				188DE670D9BEF9357838C78D041D24E5 /* JPVideoPlayerCache.m */,
+				C9F7099D232CCAAC5C8582FF2B98C51F /* JPVideoPlayerCacheConfig.h */,
+				7C764A6D3544482C7951482C374F0C23 /* JPVideoPlayerCacheConfig.m */,
+				6B424C661B44253742E1081D26DC0C89 /* JPVideoPlayerCachePathTool.h */,
+				46E732B401A4CC903ACBBE8CDB3AB564 /* JPVideoPlayerCachePathTool.m */,
+				C7CB4BBA1A57168FD72DD81EC5DA79A9 /* JPVideoPlayerCompat.h */,
+				E26C0514B01C0EAAD160EB2BB1E09684 /* JPVideoPlayerDownloader.h */,
+				E7A55302F5C61BF3BF81C0052C994F1C /* JPVideoPlayerDownloader.m */,
+				1E393358A9196C8CFCBACC0BD7145652 /* JPVideoPlayerDownloaderOperation.h */,
+				88CA18EC681B0B0F43216BB1DFEE9329 /* JPVideoPlayerDownloaderOperation.m */,
+				34B40DAE545615D488B94BAF4F7BC393 /* JPVideoPlayerManager.h */,
+				7EEDA2315A70EACCEAE683B4BB926C41 /* JPVideoPlayerManager.m */,
+				CB9440A0606A96513AFA6543338E482A /* JPVideoPlayerOperation.h */,
+				657C7B035A32A69B779DCCE3C65D9966 /* JPVideoPlayerPlayVideoTool.h */,
+				E862A5D87D035F219C566F00548DA395 /* JPVideoPlayerPlayVideoTool.m */,
+				35F4FB31F2BA2252D75354D728703FB8 /* JPVideoPlayerResourceLoader.h */,
+				382CD3EBD1C94F38DFC2CF564ECBFA44 /* JPVideoPlayerResourceLoader.m */,
+				0B6DEB2BF22150DFE2604CC8D7CB2B12 /* UIView+PlayerStatusAndDownloadIndicator.h */,
+				5C359D0D8FA8185499D2E00FF599C9C2 /* UIView+PlayerStatusAndDownloadIndicator.m */,
+				3CF268490B3DD63FE51342463B077139 /* UIView+WebVideoCache.h */,
+				D64F577E1AF48FE08BF9946B34023FC9 /* UIView+WebVideoCache.m */,
+				7D5BE21D08AA0A28F2AE9FAE62802EA0 /* UIView+WebVideoCacheOperation.h */,
+				8EC121E407E1FAD0C607424274DEB200 /* UIView+WebVideoCacheOperation.m */,
+				A1B4AF1E1C4AB426E7679706C7950E43 /* Support Files */,
+			);
+			name = JPVideoPlayer;
+			path = JPVideoPlayer;
+			sourceTree = "<group>";
+		};
+		14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D2AD1162607AC2E543D529A2FE30C0EF /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5F300122C742DB952BD91A1484BB334D /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				7F31F0E3FF11ECEC535061CC0F0F978C /* Pods-JPVideoPlayerDemo_swift */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */,
+				E8D749E70A5255B0362406EDB409D54B /* Pods */,
+				DD94EE68F0EC8165A6D10B20896404E1 /* Products */,
+				5F300122C742DB952BD91A1484BB334D /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		7F31F0E3FF11ECEC535061CC0F0F978C /* Pods-JPVideoPlayerDemo_swift */ = {
+			isa = PBXGroup;
+			children = (
+				28E672DB1F97453DB995936C84FE94F9 /* Info.plist */,
+				5E9104F130FC3087616CE55269765E90 /* Pods-JPVideoPlayerDemo_swift.modulemap */,
+				B00BD966BECAB0A0BE723A31ABF4F33D /* Pods-JPVideoPlayerDemo_swift-acknowledgements.markdown */,
+				D22347F322DEB69F0974C1E343BF532E /* Pods-JPVideoPlayerDemo_swift-acknowledgements.plist */,
+				DADD3708B0E0448A24DAE05674D25759 /* Pods-JPVideoPlayerDemo_swift-dummy.m */,
+				0708B70863240F1080A188C7EEDDB31F /* Pods-JPVideoPlayerDemo_swift-frameworks.sh */,
+				D180048B8C308DBCC76A544CEEAA497B /* Pods-JPVideoPlayerDemo_swift-resources.sh */,
+				7B8784309D20B1A18ADAD4D8A0003A49 /* Pods-JPVideoPlayerDemo_swift-umbrella.h */,
+				9C06E7AF7920BFEAD623C0CFCAE490C7 /* Pods-JPVideoPlayerDemo_swift.debug.xcconfig */,
+				85178BEE0B43B9EDF90FCE29D2126EA2 /* Pods-JPVideoPlayerDemo_swift.release.xcconfig */,
+			);
+			name = "Pods-JPVideoPlayerDemo_swift";
+			path = "Target Support Files/Pods-JPVideoPlayerDemo_swift";
+			sourceTree = "<group>";
+		};
+		A1B4AF1E1C4AB426E7679706C7950E43 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				85381758AB02D1DBC407C1CD32B7DBD4 /* Info.plist */,
+				4B13C58F66C2879837245F1E6D8AE215 /* JPVideoPlayer.modulemap */,
+				88BF64299F6D7817FE0336192FB130F4 /* JPVideoPlayer.xcconfig */,
+				2264DBBFD3CA9C50AD044BA9F39425AF /* JPVideoPlayer-dummy.m */,
+				E8689DCA58411666E8AEEEB81449269B /* JPVideoPlayer-prefix.pch */,
+				FBDECAA20DF8221BD780D828D8D0BA93 /* JPVideoPlayer-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/JPVideoPlayer";
+			sourceTree = "<group>";
+		};
+		D2AD1162607AC2E543D529A2FE30C0EF /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */,
+				A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */,
+				0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */,
+				D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		DD94EE68F0EC8165A6D10B20896404E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				10715C7D2A02704B48E1D823B79B1473 /* JPVideoPlayer.framework */,
+				ABB1103ABB0EB940A2CA8707E697A80B /* Pods_JPVideoPlayerDemo_swift.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E8D749E70A5255B0362406EDB409D54B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				06064954CA8B75E767965C83BE190844 /* JPVideoPlayer */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		23FF04756FE3C3E5D0EF6424362DC5E9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8CD8FEE21D70F743713E96E8E704F25 /* JPVideoPlayer-umbrella.h in Headers */,
+				0B43B9D28F47D0D34BABF1B815994DB8 /* JPVideoPlayerActivityIndicator.h in Headers */,
+				A5731395804DB6381C9046BD1AEA86B8 /* JPVideoPlayerCache.h in Headers */,
+				346E78B548E239C8A5E0ECF6C51D33CC /* JPVideoPlayerCacheConfig.h in Headers */,
+				D841087A766AC1B3DB88E6296CC99C47 /* JPVideoPlayerCachePathTool.h in Headers */,
+				7633EE35FC1E047F6B6563F926F0ACF3 /* JPVideoPlayerCompat.h in Headers */,
+				000AAB72065C14EF4C7417243FAC577D /* JPVideoPlayerDownloader.h in Headers */,
+				50D61F05A8374A2EA0396FA114F5FD5B /* JPVideoPlayerDownloaderOperation.h in Headers */,
+				2FCBB886C96E49242C8B8207E2547775 /* JPVideoPlayerManager.h in Headers */,
+				D6E57FF8ACBBBA1DEFAE9E5A1D9E8964 /* JPVideoPlayerOperation.h in Headers */,
+				17A1EE2DF065C577C6E94C6464B18544 /* JPVideoPlayerPlayVideoTool.h in Headers */,
+				FFFEBD4274B14837C78FC8462D4F497D /* JPVideoPlayerResourceLoader.h in Headers */,
+				E3D1E49885D7481E4B5D2A57B02DEA37 /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */,
+				316A57E2FE8477196CB7CB3DF67F74BF /* UIView+WebVideoCache.h in Headers */,
+				137A0119E97D4AEE19254E370269F8A5 /* UIView+WebVideoCacheOperation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		501B397988400720FF484E8FB6E0080D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3F971B22711E0A9013AC2ACA9634E4B /* Pods-JPVideoPlayerDemo_swift-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7349C64BD55863429921A487451396F4 /* JPVideoPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31F43A2C8407A80EAB36BEEB06BEF9A4 /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */;
+			buildPhases = (
+				C780C36DF8C7C7C29C30E8EF06F43731 /* Sources */,
+				8BC1ECDA0C17FD8BF195597CC8AC1BCB /* Frameworks */,
+				23FF04756FE3C3E5D0EF6424362DC5E9 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JPVideoPlayer;
+			productName = JPVideoPlayer;
+			productReference = 10715C7D2A02704B48E1D823B79B1473 /* JPVideoPlayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F775B745135CF636D3D857076BFD76DD /* Pods-JPVideoPlayerDemo_swift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 330426B1211EBE68AFF43AF40273EEAD /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo_swift" */;
+			buildPhases = (
+				A462D157D5B70E736B905FFFD8C14130 /* Sources */,
+				813AB27ED9A68C1C51BB1022AABF22C4 /* Frameworks */,
+				501B397988400720FF484E8FB6E0080D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				36DD245F4B5FE549E5943B4D7B8D58CE /* PBXTargetDependency */,
+			);
+			name = "Pods-JPVideoPlayerDemo_swift";
+			productName = "Pods-JPVideoPlayerDemo_swift";
+			productReference = ABB1103ABB0EB940A2CA8707E697A80B /* Pods_JPVideoPlayerDemo_swift.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = DD94EE68F0EC8165A6D10B20896404E1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7349C64BD55863429921A487451396F4 /* JPVideoPlayer */,
+				F775B745135CF636D3D857076BFD76DD /* Pods-JPVideoPlayerDemo_swift */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A462D157D5B70E736B905FFFD8C14130 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38E43B79FA82D6512A9B4F60963F7F30 /* Pods-JPVideoPlayerDemo_swift-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C780C36DF8C7C7C29C30E8EF06F43731 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9083DC840E155CBBB405DFDB0DFE24EA /* JPVideoPlayer-dummy.m in Sources */,
+				62F85980574606A0B045F32C51B65962 /* JPVideoPlayerActivityIndicator.m in Sources */,
+				53497EE6E8C3BD42B16AA36FF2504B18 /* JPVideoPlayerCache.m in Sources */,
+				0F7E5624F282812DFAADEA1A7272DD11 /* JPVideoPlayerCacheConfig.m in Sources */,
+				A12478D23DEAD6D6D3119F83F08EA73F /* JPVideoPlayerCachePathTool.m in Sources */,
+				8DF5A44913D52705747BCBFDAB6A422D /* JPVideoPlayerDownloader.m in Sources */,
+				D63D668813523E0EBD2407A7E5C80BDF /* JPVideoPlayerDownloaderOperation.m in Sources */,
+				271C1E356B1982D73331CAB2CC7B3D83 /* JPVideoPlayerManager.m in Sources */,
+				057DF5A63C017C6BCA13931B1E127570 /* JPVideoPlayerPlayVideoTool.m in Sources */,
+				113E7CE2AB063637CAC963790CAF5FEB /* JPVideoPlayerResourceLoader.m in Sources */,
+				6A599CF24777C014D466C6A6C985DE3C /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
+				B18CF98A546AE24A442C1DC05E7D1004 /* UIView+WebVideoCache.m in Sources */,
+				6C52FB6CC559D51D991FEBAACF3E0573 /* UIView+WebVideoCacheOperation.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		36DD245F4B5FE549E5943B4D7B8D58CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = JPVideoPlayer;
+			target = 7349C64BD55863429921A487451396F4 /* JPVideoPlayer */;
+			targetProxy = A171005B343B3FFACA93AF349617E971 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		015A368F878AC3E2CEAE21DDE8026304 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		44CDBB6D11DE06DB64D6268622BDC47E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50A0A502D12E17ACA346D470D56F6495 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 88BF64299F6D7817FE0336192FB130F4 /* JPVideoPlayer.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/JPVideoPlayer/JPVideoPlayer-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JPVideoPlayer/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JPVideoPlayer/JPVideoPlayer.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = JPVideoPlayer;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		74FFD93429A5A848E9C0B41850155D9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 85178BEE0B43B9EDF90FCE29D2126EA2 /* Pods-JPVideoPlayerDemo_swift.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-JPVideoPlayerDemo_swift/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-JPVideoPlayerDemo_swift/Pods-JPVideoPlayerDemo_swift.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_JPVideoPlayerDemo_swift;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		BC6D2FFE575FB943BD7F8EA2C1E1FC28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 88BF64299F6D7817FE0336192FB130F4 /* JPVideoPlayer.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/JPVideoPlayer/JPVideoPlayer-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JPVideoPlayer/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JPVideoPlayer/JPVideoPlayer.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = JPVideoPlayer;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EE98778C33FDB9C57C311BB813EF7FB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C06E7AF7920BFEAD623C0CFCAE490C7 /* Pods-JPVideoPlayerDemo_swift.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-JPVideoPlayerDemo_swift/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-JPVideoPlayerDemo_swift/Pods-JPVideoPlayerDemo_swift.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_JPVideoPlayerDemo_swift;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				015A368F878AC3E2CEAE21DDE8026304 /* Debug */,
+				44CDBB6D11DE06DB64D6268622BDC47E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31F43A2C8407A80EAB36BEEB06BEF9A4 /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC6D2FFE575FB943BD7F8EA2C1E1FC28 /* Debug */,
+				50A0A502D12E17ACA346D470D56F6495 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		330426B1211EBE68AFF43AF40273EEAD /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo_swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE98778C33FDB9C57C311BB813EF7FB9 /* Debug */,
+				74FFD93429A5A848E9C0B41850155D9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}
