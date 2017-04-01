@@ -25,6 +25,7 @@ You may download my demo to know how to play video in UITableViewController, thi
 - [x] A guarantee that main thread will never be blocked
 - [x] Location video play support
 - [x] HTTPS support
+- [x] Swift support
 
 ## Requirements
 
@@ -61,6 +62,16 @@ Objective-C:
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
 [aview jp_playVideoWithURL:url];
+```
+
+```swift
+Swift:
+
+import JPVideoPlayer
+
+...
+let url = URL(string: videoPath)
+aview.jp_playVideoWithURL(with: url)
 ```
 
 #### Play video muted.
@@ -177,6 +188,7 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 - [x] 保证不会阻塞线程
 - [x] 支持播放本地视频
 - [x] HTTPS 支持
+- [x] Swift 支持
 
 ## 组件要求
 
@@ -211,6 +223,16 @@ Objective-C:
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
 [aview jp_playVideoWithURL:url];
+```
+
+```swift
+Swift:
+
+import JPVideoPlayer
+
+...
+let url = URL(string: videoPath)
+aview.jp_playVideoWithURL(with: url)
 ```
 
 #### 静音播放视频.
