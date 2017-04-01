@@ -49,8 +49,8 @@ class JPVideoPlayerDemoVC_home: UITableViewController {
             playVideoInVisiableCells()
         }
         else{
-            let url = NSURL(string: (playingCell?.videoPath)!)
-            playingCell?.videoImv.jp_playVideoMutedDisplayStatusView(with: url as URL?)
+            let url = URL(string: (playingCell?.videoPath)!)
+            playingCell?.videoImv.jp_playVideoMutedDisplayStatusView(with: url)
         }
         tableViewRange.isHidden = false
     }
@@ -324,7 +324,7 @@ extension JPVideoPlayerDemoVC_home {
         videoCell.videoImv.jp_playVideoMutedDisplayStatusView(with: URL(string: videoCell.videoPath))
         
         // hide status view.
-        videoCell.videoImv.jp_playVideoMuted(with: URL(string: videoCell.videoPath))
+        // videoCell.videoImv.jp_playVideoMuted(with: URL(string: videoCell.videoPath))
     }
     
     func handleScrollStop() {
@@ -338,13 +338,13 @@ extension JPVideoPlayerDemoVC_home {
         if playingCell?.hash != bestCell.hash {
             playingCell?.videoImv.stopPlay()
             
-            let url = NSURL(string: bestCell.videoPath)
+            let url = URL(string: bestCell.videoPath)
             
             // display status view.
-            bestCell.videoImv.jp_playVideoMutedDisplayStatusView(with: url as URL?)
+            bestCell.videoImv.jp_playVideoMutedDisplayStatusView(with: url)
             
             // hide status view.
-            // bestCell.videoImv.jp_playVideoMuted(with: url as URL?)
+            // bestCell.videoImv.jp_playVideoMuted(with: url)
             
             playingCell = bestCell
         }
