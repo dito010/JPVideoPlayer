@@ -180,7 +180,7 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 ## 特性
 
-- [x] 视频播放边下边播
+- [x] 视频播放边下边播, 同时边缓存到本地
 - [x] 主线程处理切换视频
 - [x] 不阻塞线程，不卡顿，滑动如丝顺滑
 - [x] 当滚屏时采取总是播放处在屏幕中心的那个 cell 的视频的策略
