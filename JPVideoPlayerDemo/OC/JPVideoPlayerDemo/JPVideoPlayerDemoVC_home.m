@@ -14,7 +14,6 @@
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerDemoCell.h"
 #import "JPVideoPlayerDemoVC_present.h"
-#import "JPVideoPlayerCache.h"
 #import "UITableView+VideoPlay.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
@@ -174,7 +173,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 #pragma mark Setup
 
 -(void)setup{
-    
     // 自定义导航栏
     UIImageView *navBarImageView = [UIImageView new];
     navBarImageView.image = [UIImage imageNamed:@"navbar"];
@@ -193,6 +191,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     self.pathStrings = @[
                          // location video path.
                          url.absoluteString,
+                         
+                         // The vertical video.
+                         @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
                          
                          @"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/lava-guitar-creation-2.mp4",
@@ -224,19 +225,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          @"http://lavaweb-10015286.video.myqcloud.com/hong-song-mei-gui-mu-2.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/ideal-pick-2.mp4",
                          ];
-    
-    
-    // Count all cache size.
-    // 计算缓存大小
-    [[JPVideoPlayerCache sharedCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
-        printf("Total cache size, 总缓存大小: %0.2f/MB, 总缓存文件数: %ld, 你可以使用框架提供的方法, 清除所有缓存或指定的缓存, 具体请查看 `JPVideoPlayerCache`\n", (unsigned long)totalSize/1024./1024., (unsigned long)fileCount);
-    }];
-    
-    // Clear all cache.
-    // 清空所有缓存
-    // [[JPVideoPlayerCache sharedImageCache] clearDiskOnCompletion:^{
-    //  NSLog(@"ClearDiskFinished, 清空磁盘完成");
-    // }];
 }
 
 
@@ -253,15 +241,15 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
         _tableViewRange.userInteractionEnabled = NO;
         CGSize screenSize = [UIScreen mainScreen].bounds.size;
         _tableViewRange.backgroundColor = [UIColor clearColor];
-        _tableViewRange.frame = CGRectMake(0, JPVideoPlayerDemoNavAndStatusTotalHei, screenSize.width, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei);
+        _tableViewRange.frame = CGRectMake(0, JPVideoPlayerDemoNavAndStatusTotalHei, screenSize.width, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei);
         _tableViewRange.hidden = YES;
         
         UIBezierPath *linePath1 = [UIBezierPath bezierPath];
         {
             [linePath1 moveToPoint:CGPointMake(1, 1)];
             [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, 1)];
-            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1)];
-            [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1)];
+            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1)];
+            [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1)];
             [linePath1 addLineToPoint:CGPointMake(1, 1)];
         }
         
@@ -281,8 +269,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
         
         UIBezierPath *linePath2 = [UIBezierPath bezierPath];
         {
-            [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1))];
-            [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1))];
+            [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1))];
+            [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1))];
         }
         
         CAShapeLayer *layer2 = [CAShapeLayer layer];

@@ -13,6 +13,7 @@
 
 
 CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
+CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 @implementation UITableView (VideoPlay)
 
 -(void)playVideoInVisiableCells{
@@ -99,7 +100,7 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
     
     CGRect windowRect = [UIScreen mainScreen].bounds;
     windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
-    windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
+    windowRect.size.height -= (JPVideoPlayerDemoNavAndStatusTotalHei + JPVideoPlayerDemoTabbarHei);
     
     for (JPVideoPlayerDemoCell *cell in visiableCells) {
         

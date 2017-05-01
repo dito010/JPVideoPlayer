@@ -10,7 +10,8 @@
 
 @class JPVideoPlayerDemoCell;
 
-UIKIT_EXTERN CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei;
+UIKIT_EXTERN CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei; // 导航栏和状态栏高度总和.
+UIKIT_EXTERN CGFloat const JPVideoPlayerDemoTabbarHei; // tabbar 高度.
 #define JPVideoPlayerDemoRowHei ([UIScreen mainScreen].bounds.size.width*9.0/16.0)
 
 /*

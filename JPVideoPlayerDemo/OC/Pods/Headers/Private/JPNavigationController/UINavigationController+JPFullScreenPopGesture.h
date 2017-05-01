@@ -1,0 +1,1 @@
+../../../JPNavigationController/JPNavigationController/UINavigationController+JPFullScreenPopGesture.h

@@ -1,0 +1,1 @@
+../../../JPNavigationController/JPNavigationController/JPFullScreenPopGestureRecognizerDelegate.h
