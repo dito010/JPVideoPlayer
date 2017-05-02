@@ -46,8 +46,13 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
     
     if (url) {
         __weak typeof(self) wself = self;
+        
         // set self as the delegate of `JPVideoPlayerManager`.
         [JPVideoPlayerManager sharedManager].delegate = self;
+        
+        // set up the video layer view and indicator view.
+        [self setupVideoLayerViewAndIndicatorView];
+        
         id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] loadVideoWithURL:url showOnView:self options:options progress:progressBlock completed:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
             __strong __typeof (wself) sself = wself;
             if (!sself) return;

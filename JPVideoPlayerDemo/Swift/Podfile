@@ -3,7 +3,7 @@ target 'JPVideoPlayerDemo_swift' do
 
 use_frameworks!
 
-pod 'JPVideoPlayer', '~> 2.0.4’
+pod 'JPVideoPlayer', '~> 2.0.5’
 pod 'JPNavigationController', '~> 1.2.6'
 
 end

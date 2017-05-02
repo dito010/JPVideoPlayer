@@ -1,15 +1,15 @@
 PODS:
   - JPNavigationController (1.2.6)
-  - JPVideoPlayer (2.0.4)
+  - JPVideoPlayer (2.0.5)
 
 DEPENDENCIES:
   - JPNavigationController (~> 1.2.6)
-  - JPVideoPlayer (~> 2.0.4)
+  - JPVideoPlayer (~> 2.0.5)
 
 SPEC CHECKSUMS:
   JPNavigationController: 8b354a37c47229e349b8b48d40da95eaa87c558e
-  JPVideoPlayer: bcfa660d6144b5c1482caec0371fcb0c4d090ddc
+  JPVideoPlayer: a41b1467fe71a8c5e2b4efe8387c6e7e219b27ad
 
-PODFILE CHECKSUM: 9219a6d60351326c7613f31257cb7046634c8479
+PODFILE CHECKSUM: 6eb6460d7e0c0b5e95f780c7be4bd74a7283affb
 
 COCOAPODS: 1.2.0

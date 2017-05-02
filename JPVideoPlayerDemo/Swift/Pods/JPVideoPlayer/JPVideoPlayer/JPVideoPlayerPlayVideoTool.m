@@ -36,6 +36,11 @@ CGFloat const JPVideoPlayerLayerFrameY = 2;
 @property(nonatomic, strong, nullable)AVPlayerLayer *currentPlayerLayer;
 
 /**
+ * The background layer for video layer.
+ */
+@property(nonatomic, strong, nullable)CALayer *backgroundLayer;
+
+/**
  * The current player's item.
  */
 @property(nonatomic, strong, nullable)AVPlayerItem *currentPlayerItem;
@@ -75,8 +80,14 @@ CGFloat const JPVideoPlayerLayerFrameY = 2;
  */
 @property(nonatomic, strong, nonnull)NSString *playingKey;
 
+/**
+ * The last play time for player.
+ */
+@property(nonatomic, assign)NSTimeInterval lastTime;
+
 @end
 
+#define JPLog(FORMAT, ...); fprintf(stderr,"%s\n",[[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 static NSString *JPVideoPlayerURLScheme = @"SystemCannotRecognition";
 static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @implementation JPVideoPlayerPlayVideoToolItem
@@ -101,15 +112,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 -(void)reset{
     // remove video layer from superlayer.
-    if (self.currentPlayerLayer.superlayer) {
+    if (self.backgroundLayer.superlayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
+        [self.backgroundLayer removeFromSuperlayer];
     }
     
     // remove observe.
     JPVideoPlayerPlayVideoTool *tool = [JPVideoPlayerPlayVideoTool sharedTool];
     [_currentPlayerItem removeObserver:tool forKeyPath:@"status"];
-    [_currentPlayerItem removeObserver:tool forKeyPath:@"playbackBufferEmpty"];
-    [_currentPlayerItem removeObserver:tool forKeyPath:@"playbackLikelyToKeepUp"];
+    [_currentPlayerItem removeObserver:tool forKeyPath:@"loadedTimeRanges"];
     
     // remove player
     [self.player pause];
@@ -120,6 +131,14 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     self.currentPlayerLayer = nil;
     self.videoURLAsset = nil;
     self.resourceLoader = nil;
+}
+
+-(CALayer *)backgroundLayer{
+    if (!_backgroundLayer) {
+        _backgroundLayer = [CALayer new];
+        _backgroundLayer.backgroundColor = [UIColor blackColor].CGColor;
+    }
+    return _backgroundLayer;
 }
 
 @end
@@ -176,8 +195,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         item.url = url;
         item.currentPlayerItem = playerItem;
         [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-        [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-        [playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+        [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
         
         item.player = [AVPlayer playerWithPlayerItem:playerItem];
         item.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:item.player];
@@ -194,7 +212,9 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             }
             item.currentPlayerLayer.videoGravity = videoGravity;
         }
-        item.currentPlayerLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+        
+        item.backgroundLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+        item.currentPlayerLayer.frame = item.backgroundLayer.bounds;
         item.error = error;
         item.playingKey = [[JPVideoPlayerManager sharedManager]cacheKeyForURL:url];
     }
@@ -237,8 +257,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         item.url = url;
         item.currentPlayerItem = playerItem;
         [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-        [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-        [playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+        [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
         
         item.player = [AVPlayer playerWithPlayerItem:playerItem];
         item.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:item.player];
@@ -255,8 +274,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             }
             item.currentPlayerLayer.videoGravity = videoGravity;
         }
-        CGFloat layerY = (options&JPVideoPlayerShowActivityIndicatorView) ? JPVideoPlayerLayerFrameY : 0;
-        item.currentPlayerLayer.frame = CGRectMake(0, layerY, showView.bounds.size.width, showView.bounds.size.height);
+        item.backgroundLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+        item.currentPlayerLayer.frame = item.backgroundLayer.bounds;
         item.videoURLAsset = videoURLAsset;
         item.error = error;
         item.playerOptions = options;
@@ -286,11 +305,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 -(void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath{
     if (self.currentPlayVideoItem.resourceLoader) {
         [self.currentPlayVideoItem.resourceLoader didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
-        [UIView animateWithDuration:0.3 animations:^{
-            CGRect layerFrame = self.currentPlayVideoItem.currentPlayerLayer.frame;
-            layerFrame.origin.y = 0;
-            self.currentPlayVideoItem.currentPlayerLayer.frame = layerFrame;
-        }];
     }
 }
 
@@ -352,6 +366,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self.currentPlayVideoItem.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
         __strong typeof(weak_Item) strong_Item = weak_Item;
         if (!strong_Item) return;
+        
+        self.currentPlayVideoItem.lastTime = 0;
         [strong_Item.player play];
     }];
 }
@@ -387,11 +403,20 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 break;
         }
     }
-    else if ([keyPath isEqualToString:@"playbackBufferEmpty"]){
-        [self showActivaityIndicatorView];
-    }
-    else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]){
-        [self hideActivaityIndicatorView];
+    else if ([keyPath isEqualToString:@"loadedTimeRanges"]){
+        
+        // 如果当前播放的时间没有增加, 则说明视频卡住了, 增加了就说明开始播放了.
+        // fixed #28.
+        NSTimeInterval currentTime = CMTimeGetSeconds(self.currentPlayVideoItem.player.currentTime);
+        // JPLog(@"%f", currentTime)
+        
+        if (currentTime != 0 && currentTime > self.currentPlayVideoItem.lastTime) {
+            [self hideActivaityIndicatorView];
+            self.currentPlayVideoItem.lastTime = currentTime;
+        }
+        else{
+            [self showActivaityIndicatorView];
+        }
     }
 }
 
@@ -431,7 +456,9 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 -(void)displayVideoPicturesOnShowLayer{
     if (!self.currentPlayVideoItem.isCancelled) {
-        [self.currentPlayVideoItem.unownShowView.layer addSublayer:self.currentPlayVideoItem.currentPlayerLayer];
+        // fixed #26.
+        [self.currentPlayVideoItem.backgroundLayer addSublayer:self.currentPlayVideoItem.currentPlayerLayer];
+        [self.currentPlayVideoItem.unownShowView.videoLayerView.layer addSublayer:self.currentPlayVideoItem.backgroundLayer];
     }
 }
 
