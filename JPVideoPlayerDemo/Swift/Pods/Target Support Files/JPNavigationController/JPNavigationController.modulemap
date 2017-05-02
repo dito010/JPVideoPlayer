@@ -1,0 +1,6 @@
+framework module JPNavigationController {
+  umbrella header "JPNavigationController-umbrella.h"
+
+  export *
+  module * { export * }
+}

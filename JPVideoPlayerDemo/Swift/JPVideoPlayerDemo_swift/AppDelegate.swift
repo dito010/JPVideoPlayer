@@ -10,6 +10,7 @@
  */
 
 import UIKit
+import JPNavigationController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,9 +24,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let screenSize = UIScreen.main.bounds.size
         window = UIWindow(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
+        
         let homeVC = JPVideoPlayerDemoVC_home()
-        let nav = UINavigationController(rootViewController: homeVC)
-        window?.rootViewController = nav
+        let nav_home = UINavigationController(rootViewController: homeVC)
+        nav_home.tabBarItem.image = #imageLiteral(resourceName: "player")
+        nav_home.tabBarItem.selectedImage = #imageLiteral(resourceName: "player_select")
+        nav_home.tabBarItem.title = "Player"
+        
+        let settingVC = JPVideoPlayerDemoVC_Setting()
+        let nav_setting = JPNavigationController(rootViewController: settingVC)
+        nav_setting.tabBarItem.image = #imageLiteral(resourceName: "setting")
+        nav_setting.tabBarItem.selectedImage = #imageLiteral(resourceName: "setting_select")
+        nav_setting.tabBarItem.title = "Setting"
+        
+        let tabVC = UITabBarController()
+        tabVC.viewControllers = [nav_home, nav_setting]
+        tabVC.tabBar.tintColor = UIColor(red: 64.0/255.0, green: 146.0/255.0, blue: 75.0/255.0, alpha: 1.0)
+        
+        window?.rootViewController = tabVC
         window?.makeKeyAndVisible()
         
         UIApplication.shared.setStatusBarHidden(false, with: UIStatusBarAnimation.fade)

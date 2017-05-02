@@ -44,7 +44,7 @@
     // Clear all cache.
     // 清空所有缓存
      [[JPVideoPlayerCache sharedCache] clearDiskOnCompletion:^{
-         NSLog(@"ClearDiskFinished, 清空磁盘完成");
+         NSLog(@"clear disk finished, 清空磁盘完成");
          
          __strong typeof(weakSelf) strongSelf = weakSelf;
          if (!strongSelf) return;
@@ -61,7 +61,7 @@
 }
 
 - (IBAction)wechatBtnClick:(id)sender {
-    [self wechat];
+    [self goWechat];
 }
 
 
@@ -70,9 +70,9 @@
 
 -(void)setup{
     self.navigationController.navigationBar.hidden = YES;
-    self.clearBtn.layer.cornerRadius = 5.0;
-    self.jianshuBtn.layer.cornerRadius = 5.0;
-    self.githubBtn.layer.cornerRadius = 5.0;
+    self.clearBtn.layer.cornerRadius =
+    self.jianshuBtn.layer.cornerRadius =
+    self.githubBtn.layer.cornerRadius =
     self.wechatBtn.layer.cornerRadius = 5.0;
     
     [self calculateCacheMes];
@@ -90,7 +90,7 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         
-        NSString *cacheStr = [NSString stringWithFormat:@"总缓存大小: %0.2fMB, 总缓存文件数: %ld", (unsigned long)totalSize/1024./1024., (unsigned long)fileCount];
+        NSString *cacheStr = [NSString stringWithFormat:@"总缓存大小: %0.2fMB, 总缓存文件数: %ld 个", (unsigned long)totalSize/1024./1024., (unsigned long)fileCount];
         
         strongSelf.cacheLabel.text = cacheStr;
         
@@ -106,7 +106,7 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:webSite]];
 }
 
--(void)wechat{
+-(void)goWechat{
     UIViewController *vc = [[UIViewController alloc]init];
     vc.hidesBottomBarWhenPushed = YES;
     vc.view.backgroundColor = [UIColor whiteColor];

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>JPNavigationController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JPVideoPlayer.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,7 +27,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F775B745135CF636D3D857076BFD76DD</key>
+		<key>A49F3FB578D8D7BA04AA84F338AAFE2E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D5630C38511D6B4C922775C2D4267A13</key>
 		<dict>
 			<key>primary</key>
 			<true/>

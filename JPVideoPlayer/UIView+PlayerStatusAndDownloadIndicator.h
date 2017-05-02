@@ -20,6 +20,11 @@
 @property(nonatomic, readonly, nullable)UIProgressView *progressView;
 
 /**
+ * The view to display video layer.
+ */
+@property(nonatomic, readonly, nullable)UIView *videoLayerView;
+
+/**
  * Call this method to custom the tint color of progress view(@optional).
  *
  * @param tintColor a `UIColor` instance to custom the progress view tint color.
@@ -60,5 +65,15 @@
  * Hide tthe activity indicator view for player status.
  */
 -(void)hideActivityIndicatorView;
+
+/**
+ * Set up the video layer view and indicator view.
+ */
+-(void)setupVideoLayerViewAndIndicatorView;
+
+/**
+ * Remove the video layer view and indicator view..
+ */
+-(void)removeVideoLayerViewAndIndicatorView;
 
 @end

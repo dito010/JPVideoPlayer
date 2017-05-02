@@ -19,6 +19,10 @@
 
 @property(nonatomic)UIProgressView *progressView;
 
+@property(nonatomic)UIView *videoLayerView;
+
+@property(nonatomic)UIView *indicatorView;
+
 @property(nonatomic)UIColor *progressViewTintColor;
 
 @property(nonatomic)UIColor *progressViewBackgroundColor;
@@ -31,6 +35,8 @@ static char progressViewKey;
 static char progressViewTintColorKey;
 static char progressViewBackgroundColorKey;
 static char activityIndicatorViewKey;
+static char videoLayerViewKey;
+static char indicatorViewKey;
 @implementation UIView (PlayerStatusAndDownloadIndicator)
 
 #pragma mark -----------------------------------------
@@ -48,12 +54,18 @@ static char activityIndicatorViewKey;
 }
 
 -(void)showProgressView{
-    self.progressView.progress = 0;
-    self.progressView.hidden = NO;
+    if (!self.progressView.superview) {
+        [self.indicatorView addSubview:self.progressView];
+        self.progressView.progress = 0;
+        self.progressView.hidden = NO;
+    }
 }
 
 -(void)hideProgressView{
-    self.progressView.hidden = YES;
+    if (self.progressView.superview) {
+        self.progressView.hidden = YES;
+        [self.progressView removeFromSuperview];
+    }
 }
 
 -(void)progressViewStatusChangedWithReceivedSize:(NSUInteger)receivedSize expectSize:(NSUInteger)expectSize{
@@ -64,13 +76,31 @@ static char activityIndicatorViewKey;
 }
 
 -(void)showActivityIndicatorView{
-    self.activityIndicatorView.hidden = NO;
-    [self.activityIndicatorView startAnimating];
+    if (!self.activityIndicatorView.superview) {
+        [self.indicatorView addSubview:self.activityIndicatorView];
+        [self.activityIndicatorView startAnimating];
+    }
 }
 
 -(void)hideActivityIndicatorView{
-    self.activityIndicatorView.hidden = YES;
-    [self.activityIndicatorView stopAnimating];
+    if (self.activityIndicatorView.superview) {
+        [self.activityIndicatorView stopAnimating];
+        [self.activityIndicatorView removeFromSuperview];
+    }
+}
+
+-(void)setupVideoLayerViewAndIndicatorView{
+    if (!self.videoLayerView.superview && !self.indicatorView.superview) {
+        [self addSubview:self.videoLayerView];
+        [self addSubview:self.indicatorView];
+    }
+}
+
+-(void)removeVideoLayerViewAndIndicatorView{
+    if (self.videoLayerView.superview && self.indicatorView.superview) {
+        [self.videoLayerView removeFromSuperview];
+        [self.indicatorView removeFromSuperview];
+    }
 }
 
 
@@ -107,10 +137,9 @@ static char activityIndicatorViewKey;
         progressView = [UIProgressView new];
         progressView.hidden = YES;
         progressView.frame = CGRectMake(0, 0, self.frame.size.width, JPVideoPlayerLayerFrameY);
-        [self addSubview:progressView];
         progressView.tintColor = self.progressViewTintColor;
         progressView.backgroundColor = self.progressViewBackgroundColor;
-        objc_setAssociatedObject(self, &progressViewKey, progressView, OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, &progressViewKey, progressView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return progressView;
 }
@@ -123,12 +152,34 @@ static char activityIndicatorViewKey;
         CGFloat selfX = (viewSize.width-ActivityIndicatorWH)*0.5;
         CGFloat selfY = (viewSize.height-ActivityIndicatorWH)*0.5;
         acv.frame = CGRectMake(selfX, selfY, ActivityIndicatorWH, ActivityIndicatorWH);
-        NSInteger count = self.subviews.count;
-        [self insertSubview:acv atIndex:count+1];
         acv.hidden = YES;
         objc_setAssociatedObject(self, &activityIndicatorViewKey, acv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return acv;
+}
+
+-(UIView *)videoLayerView{
+    UIView *view = objc_getAssociatedObject(self, &videoLayerViewKey);
+    if (!view) {
+        view = [UIView new];
+        view.frame = self.bounds;
+        view.backgroundColor = [UIColor clearColor];
+        view.userInteractionEnabled = NO;
+        objc_setAssociatedObject(self, &videoLayerViewKey, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return view;
+}
+
+-(UIView *)indicatorView{
+    UIView *view = objc_getAssociatedObject(self, &indicatorViewKey);
+    if (!view) {
+        view = [UIView new];
+        view.frame = self.bounds;
+        view.backgroundColor = [UIColor clearColor];
+        view.userInteractionEnabled = NO;
+        objc_setAssociatedObject(self, &indicatorViewKey, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return view;
 }
 
 @end

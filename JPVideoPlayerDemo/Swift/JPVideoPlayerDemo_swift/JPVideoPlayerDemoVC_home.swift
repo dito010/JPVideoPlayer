@@ -27,6 +27,7 @@ public enum kJPVideoPlayerDemoScrollDerection: Int {
 }
 
 let JPVideoPlayerDemoNavAndStatusTotalHei : CGFloat = 64.0
+let JPVideoPlayerDemoTabbarHei : CGFloat = 49.0
 let screenSize = UIScreen.main.bounds.size
 let JPVideoPlayerDemoReuseID = "JPVideoPlayerDemoReuseID"
 let  JPVideoPlayerDemoRowHei : CGFloat = CGFloat(screenSize.width)*9.0/16.0
@@ -42,7 +43,7 @@ class JPVideoPlayerDemoVC_home: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if playingCell==nil {
+        if playingCell == nil {
             
             // Find the first cell need to play video in visiable cells.
             // 在可见cell中找第一个有视频的进行播放.
@@ -70,7 +71,7 @@ class JPVideoPlayerDemoVC_home: UITableViewController {
     lazy var tableViewRange : UIView = self.generateTableViewRange()
     
     let generateTableViewRange = { () -> UIView in
-        let tableViewRange = UIView(frame: CGRect(x: 0, y: JPVideoPlayerDemoNavAndStatusTotalHei, width: screenSize.width, height: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei))
+        let tableViewRange = UIView(frame: CGRect(x: 0, y: JPVideoPlayerDemoNavAndStatusTotalHei, width: screenSize.width, height: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei))
         tableViewRange.isUserInteractionEnabled = false
         tableViewRange.backgroundColor = UIColor.clear
         tableViewRange.isHidden = true
@@ -225,7 +226,6 @@ extension JPVideoPlayerDemoVC_home {
         setupNavBar()
         setupTableView()
         displayTableViewRange()
-        viewDidLoadEvents()
     }
     
     func setupNavBar() {
@@ -257,8 +257,8 @@ extension JPVideoPlayerDemoVC_home {
         let linePath1 = UIBezierPath()
         linePath1.move(to: CGPoint(x: 1, y: 1))
         linePath1.addLine(to: CGPoint(x: screenSize.width-1, y: 1))
-        linePath1.addLine(to: CGPoint(x: screenSize.width-1, y: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1))
-        linePath1.addLine(to: CGPoint(x: 1, y: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1))
+        linePath1.addLine(to: CGPoint(x: screenSize.width-1, y: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1-JPVideoPlayerDemoTabbarHei))
+        linePath1.addLine(to: CGPoint(x: 1, y: screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1-JPVideoPlayerDemoTabbarHei))
         linePath1.addLine(to: CGPoint(x: 1, y: 1))
         
         let layer1 = CAShapeLayer()
@@ -272,8 +272,8 @@ extension JPVideoPlayerDemoVC_home {
         tableViewRange.layer.addSublayer(layer1)
         
         let linePath2 = UIBezierPath()
-        linePath2.move(to: CGPoint(x: 1, y: 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1)))
-        linePath2.addLine(to: CGPoint(x: screenSize.width-1, y: 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1)))
+        linePath2.move(to: CGPoint(x: 1, y: 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1-JPVideoPlayerDemoTabbarHei)))
+        linePath2.addLine(to: CGPoint(x: screenSize.width-1, y: 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-1-JPVideoPlayerDemoTabbarHei)))
         
         let layer2 = CAShapeLayer()
         let drawColor2 = UIColor(colorLiteralRed: 0, green: 0.98, blue: 0, alpha: 1)
@@ -284,18 +284,6 @@ extension JPVideoPlayerDemoVC_home {
         layer2.lineDashPattern = [6, 3]
         layer2.lineCap = "round"
         tableViewRange.layer.addSublayer(layer2)
-    }
-    
-    func viewDidLoadEvents() {
-        // Count all cache size.
-        JPVideoPlayerCache.shared().calculateSize { (fileCount, totalSize) in
-            print("Total cache size, 总缓存大小: \(CGFloat(totalSize)/1024.0/1024.0)/MB, 总缓存文件数: \(fileCount), 你可以使用框架提供的方法, 清除所有缓存或指定的缓存, 具体请查看 `JPVideoPlayerCache`")
-        }
-        
-        // Clear all cache.
-        // JPVideoPlayerCache.shared().clearDisk {
-        //    print("ClearDiskFinished, 清空磁盘完成")
-        // }
     }
 }
 
@@ -355,6 +343,11 @@ extension JPVideoPlayerDemoVC_home {
             return
         }
         
+        // 防止弹出新的控制器时 tableView 自动调用滚动方法, 导致最后一个 cell 无法播放视频.
+        if tableViewRange.isHidden {
+            return;
+        }
+        
         // Stop play when the cell playing video is unvisiable.
         // 当前播放视频的cell移出视线，要移除播放器.
         if !playingCellIsVisiable() {
@@ -379,7 +372,7 @@ extension JPVideoPlayerDemoVC_home{
         
         var windowRect = UIScreen.main.bounds
         windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
-        windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
+        windowRect.size.height -= (JPVideoPlayerDemoNavAndStatusTotalHei + JPVideoPlayerDemoTabbarHei);
         
         // To find next cell need play video.
         // 找到下一个要播放的cell(最在屏幕中心的).

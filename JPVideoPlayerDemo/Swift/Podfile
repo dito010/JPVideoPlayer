@@ -1,12 +1,9 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, ‘8.0’
 
 target 'JPVideoPlayerDemo_swift' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-  use_frameworks!
 
-  # Pods for JPVideoPlayerDemo_swift
+use_frameworks!
 
-pod 'JPVideoPlayer', '~> 2.0.3’
+pod 'JPVideoPlayer', '~> 2.0.4’
+pod 'JPNavigationController', '~> 1.2.6'
 
 end

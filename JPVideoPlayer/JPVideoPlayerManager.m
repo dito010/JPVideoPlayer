@@ -357,6 +357,7 @@
     dispatch_main_async_safe(^{
         if (self.showViews.count) {
             for (UIView *view in self.showViews) {
+                [view removeVideoLayerViewAndIndicatorView];
                 [view hideActivityIndicatorView];
                 [view hideProgressView];
                 view.currentPlayingURL = nil;
