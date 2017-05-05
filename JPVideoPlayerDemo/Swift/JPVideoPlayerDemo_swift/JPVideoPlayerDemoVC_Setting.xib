@@ -102,7 +102,7 @@
                                 <constraint firstAttribute="height" constant="40" id="e7r-91-en9"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <state key="normal" title="申请加入 JPVideoPlayer 群">
+                            <state key="normal" title="申请加入 NewPan 和他的朋友们群">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>

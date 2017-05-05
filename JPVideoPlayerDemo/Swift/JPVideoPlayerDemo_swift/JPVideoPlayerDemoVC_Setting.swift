@@ -60,7 +60,7 @@ extension JPVideoPlayerDemoVC_Setting {
         let vc = UIViewController()
         vc.hidesBottomBarWhenPushed = true
         vc.view.backgroundColor = UIColor.white
-        vc.title = "扫描加入 JPVideoPlayer 群"
+        vc.title = "扫描加入 NewPan 和他的朋友们群"
         
         let imv = UIImageView()
         imv.frame = CGRect(x: 0, y: 0, width: 250, height: 250)

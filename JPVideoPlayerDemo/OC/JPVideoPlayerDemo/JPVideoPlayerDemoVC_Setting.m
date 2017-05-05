@@ -110,7 +110,7 @@
     UIViewController *vc = [[UIViewController alloc]init];
     vc.hidesBottomBarWhenPushed = YES;
     vc.view.backgroundColor = [UIColor whiteColor];
-    vc.title = @"扫描加入 JPVideoPlayer 群";
+    vc.title = @"扫描加入 NewPan 和他的朋友们群";
     
     NSArray *colors = @[[UIColor colorWithRed:98.0/255.0 green:152.0/255.0 blue:209.0/255.0 alpha:1], [UIColor colorWithRed:190.0/255.0 green:53.0/255.0 blue:77.0/255.0 alpha:1]];
     NSString *codeStr = @"http://qm.qq.com/cgi-bin/qm/qr?k=iOcOSuD9eYS7kdmcclRFnWFkHZbGIjdm";
