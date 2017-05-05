@@ -15,8 +15,8 @@
                 <outlet property="clearBtn" destination="SyR-Hd-kjj" id="WT7-b2-M9Y"/>
                 <outlet property="githubBtn" destination="va8-WC-9Zs" id="7VV-hw-8hh"/>
                 <outlet property="jianshuBtn" destination="QJZ-6X-g8r" id="9xX-7G-TZu"/>
+                <outlet property="qqBtn" destination="ujU-bn-FWU" id="Q9a-Yh-N3J"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
-                <outlet property="wechatBtn" destination="ujU-bn-FWU" id="qLC-BM-Jaz"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -102,11 +102,11 @@
                                 <constraint firstAttribute="height" constant="40" id="e7r-91-en9"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <state key="normal" title="成为 NewPan 的微信好友">
+                            <state key="normal" title="申请加入 JPVideoPlayer 群">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
-                                <action selector="wechatBtnClick" destination="-1" eventType="touchUpInside" id="gqZ-xV-SVl"/>
+                                <action selector="qqBtnClick" destination="-1" eventType="touchUpInside" id="Kqz-Z3-XkI"/>
                             </connections>
                         </button>
                     </subviews>

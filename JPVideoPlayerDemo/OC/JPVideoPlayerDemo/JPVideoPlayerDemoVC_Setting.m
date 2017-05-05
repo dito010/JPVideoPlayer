@@ -21,7 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *githubBtn;
 
-@property (weak, nonatomic) IBOutlet UIButton *wechatBtn;
+@property (weak, nonatomic) IBOutlet UIButton *qqBtn;
 
 @end
 
@@ -60,7 +60,7 @@
     [self gotoWebForGivenWebSite:@"https://github.com/Chris-Pan"];
 }
 
-- (IBAction)wechatBtnClick:(id)sender {
+- (IBAction)qqBtnClick:(id)sender {
     [self goWechat];
 }
 
@@ -73,7 +73,7 @@
     self.clearBtn.layer.cornerRadius =
     self.jianshuBtn.layer.cornerRadius =
     self.githubBtn.layer.cornerRadius =
-    self.wechatBtn.layer.cornerRadius = 5.0;
+    self.qqBtn.layer.cornerRadius = 5.0;
     
     [self calculateCacheMes];
 }
@@ -110,12 +110,12 @@
     UIViewController *vc = [[UIViewController alloc]init];
     vc.hidesBottomBarWhenPushed = YES;
     vc.view.backgroundColor = [UIColor whiteColor];
-    vc.title = @"NewPan 的微信二维码";
+    vc.title = @"扫描加入 JPVideoPlayer 群";
     
     NSArray *colors = @[[UIColor colorWithRed:98.0/255.0 green:152.0/255.0 blue:209.0/255.0 alpha:1], [UIColor colorWithRed:190.0/255.0 green:53.0/255.0 blue:77.0/255.0 alpha:1]];
-    NSString *codeStr = @"http://weixin.qq.com/r/FeMxKeHeT7wwraVK97YH";
+    NSString *codeStr = @"http://qm.qq.com/cgi-bin/qm/qr?k=iOcOSuD9eYS7kdmcclRFnWFkHZbGIjdm";
     
-    UIImage *img = [JPQRCodeTool generateCodeForString:codeStr withCorrectionLevel:kQRCodeCorrectionLevelHight SizeType:kQRCodeSizeTypeCustom customSizeDelta:50 drawType:kQRCodeDrawTypeCircle gradientType:kQRCodeGradientTypeDiagonal gradientColors:colors];
+    UIImage *img = [JPQRCodeTool generateCodeForString:codeStr withCorrectionLevel:kQRCodeCorrectionLevelNormal SizeType:kQRCodeSizeTypeCustom customSizeDelta:50 drawType:kQRCodeDrawTypeCircle gradientType:kQRCodeGradientTypeDiagonal gradientColors:colors];
     UIImageView *imv = [UIImageView new];
     imv.image = img;
     imv.center = vc.view.center;
