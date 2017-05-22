@@ -55,9 +55,6 @@ static char backgroundLayerKey;
         view.backgroundColor = [UIColor clearColor];
         view.userInteractionEnabled = NO;
         objc_setAssociatedObject(self, &indicatorViewKey, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
-        self.jp_backgroundLayer.frame = self.bounds;
-        [self.jp_videoLayerView.layer addSublayer:self.jp_backgroundLayer];
     }
     return view;
 }
@@ -79,6 +76,11 @@ static char backgroundLayerKey;
 
 #pragma mark -----------------------------------------
 #pragma mark Private
+
+-(void)displayBackLayer{
+    self.jp_backgroundLayer.frame = self.bounds;
+    [self.jp_videoLayerView.layer addSublayer:self.jp_backgroundLayer];
+}
 
 -(void)refreshIndicatorViewForPortrait{
     [self layoutProgressViewForPortrait:self.progressView];

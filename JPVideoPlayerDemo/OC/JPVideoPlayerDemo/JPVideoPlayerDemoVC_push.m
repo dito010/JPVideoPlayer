@@ -93,7 +93,8 @@
 }
 
 - (IBAction)playOrPause:(id)sender {
-    if (self.videoImv.playingStatus == JPVideoPlayerPlayingStatusPlaying) {
+    JPVideoPlayerPlayingStatus status = self.videoImv.playingStatus;
+    if (status == JPVideoPlayerPlayingStatusPlaying) {
         [self.videoImv jp_pause];
     }
     else{

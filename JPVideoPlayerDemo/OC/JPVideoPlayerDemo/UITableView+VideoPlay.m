@@ -38,9 +38,6 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
         
         // display status view.
         [videoCell.videoImv jp_playVideoWithURL:[NSURL URLWithString:videoCell.videoPath]];
-        
-        // hide status view.
-        // [videoCell.videoImv jp_playVideoMutedWithURL:[NSURL URLWithString:videoCell.videoPath]];
     }
 }
 

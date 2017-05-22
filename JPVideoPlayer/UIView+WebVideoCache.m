@@ -281,7 +281,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
     return YES;
 }
 
--(void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+-(void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
     self.playingStatus = playingStatus;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingStatusDidChanged:)]) {
         [self.jp_videoPlayerDelegate playingStatusDidChanged:playingStatus];

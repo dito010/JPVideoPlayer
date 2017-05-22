@@ -158,13 +158,16 @@
         NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
             
-            BOOL needDisplayProgress = [self needDisplayProgressViewWithDownloadingProgressValue:1 playingProgressValue:0];
+            BOOL needDisplayProgress = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:1.0];
             
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             if (needDisplayProgress) {
                 [showView performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@1];
             }
+            
+            // display backLayer.
+            [showView performSelector:NSSelectorFromString(@"displayBackLayer")];
 #pragma clang diagnostic pop
             
             [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:path options:options showOnView:showView playingProgress:^(CGFloat progress) {
@@ -172,7 +175,7 @@
                 if (!sShowView) return;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                BOOL needDisplayProgress = [self needDisplayProgressViewWithDownloadingProgressValue:sShowView.downloadProgressValue playingProgressValue:progress];
+                BOOL needDisplayProgress = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
                 if (needDisplayProgress) {
                     [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
                 }
@@ -243,9 +246,13 @@
                                     if (![JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem) {
                                         __strong typeof(wShowView) sShowView = wShowView;
                                         if (!sShowView) return;
-                                        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                                        // display backLayer.
+                                        [sShowView performSelector:NSSelectorFromString(@"displayBackLayer")];
+#pragma clang diagnostic pop
                                         [[JPVideoPlayerPlayVideoTool sharedTool] playVideoWithURL:url tempVideoCachePath:tempVideoCachedPath options:options videoFileExceptSize:expectedSize videoFileReceivedSize:storedSize showOnView:sShowView playingProgress:^(CGFloat progress) {
-                                            BOOL needDisplayProgress = [self needDisplayProgressViewWithDownloadingProgressValue:sShowView.downloadProgressValue playingProgressValue:progress];
+                                            BOOL needDisplayProgress = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                                             if (needDisplayProgress) {
@@ -354,19 +361,21 @@
                 
                 // play video from disk.
                 if (cacheType==JPVideoPlayerCacheTypeDisk) {
-                    BOOL needDisplayProgressView = [self needDisplayProgressViewWithDownloadingProgressValue:1 playingProgressValue:0];
+                    BOOL needDisplayProgressView = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:1.0];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     if (needDisplayProgressView) {
                         [showView performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@1];
                     }
+                    // display backLayer.
+                    [showView performSelector:NSSelectorFromString(@"displayBackLayer")];
 #pragma clang diagnostic pop
                     
                     [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:videoPath options:options showOnView:showView playingProgress:^(CGFloat progress) {
                         __strong typeof(wShowView) sShowView = wShowView;
                         if (!sShowView) return;
                         
-                        BOOL needDisplayProgressView = [self needDisplayProgressViewWithDownloadingProgressValue:1 playingProgressValue:progress];
+                        BOOL needDisplayProgressView = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                         if (needDisplayProgressView) {
@@ -476,8 +485,16 @@
 #pragma mark -----------------------------------------
 #pragma mark Private
 
--(BOOL)needDisplayProgressViewWithDownloadingProgressValue:(CGFloat)downloadingProgress playingProgressValue:(CGFloat)playingProgress{
-    return self.delegate && ([self.delegate respondsToSelector:@selector(videoPlayerManager:playingProgressDidChanged:)] || [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadingProgressDidChanged:)]) && ([self.delegate videoPlayerManager:self downloadingProgressDidChanged:downloadingProgress] || [self.delegate videoPlayerManager:self playingProgressDidChanged:playingProgress]);
+-(BOOL)needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)downloadingProgress{
+    BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadingProgressDidChanged:)];
+    BOOL download = [self.delegate videoPlayerManager:self downloadingProgressDidChanged:downloadingProgress];
+    return  respond && download;
+}
+
+-(BOOL)needDisplayPlayingProgressViewWithPlayingProgressValue:(CGFloat)playingProgress{
+    BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingProgressDidChanged:)];
+    BOOL playing = [self.delegate videoPlayerManager:self playingProgressDidChanged:playingProgress];
+    return  respond && playing;
 }
 
 -(void)hideAllIndicatorAndProgressViewsWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
@@ -506,7 +523,7 @@
 }
 
 -(void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
-    if (![self needDisplayProgressViewWithDownloadingProgressValue:0 playingProgressValue:0]) {
+    if (![self needDisplayPlayingProgressViewWithPlayingProgressValue:0] || ![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:0]) {
         return;
     }
     
@@ -530,7 +547,7 @@
 }
 
 -(void)progressRefreshWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options receiveSize:(NSUInteger)receiveSize exceptSize:(NSUInteger)expectedSize{
-    if (![self needDisplayProgressViewWithDownloadingProgressValue:(CGFloat)receiveSize/expectedSize playingProgressValue:self.showViews.firstObject.playingProgressValue]) {
+    if (![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)receiveSize/expectedSize]) {
         return;
     }
     
@@ -557,7 +574,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     dispatch_main_async_safe(^{
-        BOOL needDisplayProgress = [self needDisplayProgressViewWithDownloadingProgressValue:0 playingProgressValue:0];
+        BOOL needDisplayProgress = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:0] || [self needDisplayPlayingProgressViewWithPlayingProgressValue:0];
 
         if ((options & JPVideoPlayerShowProgressView) && needDisplayProgress) {
             [view performSelector:NSSelectorFromString(@"jp_showProgressView")];

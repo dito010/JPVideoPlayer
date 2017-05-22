@@ -173,7 +173,7 @@
 		48FD32691EB6FF3B00ACCB05 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				48FD326C1EB6FF6300ACCB05 /* Present */,
+				48FD326C1EB6FF6300ACCB05 /* Push */,
 				48FD326B1EB6FF5E00ACCB05 /* Home */,
 			);
 			name = Player;
@@ -204,14 +204,14 @@
 			name = Home;
 			sourceTree = "<group>";
 		};
-		48FD326C1EB6FF6300ACCB05 /* Present */ = {
+		48FD326C1EB6FF6300ACCB05 /* Push */ = {
 			isa = PBXGroup;
 			children = (
 				481650631ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.h */,
 				481650641ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m */,
 				481650651ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib */,
 			);
-			name = Present;
+			name = Push;
 			sourceTree = "<group>";
 		};
 		48FD326E1EB701AC00ACCB05 /* QRCode */ = {
