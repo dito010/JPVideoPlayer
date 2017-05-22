@@ -37,7 +37,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
         self.playingCell = videoCell;
         
         // display status view.
-        [videoCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:[NSURL URLWithString:videoCell.videoPath]];
+        [videoCell.videoImv jp_playVideoWithURL:[NSURL URLWithString:videoCell.videoPath]];
         
         // hide status view.
         // [videoCell.videoImv jp_playVideoMutedWithURL:[NSURL URLWithString:videoCell.videoPath]];
@@ -55,15 +55,15 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     // 注意, 如果正在播放的 cell 和 finnalCell 是同一个 cell, 不应该在播放.
     if (self.playingCell.hash != bestCell.hash && bestCell.hash != 0) {
         
-        [self.playingCell.videoImv stopPlay];
+        [self.playingCell.videoImv jp_stopPlay];
         
         NSURL *url = [NSURL URLWithString:bestCell.videoPath];
         
         // display status view.
-        [bestCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
+        // [bestCell.videoImv jp_playVideoDisplayStatusViewWithURL:url];
         
         // hide status view.
-        // [bestCell.videoImv jp_playVideoMutedWithURL:url];
+         [bestCell.videoImv jp_playVideoWithURL:url];
         
         self.playingCell = bestCell;
     }
@@ -81,7 +81,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 }
 
 -(void)stopPlay{
-    [self.playingCell.videoImv stopPlay];
+    [self.playingCell.videoImv jp_stopPlay];
     self.playingCell = nil;
 }
 

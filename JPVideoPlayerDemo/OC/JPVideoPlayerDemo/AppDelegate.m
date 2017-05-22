@@ -28,7 +28,7 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     
-    UINavigationController *nav_home = [[UINavigationController alloc]initWithRootViewController:[JPVideoPlayerDemoVC_home new]];
+    JPNavigationController *nav_home = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerDemoVC_home new]];
     nav_home.tabBarItem.image = [[UIImage imageNamed:@"player"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     nav_home.tabBarItem.selectedImage = [[UIImage imageNamed:@"player_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     nav_home.title = @"Player";

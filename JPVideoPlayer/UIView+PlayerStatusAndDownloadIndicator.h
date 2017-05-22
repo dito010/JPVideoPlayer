@@ -12,68 +12,47 @@
 
 #import <UIKit/UIKit.h>
 
+@class JPVideoPlayerProgressView;
+
 @interface UIView (PlayerStatusAndDownloadIndicator)
 
 /**
- * The progress view indicator the downloading progress.
+ * The view of video layer display on.
  */
-@property(nonatomic, readonly, nullable)UIProgressView *progressView;
+@property(nonatomic, readonly, nullable)UIView *jp_videoLayerView;
 
 /**
- * The view to display video layer.
+ * The background layer for video layer.
  */
-@property(nonatomic, readonly, nullable)UIView *videoLayerView;
+@property(nonatomic, readonly, nullable)CALayer *jp_backgroundLayer;
 
 /**
- * Call this method to custom the tint color of progress view(@optional).
+ *  The indicator view to add progress view and activity view.
+ */
+@property(nonatomic, readonly, nullable)UIView *jp_indicatorView;
+
+/**
+ * The download progress value.
+ */
+@property(nonatomic, readonly)CGFloat downloadProgressValue;
+
+/**
+ * The playing progress value.
+ */
+@property(nonatomic, readonly)CGFloat playingProgressValue;
+
+/**
+ * Call this method to custom the dowload indicator color of progress view(@optional).
  *
- * @param tintColor a `UIColor` instance to custom the progress view tint color.
+ * @param color a `UIColor` instance to custom the dowload indicator progress view color.
  */
--(void)perfersProgressViewColor:(UIColor * _Nonnull)tintColor;
+-(void)jp_perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
 
 /**
- * Call this method to custom the background color of progress view(@optional).
+ * Call this method to custom the playing indicator color of progress view(@optional).
  *
- * @param backgroundColor a `UIColor` instance for progress view background color.
+ * @param color a `UIColor` instance to custom the playing indicator progress view color.
  */
--(void)perfersProgressViewBackgroundColor:(UIColor * _Nonnull)backgroundColor;
-
-/**
- * Show the progress view for downloading progress.
- */
--(void)showProgressView;
-
-/**
- * Hide the progress view for downloading progress.
- */
--(void)hideProgressView;
-
-/**
- * Update the progress view's progress.
- * 
- * @param receivedSize The video data cached in disk.
- * @param expectSize  The video data total length.
- */
--(void)progressViewStatusChangedWithReceivedSize:(NSUInteger)receivedSize expectSize:(NSUInteger)expectSize;
-
-/**
- * Show the activity indicator view for player status.
- */
--(void)showActivityIndicatorView;
-
-/**
- * Hide tthe activity indicator view for player status.
- */
--(void)hideActivityIndicatorView;
-
-/**
- * Set up the video layer view and indicator view.
- */
--(void)setupVideoLayerViewAndIndicatorView;
-
-/**
- * Remove the video layer view and indicator view..
- */
--(void)removeVideoLayerViewAndIndicatorView;
+-(void)jp_perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
 
 @end

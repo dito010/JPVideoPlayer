@@ -13,8 +13,8 @@
 #import "JPVideoPlayerDemoVC_home.h"
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerDemoCell.h"
-#import "JPVideoPlayerDemoVC_present.h"
 #import "UITableView+VideoPlay.h"
+#import "JPVideoPlayerDemoVC_push.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -73,7 +73,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [super viewWillDisappear:animated];
     
     if (self.tableView.playingCell) {
-        [self.tableView.playingCell.videoImv stopPlay];
+        [self.tableView.playingCell.videoImv jp_stopPlay];
     }
     
     self.tableViewRange.hidden = YES;
@@ -118,8 +118,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 #pragma mark TableView Delegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    JPVideoPlayerDemoVC_present *single = [JPVideoPlayerDemoVC_present new];
-    [self presentViewController:single animated:YES completion:nil];
+    JPVideoPlayerDemoVC_push *single = [JPVideoPlayerDemoVC_push new];
+    single.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:single animated:YES];
     JPVideoPlayerDemoCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     single.videoPath = cell.videoPath;
 }
@@ -192,8 +193,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          // location video path.
                          url.absoluteString,
                          
-                         // The vertical video.
-                         @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
+                         // This url will redirect.
+                         @"http://v.polyv.net/uc/video/getMp4?vid=9c9f71f62d5f24a7f9c6273e469a71a0_9",
                          
                          @"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/lava-guitar-creation-2.mp4",
@@ -201,11 +202,11 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          @"http://lavaweb-10015286.video.myqcloud.com/ideal-pick-2.mp4",
                          
                          // This path is a https.
-                         //                         @"https://bb-bang.com:9002/Test/Vedio/20170110/f49601b6bfe547e0a7d069d9319388f4.mp4",
-                         //                         @"http://123.103.15.1JPVideoPlayerDemoNavAndStatusTotalHei:8880/myVirtualImages/14266942.mp4",
+                         // "https://bb-bang.com:9002/Test/Vedio/20170110/f49601b6bfe547e0a7d069d9319388f4.mp4",
+                         // "http://123.103.15.1JPVideoPlayerDemoNavAndStatusTotalHei:8880/myVirtualImages/14266942.mp4",
                          
                          // This video saved in amazon, maybe load sowly.
-                         //                         @"http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
+                         // "http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_03.mp4",
@@ -216,14 +217,27 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          @"http://120.25.226.186:32812/resources/videos/minion_08.mp4",
                          
                          // To simulate the cell have no video to play.
-                         // 模拟有些cell没有视频
-                         // @"",
+                         // "",
                          @"http://120.25.226.186:32812/resources/videos/minion_10.mp4",
                          @"http://120.25.226.186:32812/resources/videos/minion_11.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/lava-guitar-creation-2.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/hong-song-mei-gui-mu-2.mp4",
                          @"http://lavaweb-10015286.video.myqcloud.com/ideal-pick-2.mp4",
+                         
+                         // The vertical video.
+                         @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
+                         
+                         
+                         
+//                         @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
+//                         @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
+//                         @"http://static.smartisanos.cn/common/video/m1-white.mp4",
+//                         @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
+//                         @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
+//                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+//                         @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
+//                         @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
                          ];
 }
 

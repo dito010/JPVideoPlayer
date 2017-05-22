@@ -12,7 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
-extern CGFloat const ActivityIndicatorWH;
+extern CGFloat const JPVideoPlayerActivityIndicatorWH;
 
 @interface JPVideoPlayerActivityIndicator : UIView
 

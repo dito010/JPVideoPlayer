@@ -12,7 +12,7 @@
 
 #import "JPVideoPlayerActivityIndicator.h"
 
-CGFloat const ActivityIndicatorWH = 46;
+CGFloat const JPVideoPlayerActivityIndicatorWH = 46;
 
 @interface JPVideoPlayerActivityIndicator()
 

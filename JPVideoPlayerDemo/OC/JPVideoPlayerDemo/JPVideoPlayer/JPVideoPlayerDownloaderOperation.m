@@ -14,13 +14,13 @@
 #import "JPVideoPlayerCachePathTool.h"
 #import "JPVideoPlayerManager.h"
 
-NSString *const JPVideoPlayerDownloadStartNotification = @"JPVideoPlayerDownloadStartNotification";
-NSString *const JPVideoPlayerDownloadReceiveResponseNotification = @"JPVideoPlayerDownloadReceiveResponseNotification";
-NSString *const JPVideoPlayerDownloadStopNotification = @"JPVideoPlayerDownloadStopNotification";
-NSString *const JPVideoPlayerDownloadFinishNotification = @"JPVideoPlayerDownloadFinishNotification";
+NSString *const JPVideoPlayerDownloadStartNotification = @"www.jpvideplayer.download.start.notification";
+NSString *const JPVideoPlayerDownloadReceiveResponseNotification = @"www.jpvideoplayer.download.received.response.notification";
+NSString *const JPVideoPlayerDownloadStopNotification = @"www.jpvideplayer.download.stop.notification";
+NSString *const JPVideoPlayerDownloadFinishNotification = @"www.jpvideplayer.download.finished.notification";
 
-static NSString *const kProgressCallbackKey = @"kProgressCallbackKey";
-static NSString *const kErrorCallbackKey = @"kErrorCallbackKey";
+static NSString *const kProgressCallbackKey = @"www.jpvideplayer.progress.callback";
+static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
 
 typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 

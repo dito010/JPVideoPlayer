@@ -9,10 +9,9 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import <UIKit/UIKit.h>
 
-@interface JPVideoPlayerDemoVC_present : UIViewController
+@interface JPVideoPlayerDemoVC_push : UIViewController
 
 /**
  * videoPath

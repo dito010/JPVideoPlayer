@@ -21,7 +21,7 @@
 -(void)awakeFromNib{
     [super awakeFromNib];
     
-    self.videoImv.videoPlayerDelegate = self;
+    self.videoImv.jp_videoPlayerDelegate = self;
 }
 
 -(void)setIndexPath:(NSIndexPath *)indexPath{
@@ -48,6 +48,10 @@
     // do something here.
     return YES;
 }
+
+//-(BOOL)shouldProgressViewOnTop{
+//    return YES;
+//}
 
 
 @end
