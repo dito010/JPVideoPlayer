@@ -34,12 +34,12 @@
 /**
  * The download progress value.
  */
-@property(nonatomic, readonly)CGFloat downloadProgressValue;
+@property(nonatomic, readonly)CGFloat jp_downloadProgressValue;
 
 /**
  * The playing progress value.
  */
-@property(nonatomic, readonly)CGFloat playingProgressValue;
+@property(nonatomic, readonly)CGFloat jp_playingProgressValue;
 
 /**
  * Call this method to custom the dowload indicator color of progress view(@optional).

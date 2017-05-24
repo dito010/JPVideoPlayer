@@ -117,7 +117,7 @@ static char backgroundLayerKey;
     delta = MAX(0, delta);
     delta = MIN(delta, 1);
     [self.progressView setDownloadProgress:delta];
-    self.downloadProgressValue = delta;
+    self.jp_downloadProgressValue = delta;
 }
 
 -(void)jp_progressViewPlayingStatusChangedWithProgressValue:(NSNumber *)progress{
@@ -125,7 +125,7 @@ static char backgroundLayerKey;
     delta = MAX(0, delta);
     delta = MIN(delta, 1);
     [self.progressView setPlayingProgress:delta];
-    self.playingProgressValue = delta;
+    self.jp_playingProgressValue = delta;
 }
 
 -(void)jp_showActivityIndicatorView{
@@ -170,19 +170,19 @@ static char backgroundLayerKey;
     return backLayer;
 }
 
--(void)setPlayingProgressValue:(CGFloat)playingProgressValue{
-    objc_setAssociatedObject(self, &playingProgressValueKey, @(playingProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+-(void)setJp_playingProgressValue:(CGFloat)jp_playingProgressValue{
+    objc_setAssociatedObject(self, &playingProgressValueKey, @(jp_playingProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(CGFloat)playingProgressValue{
+-(CGFloat)jp_playingProgressValue{
     return [objc_getAssociatedObject(self, &playingProgressValueKey) floatValue];
 }
 
--(void)setDownloadProgressValue:(CGFloat)downloadProgressValue{
-    objc_setAssociatedObject(self, &downloadProgressValueKey, @(downloadProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+-(void)setJp_downloadProgressValue:(CGFloat)jp_downloadProgressValue{
+   objc_setAssociatedObject(self, &downloadProgressValueKey, @(jp_downloadProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(CGFloat)downloadProgressValue{
+-(CGFloat)jp_downloadProgressValue{
     return [objc_getAssociatedObject(self, &downloadProgressValueKey) floatValue];
 }
 
