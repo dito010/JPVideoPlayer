@@ -38,19 +38,19 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 #pragma mark Play Video Methods
 
 -(void)jp_playVideoWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerMutedPlay progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView progress:nil completed:nil];
 }
 
--(void)jp_playVideoDisplayStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completed:nil];
+-(void)jp_playVideoHiddenStatusViewWithURL:(NSURL *)url{
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completed:nil];
 }
 
 -(void)jp_playVideoMutedDisplayStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay progress:nil completed:nil];
 }
 
--(void)jp_playVideoMutedWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completed:nil];
+-(void)jp_playVideoMutedHiddenStatusViewWithURL:(NSURL *)url{
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView progress:nil completed:nil];
 }
 
 -(void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(JPVideoPlayerCompletionBlock)completedBlock{
@@ -139,8 +139,11 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
         return;
     }
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // hide status bar.
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic pop
     
     self.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
     
@@ -179,8 +182,12 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
         return;
     }
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // display status bar.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic pop
+
     
     self.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
     
@@ -220,7 +227,10 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 #pragma mark Private
 
 -(void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:YES];
+#pragma clang diagnostic pop
 }
 
 -(void)setParentView_beforeFullScreen:(UIView *)parentView_beforeFullScreen{

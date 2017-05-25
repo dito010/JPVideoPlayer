@@ -12,6 +12,10 @@
 #import "UIView+WebVideoCache.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "JPVideoPlayerCache.h"
+#import "JPVideoPlayerDownloader.h"
+#import "JPVideoPlayerOperation.h"
+#import "JPVideoPlayerManager.h"
+#import "JPVideoPlayerCompat.h"
 
 
 

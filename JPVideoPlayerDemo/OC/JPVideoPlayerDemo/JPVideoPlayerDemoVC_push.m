@@ -50,8 +50,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.videoImv jp_playVideoDisplayStatusViewWithURL:[NSURL URLWithString:_videoPath]];
-    // [self.videoImv jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
+    [self.videoImv jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
     
     [self.videoImv jp_perfersPlayingProgressViewColor:[UIColor redColor]];
     [self.videoImv jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
