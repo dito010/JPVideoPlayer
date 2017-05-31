@@ -4,8 +4,10 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>JPVideoPlayer.xcscheme_^#shared#^_</key>
+		<key>JPVideoPlayer.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
@@ -14,10 +16,25 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>VideoPlayer.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>48B548EC1ED5B3AB00062DC2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>48CB2C121EDE49EA009DD486</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>48CB2C621EDE4E0C009DD486</key>
 		<dict>
 			<key>primary</key>
 			<true/>

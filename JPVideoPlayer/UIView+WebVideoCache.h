@@ -9,6 +9,7 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
+
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerManager.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
@@ -47,6 +48,13 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
  * @return Return YES to take the progress view to top.
  */
 -(BOOL)shouldProgressViewOnTop;
+
+/**
+ * Controls the color of the layer under video palyer. by default it is NO, means that the color of the layer is `clearColor`.
+ *
+ * @return YES to make the color of the layer be `blackColor`.
+ */
+-(BOOL)shouldDisplayBlackLayerBeforePlayStart;
 
 /**
  * Notify the playing status.
@@ -91,9 +99,11 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
 #pragma mark - Play Video Methods
 
 /**
- * Play `video` with an `url` on the view.
+ * Play `video` with an `url` on the view, and play audio at the same time.
  *
  * The download is asynchronous and cached.
+ *
+ * The progress view will display when downloading, and will display indicator view when buffer empty.
  *
  * @param url The url for the video.
  */
@@ -104,11 +114,11 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
  *
  * The download is asynchronous and cached.
  *
- * The progress view will display when downloading, and will display indicator view when buffer empty.
+ * The progress view will hidden when downloading, and will display indicator view when buffer empty.
  *
  * @param url The url for the video.
  */
-- (void)jp_playVideoDisplayStatusViewWithURL:(nullable NSURL *)url;
+-(void)jp_playVideoHiddenStatusViewWithURL:(nullable NSURL *)url;
 
 /**
  * Play `video` with an `url` on the view.
@@ -117,9 +127,11 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
  *
  * Not audio output of the player is muted. Only affects audio muting for the player instance and not for the device.
  *
+ * The progress view will hidden when downloading, and will display indicator view when buffer empty.
+ *
  * @param url The url for the video.
  */
-- (void)jp_playVideoMutedWithURL:(nullable NSURL *)url;
+- (void)jp_playVideoMutedHiddenStatusViewWithURL:(nullable NSURL *)url;
 
 /**
  * Play `video` with an `url` on the view.
@@ -128,7 +140,7 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
  *
  * The progress view will display when downloading, and will display indicator view when buffer empty.
  *
- * Not audio output of the player is muted. Only affects audio muting for the player instance and not for the device
+ * Not audio output of the player is muted. Only affects audio muting for the player instance and not for the device.
  *
  * @param url The url for the video.
  */

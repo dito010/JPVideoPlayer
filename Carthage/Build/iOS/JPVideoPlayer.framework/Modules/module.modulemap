@@ -1,6 +1,0 @@
-framework module JPVideoPlayer {
-  umbrella header "JPVideoPlayer.h"
-
-  export *
-  module * { export * }
-}

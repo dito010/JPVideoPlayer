@@ -54,6 +54,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
+    self.tableView.delegate = self;
+    
     if (!self.tableView.playingCell) {
         
         // Find the first cell need to play video in visiable cells.
@@ -71,6 +74,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    
+    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
+    self.tableView.delegate = nil;
     
     if (self.tableView.playingCell) {
         [self.tableView.playingCell.videoImv jp_stopPlay];

@@ -78,7 +78,17 @@ static char backgroundLayerKey;
 #pragma mark Private
 
 -(void)displayBackLayer{
+    if (self.jp_backgroundLayer.superlayer) {
+        return;
+    }
     self.jp_backgroundLayer.frame = self.bounds;
+    UIColor *backcolor = [UIColor clearColor];
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldDisplayBlackLayerBeforePlayStart)]) {
+        if ([self.jp_videoPlayerDelegate shouldDisplayBlackLayerBeforePlayStart]) {
+            backcolor = [UIColor blackColor];
+        }
+    }
+    self.jp_backgroundLayer.backgroundColor = backcolor.CGColor;
     [self.jp_videoLayerView.layer addSublayer:self.jp_backgroundLayer];
 }
 
