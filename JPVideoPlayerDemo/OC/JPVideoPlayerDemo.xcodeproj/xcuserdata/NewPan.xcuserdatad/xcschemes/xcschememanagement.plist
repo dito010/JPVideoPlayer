@@ -4,13 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>JPVideoPlayer.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
-		</dict>
 		<key>JPVideoPlayerDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -35,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>48CB2C621EDE4E0C009DD486</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>48CB2CC81EDF034D009DD486</key>
 		<dict>
 			<key>primary</key>
 			<true/>

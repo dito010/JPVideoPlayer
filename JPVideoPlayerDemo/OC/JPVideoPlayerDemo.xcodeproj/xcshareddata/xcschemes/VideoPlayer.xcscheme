@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48CB2C621EDE4E0C009DD486"
+               BlueprintIdentifier = "48CB2CC81EDF034D009DD486"
                BuildableName = "VideoPlayer.framework"
                BlueprintName = "VideoPlayer"
                ReferencedContainer = "container:JPVideoPlayerDemo.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48CB2C621EDE4E0C009DD486"
+            BlueprintIdentifier = "48CB2CC81EDF034D009DD486"
             BuildableName = "VideoPlayer.framework"
             BlueprintName = "VideoPlayer"
             ReferencedContainer = "container:JPVideoPlayerDemo.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48CB2C621EDE4E0C009DD486"
+            BlueprintIdentifier = "48CB2CC81EDF034D009DD486"
             BuildableName = "VideoPlayer.framework"
             BlueprintName = "VideoPlayer"
             ReferencedContainer = "container:JPVideoPlayerDemo.xcodeproj">
