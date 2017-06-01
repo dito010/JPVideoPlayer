@@ -31,6 +31,7 @@ You may download my demo to know how to play video in UITableViewController, thi
 - [x] HTTPS support
 - [x] Swift support
 - [x] Carthage support
+- [x] Landscape support
 
 ## Requirements
 
@@ -218,6 +219,7 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 - [x] HTTPS 支持
 - [x] Swift 支持
 - [x] Carthage 支持
+- [x] 横屏支持
 
 ## 组件要求
 
