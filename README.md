@@ -187,7 +187,7 @@ end
 [Carthage](https://github.com/Carthage/Carthage) is a simple, decentralized dependency manager for Cocoa.
 
 ```
-github "Chris-Pan/JPVideoPlayer"
+github "newyjp/JPVideoPlayer"
 
 ```
 
@@ -369,7 +369,7 @@ end
 
 #### cartfile
 ```
-github "Chris-Pan/JPVideoPlayer"
+github "newyjp/JPVideoPlayer"
 ```
 
 
