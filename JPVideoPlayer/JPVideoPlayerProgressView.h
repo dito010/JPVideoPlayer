@@ -28,32 +28,32 @@
  *
  * @param downloadProgress the progress value, this value must between 0 and 1.
  */
--(void)setDownloadProgress:(CGFloat)downloadProgress;
+- (void)setDownloadProgress:(CGFloat)downloadProgress;
 
 /**
  * Refresh playing progress by pass the progress value.
  *
  * @param playingProgress the progress value, this value must between 0 and 1.
  */
--(void)setPlayingProgress:(CGFloat)playingProgress;
+- (void)setPlayingProgress:(CGFloat)playingProgress;
 
 /**
  * Call this method to custom the dowload indicator color of progress view(@optional).
  *
  * @param color a `UIColor` instance to custom the dowload indicator progress view color.
  */
--(void)perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
+- (void)perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
 
 /**
  * Call this method to custom the playing indicator color of progress view(@optional).
  *
  * @param color a `UIColor` instance to custom the playing indicator progress view color.
  */
--(void)perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
+- (void)perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
 
 /**
  * Call this method to refresh the progress view frame.
  */
--(void)refreshProgressViewForScreenEvents;
+- (void)refreshProgressViewForScreenEvents;
 
 @end

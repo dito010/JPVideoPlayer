@@ -51,7 +51,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [self insertLineInScreenCenter];
 }
 
--(void)viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
@@ -72,7 +72,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     self.tableViewRange.hidden = NO;
 }
 
--(void)viewWillDisappear:(BOOL)animated{
+- (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
@@ -86,15 +86,14 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark Data Srouce
+#pragma mark - Data Srouce
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     return self.pathStrings.count;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     JPVideoPlayerDemoCell *cell = [tableView dequeueReusableCellWithIdentifier:JPVideoPlayerDemoReuseID forIndexPath:indexPath];
     cell.videoPath = self.pathStrings[indexPath.row];
@@ -120,10 +119,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark TableView Delegate
+#pragma mark - TableView Delegate
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     JPVideoPlayerDemoVC_push *single = [JPVideoPlayerDemoVC_push new];
     single.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:single animated:YES];
@@ -131,7 +129,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     single.videoPath = cell.videoPath;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return JPVideoPlayerDemoRowHei;
 }
 
@@ -156,7 +154,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [self.tableView handleScrollStop];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     // 处理滚动方向
     [self handleScrollDerectionWithOffset:scrollView.contentOffset.y];
@@ -166,20 +164,19 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [self.tableView handleQuickScroll];
 }
 
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     self.offsetY_last = scrollView.contentOffset.y;
 }
 
--(void)handleScrollDerectionWithOffset:(CGFloat)offsetY{
+- (void)handleScrollDerectionWithOffset:(CGFloat)offsetY{
     self.tableView.currentDerection = (offsetY-self.offsetY_last>0) ? JPVideoPlayerDemoScrollDerectionUp : JPVideoPlayerDemoScrollDerectionDown;
     self.offsetY_last = offsetY;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Setup
+#pragma mark - Setup
 
--(void)setup{
+- (void)setup{
     // 自定义导航栏
     UIImageView *navBarImageView = [UIImageView new];
     navBarImageView.image = [UIImage imageNamed:@"navbar"];
@@ -234,26 +231,25 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          // The vertical video.
                          @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
                          
-                         // @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-                         // @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
-                         // @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-                         // @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
-                         // @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
-                         // @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-                         // @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
-                         // @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
+                          @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
+                          @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
+                          @"http://static.smartisanos.cn/common/video/m1-white.mp4",
+                          @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
+                          @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
+                          @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+                          @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
+                          @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
                          ];
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)insertLineInScreenCenter{
+- (void)insertLineInScreenCenter{
     [[UIApplication sharedApplication].keyWindow insertSubview:self.tableViewRange aboveSubview:self.tableView];
 }
 
--(UIView *)tableViewRange{
+- (UIView *)tableViewRange{
     if (!_tableViewRange) {
         _tableViewRange = [UIView new];
         _tableViewRange.userInteractionEnabled = NO;

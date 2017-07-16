@@ -11,10 +11,9 @@
 
 #import "JPVideoPlayerDemoVC_push.h"
 #import "UIView+WebVideoCache.h"
+#import <JPNavigationControllerKit.h>
 
 @interface JPVideoPlayerDemoVC_push ()<JPVideoPlayerDelegate>
-
-@property (nonatomic, strong) UIImageView *videoImv;
 
 @property (weak, nonatomic) IBOutlet UISwitch *muteSwitch;
 
@@ -22,69 +21,79 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *playOrPauseSwitch;
 
+@property (nonatomic, strong) UIView *videoContainer;
+
 @end
 
 #warning 注意: 播放视频的工具类是单例, 单例生命周期为整个应用生命周期, 故而须在 `-viewWillDisappear:`(推荐)或其他方法里 调用 `stopPlay` 方法来停止视频播放, 否则当前控制器销毁了, 视频仍然在后台播放, 虽然看不到图像, 但是能听到声音(如果有).
+#warning 由于 frame 和 Autolayout 的冲突关系, 所以建议需要横屏的那个视频容器 view 用 frame 的方式进行布局.
 
 @implementation JPVideoPlayerDemoVC_push
 
--(void)viewDidLoad{
+- (void)viewDidLoad{
     [super viewDidLoad];
     
     self.navigationController.navigationBarHidden = YES;
-    {
-        self.videoImv = [UIImageView new];
-        CGRect screenBounds = [UIScreen mainScreen].bounds;
-        self.videoImv.frame = CGRectMake(0, 120, screenBounds.size.width, screenBounds.size.width*9.0/16.0);
-        [self.view addSubview:self.videoImv];
-        self.videoImv.userInteractionEnabled = YES;
-        
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-        [self.videoImv addGestureRecognizer:tapGestureRecognizer];
-    }
     
-    self.videoImv.jp_videoPlayerDelegate = self;
-    [self.videoImv jp_perfersLandscapeForViewController:self];
+    // 使用 `JPNavigationController` 处理 pop 手势导致 `AVPlayer` 播放器播放视频卡顿.
+    self.navigationController.jp_useCustomPopAnimationForCurrentViewController = YES;
+    
+    _videoContainer = ({
+        UIView *videoView = [UIView new];
+        videoView.backgroundColor = [UIColor clearColor];
+        CGFloat screenWid = [UIScreen mainScreen].bounds.size.width;
+        videoView.frame = CGRectMake(0, 100, screenWid, screenWid * 9.0 / 16.0);
+        [self.view addSubview:videoView];
+        
+        videoView;
+    });
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    [self.videoContainer addGestureRecognizer:tapGestureRecognizer];
+    
+    self.videoContainer.jp_videoPlayerDelegate = self;
+    [self.videoContainer jp_perfersLandscapeForViewController:self];
 }
 
--(void)viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.videoImv jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
+    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
     
-    [self.videoImv jp_perfersPlayingProgressViewColor:[UIColor redColor]];
-    [self.videoImv jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
-    self.muteSwitch.on = ![self.videoImv jp_playerIsMute];
-    self.playOrPauseSwitch.on = self.videoImv.playingStatus == JPVideoPlayerPlayingStatusPlaying ? NO : YES;
+    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
+    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
+    self.muteSwitch.on = ![self.videoContainer jp_playerIsMute];
+    self.playOrPauseSwitch.on = self.videoContainer.playingStatus == JPVideoPlayerPlayingStatusPlaying ? NO : YES;
 }
 
--(void)viewWillDisappear:(BOOL)animated{
+- (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
-    [self.videoImv jp_stopPlay];
+    [self.videoContainer jp_stopPlay];
 }
 
+- (void)dealloc{
+    NSLog(@"JPVideoPlayerDemoVC_push 释放了");
+}
 
-#pragma mark --------------------------------------------------
 #pragma mark - Tap Event
 
 - (void)handleTapGesture:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
-        if (self.videoImv.viewStatus == JPVideoPlayerVideoViewStatusPortrait) {
-            [self.videoImv jp_landscape];
+        if (self.videoContainer.viewStatus == JPVideoPlayerVideoViewStatusPortrait) {
+            [self.videoContainer jp_landscapeAnimated:YES completion:nil];
         }
-        else if (self.videoImv.viewStatus == JPVideoPlayerVideoViewStatusLandscape) {
-            [self.videoImv jp_portrait];
+        else if (self.videoContainer.viewStatus == JPVideoPlayerVideoViewStatusLandscape) {
+            [self.videoContainer jp_portraitAnimated:YES completion:nil];
         }
     }
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark Click Events
+#pragma mark - Click Events
 
 - (IBAction)muteSwitch:(UISwitch *)sw {
-    [self.videoImv jp_setPlayerMute:!sw.on];
+    [self.videoContainer jp_setPlayerMute:!sw.on];
 }
 
 - (IBAction)closeBtnClick:(id)sender {
@@ -92,39 +101,38 @@
 }
 
 - (IBAction)playOrPause:(id)sender {
-    JPVideoPlayerPlayingStatus status = self.videoImv.playingStatus;
+    JPVideoPlayerPlayingStatus status = self.videoContainer.playingStatus;
     if (status == JPVideoPlayerPlayingStatusPlaying) {
-        [self.videoImv jp_pause];
+        [self.videoContainer jp_pause];
     }
     else{
-        [self.videoImv jp_resume];
+        [self.videoContainer jp_resume];
     }
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark JPVideoPlayerDelegate
+#pragma mark - JPVideoPlayerDelegate
 
--(BOOL)shouldDownloadVideoForURL:(NSURL *)videoURL{
+- (BOOL)shouldDownloadVideoForURL:(NSURL *)videoURL{
     return YES;
 }
 
--(BOOL)shouldAutoReplayAfterPlayCompleteForURL:(NSURL *)videoURL{
+- (BOOL)shouldAutoReplayAfterPlayCompleteForURL:(NSURL *)videoURL{
     return self.autoReplaySwitch.on;
 }
 
--(BOOL)shouldProgressViewOnTop{
+- (BOOL)shouldProgressViewOnTop{
     return NO;
 }
 
--(void)playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
 }
 
-//-(void)downloadingProgressDidChanged:(CGFloat)downloadingProgress{
+//- (void)downloadingProgressDidChanged:(CGFloat)downloadingProgress{
 //    NSLog(@"%0.2lf", downloadingProgress);
 //}
 //
-//-(void)playingProgressDidChanged:(CGFloat)playingProgress{
+//- (void)playingProgressDidChanged:(CGFloat)playingProgress{
 //    NSLog(@"%0.2lf", playingProgress);
 //}
 

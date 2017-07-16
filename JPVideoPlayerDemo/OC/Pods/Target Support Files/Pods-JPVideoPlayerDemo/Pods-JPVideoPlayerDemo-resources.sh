@@ -77,10 +77,10 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "JPNavigationController/JPNavigationController/JPImage.bundle"
+  install_resource "JPNavigationController/JPNavigationController/JPNavigationController.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "JPNavigationController/JPNavigationController/JPImage.bundle"
+  install_resource "JPNavigationController/JPNavigationController/JPNavigationController.bundle"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

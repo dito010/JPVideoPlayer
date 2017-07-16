@@ -46,13 +46,13 @@
  *
  * @param color a `UIColor` instance to custom the dowload indicator progress view color.
  */
--(void)jp_perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
+- (void)jp_perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
 
 /**
  * Call this method to custom the playing indicator color of progress view(@optional).
  *
  * @param color a `UIColor` instance to custom the playing indicator progress view color.
  */
--(void)jp_perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
+- (void)jp_perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
 
 @end

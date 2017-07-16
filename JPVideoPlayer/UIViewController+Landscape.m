@@ -10,7 +10,7 @@
  */
 
 #import "UIViewController+Landscape.h"
-#import "JRSwizzle.h"
+#import <JRSwizzle/JRSwizzle.h>
 #import <objc/runtime.h>
 
 NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideoplayer.landscape.notification";
@@ -29,9 +29,13 @@ NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideopla
 +(void)load{
     [super load];
     
-    [self jr_swizzleMethod:@selector(viewDidLoad) withMethod:@selector(jp_viewDidLoad) error:nil];
-    [self jr_swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(jp_dealloc) error:nil];
-    [self jr_swizzleMethod:@selector(shouldAutorotate) withMethod:@selector(jp_shouldAutorotate) error:nil];
+    // fix #50.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self jr_swizzleMethod:@selector(viewDidLoad) withMethod:@selector(jp_viewDidLoad) error:nil];
+        [self jr_swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(jp_dealloc) error:nil];
+        [self jr_swizzleMethod:@selector(shouldAutorotate) withMethod:@selector(jp_shouldAutorotate) error:nil];
+    });
 }
 
 - (BOOL)jp_shouldAutorotate{
@@ -43,18 +47,17 @@ NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideopla
     }
 }
 
--(void)jp_viewDidLoad{
+- (void)jp_viewDidLoad{
     [self jp_viewDidLoad];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLandscapeNotification:) name:JPVideoPlayerLandscapeNotification object:nil];
 }
 
--(void)jp_dealloc{
-    [self jp_dealloc];
+- (void)jp_dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(BOOL)jp_prefersStatusBarHidden{
+- (BOOL)jp_prefersStatusBarHidden{
     if (self.needLandscapeVC && (self == self.needLandscapeVC)) {
         return NO;
     }
@@ -64,10 +67,9 @@ NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideopla
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)didReceiveLandscapeNotification:(NSNotification *)note{
+- (void)didReceiveLandscapeNotification:(NSNotification *)note{
     UIViewController *vc = note.object;
     if (!vc) {
         return;
@@ -76,11 +78,11 @@ NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideopla
     self.needLandscapeVC = vc;
 }
 
--(void)setNeedLandscapeVC:(UIViewController *)needLandscapeVC{
+- (void)setNeedLandscapeVC:(UIViewController *)needLandscapeVC{
     objc_setAssociatedObject(self, @selector(needLandscapeVC), needLandscapeVC, OBJC_ASSOCIATION_ASSIGN);
 }
 
--(UIViewController *)needLandscapeVC{
+- (UIViewController *)needLandscapeVC{
     return objc_getAssociatedObject(self, _cmd);
 }
 

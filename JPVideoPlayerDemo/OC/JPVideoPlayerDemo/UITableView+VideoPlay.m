@@ -16,7 +16,7 @@ CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
 CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 @implementation UITableView (VideoPlay)
 
--(void)playVideoInVisiableCells{
+- (void)playVideoInVisiableCells{
     
     NSArray *visiableCells = [self visibleCells];
     
@@ -42,10 +42,9 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark Video Play Events
+#pragma mark - Video Play Events
 
--(void)handleScrollStop{
+- (void)handleScrollStop{
     JPVideoPlayerDemoCell *bestCell = [self findTheBestToPlayVideoCell];
     
     // If the found cell is the cell playing video, this situation cannot play video again.
@@ -66,7 +65,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     }
 }
 
--(void)handleQuickScroll{
+- (void)handleQuickScroll{
     
     if (!self.playingCell) return;
     
@@ -77,16 +76,15 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     }
 }
 
--(void)stopPlay{
+- (void)stopPlay{
     [self.playingCell.videoImv jp_stopPlay];
     self.playingCell = nil;
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(JPVideoPlayerDemoCell *)findTheBestToPlayVideoCell{
+- (JPVideoPlayerDemoCell *)findTheBestToPlayVideoCell{
     
     // To find next cell need play video.
     // 找到下一个要播放的cell(最在屏幕中心的).
@@ -154,7 +152,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     return finnalCell;
 }
 
--(BOOL)playingCellIsVisiable{
+- (BOOL)playingCellIsVisiable{
     CGRect windowRect = [UIScreen mainScreen].bounds;
     // because have UINavigationBar here.
     windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
@@ -184,19 +182,19 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     return YES;
 }
 
--(void)setCurrentDerection:(JPVideoPlayerDemoScrollDerection)currentDerection{
+- (void)setCurrentDerection:(JPVideoPlayerDemoScrollDerection)currentDerection{
     objc_setAssociatedObject(self, @selector(currentDerection), @(currentDerection), OBJC_ASSOCIATION_ASSIGN);
 }
 
--(JPVideoPlayerDemoScrollDerection)currentDerection{
+- (JPVideoPlayerDemoScrollDerection)currentDerection{
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
--(void)setMaxNumCannotPlayVideoCells:(NSUInteger)maxNumCannotPlayVideoCells{
+- (void)setMaxNumCannotPlayVideoCells:(NSUInteger)maxNumCannotPlayVideoCells{
     
 }
 
--(NSUInteger)maxNumCannotPlayVideoCells{
+- (NSUInteger)maxNumCannotPlayVideoCells{
     NSUInteger num = [objc_getAssociatedObject(self, _cmd) integerValue];
     if (num==0) {
         CGFloat radius = [UIScreen mainScreen].bounds.size.height / JPVideoPlayerDemoRowHei;
@@ -209,15 +207,15 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     return num;
 }
 
--(void)setPlayingCell:(JPVideoPlayerDemoCell *)playingCell{
+- (void)setPlayingCell:(JPVideoPlayerDemoCell *)playingCell{
     objc_setAssociatedObject(self, @selector(playingCell), playingCell, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(JPVideoPlayerDemoCell *)playingCell{
+- (JPVideoPlayerDemoCell *)playingCell{
     return objc_getAssociatedObject(self, _cmd);
 }
 
--(void)setDictOfVisiableAndNotPlayCells:(NSDictionary *)dictOfVisiableAndNotPlayCells{
+- (void)setDictOfVisiableAndNotPlayCells:(NSDictionary *)dictOfVisiableAndNotPlayCells{
     
 }
 
@@ -238,7 +236,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
  * 注意 : 你需要仔细思考一下我的测量结果, 举个例子, 如果屏幕上有4个cell, 那么这个时候, 我们能够在顶部发现一个滑动不可及cell, 同时, 我们在底部也会发现一个这样的cell.
  * 注意 : 只有每屏可见cell数在3以上时,才会出现滑动不可及cell.
  */
--(NSDictionary *)dictOfVisiableAndNotPlayCells{
+- (NSDictionary *)dictOfVisiableAndNotPlayCells{
     
     // The key is the number of visiable cells in screen, the value is the number of cells cannot stop in screen center.
     // 以每屏可见cell的最大个数为key, 对应的滑动不可及cell数为value

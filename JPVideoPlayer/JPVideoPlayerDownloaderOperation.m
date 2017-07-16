@@ -62,8 +62,7 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
 - (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
                               inSession:(nullable NSURLSession *)session
@@ -111,8 +110,7 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark NSOperation Required
+#pragma mark - NSOperation Required
 
 - (void)start {
     @synchronized (self) {
@@ -189,10 +187,9 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark NSURLSessionDataDelegate
+#pragma mark - NSURLSessionDataDelegate
 
--(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler{
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler{
     
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
@@ -265,7 +262,7 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
     }
 }
 
--(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
     @synchronized(self) {
         self.dataTask = nil;
         
@@ -338,8 +335,7 @@ typedef NSMutableDictionary<NSString *, id> JPCallbacksDictionary;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
 - (void)cancelInternal {
     if (self.isFinished) return;

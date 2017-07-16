@@ -16,8 +16,8 @@ extern CGFloat const JPVideoPlayerActivityIndicatorWH;
 
 @interface JPVideoPlayerActivityIndicator : UIView
 
--(void)startAnimating;
+- (void)startAnimating;
 
--(void)stopAnimating;
+- (void)stopAnimating;
 
 @end

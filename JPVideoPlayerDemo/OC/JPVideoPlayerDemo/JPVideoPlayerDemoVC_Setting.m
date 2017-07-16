@@ -34,8 +34,7 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Click Events
+#pragma mark - Click Events
 
 - (IBAction)clearBtnClick:(id)sender {
     
@@ -65,10 +64,9 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Setup
+#pragma mark - Setup
 
--(void)setup{
+- (void)setup{
     self.navigationController.navigationBar.hidden = YES;
     self.clearBtn.layer.cornerRadius =
     self.jianshuBtn.layer.cornerRadius =
@@ -78,10 +76,9 @@
     [self calculateCacheMes];
 }
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)calculateCacheMes{
+- (void)calculateCacheMes{
     __weak typeof(self) weakSelf = self;
     
     // Count all cache size.
@@ -99,14 +96,14 @@
     }];
 }
 
--(void)gotoWebForGivenWebSite:(NSString *)webSite{
+- (void)gotoWebForGivenWebSite:(NSString *)webSite{
     if (webSite.length==0)
         return;
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:webSite]];
 }
 
--(void)goWechat{
+- (void)goWechat{
     UIViewController *vc = [[UIViewController alloc]init];
     vc.hidesBottomBarWhenPushed = YES;
     vc.view.backgroundColor = [UIColor whiteColor];

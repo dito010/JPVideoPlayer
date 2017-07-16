@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => 'https://github.com/Chris-Pan/JPVideoPlayer.git', :tag => s.version }
   s.source_files  = 'JPVideoPlayer/**/*.{h,m}'
-  s.frameworks = 'Foundation', 'UIKit', 'AVFoundation', 'MobileCoreServices'
+  s.frameworks = 'Foundation', 'UIKit', 'AVFoundation', 'MobileCoreServices', 'JRSwizzle'
   s.requires_arc = true
 
 end

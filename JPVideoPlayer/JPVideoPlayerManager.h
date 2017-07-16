@@ -97,7 +97,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return Return NO to prevent the downloading of the video on cache misses. If not implemented, YES is implied.
  */
--(BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(nullable NSURL *)videoURL;
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(nullable NSURL *)videoURL;
 
 /**
  * Controls which video should automatic replay when the video is play completed.
@@ -107,7 +107,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
--(BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(nullable NSURL *)videoURL;
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(nullable NSURL *)videoURL;
 
 /**
  * Notify the playing status.
@@ -115,7 +115,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  * @param videoPlayerManager The current `JPVideoPlayerManager`.
  * @param playingStatus      The current playing status.
  */
--(void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
 
 /**
  * Notify the download progress value. this method will be called on main thread. 
@@ -126,7 +126,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return return YES means need automatic display progress view, return NO means hidden progress view.
  */
--(BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress;
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress;
 
 /**
  * Notify the playing progress value. this method will be called on main thread.
@@ -136,7 +136,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return return YES means need automatic display progress view, return NO means hidden progress view.
  */
--(BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress;
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress;
 
 @end
 
@@ -204,30 +204,30 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
 /**
  * Call this method to stop play video.
  */
--(void)stopPlay;
+- (void)stopPlay;
 
 /**
  *  Call this method to pause play.
  */
--(void)pause;
+- (void)pause;
 
 /**
  *  Call this method to resume play.
  */
--(void)resume;
+- (void)resume;
 
 /**
  * Call this method to play or pause audio of current video.
  *
  * @param mute the audio status will change to.
  */
--(void)setPlayerMute:(BOOL)mute;
+- (void)setPlayerMute:(BOOL)mute;
 
 /**
  * Call this method to get the audio statu for current player.
  *
  * @return the audio status for current player.
  */
--(BOOL)playerIsMute;
+- (BOOL)playerIsMute;
 
 @end

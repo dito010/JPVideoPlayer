@@ -22,13 +22,13 @@
  * @param expectedSize         The video data total length.
  * @param receivedSize       The video data cached in disk.
  */
--(void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath videoFileExceptSize:(NSUInteger)expectedSize videoFileReceivedSize:(NSUInteger)receivedSize;
+- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath videoFileExceptSize:(NSUInteger)expectedSize videoFileReceivedSize:(NSUInteger)receivedSize;
 
 /**
  * Call this method to change the video path from temporary path to full path.
  *
  * @param fullVideoCachePath the full video file path in disk.
  */
--(void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath;
+- (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath;
 
 @end

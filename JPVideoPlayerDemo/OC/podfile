@@ -1,4 +1,9 @@
 platform :ios, '8.0'
-target “JPVideoPlayerDemo” do
-pod 'JPNavigationController', '~> 1.2.6'
+
+target "JPVideoPlayerDemo" do
+
+pod 'JPNavigationController', '~> 2.0.0'
+
+pod 'JRSwizzle'
+
 end

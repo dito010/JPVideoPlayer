@@ -18,8 +18,7 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 
 @implementation JPVideoPlayerCachePathTool
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
 +(nonnull NSString *)videoCachePathForAllTemporaryFile{
     return [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForTemporaryFile];
@@ -50,8 +49,7 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
 +(nonnull NSString *)getFilePathWithAppendingString:(nonnull NSString *)apdStr{
     NSFileManager *fileManager = [NSFileManager defaultManager];

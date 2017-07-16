@@ -103,8 +103,7 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
 - (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url showOnView:(nullable UIView *)showView options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerCompletionBlock)completedBlock{
     
@@ -411,7 +410,7 @@
     return operation;
 }
 
--(void)cancelAllDownloads{
+- (void)cancelAllDownloads{
     [self.videoDownloader cancelAllDownloads];
 }
 
@@ -426,7 +425,7 @@
     return [url absoluteString];
 }
 
--(void)stopPlay{
+- (void)stopPlay{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     dispatch_main_async_safe(^{
@@ -445,64 +444,62 @@
 #pragma clang diagnostic pop
 }
 
--(void)pause{
+- (void)pause{
     [[JPVideoPlayerPlayVideoTool sharedTool] pause];
 }
 
--(void)resume{
+- (void)resume{
     [[JPVideoPlayerPlayVideoTool sharedTool] resume];
 }
 
--(void)setPlayerMute:(BOOL)mute{
+- (void)setPlayerMute:(BOOL)mute{
     if ([JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem) {
         [[JPVideoPlayerPlayVideoTool sharedTool] setMute:mute];
     }
     self.mute = mute;
 }
 
--(BOOL)playerIsMute{
+- (BOOL)playerIsMute{
     return self.mute;
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark JPVideoPlayerPlayVideoToolDelegate
+#pragma mark - JPVideoPlayerPlayVideoToolDelegate
 
--(BOOL)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(NSURL *)videoURL{
+- (BOOL)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(NSURL *)videoURL{
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
         return [self.delegate videoPlayerManager:self shouldAutoReplayForURL:videoURL];
     }
     return YES;
 }
 
--(void)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingStatusDidChanged:)]) {
         [self.delegate videoPlayerManager:self playingStatusDidChanged:playingStatus];
     }
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(BOOL)needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)downloadingProgress{
+- (BOOL)needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)downloadingProgress{
     BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadingProgressDidChanged:)];
     BOOL download = [self.delegate videoPlayerManager:self downloadingProgressDidChanged:downloadingProgress];
     return  respond && download;
 }
 
--(BOOL)needDisplayPlayingProgressViewWithPlayingProgressValue:(CGFloat)playingProgress{
+- (BOOL)needDisplayPlayingProgressViewWithPlayingProgressValue:(CGFloat)playingProgress{
     BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingProgressDidChanged:)];
     BOOL playing = [self.delegate videoPlayerManager:self playingProgressDidChanged:playingProgress];
     return  respond && playing;
 }
 
--(void)hideAllIndicatorAndProgressViewsWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
+- (void)hideAllIndicatorAndProgressViewsWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
     [self hideActivityViewWithURL:url options:options];
     [self hideProgressViewWithURL:url options:options];
 }
 
--(void)hideActivityViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
+- (void)hideActivityViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
     if (options & JPVideoPlayerShowActivityIndicatorView){
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -522,7 +519,7 @@
     }
 }
 
--(void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
+- (void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
     if (![self needDisplayPlayingProgressViewWithPlayingProgressValue:0] || ![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:0]) {
         return;
     }
@@ -546,7 +543,7 @@
 #pragma clang diagnostic pop
 }
 
--(void)progressRefreshWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options receiveSize:(NSUInteger)receiveSize exceptSize:(NSUInteger)expectedSize{
+- (void)progressRefreshWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options receiveSize:(NSUInteger)receiveSize exceptSize:(NSUInteger)expectedSize{
     if (![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)receiveSize/expectedSize]) {
         return;
     }
@@ -570,7 +567,7 @@
     }
 }
 
--(void)showProgressViewAndActivityIndicatorViewForView:(UIView *)view options:(JPVideoPlayerOptions)options{
+- (void)showProgressViewAndActivityIndicatorViewForView:(UIView *)view options:(JPVideoPlayerOptions)options{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     dispatch_main_async_safe(^{

@@ -37,7 +37,7 @@
 
 @implementation JPVideoPlayerProgressView
 
--(instancetype)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor colorWithRed:22.0/255.0 green:30.0/255.0 blue:37.0/255.0 alpha:0.8];
@@ -46,10 +46,9 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
--(void)setDownloadProgress:(CGFloat)downloadProgress{
+- (void)setDownloadProgress:(CGFloat)downloadProgress{
     if (downloadProgress<0 || downloadProgress > 1) {
         return;
     }
@@ -58,7 +57,7 @@
     [self refreshProgressWithProgressVaule:downloadProgress forLayer:self.downloadLayer];
 }
 
--(void)setPlayingProgress:(CGFloat)playingProgress{
+- (void)setPlayingProgress:(CGFloat)playingProgress{
     if (playingProgress<0 || playingProgress > 1) {
         return;
     }
@@ -67,35 +66,34 @@
     [self refreshProgressWithProgressVaule:playingProgress forLayer:self.playingLayer];
 }
 
--(void)perfersPlayingProgressViewColor:(UIColor *)color{
+- (void)perfersPlayingProgressViewColor:(UIColor *)color{
     if (color != nil) {
         self.playingLayer.backgroundColor = color.CGColor;
     }
 }
 
--(void)perfersDownloadProgressViewColor:(UIColor *)color{
+- (void)perfersDownloadProgressViewColor:(UIColor *)color{
     if (color != nil) {
         self.downloadLayer.backgroundColor = color.CGColor;
     }
 }
 
--(void)refreshProgressViewForScreenEvents{
+- (void)refreshProgressViewForScreenEvents{
     [self refreshProgressWithProgressVaule:_downloadProgressValue forLayer:_downloadLayer];
     [self refreshProgressWithProgressVaule:_playingProgressValue forLayer:_playingLayer];
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)refreshProgressWithProgressVaule:(CGFloat)progressValue forLayer:(CALayer *)layer{
+- (void)refreshProgressWithProgressVaule:(CGFloat)progressValue forLayer:(CALayer *)layer{
     CGRect frame = layer.frame;
     CGFloat screenWidth = self.bounds.size.width;
     frame.size.width = screenWidth * progressValue;
     layer.frame = frame;
 }
 
--(void)addIndicatorLayerOnce{
+- (void)addIndicatorLayerOnce{
     if (!self.downloadLayer.superlayer) {
         self.downloadLayer.frame = CGRectMake(0, 0, 0, self.bounds.size.height);
         [self.layer addSublayer:self.downloadLayer];
@@ -107,7 +105,7 @@
     }
 }
 
--(CALayer *)downloadLayer{
+- (CALayer *)downloadLayer{
     if (!_downloadLayer) {
         _downloadLayer = [CALayer new];
         _downloadLayer.backgroundColor = [UIColor colorWithRed:196.0/255.0 green:193.0/255.0 blue:195.0/255.0 alpha:0.8].CGColor;
@@ -115,7 +113,7 @@
     return _downloadLayer;
 }
 
--(CALayer *)playingLayer{
+- (CALayer *)playingLayer{
     if (!_playingLayer) {
         _playingLayer = [CALayer new];
         _playingLayer.backgroundColor = self.tintColor.CGColor;

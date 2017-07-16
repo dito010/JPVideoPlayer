@@ -50,12 +50,12 @@ typedef NS_ENUM(NSUInteger, JPVideoPlayerDemoScrollDerection) {
  */
 @property(nonatomic, nonnull)NSDictionary *dictOfVisiableAndNotPlayCells;
 
--(void)playVideoInVisiableCells;
+- (void)playVideoInVisiableCells;
 
--(void)handleScrollStop;
+- (void)handleScrollStop;
 
--(void)handleQuickScroll;
+- (void)handleQuickScroll;
 
--(void)stopPlay;
+- (void)stopPlay;
 
 @end

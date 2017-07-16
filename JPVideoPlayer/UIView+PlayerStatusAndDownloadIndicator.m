@@ -44,10 +44,9 @@ static char playingProgressValueKey;
 static char backgroundLayerKey;
 @implementation UIView (PlayerStatusAndDownloadIndicator)
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
--(UIView *)jp_indicatorView{
+- (UIView *)jp_indicatorView{
     UIView *view = objc_getAssociatedObject(self, &indicatorViewKey);
     if (!view) {
         view = [UIView new];
@@ -59,14 +58,14 @@ static char backgroundLayerKey;
     return view;
 }
 
--(void)jp_perfersPlayingProgressViewColor:(UIColor *)color{
+- (void)jp_perfersPlayingProgressViewColor:(UIColor *)color{
     if (color) {
         [self.progressView perfersPlayingProgressViewColor:color];
         self.progressViewTintColor = color;
     }
 }
 
--(void)jp_perfersDownloadProgressViewColor:(UIColor *)color{
+- (void)jp_perfersDownloadProgressViewColor:(UIColor *)color{
     if (color) {
         [self.progressView perfersDownloadProgressViewColor:color];
         self.progressViewBackgroundColor = color;
@@ -74,10 +73,9 @@ static char backgroundLayerKey;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)displayBackLayer{
+- (void)displayBackLayer{
     if (self.jp_backgroundLayer.superlayer) {
         return;
     }
@@ -92,19 +90,19 @@ static char backgroundLayerKey;
     [self.jp_videoLayerView.layer addSublayer:self.jp_backgroundLayer];
 }
 
--(void)refreshIndicatorViewForPortrait{
+- (void)refreshIndicatorViewForPortrait{
     [self layoutProgressViewForPortrait:self.progressView];
     [self layoutActivityIndicatorViewForPortrait:self.activityIndicatorView];
     [self.progressView refreshProgressViewForScreenEvents];
 }
 
--(void)refreshIndicatorViewForLandscape{
+- (void)refreshIndicatorViewForLandscape{
     [self layoutProgressViewForLandscape:self.progressView];
     [self layoutActivityIndicatorViewForLandscape:self.activityIndicatorView];
     [self.progressView refreshProgressViewForScreenEvents];
 }
 
--(void)jp_showProgressView{
+- (void)jp_showProgressView{
     if (!self.progressView.superview) {
         [self.jp_indicatorView addSubview:self.progressView];
         [self.progressView setDownloadProgress:0];
@@ -113,7 +111,7 @@ static char backgroundLayerKey;
     }
 }
 
--(void)jp_hideProgressView{
+- (void)jp_hideProgressView{
     if (self.progressView.superview) {
         self.progressView.hidden = YES;
         [self.progressView setDownloadProgress:0];
@@ -122,7 +120,7 @@ static char backgroundLayerKey;
     }
 }
 
--(void)jp_progressViewDownloadingStatusChangedWithProgressValue:(NSNumber *)progress{
+- (void)jp_progressViewDownloadingStatusChangedWithProgressValue:(NSNumber *)progress{
     CGFloat delta = [progress floatValue];
     delta = MAX(0, delta);
     delta = MIN(delta, 1);
@@ -130,7 +128,7 @@ static char backgroundLayerKey;
     self.jp_downloadProgressValue = delta;
 }
 
--(void)jp_progressViewPlayingStatusChangedWithProgressValue:(NSNumber *)progress{
+- (void)jp_progressViewPlayingStatusChangedWithProgressValue:(NSNumber *)progress{
     CGFloat delta = [progress floatValue];
     delta = MAX(0, delta);
     delta = MIN(delta, 1);
@@ -138,28 +136,28 @@ static char backgroundLayerKey;
     self.jp_playingProgressValue = delta;
 }
 
--(void)jp_showActivityIndicatorView{
+- (void)jp_showActivityIndicatorView{
     if (!self.activityIndicatorView.superview) {
         [self.jp_indicatorView addSubview:self.activityIndicatorView];
         [self.activityIndicatorView startAnimating];
     }
 }
 
--(void)jp_hideActivityIndicatorView{
+- (void)jp_hideActivityIndicatorView{
     if (self.activityIndicatorView.superview) {
         [self.activityIndicatorView stopAnimating];
         [self.activityIndicatorView removeFromSuperview];
     }
 }
 
--(void)jp_setupVideoLayerViewAndIndicatorView{
+- (void)jp_setupVideoLayerViewAndIndicatorView{
     if (!self.jp_videoLayerView.superview && !self.jp_indicatorView.superview) {
         [self addSubview:self.jp_videoLayerView];
         [self addSubview:self.jp_indicatorView];
     }
 }
 
--(void)jp_removeVideoLayerViewAndIndicatorView{
+- (void)jp_removeVideoLayerViewAndIndicatorView{
     if (self.jp_videoLayerView.superview && self.jp_indicatorView.superview) {
         [self.jp_videoLayerView removeFromSuperview];
         [self.jp_indicatorView removeFromSuperview];
@@ -167,10 +165,9 @@ static char backgroundLayerKey;
 }
 
 
-#pragma mark -----------------------------------------
 #pragma mark - Properties
 
--(CALayer *)jp_backgroundLayer{
+- (CALayer *)jp_backgroundLayer{
     CALayer *backLayer = objc_getAssociatedObject(self, &backgroundLayerKey);
     if (!backLayer) {
         backLayer = [CALayer new];
@@ -180,27 +177,27 @@ static char backgroundLayerKey;
     return backLayer;
 }
 
--(void)setJp_playingProgressValue:(CGFloat)jp_playingProgressValue{
+- (void)setJp_playingProgressValue:(CGFloat)jp_playingProgressValue{
     objc_setAssociatedObject(self, &playingProgressValueKey, @(jp_playingProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(CGFloat)jp_playingProgressValue{
+- (CGFloat)jp_playingProgressValue{
     return [objc_getAssociatedObject(self, &playingProgressValueKey) floatValue];
 }
 
--(void)setJp_downloadProgressValue:(CGFloat)jp_downloadProgressValue{
+- (void)setJp_downloadProgressValue:(CGFloat)jp_downloadProgressValue{
    objc_setAssociatedObject(self, &downloadProgressValueKey, @(jp_downloadProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(CGFloat)jp_downloadProgressValue{
+- (CGFloat)jp_downloadProgressValue{
     return [objc_getAssociatedObject(self, &downloadProgressValueKey) floatValue];
 }
 
--(void)setProgressViewTintColor:(UIColor *)progressViewTintColor{
+- (void)setProgressViewTintColor:(UIColor *)progressViewTintColor{
     objc_setAssociatedObject(self, &progressViewTintColorKey, progressViewTintColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(UIColor *)progressViewTintColor{
+- (UIColor *)progressViewTintColor{
     UIColor *color = objc_getAssociatedObject(self, &progressViewTintColorKey);
     if (!color) {
         color = [UIColor colorWithRed:0.0/255 green:118.0/255 blue:255.0/255 alpha:1];
@@ -208,11 +205,11 @@ static char backgroundLayerKey;
     return color;
 }
 
--(void)setProgressViewBackgroundColor:(UIColor *)progressViewBackgroundColor{
+- (void)setProgressViewBackgroundColor:(UIColor *)progressViewBackgroundColor{
     objc_setAssociatedObject(self, &progressViewBackgroundColorKey, progressViewBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(UIColor *)progressViewBackgroundColor{
+- (UIColor *)progressViewBackgroundColor{
     UIColor *color = objc_getAssociatedObject(self, &progressViewTintColorKey);
     if (!color) {
         color = [UIColor colorWithRed:155.0/255 green:155.0/255 blue:155.0/255 alpha:1.0];
@@ -220,7 +217,7 @@ static char backgroundLayerKey;
     return color;
 }
 
--(JPVideoPlayerProgressView *)progressView{
+- (JPVideoPlayerProgressView *)progressView{
     JPVideoPlayerProgressView *progressView = objc_getAssociatedObject(self, &progressViewKey);
     if (!progressView) {
         progressView = [JPVideoPlayerProgressView new];
@@ -234,7 +231,7 @@ static char backgroundLayerKey;
     return progressView;
 }
 
--(JPVideoPlayerActivityIndicator *)activityIndicatorView{
+- (JPVideoPlayerActivityIndicator *)activityIndicatorView{
     JPVideoPlayerActivityIndicator *acv = objc_getAssociatedObject(self, &activityIndicatorViewKey);
     if (!acv) {
         acv = [JPVideoPlayerActivityIndicator new];
@@ -245,7 +242,7 @@ static char backgroundLayerKey;
     return acv;
 }
 
--(UIView *)jp_videoLayerView{
+- (UIView *)jp_videoLayerView{
     UIView *view = objc_getAssociatedObject(self, &videoLayerViewKey);
     if (!view) {
         view = [UIView new];
@@ -258,10 +255,9 @@ static char backgroundLayerKey;
 }
 
 
-#pragma mark -----------------------------------------
 #pragma mark - Landscape Events
 
--(void)layoutProgressViewForPortrait:(UIView *)progressView{
+- (void)layoutProgressViewForPortrait:(UIView *)progressView{
     CGFloat progressViewY = self.frame.size.height - JPVideoPlayerLayerFrameY;
     if ([self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldProgressViewOnTop)] && [self.jp_videoPlayerDelegate shouldProgressViewOnTop]) {
         progressViewY = 0;
@@ -269,7 +265,7 @@ static char backgroundLayerKey;
     progressView.frame = CGRectMake(0, progressViewY, self.frame.size.width, JPVideoPlayerLayerFrameY);
 }
 
--(void)layoutProgressViewForLandscape:(UIView *)progressView{
+- (void)layoutProgressViewForLandscape:(UIView *)progressView{
     CGFloat width = CGRectGetHeight(self.superview.bounds);
     CGFloat hei = CGRectGetWidth(self.superview.bounds);
     CGFloat progressViewY = hei - JPVideoPlayerLayerFrameY;
@@ -279,14 +275,14 @@ static char backgroundLayerKey;
     progressView.frame = CGRectMake(0, progressViewY, width, hei);
 }
 
--(void)layoutActivityIndicatorViewForPortrait:(UIView *)acv{
+- (void)layoutActivityIndicatorViewForPortrait:(UIView *)acv{
     CGSize viewSize = self.frame.size;
     CGFloat selfX = (viewSize.width-JPVideoPlayerActivityIndicatorWH)*0.5;
     CGFloat selfY = (viewSize.height-JPVideoPlayerActivityIndicatorWH)*0.5;
     acv.frame = CGRectMake(selfX, selfY, JPVideoPlayerActivityIndicatorWH, JPVideoPlayerActivityIndicatorWH);
 }
 
--(void)layoutActivityIndicatorViewForLandscape:(UIView *)acv{
+- (void)layoutActivityIndicatorViewForLandscape:(UIView *)acv{
     CGFloat width = CGRectGetHeight(self.superview.bounds);
     CGFloat hei = CGRectGetWidth(self.superview.bounds);
     CGFloat selfX = (width-JPVideoPlayerActivityIndicatorWH)*0.5;

@@ -1,0 +1,1 @@
+../../../JPNavigationController/JPNavigationController/JPNavigationControllerGestureRecognizer.h

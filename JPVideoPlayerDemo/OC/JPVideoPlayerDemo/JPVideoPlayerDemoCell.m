@@ -18,13 +18,13 @@
 
 @implementation JPVideoPlayerDemoCell
 
--(void)awakeFromNib{
+- (void)awakeFromNib{
     [super awakeFromNib];
     
     self.videoImv.jp_videoPlayerDelegate = self;
 }
 
--(void)setIndexPath:(NSIndexPath *)indexPath{
+- (void)setIndexPath:(NSIndexPath *)indexPath{
     _indexPath = indexPath;
     
     if (indexPath.row%2) {
@@ -36,20 +36,19 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark JPVideoPlayerDelegate
+#pragma mark - JPVideoPlayerDelegate
 
--(BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(NSURL *)videoURL{
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(NSURL *)videoURL{
     // do something here.
     return YES;
 }
 
--(BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(NSURL *)videoURL{
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(NSURL *)videoURL{
     // do something here.
     return YES;
 }
 
-//-(BOOL)shouldProgressViewOnTop{
+//- (BOOL)shouldProgressViewOnTop{
 //    return YES;
 //}
 
