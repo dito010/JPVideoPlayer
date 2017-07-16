@@ -10,7 +10,7 @@
  */
 
 #import "UIViewController+Landscape.h"
-#import <JRSwizzle/JRSwizzle.h>
+#import "JPVideoPlayerSwizzle.h"
 #import <objc/runtime.h>
 
 NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideoplayer.landscape.notification";

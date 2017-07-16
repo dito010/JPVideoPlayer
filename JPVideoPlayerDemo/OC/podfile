@@ -4,6 +4,4 @@ target "JPVideoPlayerDemo" do
 
 pod 'JPNavigationController', '~> 2.0.0'
 
-pod 'JRSwizzle'
-
 end
