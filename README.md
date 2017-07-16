@@ -4,7 +4,7 @@
 </p>
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer)
-[![pod](https://img.shields.io/badge/pod-2.2.2-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) 
+[![pod](https://img.shields.io/badge/pod-2.2.3-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) 
 [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) 
 [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
 [![pod](https://img.shields.io/badge/Carthage-support-green.svg)](https://github.com/Carthage/Carthage)
@@ -142,8 +142,8 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 
 ...
 [aview jp_perfersLandscapeForViewController:self];
-[aview jp_landscape];
-[aview jp_portrait];
+[aview jp_landscapeAnimated:YES completion:nil];
+[aview jp_portraitAnimated:YES completion:nil];
 ```
 
 
@@ -178,8 +178,8 @@ There are three ways to use JPVideoPlayer in your project:
 #### Podfile
 ```
 platform :ios, '8.0'
-target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 2.2.2'
+target "YourProjectName" do
+pod 'JPVideoPlayer', '~> 2.2.3'
 end
 ```
 
@@ -328,8 +328,8 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 
 ...
 [aview jp_perfersLandscapeForViewController:self];
-[aview jp_landscape];
-[aview jp_portrait];
+[aview jp_landscapeAnimated:YES completion:nil];
+[aview jp_portraitAnimated:YES completion:nil];
 ```
 
 #### 缓存查询管理.
@@ -360,8 +360,8 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 #### Podfile
 ```
 platform :ios, '8.0'
-target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 2.2.2'
+target "你的项目名称" do
+pod 'JPVideoPlayer', '~> 2.2.3'
 end
 ```
 
