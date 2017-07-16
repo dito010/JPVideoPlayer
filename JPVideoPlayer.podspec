@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = 'JPVideoPlayer'
-  s.version      = '2.2.4'
+  s.version      = '2.2.5'
   s.summary      = 'Automatic play video in UITableView like Weibo home page in main thread and never block main thread.'
 
   s.description  = 'This library provides an video player with cache support in UITableView.'\
@@ -29,7 +29,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/Chris-Pan/JPVideoPlayer.git', :tag => s.version }
   s.source_files  = 'JPVideoPlayer/**/*.{h,m}'
   s.frameworks = 'Foundation', 'UIKit', 'AVFoundation', 'MobileCoreServices'
-  s.dependency 'JRSwizzle', '1.1.0'
   s.requires_arc = true
 
 end
