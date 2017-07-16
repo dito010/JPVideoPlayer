@@ -32,9 +32,9 @@ NSString *  _Nonnull const JPVideoPlayerLandscapeNotification = @"www.jpvideopla
     // fix #50.
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self jr_swizzleMethod:@selector(viewDidLoad) withMethod:@selector(jp_viewDidLoad) error:nil];
-        [self jr_swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(jp_dealloc) error:nil];
-        [self jr_swizzleMethod:@selector(shouldAutorotate) withMethod:@selector(jp_shouldAutorotate) error:nil];
+        [self jp_swizzleMethod:@selector(viewDidLoad) withMethod:@selector(jp_viewDidLoad) error:nil];
+        [self jp_swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(jp_dealloc) error:nil];
+        [self jp_swizzleMethod:@selector(shouldAutorotate) withMethod:@selector(jp_shouldAutorotate) error:nil];
     });
 }
 
