@@ -1,9 +1,9 @@
 
-target 'JPVideoPlayerDemo_swift' do
+target "JPVideoPlayerDemo_swift" do
 
 use_frameworks!
 
-pod 'JPVideoPlayer', '~> 2.0.5’
-pod 'JPNavigationController', '~> 1.2.6'
+pod 'JPVideoPlayer', '~> 2.2.3’
+pod 'JPNavigationController', '~> 2.0.1'
 
 end

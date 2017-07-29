@@ -98,18 +98,12 @@
         _failedURLs = [NSMutableSet new];
         _runningOperations = [NSMutableArray array];
         _showViews = [NSMutableArray array];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startDownloadVideo:) name:JPVideoPlayerDownloadStartNotification object:nil];
     }
     return self;
 }
 
--(void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
-
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
 - (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url showOnView:(nullable UIView *)showView options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerCompletionBlock)completedBlock{
     
@@ -149,12 +143,43 @@
     NSString *key = [self cacheKeyForURL:url];
     
     BOOL isFileURL = [url isFileURL];
+    
+    // show progress view and activity indicator view if need.
+    [self showProgressViewAndActivityIndicatorViewForView:showView options:options];
+    
+    __weak typeof(showView) wShowView = showView;
     if (isFileURL) {
+        
+        // hide activity view.
+        [self hideActivityViewWithURL:url options:options];
         
         // local file.
         NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-            [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:path options:options showOnView:showView error:^(NSError * _Nullable error) {
+            
+            BOOL needDisplayProgress = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:1.0];
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            if (needDisplayProgress) {
+                [showView performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@1];
+            }
+            
+            // display backLayer.
+            [showView performSelector:NSSelectorFromString(@"displayBackLayer")];
+#pragma clang diagnostic pop
+            
+            [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:path options:options showOnView:showView playingProgress:^(CGFloat progress) {
+                __strong typeof(wShowView) sShowView = wShowView;
+                if (!sShowView) return;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                BOOL needDisplayProgress = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
+                if (needDisplayProgress) {
+                    [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
+                }
+#pragma clang diagnostic pop
+            } error:^(NSError * _Nullable error) {
                 if (completedBlock) {
                     completedBlock(nil, error, JPVideoPlayerCacheTypeLocation, url);
                 }
@@ -163,6 +188,8 @@
         }
         else{
             [self callCompletionBlockForOperation:operation completion:completedBlock videoPath:nil error:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil] cacheType:JPVideoPlayerCacheTypeNone url:url];
+            // hide progress view.
+            [self hideProgressViewWithURL:url options:options];
             return operation;
         }
     }
@@ -206,21 +233,37 @@
                             // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data.
                         }
                         if (!error) {
+                            
+                            // refresh progress view.
+                            [self progressRefreshWithURL:targetURL options:options receiveSize:storedSize exceptSize:expectedSize];
+                            
                             if (!fullVideoCachePath) {
                                 if (progressBlock) {
                                     progressBlock(data, storedSize, expectedSize, tempVideoCachedPath, targetURL);
                                 }
-                                
-                                // refresh progress view.
-                                [self progressRefreshWithURL:targetURL options:options receiveSize:storedSize exceptSize:expectedSize];
-                                
                                 { // play video from web.
                                     if (![JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem) {
-                                        [[JPVideoPlayerPlayVideoTool sharedTool] playVideoWithURL:targetURL tempVideoCachePath:tempVideoCachedPath options:options videoFileExceptSize:expectedSize videoFileReceivedSize:receivedSize showOnView:showView error:^(NSError * _Nullable error) {
+                                        __strong typeof(wShowView) sShowView = wShowView;
+                                        if (!sShowView) return;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                                        // display backLayer.
+                                        [sShowView performSelector:NSSelectorFromString(@"displayBackLayer")];
+#pragma clang diagnostic pop
+                                        [[JPVideoPlayerPlayVideoTool sharedTool] playVideoWithURL:url tempVideoCachePath:tempVideoCachedPath options:options videoFileExceptSize:expectedSize videoFileReceivedSize:storedSize showOnView:sShowView playingProgress:^(CGFloat progress) {
+                                            BOOL needDisplayProgress = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                                            if (needDisplayProgress) {
+                                                [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
+                                            }
+#pragma clang diagnostic pop
                                             
+                                        } error:^(NSError * _Nullable error) {
                                             if (error) {
                                                 if (completedBlock) {
                                                     [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:videoPath error:error cacheType:JPVideoPlayerCacheTypeNone url:targetURL];
+                                                    [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
                                                     [self safelyRemoveOperationFromRunning:operation];
                                                 }
                                             }
@@ -239,10 +282,11 @@
                                 // cache finished, and move the full video file from temporary path to full path.
                                 [[JPVideoPlayerPlayVideoTool sharedTool] didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
                                 [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:fullVideoCachePath error:nil cacheType:JPVideoPlayerCacheTypeNone url:url];
-                                
-                                // hide progress view.
-                                [self hideAllIndicatorViewWithURL:url options:options];
                                 [self safelyRemoveOperationFromRunning:strongOperation];
+                                
+                                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadingProgressDidChanged:)]) {
+                                    [self.delegate videoPlayerManager:self downloadingProgressDidChanged:1];
+                                }
                             }
                         }
                         else{
@@ -250,7 +294,7 @@
                             [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:nil error:error cacheType:JPVideoPlayerCacheTypeNone url:url];
                             
                             // hide indicator view.
-                            [self hideAllIndicatorViewWithURL:url options:options];
+                            [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
                             [self safelyRemoveOperationFromRunning:strongOperation];
                         }
                     }];
@@ -263,7 +307,7 @@
                         
                         __strong __typeof(weakOperation) strongOperation = weakOperation;
                         if (!strongOperation || strongOperation.isCancelled) {
-                            // Do nothing if the operation was cancelled
+                            // Do nothing if the operation was cancelled.
                             // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data.
                         }
                         else if (error){
@@ -300,7 +344,7 @@
                         [[JPVideoPlayerManager sharedManager] stopPlay];
                         
                         // hide indicator view.
-                        [self hideAllIndicatorViewWithURL:url options:options];
+                        [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
                         
                         __strong __typeof(weakOperation) strongOperation = weakOperation;
                         [self safelyRemoveOperationFromRunning:strongOperation];
@@ -311,11 +355,35 @@
                 // full video cache file in disk.
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                 
+                // hide activity view.
+                [self hideActivityViewWithURL:url options:options];
+                
                 // play video from disk.
                 if (cacheType==JPVideoPlayerCacheTypeDisk) {
-                    [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:videoPath options:options showOnView:showView error:^(NSError * _Nullable error) {
+                    BOOL needDisplayProgressView = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:1.0];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    if (needDisplayProgressView) {
+                        [showView performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@1];
+                    }
+                    // display backLayer.
+                    [showView performSelector:NSSelectorFromString(@"displayBackLayer")];
+#pragma clang diagnostic pop
+                    
+                    [[JPVideoPlayerPlayVideoTool sharedTool] playExistedVideoWithURL:url fullVideoCachePath:videoPath options:options showOnView:showView playingProgress:^(CGFloat progress) {
+                        __strong typeof(wShowView) sShowView = wShowView;
+                        if (!sShowView) return;
+                        
+                        BOOL needDisplayProgressView = [self needDisplayPlayingProgressViewWithPlayingProgressValue:progress];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                        if (needDisplayProgressView) {
+                            [showView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
+                        }
+#pragma clang diagnostic pop
+                    } error:^(NSError * _Nullable error) {
                         if (completedBlock) {
-                            completedBlock(nil, error, JPVideoPlayerCacheTypeDisk, url);
+                            completedBlock(nil, error, JPVideoPlayerCacheTypeLocation, url);
                         }
                     }];
                     [JPVideoPlayerPlayVideoTool sharedTool].delegate = self;
@@ -326,11 +394,15 @@
             }
             else {
                 // video not in cache and download disallowed by delegate.
+                
+                // hide activity and progress view.
+                [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
+                
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                 [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:nil error:nil cacheType:JPVideoPlayerCacheTypeNone url:url];
                 [self safelyRemoveOperationFromRunning:operation];
                 // hide indicator view.
-                [self hideAllIndicatorViewWithURL:url options:options];
+                [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
             }
         }];
     }
@@ -338,7 +410,7 @@
     return operation;
 }
 
--(void)cancelAllDownloads{
+- (void)cancelAllDownloads{
     [self.videoDownloader cancelAllDownloads];
 }
 
@@ -346,20 +418,22 @@
     if (!url) {
         return @"";
     }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
-#pragma clang diagnostic pop
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//    url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
+//#pragma clang diagnostic pop
     return [url absoluteString];
 }
 
--(void)stopPlay{
+- (void)stopPlay{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     dispatch_main_async_safe(^{
         if (self.showViews.count) {
             for (UIView *view in self.showViews) {
-                [view removeVideoLayerViewAndIndicatorView];
-                [view hideActivityIndicatorView];
-                [view hideProgressView];
+                [view performSelector:NSSelectorFromString(@"jp_removeVideoLayerViewAndIndicatorView")];
+                [view performSelector:NSSelectorFromString(@"jp_hideActivityIndicatorView")];
+                [view performSelector:NSSelectorFromString(@"jp_hideProgressView")];
                 view.currentPlayingURL = nil;
             }
             [self.showViews removeAllObjects];
@@ -367,41 +441,68 @@
         
         [[JPVideoPlayerPlayVideoTool sharedTool] stopPlay];
     });
+#pragma clang diagnostic pop
 }
 
--(void)setPlayerMute:(BOOL)mute{
+- (void)pause{
+    [[JPVideoPlayerPlayVideoTool sharedTool] pause];
+}
+
+- (void)resume{
+    [[JPVideoPlayerPlayVideoTool sharedTool] resume];
+}
+
+- (void)setPlayerMute:(BOOL)mute{
     if ([JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem) {
         [[JPVideoPlayerPlayVideoTool sharedTool] setMute:mute];
     }
     self.mute = mute;
 }
 
--(BOOL)playerIsMute{
+- (BOOL)playerIsMute{
     return self.mute;
 }
 
 
-#pragma mark --------------------------------------------------
-#pragma mark JPVideoPlayerPlayVideoToolDelegate
+#pragma mark - JPVideoPlayerPlayVideoToolDelegate
 
--(BOOL)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(NSURL *)videoURL{
+- (BOOL)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(NSURL *)videoURL{
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
         return [self.delegate videoPlayerManager:self shouldAutoReplayForURL:videoURL];
     }
     return YES;
 }
 
+- (void)playVideoTool:(JPVideoPlayerPlayVideoTool *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingStatusDidChanged:)]) {
+        [self.delegate videoPlayerManager:self playingStatusDidChanged:playingStatus];
+    }
+}
 
-#pragma mark -----------------------------------------
-#pragma mark Private
 
--(void)hideAllIndicatorViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
-    [self hideProgressViewWithURL:url options:options];
+#pragma mark - Private
+
+- (BOOL)needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)downloadingProgress{
+    BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadingProgressDidChanged:)];
+    BOOL download = [self.delegate videoPlayerManager:self downloadingProgressDidChanged:downloadingProgress];
+    return  respond && download;
+}
+
+- (BOOL)needDisplayPlayingProgressViewWithPlayingProgressValue:(CGFloat)playingProgress{
+    BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingProgressDidChanged:)];
+    BOOL playing = [self.delegate videoPlayerManager:self playingProgressDidChanged:playingProgress];
+    return  respond && playing;
+}
+
+- (void)hideAllIndicatorAndProgressViewsWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
     [self hideActivityViewWithURL:url options:options];
+    [self hideProgressViewWithURL:url options:options];
 }
 
--(void)hideActivityViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
-    if (options & JPVideoPlayerDownloaderShowActivityIndicatorView){
+- (void)hideActivityViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
+    if (options & JPVideoPlayerShowActivityIndicatorView){
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         dispatch_main_async_safe(^{
             UIView *view = nil;
             for (UIView *v in self.showViews) {
@@ -411,14 +512,21 @@
                 }
             }
             if (view) {
-                [view hideActivityIndicatorView];
+                [view performSelector:NSSelectorFromString(@"jp_hideActivityIndicatorView")];
             }
         });
+#pragma clang diagnostic pop
     }
 }
 
--(void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
-    if (options & JPVideoPlayerDownloaderShowProgressView){
+- (void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
+    if (![self needDisplayPlayingProgressViewWithPlayingProgressValue:0] || ![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:0]) {
+        return;
+    }
+    
+    if (options & JPVideoPlayerShowProgressView){
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         dispatch_main_async_safe(^{
             UIView *view = nil;
             for (UIView *v in self.showViews) {
@@ -428,14 +536,21 @@
                 }
             }
             if (view) {
-                [view hideProgressView];
+                [view performSelector:NSSelectorFromString(@"jp_hideProgressView")];
             }
         });
     }
+#pragma clang diagnostic pop
 }
 
--(void)progressRefreshWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options receiveSize:(NSUInteger)receiveSize exceptSize:(NSUInteger)expectedSize{
-    if (options & JPVideoPlayerDownloaderShowProgressView){
+- (void)progressRefreshWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options receiveSize:(NSUInteger)receiveSize exceptSize:(NSUInteger)expectedSize{
+    if (![self needDisplayDownloadingProgressViewWithDownloadingProgressValue:(CGFloat)receiveSize/expectedSize]) {
+        return;
+    }
+    
+    if (options & JPVideoPlayerShowProgressView){
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         dispatch_main_async_safe(^{
             UIView *view = nil;
             for (UIView *v in self.showViews) {
@@ -445,27 +560,27 @@
                 }
             }
             if (view) {
-                [view progressViewStatusChangedWithReceivedSize:receiveSize expectSize:expectedSize];
+                [view performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@((CGFloat)receiveSize/expectedSize)];
             }
         });
+#pragma clang diagnostic pop
     }
 }
 
--(void)startDownloadVideo:(nonnull NSNotification *)note{
+- (void)showProgressViewAndActivityIndicatorViewForView:(UIView *)view options:(JPVideoPlayerOptions)options{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     dispatch_main_async_safe(^{
-        JPVideoPlayerDownloaderOperation *o = note.object;
-        if (o.options & JPVideoPlayerDownloaderShowProgressView || o.options & JPVideoPlayerDownloaderShowActivityIndicatorView) {
-            for (UIView *v in self.showViews) {
-                if (v.currentPlayingURL && [v.currentPlayingURL.absoluteString isEqualToString:o.request.URL.absoluteString]) {
-                    if (o.options & JPVideoPlayerDownloaderShowProgressView)
-                        [v showProgressView];
-                    if (o.options & JPVideoPlayerDownloaderShowActivityIndicatorView)
-                        [v showActivityIndicatorView];
-                    break;
-                }
-            }
+        BOOL needDisplayProgress = [self needDisplayDownloadingProgressViewWithDownloadingProgressValue:0] || [self needDisplayPlayingProgressViewWithPlayingProgressValue:0];
+
+        if ((options & JPVideoPlayerShowProgressView) && needDisplayProgress) {
+            [view performSelector:NSSelectorFromString(@"jp_showProgressView")];
+        }
+        if ((options & JPVideoPlayerShowActivityIndicatorView)) {
+            [view performSelector:NSSelectorFromString(@"jp_showActivityIndicatorView")];
         }
     });
+#pragma clang diagnostic pop
 }
 
 - (void)safelyRemoveOperationFromRunning:(nullable JPVideoPlayerCombinedOperation*)operation {
@@ -485,9 +600,7 @@
 }
 
 - (void)diskVideoExistsForURL:(nullable NSURL *)url completion:(nullable JPVideoPlayerCheckCacheCompletionBlock)completionBlock {
-    
     NSString *key = [self cacheKeyForURL:url];
-    
     [self.videoCache diskVideoExistsWithKey:key completion:^(BOOL isInDiskCache) {
         if (completionBlock) {
             completionBlock(isInDiskCache);

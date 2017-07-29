@@ -3,12 +3,14 @@
 <p align="center" >
 <img src="Images/logo.png" title="JPNavigationController logo" float=left>
 </p>
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPNavigationController) [![pod](https://img.shields.io/badge/pod-1.2.5-brightgreen.svg)](https://github.com/Chris-Pan/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-ff69b4.svg)](https://github.com/Chris-Pan/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-blue.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 
-This library provides an fullScreen pop and push gesture for UINavigationController with customize UINavigationBar for each single support. 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/pod-2.0.0-green.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
+![pod](https://img.shields.io/travis/rust-lang/rust/master.svg)
 
-<p align="center" >
-<img src="Images/JPNavigationController.gif" title="JPNavigationController Demo" float=left>
+This library provides an fullScreen pop and push gesture for UINavigationController with customize UINavigationBar for each single support and, smooth playing video use `AVPlayer` when perform pop gesture support. 
+
+<p align="left" >
+<img src="Images/demo.gif" title="JPNavigationController Demo" float=left>
 </p>
 
 
@@ -21,6 +23,7 @@ This library provides an fullScreen pop and push gesture for UINavigationControl
 - [x] Customize pop and push gesture distance on the left side of the screen support
 - [x] Close pop gesture for single viewController support
 - [x] Close pop gesture for all viewController support
+- [x] Smooth playing video use `AVPlayer` when perform pop gesture support 
 
 
 ## Requirements
@@ -31,9 +34,10 @@ This library provides an fullScreen pop and push gesture for UINavigationControl
 
 ## Getting Started
 
-- Read the [[iOS]UINavigationController全屏pop之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
-- Read the [[iOS]UINavigationController全屏pop之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
-- Read the [[iOS]UINavigationController全屏pop之为控制器添加左滑push](http://www.jianshu.com/p/ff68b5e646fc)
+- Read the [[iOS]UINavigationController全屏 pop 之为每个控制器自定义 UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
+- Read the [[iOS]UINavigationController全屏 pop 之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
+- Read the [[iOS]UINavigationController全屏 pop 之为控制器添加左滑 push](http://www.jianshu.com/p/ff68b5e646fc)
+- Read the [[iOS]调和 pop 手势导致 AVPlayer 播放卡顿](http://www.jianshu.com/p/be02059b9e6a)
 - Try the example by downloading the project from Github
 
 
@@ -79,26 +83,36 @@ Objective-C:
 // Pop to a given view controller.
 
 // Plan A: find the target view controller by youself, then pop it.
-JPSecondVC *second = nil;
+JPNavigationControllerDemo_linkBar *vc = nil;
 NSArray *viewControllers = self.navigationController.jp_rootNavigationController.jp_viewControllers;
 for (UIViewController *c in viewControllers) {
-    if ([c isKindOfClass:[JPSecondVC class]]) {
-        second = (JPSecondVC *)c;
+    if ([c isKindOfClass:[JPNavigationControllerDemo_linkBar class]]) {
+        vc = (JPNavigationControllerDemo_linkBar *)c;
         break;
     }
 }
 
-if (second) {
-    [self.navigationController popToViewController:second animated:YES];
+if (vc) {
+    [self.navigationController popToViewController:vc animated:YES];
 }
 
 
-// Plan B: use jp_popToViewControllerClassIs: animated:.
-[self.navigationController jp_popToViewControllerClassIs:[JPSecondVC class] animated:YES];
+// Plan B: use jp_popToViewControllerClassString:handle:animated:.
+[self.navigationController jp_popToViewControllerClassString:@"JPNavigationControllerDemo_linkBar" handle:^UIViewController * _Nullable(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error) {
+
+    if (!error) {
+        return viewControllers.firstObject;
+    }
+    else{
+        NSLog(@"%@", error);
+        return nil;
+    }
+
+} animated:YES];
 ```
 
 
-#### Customize UINavigationBar
+#### Custom UINavigationBar
 
 ```objective-c
 Objective-C:
@@ -117,10 +131,10 @@ self.navigationController.navigationBarHidden = YES;
 Objective-C:
 
 // Become the delegate of JPNavigationControllerDelegate protocol and, implemented protocol method, then you own left-slip to push function.
-self.navigationController.jp_delegate = self;
+[self.navigationController jp_registerNavigtionControllerDelegate:self];
 
 // Implementation protocol method
--(void)jp_navigationControllerDidPushLeft{
+- (void)navigationControllerDidPush:(JPNavigationController *)navigationController{
     [self.navigationController pushViewController:YourVc animated:YES];
 }
 ```
@@ -131,8 +145,9 @@ self.navigationController.jp_delegate = self;
 Objective-C:
 
 // Return the link view in the be pushed viewController.
--(void)viewDidLoad{
+- (void)viewDidLoad{
     [super viewDidLoad];
+
     YourVc.navigationController.jp_linkViewHeight = 44.0f;
     self.navigationController.jp_linkView = YourLinkView;
 }
@@ -164,6 +179,13 @@ Objective-C:
 self.navigationController.jp_closePopForAllViewController = YES;
 ```
 
+#### Use custom pop animation when contain AVPlayer
+
+```objective-c
+Objective-C:
+
+self.navigationController.jp_useCustomPopAnimationForCurrentViewController = YES;
+```
 
 Installation
 ------------
@@ -180,13 +202,13 @@ There are two ways to use JPNavigationController in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPNavigationController', '~> 1.2.5'
+pod 'JPNavigationController', '~> 2.0.0'
 end
 ```
 
 ## Licenses
 
-All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPNavigationController/blob/master/LICENSE).
+All source code is licensed under the [MIT License](https://github.com/newyjp/JPNavigationController/blob/master/LICENSE).
 
 
 如果你在天朝
@@ -196,13 +218,14 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 ## 特性
 
-- [x] 全屏pop手势支持
-- [x] 全屏push到绑定的控制器支持
+- [x] 全屏 pop 手势支持
+- [x] 全屏 push 到绑定的控制器支持
 - [x] 为每个控制器定制 UINavigationBar 支持(包括设置颜色和透明度)
 - [x] 为每个控制器添加底部联动视图支持
-- [x] 自定义pop手势范围支持(从屏幕最左侧开始计算宽度)
-- [x] 为单个控制器关闭pop手势支持
-- [x] 为所有控制器关闭pop手势支持
+- [x] 自定义 pop 手势范围支持(从屏幕最左侧开始计算宽度)
+- [x] 为单个控制器关闭 pop 手势支持
+- [x] 为所有控制器关闭 pop 手势支持
+- [x] 当当前控制器使用 `AVPlayer` 播放视频的时候, 使用自定义的 pop 动画以保证 `AVPlayer` 流畅播放.
 
 
 ## 组件要求
@@ -213,9 +236,11 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 ## 了解实现思路和源码解析
 
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为控制器添加左滑push](http://www.jianshu.com/p/ff68b5e646fc)
+- 阅读我的简书文章 [[iOS]UINavigationController全屏 pop 之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
+- 阅读我的简书文章 [[iOS]UINavigationController 全屏 pop 之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
+- 阅读我的简书文章 [[iOS]UINavigationController全屏 pop 之为控制器添加左滑 push](http://www.jianshu.com/p/ff68b5e646fc)
+- 阅读我的简书文章 [[iOS]调和 pop 手势导致 AVPlayer 播放卡顿](http://www.jianshu.com/p/be02059b9e6a)
+
 - 下载我Github上的demo
 
 
@@ -261,22 +286,32 @@ Objective-C:
 // 弹出到指定的控制器
 
 // 方案A: 找到目标控制器, pop
-JPSecondVC *second = nil;
+JPNavigationControllerDemo_linkBar *vc = nil;
 NSArray *viewControllers = self.navigationController.jp_rootNavigationController.jp_viewControllers;
 for (UIViewController *c in viewControllers) {
-    if ([c isKindOfClass:[JPSecondVC class]]) {
-        second = (JPSecondVC *)c;
-        break;
+if ([c isKindOfClass:[JPNavigationControllerDemo_linkBar class]]) {
+    vc = (JPNavigationControllerDemo_linkBar *)c;
+    break;
+   }
+}
+
+if (vc) {
+    [self.navigationController popToViewController:vc animated:YES];
+}
+
+
+// 方案 B: jp_popToViewControllerClassString:handle:animated:.
+[self.navigationController jp_popToViewControllerClassString:@"JPNavigationControllerDemo_linkBar" handle:^UIViewController * _Nullable(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error) {
+
+    if (!error) {
+        return viewControllers.firstObject;
     }
-}
+    else{
+        NSLog(@"%@", error);
+        return nil;
+    }
 
-if (second) {
-    [self.navigationController popToViewController:second animated:YES];
-}
-
-
-// 方案B: 使用 jp_popToViewControllerClassIs: animated:.
-[self.navigationController jp_popToViewControllerClassIs:[JPSecondVC class] animated:YES];
+} animated:YES];
 ```
 
 
@@ -299,10 +334,10 @@ self.navigationController.navigationBarHidden = YES;
 Objective-C:
 
 // 成为JPNavigationControllerDelegate协议的代理, 实现协议方法即可拥有左滑push功能.
-self.navigationController.jp_delegate = self;
+[self.navigationController jp_registerNavigtionControllerDelegate:self];
 
 // 实现协议方法
--(void)jp_navigationControllerDidPushLeft{
+- (void)jp_navigationControllerDidPushLeft{
     [self.navigationController pushViewController:YourVc animated:YES];
 }
 ```
@@ -346,6 +381,12 @@ Objective-C:
 self.navigationController.jp_closePopForAllViewController = YES;
 ```
 
+#### 因为界面中有 AVPLayer 在播放视频, 所以为了保证 pop 手势执行的过程中视频能正常播放, 使用自定义的 pop 动画
+```objective-c
+Objective-C:
+
+self.navigationController.jp_useCustomPopAnimationForCurrentViewController = YES;
+```
 
 集成到你的项目
 ------------
@@ -362,14 +403,13 @@ self.navigationController.jp_closePopForAllViewController = YES;
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPNavigationController', '~> 1.2.5'
+pod 'JPNavigationController', '~> 2.0.0'
 end
 ```
 
 ## 证书
 
-All source code is licensed under the [MIT License](https://github.com/Chris-Pan/JPNavigationController/blob/master/LICENSE).
+All source code is licensed under the [MIT License](https://github.com/newyjp/JPNavigationController/blob/master/LICENSE).
 
-## 如果喜欢我的文章，请帮忙点个👍。
 
 

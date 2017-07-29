@@ -62,7 +62,7 @@ class JPVideoPlayerDemoVC_home: UITableViewController {
         tableViewRange.isHidden = true
         
         if (playingCell != nil) {
-            playingCell?.videoImv.stopPlay()
+            playingCell?.videoImv.jp_stopPlay()
         }
     }
     
@@ -194,10 +194,11 @@ extension JPVideoPlayerDemoVC_home {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let single = JPVideoPlayerDemoVC_present()
-        present(single, animated: true, completion: nil)
+        let pushVC = JPVideoPlayerDemoVC_push()
+        pushVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(pushVC, animated: true)
         let cell = tableView.cellForRow(at: indexPath) as! JPVideoPlayerDemoCell
-        single.videoPath = cell.videoPath
+        pushVC.videoPath = cell.videoPath
     }
     
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -324,7 +325,7 @@ extension JPVideoPlayerDemoVC_home {
         // If the found cell is the cell playing video, this situation cannot play video again.
         // 注意, 如果正在播放的 cell 和 finnalCell 是同一个 cell, 不应该在播放.
         if playingCell?.hash != bestCell.hash {
-            playingCell?.videoImv.stopPlay()
+            playingCell?.videoImv.jp_stopPlay()
             
             let url = URL(string: bestCell.videoPath)
             
@@ -356,7 +357,7 @@ extension JPVideoPlayerDemoVC_home {
     }
     
     func stopPlay() {
-        playingCell?.videoImv.stopPlay()
+        playingCell?.videoImv.jp_stopPlay()
         playingCell = nil
     }
     

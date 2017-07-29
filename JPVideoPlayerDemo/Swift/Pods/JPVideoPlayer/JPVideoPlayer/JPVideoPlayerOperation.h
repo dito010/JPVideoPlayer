@@ -14,6 +14,6 @@
 
 @protocol JPVideoPlayerOperation <NSObject>
 
--(void)cancel;
+- (void)cancel;
 
 @end

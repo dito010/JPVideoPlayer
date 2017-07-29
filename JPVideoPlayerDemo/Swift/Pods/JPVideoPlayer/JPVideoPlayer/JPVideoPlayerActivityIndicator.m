@@ -12,7 +12,7 @@
 
 #import "JPVideoPlayerActivityIndicator.h"
 
-CGFloat const ActivityIndicatorWH = 46;
+CGFloat const JPVideoPlayerActivityIndicatorWH = 46;
 
 @interface JPVideoPlayerActivityIndicator()
 
@@ -26,7 +26,7 @@ CGFloat const ActivityIndicatorWH = 46;
 
 @implementation JPVideoPlayerActivityIndicator
 
--(instancetype)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         [self setup_];
@@ -34,7 +34,7 @@ CGFloat const ActivityIndicatorWH = 46;
     return self;
 }
 
--(void)layoutSubviews{
+- (void)layoutSubviews{
     [super layoutSubviews];
     
     self.blurView.frame = self.bounds;
@@ -42,10 +42,9 @@ CGFloat const ActivityIndicatorWH = 46;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
--(void)startAnimating{
+- (void)startAnimating{
     if (!self.isAnimating) {
         self.hidden = NO;
         [self.activityIndicator startAnimating];
@@ -53,7 +52,7 @@ CGFloat const ActivityIndicatorWH = 46;
     }
 }
 
--(void)stopAnimating{
+- (void)stopAnimating{
     if (self.isAnimating) {
         self.hidden = YES;
         [self.activityIndicator stopAnimating];
@@ -62,10 +61,9 @@ CGFloat const ActivityIndicatorWH = 46;
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
--(void)setup_{
+- (void)setup_{
     self.backgroundColor = [UIColor clearColor];
     self.layer.cornerRadius = 8;
     self.clipsToBounds = YES;

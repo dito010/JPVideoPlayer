@@ -21,18 +21,17 @@ typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
 
 @implementation UIView (WebVideoCacheOperation)
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
--(void)setCurrentPlayingURL:(NSURL *)currentPlayingURL{
+- (void)setCurrentPlayingURL:(NSURL *)currentPlayingURL{
     objc_setAssociatedObject(self, &currentPlayingURLKey, currentPlayingURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(NSURL *)currentPlayingURL{
+- (NSURL *)currentPlayingURL{
     return objc_getAssociatedObject(self, &currentPlayingURLKey);
 }
 
--(void)jp_setVideoLoadOperation:(id)operation forKey:(NSString *)key{
+- (void)jp_setVideoLoadOperation:(id)operation forKey:(NSString *)key{
     if (key) {
         [self jp_cancelVideoLoadOperationWithKey:key];
         if (operation) {
@@ -42,7 +41,7 @@ typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
     }
 }
 
--(void)jp_cancelVideoLoadOperationWithKey:(NSString *)key{
+- (void)jp_cancelVideoLoadOperationWithKey:(NSString *)key{
     // Cancel in progress downloader from queue.
     JPOperationsDictionary *operationDictionary = [self operationDictionary];
     id operations = operationDictionary[key];
@@ -61,7 +60,7 @@ typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
     }
 }
 
--(void)jp_removeVideoLoadOperationWithKey:(NSString *)key{
+- (void)jp_removeVideoLoadOperationWithKey:(NSString *)key{
     if (key) {
         JPOperationsDictionary *operationDictionary = [self operationDictionary];
         [operationDictionary removeObjectForKey:key];
@@ -69,8 +68,7 @@ typedef NSMutableDictionary<NSString *, id> JPOperationsDictionary;
 }
 
     
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
 - (JPOperationsDictionary *)operationDictionary {
     JPOperationsDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);

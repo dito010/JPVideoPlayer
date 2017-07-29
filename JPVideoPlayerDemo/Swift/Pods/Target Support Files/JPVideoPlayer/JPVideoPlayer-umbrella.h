@@ -20,10 +20,13 @@
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerOperation.h"
 #import "JPVideoPlayerPlayVideoTool.h"
+#import "JPVideoPlayerProgressView.h"
 #import "JPVideoPlayerResourceLoader.h"
+#import "JPVideoPlayerSwizzle.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "UIView+WebVideoCache.h"
 #import "UIView+WebVideoCacheOperation.h"
+#import "UIViewController+Landscape.h"
 
 FOUNDATION_EXPORT double JPVideoPlayerVersionNumber;
 FOUNDATION_EXPORT const unsigned char JPVideoPlayerVersionString[];

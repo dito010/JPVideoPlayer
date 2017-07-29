@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
         
         let homeVC = JPVideoPlayerDemoVC_home()
-        let nav_home = UINavigationController(rootViewController: homeVC)
+        let nav_home = JPNavigationController(rootViewController: homeVC)
         nav_home.tabBarItem.image = #imageLiteral(resourceName: "player")
         nav_home.tabBarItem.selectedImage = #imageLiteral(resourceName: "player_select")
         nav_home.tabBarItem.title = "Player"

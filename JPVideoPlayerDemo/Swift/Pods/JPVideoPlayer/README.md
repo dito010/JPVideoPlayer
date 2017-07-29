@@ -3,8 +3,12 @@
 <img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
 </p>
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/pod-2.0.4-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/Chris-Pan/JPVideoPlayer) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
-![pod](https://img.shields.io/travis/rust-lang/rust/master.svg)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer)
+[![pod](https://img.shields.io/badge/pod-2.2.2-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) 
+[![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) 
+[![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
+[![pod](https://img.shields.io/badge/Carthage-support-green.svg)](https://github.com/Carthage/Carthage)
+
 
 This library provides an video player with cache support in `UITableView`.
 
@@ -26,6 +30,8 @@ You may download my demo to know how to play video in UITableViewController, thi
 - [x] Location video play support
 - [x] HTTPS support
 - [x] Swift support
+- [x] Carthage support
+- [x] Landscape support
 
 ## Requirements
 
@@ -74,7 +80,7 @@ let url = URL(string: videoPath)
 aview.jp_playVideoWithURL(with: url)
 ```
 
-#### Play video muted.
+#### Play video muted, display status view.
 ```objective-c
 Objective-C:
 
@@ -82,10 +88,10 @@ Objective-C:
 
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoMutedWithURL:url];
+[aview jp_playVideoHiddenStatusViewWithURL:url];
 ```
 
-#### Play video, and play audio, display status view.
+#### Play video muted, hidden status view.
 ```objective-c
 Objective-C:
 
@@ -93,7 +99,7 @@ Objective-C:
 
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoDisplayStatusViewWithURL:url];
+[aview jp_playVideoMutedHiddenStatusViewWithURL:url];
 ```
 
 #### Play video muted, display status view.
@@ -113,8 +119,8 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 #import <UIView+WebVideoCache.h>
 
 ...
-[aview perfersProgressViewColor:[UIColor redColor]];
-[aview perfersProgressViewBackgroundColor:[UIColor grayColor]];
+[aview jp_perfersDownloadProgressViewColor: [UIColor grayColor]];
+[aview jp_perfersPlayingProgressViewColor: [UIColor blueColor]];
 ```
 
 #### Player control.
@@ -123,9 +129,23 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 #import <UIView+WebVideoCache.h>
 
 ...
-[aview stopPlay];
-[aview setPlayerMute:YES];
+[aview jp_stopPlay];
+[aview jp_pause];
+[aview jp_resume];
+[aview jp_setPlayerMute:YES];
 ```
+
+#### Landscape Or Portrait Control
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview jp_perfersLandscapeForViewController:self];
+[aview jp_landscape];
+[aview jp_portrait];
+```
+
 
 #### Cache manage.
 ```Objective-C:
@@ -146,8 +166,9 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 Installation
 ------------
 
-There are two ways to use JPVideoPlayer in your project:
+There are three ways to use JPVideoPlayer in your project:
 - using CocoaPods
+- using Carthage
 - by cloning the project into your repository
 
 ### Installation with CocoaPods
@@ -158,8 +179,16 @@ There are two ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target “YourProjectName” do
-pod 'JPVideoPlayer', '~> 2.0.4'
+pod 'JPVideoPlayer', '~> 2.2.2'
 end
+```
+
+### Installation with Carthage
+[Carthage](https://github.com/Carthage/Carthage) is a simple, decentralized dependency manager for Cocoa.
+
+```
+github "newyjp/JPVideoPlayer"
+
 ```
 
 ## Licenses
@@ -189,6 +218,8 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 - [x] 支持播放本地视频
 - [x] HTTPS 支持
 - [x] Swift 支持
+- [x] Carthage 支持
+- [x] 横屏支持
 
 ## 组件要求
 
@@ -235,7 +266,7 @@ let url = URL(string: videoPath)
 aview.jp_playVideoWithURL(with: url)
 ```
 
-#### 静音播放视频.
+#### 播放音视频, 隐藏进度指示(可以成为代理添加指示器, 或者直接自定义指示器).
 ```objective-c
 Objective-C:
 
@@ -243,10 +274,10 @@ Objective-C:
 
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoMutedWithURL:url];
+[aview jp_playVideoHiddenStatusViewWithURL:url];
 ```
 
-#### 播放音视频, 并且显示下载进度和缓冲状态.
+#### 静音播放视频, 隐藏进度指示(可以成为代理添加指示器, 或者直接自定义指示器).
 ```objective-c
 Objective-C:
 
@@ -254,10 +285,10 @@ Objective-C:
 
 ...
 NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoDisplayStatusViewWithURL:url];
+[aview jp_playVideoMutedHiddenStatusViewWithURL:url];
 ```
 
-#### 静音播放视频, 并且显示下载进度和缓冲状态.
+#### 静音播放视频, 并且显示进度指示.
 ```objective-c
 Objective-C:
 
@@ -268,24 +299,37 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 [aview jp_playVideoMutedDisplayStatusViewWithURL:url];
 ```
 
-#### 自定义进度展示控件.
+#### 自定义进度指示颜色(下载和播放进度).
 ```Objective-C:
 
 #import <UIView+WebVideoCache.h>
 
 ...
-[aview perfersProgressViewColor:[UIColor redColor]];
-[aview perfersProgressViewBackgroundColor:[UIColor grayColor]];
+[aview jp_perfersDownloadProgressViewColor: [UIColor grayColor]];
+[aview jp_perfersPlayingProgressViewColor: [UIColor blueColor]];
 ```
 
-#### 播放控制.
+#### 播放器控制.
 ```Objective-C:
 
 #import <UIView+WebVideoCache.h>
 
 ...
-[aview stopPlay];
-[aview setPlayerMute:YES];
+[aview jp_stopPlay];
+[aview jp_pause];
+[aview jp_resume];
+[aview jp_setPlayerMute:YES];
+```
+
+#### 视频横竖屏切换
+```Objective-C:
+
+#import <UIView+WebVideoCache.h>
+
+...
+[aview jp_perfersLandscapeForViewController:self];
+[aview jp_landscape];
+[aview jp_portrait];
 ```
 
 #### 缓存查询管理.
@@ -308,6 +352,7 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 
 两种选择把框架集成到你的项目:
 - 使用 CocoaPods
+- 使用 Carthage
 - 下载我的demo, 把'JPVideoPlayer'文件夹拽到你的项目中
 
 ### 使用 CocoaPods 安装
@@ -316,10 +361,24 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 ```
 platform :ios, '8.0'
 target “你的项目名称” do
-pod 'JPVideoPlayer', '~> 2.0.4'
+pod 'JPVideoPlayer', '~> 2.2.2'
 end
 ```
+
+### 使用 Carthage 安装
+
+#### cartfile
+```
+github "newyjp/JPVideoPlayer"
+```
+
 
 ## 证书
 
 [MIT License](https://github.com/Chris-Pan/JPVideoPlayer/blob/master/LICENSE)
+
+## 架构
+
+<p align="left" >
+<img src="Images/JPVideoPlayerSequenceDiagram.png" title="JPVideoPlayerSequenceDiagram" float=left>
+</p>

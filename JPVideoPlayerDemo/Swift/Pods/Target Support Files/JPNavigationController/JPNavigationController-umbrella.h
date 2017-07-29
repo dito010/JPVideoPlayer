@@ -10,21 +10,22 @@
 #endif
 #endif
 
-#import "JPAnimatedTransitioningBase.h"
-#import "JPFullScreenPopGestureRecognizerDelegate.h"
-#import "JPLinkContainerView.h"
-#import "JPManageSinglePopVCTool.h"
+#import "JPBaseAnimationTransition.h"
 #import "JPNavigationBar.h"
 #import "JPNavigationController.h"
+#import "JPNavigationControllerCompat.h"
+#import "JPNavigationControllerGestureRecognizer.h"
 #import "JPNavigationControllerKit.h"
-#import "JPNavigationInteractiveTransition.h"
-#import "JPPushAnimatedTransitioning.h"
-#import "JPSnapTool.h"
+#import "JPNavigationControllerProtocol.h"
+#import "JPNavigationControllerTransition.h"
+#import "JPPushAnimationTransition.h"
+#import "JPTransitionShadowView.h"
 #import "JPWarpNavigationController.h"
 #import "JPWarpViewController.h"
-#import "UINavigationController+JPFullScreenPopGesture.h"
-#import "UINavigationController+JPLink.h"
-#import "UIViewController+JPNavigationController.h"
+#import "UIColor+ImageGenerate.h"
+#import "UINavigationController+FulllScreenPopPush.h"
+#import "UIView+ScreenCapture.h"
+#import "UIViewController+ViewControllers.h"
 
 FOUNDATION_EXPORT double JPNavigationControllerVersionNumber;
 FOUNDATION_EXPORT const unsigned char JPNavigationControllerVersionString[];

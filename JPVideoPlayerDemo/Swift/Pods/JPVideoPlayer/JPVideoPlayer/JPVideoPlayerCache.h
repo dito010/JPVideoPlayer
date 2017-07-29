@@ -94,7 +94,7 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
 /**
  * This method is be used to cancel current completion block when cache a peice of video data finished.
  */
--(void)cancelCurrentComletionBlock;
+- (void)cancelCurrentComletionBlock;
 
 
 # pragma - Query and Retrieve Options
@@ -124,7 +124,7 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *
  * @return if the file is existed for given video path, return YES, return NO, otherwise. 
  */
--(BOOL)diskVideoExistsWithPath:(NSString * _Nullable)fullVideoCachePath;
+- (BOOL)diskVideoExistsWithPath:(NSString * _Nullable)fullVideoCachePath;
 
 
 # pragma - Clear Cache Events
@@ -143,7 +143,7 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  * @param key  The unique flag for the given url in this framework.
  * @param completion      A block that should be executed after the video has been removed (optional).
  */
--(void)removeTempCacheForKey:(NSString * _Nonnull)key withCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
+- (void)removeTempCacheForKey:(NSString * _Nonnull)key withCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
 
 /**
  * Async remove all expired cached video from disk. Non-blocking method - returns immediately.
@@ -174,14 +174,14 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *
  * @return if the disk have enough size to cache the given size file, return YES, return NO otherwise.
  */
--(BOOL)haveFreeSizeToCacheFileWithSize:(NSUInteger)fileSize;
+- (BOOL)haveFreeSizeToCacheFileWithSize:(NSUInteger)fileSize;
 
 /**
  * Get the free size of device.
  *
  * @return the free size of device.
  */
--(unsigned long long)getDiskFreeSize;
+- (unsigned long long)getDiskFreeSize;
 
 /**
  * Get the size used by the disk cache, synchronously.
@@ -206,6 +206,6 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *
  *  @return the file's name.
  */
--(nullable NSString *)cacheFileNameForKey:(nullable NSString *)key;
+- (nullable NSString *)cacheFileNameForKey:(nullable NSString *)key;
 
 @end

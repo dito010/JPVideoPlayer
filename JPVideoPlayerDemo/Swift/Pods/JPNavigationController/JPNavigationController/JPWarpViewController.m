@@ -1,117 +1,230 @@
-//
-//  JPWarpViewController.m
-//  JPNavigationController
-//
-//  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
-//
+/*
+ * This file is part of the JPNavigationController package.
+ * (c) NewPan <13246884282@163.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Click https://github.com/newyjp
+ * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
+ */
 
 #import "JPWarpViewController.h"
 #import "JPWarpNavigationController.h"
-#import "UIViewController+JPNavigationController.h"
+#import "UIViewController+ViewControllers.h"
+#import "JPNavigationController.h"
+#import "JPNavigationControllerCompat.h"
+#import "JPTransitionShadowView.h"
+#import "JPNavigationControllerGestureRecognizer.h"
 
-@interface JPWarpViewController()
-/*!
- * \~english
- * The warpNav after warped the viewController user passed in(Lazy loading)
- *
- * \~chinese
- * 包装了用户传进来的控制器以后的warpNav(懒加载的)
- */
-@property(nonatomic, weak)JPWarpNavigationController *warpNav;
+@interface JPWarpViewController ()
 
-/*!
- * \~english
- * The view Controller user passed in(the view controller be pushed in navigationController's stack now)
- * Use for help find the viewController wanna pop to in method popToViewController:animated:
- * @see jp_rootNavigationController
- *
- * \~chinese
- * 用户传进来的控制器(当前压入栈的控制器)
- * 用于辅助 popToViewController:animated: 找到要pop到的控制器
- * @see jp_rootNavigationController
+/**
+ * The warped navigation controller by self.
  */
-@property(nonatomic, weak)UIViewController *jp_passInViewController;
+@property(nonatomic, strong) JPWarpNavigationController *warpedNavigationController;
+
+/**
+ * User viewController.
+ */
+@property(nonatomic, weak) UIViewController *userViewController;
+
+/**
+ * Pop gesture.
+ */
+@property(nonatomic, strong) JPNavigationControllerGestureRecognizer *panGesture;
+
+/**
+ * The current gesture is push or pop.
+ */
+@property(nonatomic, assign) JPNavigationControllerTransitionType transitionType;
+
+/**
+ * ImageView for toViewController.
+ */
+@property(nonatomic, strong) UIImageView *toImv_anim;
+
+/**
+ * Shadow View.
+ */
+@property(nonatomic, strong) JPTransitionShadowView *shadowView;
 
 @end
 
-
-static NSValue *jp_tabBarRectValue;
+static NSValue *kJPWarpViewControllerTabbarRectValue;
+// The borderline value devcide is need push pop or not when gesture end.
+const CGFloat kJPWarpViewControllerTransitionBorderlineDelta = 0.4;
+const CGFloat kJPWarpViewControllerTransitionDuration = 0.25;
+const CGFloat kJPWarpViewControllerInterlaceFactor = 0.3;
 @implementation JPWarpViewController
 
--(JPWarpViewController *)warpViewController:(UIViewController *)viewController{
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController rootNavigationController:(JPNavigationController *)rootNavigationController{
     
     // Alloc warpNav as B, warp the viewController user passed by B, then warp the B by self become C.
-    // 创建warpNav导航控制器B, 把用户传进来的控制器A用导航控制器B包装, 再将B用JPWarpViewController包装成为C
     
-    JPWarpNavigationController *warpNav = [[JPWarpNavigationController alloc]init];
-    warpNav.viewControllers = @[viewController];
-    [self addChildViewController:warpNav];
-    
-    self.jp_passInViewController = viewController;
-    self.warpNav = warpNav;
-    
-    // Reocrd the C(the outest warp ViewController) use to help manage close pop for signle viewControlle.
-    // @see jp_closePopVCArr
-    // 记录每个warpNav外包的viewController, 用来控制器单个页面的pop
-    warpNav.jp_warpViewController = self;
-
+    self = [super init];
+    if (self) {
+        rootViewController.jp_warpViewController = self;
+        
+        JPWarpNavigationController *warpNav = [[JPWarpNavigationController alloc] initWithRootViewController:rootViewController];
+        [warpNav setValue:rootNavigationController forKey:@"rootNavigationController"];
+        [self addChildViewController:warpNav];
+        
+        _userViewController = rootViewController;
+        _warpedNavigationController = warpNav;
+    }
     return self;
 }
 
--(void)viewDidLoad{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Display the view of user's viewController(lazy loading style).
-    // 显示用户viewController的view(懒加载的方式)
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_warpedNavigationController.view];
+    _transitionType = JPNavigationControllerTransitionTypeNone;
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle{
+    return self.childViewControllers.firstObject;
+}
+
+- (void)addPopGesture{
+    _panGesture = ({
+        JPNavigationControllerGestureRecognizer *panGesture = [[JPNavigationControllerGestureRecognizer alloc]initWithTarget:self action:@selector(gestureDidTriggered:)];
+        [self.view addGestureRecognizer:panGesture];
+        panGesture.maximumNumberOfTouches = 1;
+        JPNavigationController *rootNav = _userViewController.jp_rootNavigationController;
+        panGesture.delegate = rootNav;
+        panGesture.gestureType = JPNavigationControllerGestureRecognizerTypeWarp;
+        [panGesture addTarget:rootNav action:NSSelectorFromString(@"gestureDidTriggered:")];
+        
+        panGesture;
+    });
+}
+
+- (void)removePopGesture{
+    _panGesture.delegate = nil;
+    [_panGesture removeTarget:self action:@selector(gestureDidTriggered:)];
+    _panGesture = nil;
+}
+
+
+#pragma mark - Gesture
+
+- (void)gestureDidTriggered:(JPNavigationControllerGestureRecognizer *)gestureRecognizer{
+   
+    // Calculate the percent of the point origin-X / screen width, alloc UIPercentDrivenInteractiveTransition instance when push start, and check user is overrided the protocol method or not, if overrided, then start push and, set start percent = 0.
+    // Refresh the slip percent when pan gesture changed.
+    // Judge the slip percent is more than the JPPushBorderlineDelta when pan gesture end.
     
-    [self.view addSubview:self.warpNav.view];
-}
-
--(UIViewController *)warpedNavigationController{
-    JPWarpNavigationController *warpNav = self.childViewControllers.firstObject;
-    return warpNav.viewControllers.firstObject;
-}
-
--(void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    if (self.tabBarController && !jp_tabBarRectValue) {
-        jp_tabBarRectValue = [NSValue valueWithCGRect:self.tabBarController.tabBar.frame];
+    
+    CGFloat progress = [gestureRecognizer translationInView:gestureRecognizer.view].x / gestureRecognizer.view.bounds.size.width;
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        _transitionType = JPNavigationControllerTransitionTypePop;
+        
+        // add animation imageView.
+        self.toImv_anim.image = [_userViewController jp_screenCaptureImg];
+        self.toImv_anim.frame = CGRectMake(-kJPWarpViewControllerInterlaceFactor * JPScreenW, 0, JPScreenW, JPScreenH);
+        [self.view.superview insertSubview:self.toImv_anim atIndex:0];
+        
+        // add shadow view.
+        self.shadowView.frame = CGRectMake(-JPMixShadowViewShadowWidth, 0, JPScreenW + JPMixShadowViewShadowWidth, JPScreenH);
+        [self.view.superview insertSubview:self.shadowView aboveSubview:self.toImv_anim];
+        
+    }
+    else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        {
+            
+            if (_transitionType != JPNavigationControllerTransitionTypePop) {
+                return;
+            }
+            
+            if (progress < 0) {
+                progress = 0;
+            }
+            progress = MIN(1.0, MAX(0.0, progress));
+            
+            CGFloat tx_to = JPScreenW * kJPWarpViewControllerInterlaceFactor * progress;
+            self.toImv_anim.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_to, 0);
+            CGFloat tx_from = JPScreenW * progress;
+            self.view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_from, 0);
+            self.shadowView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_from, 0);
+        }
+    }
+    else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+        
+        if (_transitionType != JPNavigationControllerTransitionTypePop) {
+            return;
+        }
+        
+        NSTimeInterval duration;
+        
+        if (progress > kJPWarpViewControllerTransitionBorderlineDelta) {
+            duration = kJPWarpViewControllerTransitionDuration;
+            
+            [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                
+                CGFloat tx_to = JPScreenW * kJPWarpViewControllerInterlaceFactor;
+                self.toImv_anim.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_to, 0);
+                CGFloat tx_from = JPScreenW;
+                self.view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_from, 0);
+                self.shadowView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, tx_from, 0);
+                
+            } completion:^(BOOL finished) {
+                
+                [_userViewController.navigationController popViewControllerAnimated:NO];
+                self.toImv_anim.transform = CGAffineTransformIdentity;
+                self.view.transform = CGAffineTransformIdentity;
+                self.shadowView.transform = CGAffineTransformIdentity;
+                [self.toImv_anim removeFromSuperview];
+                [self.shadowView removeFromSuperview];
+                
+            }];
+        }
+        else {
+            duration = kJPWarpViewControllerTransitionDuration * progress;
+            
+            [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                
+                self.toImv_anim.transform = CGAffineTransformIdentity;
+                self.view.transform = CGAffineTransformIdentity;
+                self.shadowView.transform = CGAffineTransformIdentity;
+                
+            } completion:^(BOOL finished) {
+                
+                [self.toImv_anim removeFromSuperview];
+                [self.shadowView removeFromSuperview];
+                
+            }];
+        }
+        
+        _transitionType = JPNavigationControllerTransitionTypeNone;
     }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    if (self.tabBarController && [self warpedNavigationController].hidesBottomBarWhenPushed) {
-        self.tabBarController.tabBar.frame = CGRectZero;
+
+#pragma mark - Override
+
+- (BOOL)hidesBottomBarWhenPushed{
+    return _userViewController.hidesBottomBarWhenPushed;
+}
+
+
+#pragma mark - Private
+
+- (JPTransitionShadowView *)shadowView{
+    if (!_shadowView) {
+        _shadowView = [JPTransitionShadowView new];
     }
+    return _shadowView;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    self.tabBarController.tabBar.translucent = YES;
-    if (self.tabBarController && !self.tabBarController.tabBar.hidden && jp_tabBarRectValue) {
-        self.tabBarController.tabBar.frame = jp_tabBarRectValue.CGRectValue;
+- (UIImageView *)toImv_anim{
+    if (!_toImv_anim) {
+        _toImv_anim = [UIImageView new];
     }
-}
-
--(BOOL)hidesBottomBarWhenPushed{
-    return [self warpedNavigationController].hidesBottomBarWhenPushed;
-}
-
--(UITabBarItem *)tabBarItem{
-    return [self warpedNavigationController].tabBarItem;
-}
-
--(NSString *)title{
-    return [self warpedNavigationController].title;
-}
-
--(UIViewController *)childViewControllerForStatusBarStyle{
-    return [self warpedNavigationController];
-}
-
--(UIViewController *)childViewControllerForStatusBarHidden{
-    return [self warpedNavigationController];
+    return _toImv_anim;
 }
 
 @end

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'A49F3FB578D8D7BA04AA84F338AAFE2E'
+               BlueprintIdentifier = '2E45148549DF796F105BF0C2140F9119'
                BlueprintName = 'JPNavigationController'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'JPNavigationController.framework'>

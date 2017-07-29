@@ -1,175 +1,278 @@
-//
-//  JPWarpNavigationController.m
-//  JPNavigationController
-//
-//  Hello! I am NewPan from Guangzhou of China, Glad you could use my framework, If you have any question or wanna to contact me, please open https://github.com/Chris-Pan or http://www.jianshu.com/users/e2f2d779c022/latest_articles
-//
+/*
+ * This file is part of the JPNavigationController package.
+ * (c) NewPan <13246884282@163.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Click https://github.com/newyjp
+ * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
+ */
 
 #import "JPWarpNavigationController.h"
-#import "JPLinkContainerView.h"
-#import "UINavigationController+JPLink.h"
-#import "JPNavigationBar.h"
 #import "JPNavigationController.h"
-#import "UIViewController+JPNavigationController.h"
-#import "UINavigationController+JPFullScreenPopGesture.h"
-#import "JPManageSinglePopVCTool.h"
+#import "UIViewController+ViewControllers.h"
+#import "JPWarpViewController.h"
+#import "UIColor+ImageGenerate.h"
+#import "UINavigationController+FulllScreenPopPush.h"
+#import "JPNavigationControllerCompat.h"
+#import "UIView+ScreenCapture.h"
+#import "JPNavigationBar.h"
 
-@interface JPWarpNavigationController()
+@interface JPWarpNavigationController ()
 
-/*!
- * \~english
- * Compatible pop gesture's link view in screen bottom.
- *
- * \~chinese
- * 兼容pop手势的底部联动视图
+/**
+ * The root navigation controller.
  */
-@property(nonatomic, strong)JPLinkContainerView *linkView;
+@property(nonatomic, weak) JPNavigationController *rootNavigationController;
+
+/**
+ * Link container view.
+ */
+@property(nonatomic, strong) JPLinkContainerView *linkContainerView;
 
 @end
 
+static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigationController.bundle/backImage";
 
-#define kDefaultBackImageName @"JPImage.bundle/backImage"
-#define JPScreenH [UIScreen mainScreen].bounds.size.height
-#define JPScreenW [UIScreen mainScreen].bounds.size.width
 @implementation JPWarpNavigationController
 
--(JPLinkContainerView *)linkView{
-    if (!_linkView) {
-        _linkView = [[JPLinkContainerView alloc]init];
-        _linkView.backgroundColor = [UIColor clearColor];
-        _linkView.frame = CGRectMake(0, JPScreenH - self.jp_linkViewHeight - 20, JPScreenW, self.jp_linkViewHeight);
-        [self.navigationBar addSubview:_linkView];
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        [self _setup];
     }
-    return _linkView;
+    return self;
 }
 
--(void)viewDidLoad{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     // Replace system's NavigationBar with custom NavigationBar.
-    // 用自定义的NavigationBar替换系统的NavigationBar.
+    JPNavigationBar *customNavBar = [[JPNavigationBar alloc]init];
+    [self setValue:customNavBar forKey:@"navigationBar"];
     
-    JPNavigationBar *navBar = [[JPNavigationBar alloc]init];
-    [self setValue:navBar forKey:@"navigationBar"];
-    
-    
-    // Save root navigation Controller.
-    // 保存根导航控制器
-    
-    self.jp_rootNavigationController = (JPNavigationController *)self.navigationController;
-    
-    
-    // Monitor the notification of the range change about interactive pop allowed.
-    // 监听最大pop手势范围改变通知
-    
-    SEL popNoteSel = @selector(setJp_interactivePopMaxAllowedInitialDistanceToLeftEdgeNote:);
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:popNoteSel name:kJp_interactivePopMaxNote object:nil];
+    // default color for navigation bar.
+    [self.navigationBar setBackgroundImage:[[UIColor whiteColor] jp_image] forBarMetrics:UIBarMetricsDefault];
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle{
+    return self.topViewController;
 }
 
 
--(void)dealloc{
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:kJp_interactivePopMaxNote object:nil];
-    self.jp_rootNavigationController = nil;
-    
-    if (self.jp_linkView.superview) {
-        [self.jp_linkView removeFromSuperview];
+#pragma mark - JPNavigationControllerProtocol
+
+- (JPNavigationController *)jp_rootNavigationController{
+    return self.rootNavigationController;
+}
+
+- (void)setJp_interactivePopMaxAllowedInitialDistanceToLeftEdge:(CGFloat)jp_interactivePopMaxAllowedInitialDistanceToLeftEdge{
+    CGFloat distance = jp_interactivePopMaxAllowedInitialDistanceToLeftEdge;
+    distance = MAX(0, distance);
+    distance = MIN(distance, [UIScreen mainScreen].bounds.size.width);
+    if (!self.rootNavigationController) {
+        return;
     }
+    [self.rootNavigationController setValue:@(distance) forKey:@"interactivePopMaxAllowedInitialDistanceToLeftEdge"];
 }
 
--(void)addLinkView{
-    // If jp_linkViewHeight>0, we think this instance have a link view in bottom.
-    // If this instance have link view in bottom, this framework will check the viewController passed in by use is a class of UITableViewController or not, if yes, framework will add a contentInset for this viewController.
-    // 如果jp_linkViewHeight大于0, 视为有底部联动视图.
-    // 有了联动底部视图以后，如果传进来的控制器是一个UITableViewController,我们要为这个UITableViewController底部添加一个额外的滚动区域，防止联动底部视图挡住UITableViewController的内容
+- (CGFloat)jp_interactivePopMaxAllowedInitialDistanceToLeftEdge{
+    if (self.rootNavigationController) {
+        return [[self.rootNavigationController valueForKey:@"interactivePopMaxAllowedInitialDistanceToLeftEdge"] floatValue];
+    }
+    return JPScreenW;
+}
+
+- (void)setJp_closePopForCurrentViewController:(BOOL)jp_closePopForCurrentViewController{
+    [self willChangeValueForKey:@"closePopForCurrentViewController"];
+    _closePopForCurrentViewController = jp_closePopForCurrentViewController;
+    [self didChangeValueForKey:@"closePopForCurrentViewController"];
+}
+
+- (BOOL)jp_closePopForCurrentViewController{
+    return _closePopForCurrentViewController;
+}
+
+- (void)setJp_closePopForAllViewControllers:(BOOL)jp_closePopForAllViewControllers{
+    if (!self.rootNavigationController) {
+        return;
+    }
+    [self.rootNavigationController setValue:@(jp_closePopForAllViewControllers) forKey:@"closePopForAllViewControllers"];
+}
+
+- (BOOL)jp_closePopForAllViewControllers{
+    if (self.rootNavigationController) {
+        return [[self.rootNavigationController valueForKey:@"closePopForAllViewControllers"] boolValue];
+    }
+    return NO;
+}
+
+- (void)setJp_useCustomPopAnimationForCurrentViewController:(BOOL)jp_useCustomPopAnimationForCurrentViewController{
+    [self willChangeValueForKey:@"useCustomPopAnimationForCurrentViewController"];
+    _useCustomPopAnimationForCurrentViewController = jp_useCustomPopAnimationForCurrentViewController;
+    
+    if (jp_useCustomPopAnimationForCurrentViewController) {
+        [self.userViewController.jp_warpViewController addPopGesture];
+    }
+    else{
+        [self.userViewController.jp_warpViewController removePopGesture];;
+    }
+    
+    [self didChangeValueForKey:@"useCustomPopAnimationForCurrentViewController"];
+}
+
+- (BOOL)jp_useCustomPopAnimationForCurrentViewController{
+    return _useCustomPopAnimationForCurrentViewController;
+}
+
+- (void)jp_registerNavigtionControllerDelegate:(id<JPNavigationControllerDelegate>)delegate{
+    [self willChangeValueForKey:@"navigationDelegate"];
+    _navigationDelegate = delegate;
+    [self didChangeValueForKey:@"navigationDelegate"];
+}
+
+- (void)jp_popToViewControllerClassString:(NSString *)targetClassString handle:(JPNavigationContollerPopHandle)handle animated:(BOOL)animated{
+    SEL sel = NSSelectorFromString(@"popToViewController:");
+    NSMutableDictionary *arguments = [@{} mutableCopy];
+    if (targetClassString) {
+        arguments[@"targetClassString"] = targetClassString;
+    }
+    if (handle) {
+        arguments[@"handle"] = handle;
+    }
+    arguments[@"animated"] = @(animated);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self.rootNavigationController performSelector:sel withObject:[arguments copy]];
+#pragma clang diagnostic pop
+}
+
+- (void)setJp_linkView:(UIView *)jp_linkView{
+    [self willChangeValueForKey:@"linkView"];
+    _linkView = jp_linkView;
+    [self addLinkView];
+    [self didChangeValueForKey:@"linkView"];
+}
+
+- (UIView *)jp_linkView{
+    return _linkView;
+}
+
+- (void)setJp_linkViewHeight:(CGFloat)jp_linkViewHeight{
+    [self willChangeValueForKey:@"linkViewHeight"];
+    _linkViewHeight = jp_linkViewHeight;
+    [self addLinkView];
+    [self didChangeValueForKey:@"linkViewHeight"];
+}
+
+- (CGFloat)jp_linkViewHeight{
+    return _linkViewHeight;
+}
+
+
+#pragma mark - Link View
+
+- (void)addLinkView{
+    
+    // If jp_linkViewHeight > 0, we think have a link view in bottom.
+    // framework will check the viewController passed in by use is a class of `UITableViewController` or not, if YES, framework will add a contentInset for this viewController.
     
     UIViewController *childViewController = self.viewControllers.firstObject;
-    if (self.jp_linkViewHeight > 0 && self.jp_linkView) {
+    if (self.linkViewHeight > 0 && self.linkView) {
         
-        // Call user's viewDidLoad: method before JPWarpNavigationController's viewDidLoad:.
-        // 先调用用户的控制器的viewDidLoad:方法, 再调用JPWarpNavigationController的viewDidLoad:方法
+        if (self.linkView.superview) {
+            return;
+        }
         
-        self.jp_linkView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.jp_linkViewHeight);
-        [self.linkView addSubview:self.jp_linkView];
+        self.linkView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.linkViewHeight);
+        [self.linkContainerView addSubview:self.linkView];
         
         if ([childViewController isKindOfClass:[UITableViewController class]]) {
             UITableViewController *aVc = (UITableViewController *)self.viewControllers.firstObject;
-            aVc.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.jp_linkViewHeight, 0);
+            aVc.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.linkViewHeight, 0);
             // for test
             // NSLog(@"avc%@", NSStringFromUIEdgeInsets(aVc.tableView.contentInset));
         }
     }
 }
 
--(void)setJp_interactivePopMaxAllowedInitialDistanceToLeftEdgeNote:(NSNotification *)note{
+
+#pragma mark - Override
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     
-    // It always add observe for the range change of pop gesture when push a new viewController, this lead to all navigation controller will call this method, then lead to fix root navigation controller' pop gesture range agian and agian in once user change the pop gesture range. so we need to filter some repeated notificatoin by comparing user change pop gesture's navigation and self, we only change root navigation controller' pop gesture range when user change pop gesture's navigation is equal self.
-    // 每次push都会为当前导航控制器添加监听, 这样一来每个导航控制器都会监听通知, 这样会导致每个导航控制器都来到这个方法, 重复修改根导航控制器的pop手势范围, 这里要用self和设置pop手势范围的导航控制器作对比, 也即是如果发通知和监听通知的控制器是同一控制器, 才更改根控制器的pop手势范围.
-    
-    NSDictionary *dict = note.object;
-    CGFloat edgeValue = [dict[@"tempValue"] floatValue];
-    UINavigationController *nav = dict[@"navigation"];
-    if (self == nav) {
-        self.jp_rootNavigationController.jp_interactivePopMaxAllowedInitialDistanceToLeftEdge = edgeValue;
+    // call -initWithRootViewController: first view controller push in stack.
+    JPNavigationController *rootNavigationController = [self rootNavigationController];
+    if (!rootNavigationController) {
+        [super pushViewController:viewController animated:animated];
+        return;
     }
-}
-
--(void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     
-    JPNavigationController *nav = (JPNavigationController *)self.navigationController;
-    viewController.jp_navigationController = nav;
+    // call pushViewController:animated:.
+    viewController.jp_rootNavigationController = rootNavigationController;
     
-    UIImage *backImage = [[UIImage imageNamed:kDefaultBackImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:backImage style:UIBarButtonItemStylePlain target:self action:@selector(didTapBackButton)];
+    UIImage *backImg = [[UIImage imageNamed:kJPWarpNavigationControllerBackImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(didTapBackButton)];
     
-    // Watch out, here push a warped viewController(JPWarpViewController class).
-    // 注意, 这里压入的是一个包装过后的控制器JPWarpViewController
+    JPWarpViewController *warpViewController = [[JPWarpViewController alloc]initWithRootViewController:viewController rootNavigationController:_rootNavigationController];
     
-    JPWarpViewController *warpViewController = [[JPWarpViewController new] warpViewController:viewController];
-    viewController.jp_warpViewController = warpViewController;
-    [nav pushViewController:warpViewController animated:animated];
-}
-
--(void)didTapBackButton{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(UIViewController *)popViewControllerAnimated:(BOOL)animated{
-    return [self.navigationController popViewControllerAnimated:animated];
-}
-
--(NSArray<UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated{
-    return [self.navigationController popToRootViewControllerAnimated:animated];
-}
-
--(NSArray<UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    
-    // Watch out, when pop, we should find the warp viewController C(JPWarpViewController class), pop C.
-    // 注意, pop时应该找到包裹viewController的那个JPWarpViewController, pop该控制器
-    
-    JPWarpViewController *warp = viewController.jp_warpViewController;
-    return [self.navigationController popToViewController:warp animated:animated];
-}
-
--(void)jp_popToViewControllerClassIs:(id)targetClass animated:(BOOL)animated{
-    
-    // Pop to target view controller, you just need to pass in the class of target view controller. It's easy to use than system's popToViewController: animated: method.
-    // 弹出到指定类的控制器, 对应系统的 popToViewController: animated:方法.
-    
-    id targetVC = nil;
-    NSArray *viewControllers = self.navigationController.viewControllers;
-    for (JPWarpViewController *c in viewControllers) {
-        UIViewController *vc = c.jp_passInViewController;
-        if ([vc isKindOfClass:targetClass]) {
-            targetVC = c;
-        }
+    // capture screen for custom pop if need.
+    if (self.view.window) {
+        viewController.jp_screenCaptureImg = [self.view.window jp_captureCurrentView];
     }
-    if (targetVC) {
-        [self.navigationController popToViewController:targetVC animated:animated];
-    }
+    
+    [rootNavigationController pushViewController:warpViewController animated:animated];
 }
 
--(void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
-    [self.navigationController dismissViewControllerAnimated:flag completion:completion];
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated{
+    return [self.rootNavigationController popViewControllerAnimated:animated];
+}
+
+- (NSArray<UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    JPWarpViewController *warpVc = viewController.jp_warpViewController;
+    if (warpVc) {
+        return [self.rootNavigationController popToViewController:warpVc animated:animated];
+    }
+    return nil;
+}
+
+- (NSArray<UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated{
+    return [self.rootNavigationController popToRootViewControllerAnimated:animated];
+}
+
+- (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+    [self.rootNavigationController presentViewController:viewControllerToPresent animated:flag completion:completion];
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    [self.rootNavigationController dismissViewControllerAnimated:flag completion:completion];
+}
+
+
+#pragma mark - Private
+
+- (JPLinkContainerView *)linkContainerView{
+    if (!_linkContainerView) {
+        _linkContainerView = [JPLinkContainerView new];
+        _linkContainerView.backgroundColor = [UIColor clearColor];
+        _linkContainerView.frame = CGRectMake(0, JPScreenH - self.linkViewHeight - 20.f, JPScreenW, self.linkViewHeight);
+        [self.navigationBar addSubview:_linkContainerView];
+    }
+    return _linkContainerView;
+}
+
+- (void)_setup{
+    _closePopForCurrentViewController = NO;
+    _useCustomPopAnimationForCurrentViewController = NO;
+}
+
+- (void)didTapBackButton{
+    [self.rootNavigationController popViewControllerAnimated:YES];
+}
+
+- (UIViewController *)userViewController{
+    return self.childViewControllers.firstObject;
 }
 
 @end

@@ -72,8 +72,7 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Public
+#pragma mark - Public
 
 - (void)setValue:(nullable NSString *)value forHTTPHeaderField:(nullable NSString *)field {
     if (value) {
@@ -135,7 +134,7 @@
     }];
 }
 
--(void)cancel:(JPVideoPlayerDownloadToken *)token{
+- (void)cancel:(JPVideoPlayerDownloadToken *)token{
     dispatch_barrier_async(self.barrierQueue, ^{
         JPVideoPlayerDownloaderOperation *operation = self.URLOperations[token.url];
         BOOL canceled = [operation cancel:token.downloadOperationCancelToken];
@@ -150,8 +149,7 @@
 }
 
 
-#pragma mark -----------------------------------------
-#pragma mark Private
+#pragma mark - Private
 
 - (nullable JPVideoPlayerDownloadToken *)addProgressCallback:(JPVideoPlayerDownloaderProgressBlock)progressBlock completedBlock:(JPVideoPlayerDownloaderErrorBlock)errorBlock forURL:(nullable NSURL *)url createCallback:(JPVideoPlayerDownloaderOperation *(^)())createCallback {
     
