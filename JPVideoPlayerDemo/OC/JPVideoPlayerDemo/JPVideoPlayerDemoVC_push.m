@@ -52,7 +52,6 @@
     [self.videoContainer addGestureRecognizer:tapGestureRecognizer];
     
     self.videoContainer.jp_videoPlayerDelegate = self;
-    [self.videoContainer jp_perfersLandscapeForViewController:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -81,10 +80,10 @@
 - (void)handleTapGesture:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         if (self.videoContainer.viewStatus == JPVideoPlayerVideoViewStatusPortrait) {
-            [self.videoContainer jp_landscapeAnimated:YES completion:nil];
+            [self.videoContainer jp_gotoLandscapeAnimated:YES completion:nil];
         }
         else if (self.videoContainer.viewStatus == JPVideoPlayerVideoViewStatusLandscape) {
-            [self.videoContainer jp_portraitAnimated:YES completion:nil];
+            [self.videoContainer jp_gotoPortraitAnimated:YES completion:nil];
         }
     }
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		481650661ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m in Sources */ = {isa = PBXBuildFile; fileRef = 481650641ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m */; };
 		481650671ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481650651ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib */; };
-		487F7C681F1BB42A00DAF10C /* JPVideoPlayerSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 487F7C671F1BB42A00DAF10C /* JPVideoPlayerSwizzle.m */; };
 		488717511EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4887174F1EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.m */; };
 		488717521EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488717501EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.xib */; };
 		48CB2C4D1EDE4C63009DD486 /* JPVideoPlayerActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C2A1EDE4C63009DD486 /* JPVideoPlayerActivityIndicator.m */; };
@@ -25,7 +24,6 @@
 		48CB2C5A1EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C461EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m */; };
 		48CB2C5B1EDE4C63009DD486 /* UIView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C481EDE4C63009DD486 /* UIView+WebVideoCache.m */; };
 		48CB2C5C1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C4A1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m */; };
-		48CB2C5D1EDE4C63009DD486 /* UIViewController+Landscape.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C4C1EDE4C63009DD486 /* UIViewController+Landscape.m */; };
 		48CB2CD01EDF034D009DD486 /* VideoPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48CB2CC91EDF034D009DD486 /* VideoPlayer.framework */; };
 		48CB2CD11EDF034D009DD486 /* VideoPlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48CB2CC91EDF034D009DD486 /* VideoPlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48CB2CD91EDF0393009DD486 /* VideoPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2CD71EDF0393009DD486 /* VideoPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,7 +40,6 @@
 		48CB2CE71EDF03F0009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C461EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m */; };
 		48CB2CE81EDF03F0009DD486 /* UIView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C481EDE4C63009DD486 /* UIView+WebVideoCache.m */; };
 		48CB2CE91EDF03F0009DD486 /* UIView+WebVideoCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C4A1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m */; };
-		48CB2CEA1EDF03F0009DD486 /* UIViewController+Landscape.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C4C1EDE4C63009DD486 /* UIViewController+Landscape.m */; };
 		48CB2CEB1EDF0436009DD486 /* JPVideoPlayerCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C2B1EDE4C63009DD486 /* JPVideoPlayerCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48CB2CEC1EDF0436009DD486 /* JPVideoPlayerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C311EDE4C63009DD486 /* JPVideoPlayerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48CB2CED1EDF0436009DD486 /* JPVideoPlayerDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C321EDE4C63009DD486 /* JPVideoPlayerDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -93,8 +90,6 @@
 		481650631ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDemoVC_push.h; sourceTree = "<group>"; };
 		481650641ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDemoVC_push.m; sourceTree = "<group>"; };
 		481650651ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerDemoVC_push.xib; sourceTree = "<group>"; };
-		487F7C661F1BB42A00DAF10C /* JPVideoPlayerSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerSwizzle.h; sourceTree = "<group>"; };
-		487F7C671F1BB42A00DAF10C /* JPVideoPlayerSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerSwizzle.m; sourceTree = "<group>"; };
 		4887174E1EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDemoVC_Setting.h; sourceTree = "<group>"; };
 		4887174F1EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDemoVC_Setting.m; sourceTree = "<group>"; };
 		488717501EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerDemoVC_Setting.xib; sourceTree = "<group>"; };
@@ -126,8 +121,6 @@
 		48CB2C481EDE4C63009DD486 /* UIView+WebVideoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebVideoCache.m"; sourceTree = "<group>"; };
 		48CB2C491EDE4C63009DD486 /* UIView+WebVideoCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebVideoCacheOperation.h"; sourceTree = "<group>"; };
 		48CB2C4A1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebVideoCacheOperation.m"; sourceTree = "<group>"; };
-		48CB2C4B1EDE4C63009DD486 /* UIViewController+Landscape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Landscape.h"; sourceTree = "<group>"; };
-		48CB2C4C1EDE4C63009DD486 /* UIViewController+Landscape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Landscape.m"; sourceTree = "<group>"; };
 		48CB2CC91EDF034D009DD486 /* VideoPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48CB2CD61EDF0393009DD486 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48CB2CD71EDF0393009DD486 /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
@@ -211,10 +204,6 @@
 				48CB2C481EDE4C63009DD486 /* UIView+WebVideoCache.m */,
 				48CB2C491EDE4C63009DD486 /* UIView+WebVideoCacheOperation.h */,
 				48CB2C4A1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m */,
-				48CB2C4B1EDE4C63009DD486 /* UIViewController+Landscape.h */,
-				48CB2C4C1EDE4C63009DD486 /* UIViewController+Landscape.m */,
-				487F7C661F1BB42A00DAF10C /* JPVideoPlayerSwizzle.h */,
-				487F7C671F1BB42A00DAF10C /* JPVideoPlayerSwizzle.m */,
 			);
 			name = JPVideoPlayer;
 			path = ../../../JPVideoPlayer;
@@ -526,7 +515,6 @@
 				48CB2CE71EDF03F0009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
 				48CB2CE81EDF03F0009DD486 /* UIView+WebVideoCache.m in Sources */,
 				48CB2CE91EDF03F0009DD486 /* UIView+WebVideoCacheOperation.m in Sources */,
-				48CB2CEA1EDF03F0009DD486 /* UIViewController+Landscape.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,14 +532,12 @@
 				48EE51D01E6C069900BA602D /* JPVideoPlayerDemoCell.m in Sources */,
 				5FF7BAF21E7F8EC400912ACD /* UITableView+VideoPlay.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
-				48CB2C5D1EDE4C63009DD486 /* UIViewController+Landscape.m in Sources */,
 				48CB2C5A1EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
 				48CB2C521EDE4C63009DD486 /* JPVideoPlayerDownloaderOperation.m in Sources */,
 				48FD32711EB701D400ACCB05 /* JPQRCodeTool.m in Sources */,
 				48CB2C531EDE4C63009DD486 /* JPVideoPlayerManager.m in Sources */,
 				5F6705681DADE88F001EBFAF /* main.m in Sources */,
 				48CB2C4F1EDE4C63009DD486 /* JPVideoPlayerCacheConfig.m in Sources */,
-				487F7C681F1BB42A00DAF10C /* JPVideoPlayerSwizzle.m in Sources */,
 				488717511EB63CBA00300CA6 /* JPVideoPlayerDemoVC_Setting.m in Sources */,
 				481650661ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m in Sources */,
 				48CB2C4D1EDE4C63009DD486 /* JPVideoPlayerActivityIndicator.m in Sources */,

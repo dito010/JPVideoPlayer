@@ -14,7 +14,6 @@
 #import "UIView+WebVideoCacheOperation.h"
 #import <objc/runtime.h>
 #import "JPVideoPlayerPlayVideoTool.h"
-#import "UIViewController+Landscape.h"
 
 static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 
@@ -123,19 +122,11 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 
 #pragma mark - Landscape Or Portrait Control
 
-- (void)jp_perfersLandscapeForViewController:(UIViewController *)viewController{
-    NSAssert(viewController, @"the landscape view controller cannot be nil");
-    if (!viewController) {
-        return;
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerLandscapeNotification object:viewController];
+- (void)jp_gotoLandscape {
+    [self jp_gotoLandscapeAnimated:YES completion:nil];
 }
 
-- (void)jp_landscape{
-    [self jp_landscapeAnimated:YES completion:nil];
-}
-
-- (void)jp_landscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion{
+- (void)jp_gotoLandscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion {
     if (self.viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
         return;
     }
@@ -190,12 +181,11 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
     [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
 }
 
-- (void)jp_portrait{
-    [self jp_portraitAnimated:YES completion:nil];
+- (void)jp_gotoPortrait {
+    [self jp_gotoPortraitAnimated:YES completion:nil];
 }
 
-- (void)jp_portraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion{
-    
+- (void)jp_gotoPortraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion{
     if (self.viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
         return;
     }
@@ -231,7 +221,6 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
             completion();
         }
     }
-    
     
     [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
 }
@@ -330,11 +319,16 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 }
 
 - (id<JPVideoPlayerDelegate>)jp_videoPlayerDelegate{
-    return objc_getAssociatedObject(self, _cmd);
+    id (^__weak_block)() = objc_getAssociatedObject(self, _cmd);
+    return __weak_block();
 }
 
 - (void)setJp_videoPlayerDelegate:(id<JPVideoPlayerDelegate>)jp_videoPlayerDelegate{
-    objc_setAssociatedObject(self, @selector(jp_videoPlayerDelegate), jp_videoPlayerDelegate, OBJC_ASSOCIATION_ASSIGN);
+    id __weak __weak_object = jp_videoPlayerDelegate;
+    id (^__weak_block)() = ^{
+        return __weak_object;
+    };
+    objc_setAssociatedObject(self, @selector(jp_videoPlayerDelegate),   __weak_block, OBJC_ASSOCIATION_COPY);
 }
 
 

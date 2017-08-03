@@ -202,16 +202,9 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 #pragma mark - Landscape Or Portrait Control
 
 /**
- * Controls the landscape animation of status bar.
- *
- * @param viewController the need landscape `UIViewController`.
- */
-- (void)jp_perfersLandscapeForViewController:(UIViewController * _Nullable)viewController;
-
-/**
  * Call this method to enter full screen.
  */
-- (void)jp_landscape;
+- (void)jp_gotoLandscape;
 
 /**
  * Call this method to enter full screen.
@@ -219,12 +212,12 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param animated   need landscape animation or not.
  * @param completion call back when landscape finished.
  */
-- (void)jp_landscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+- (void)jp_gotoLandscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
 
 /**
  * Call this method to exit full screen.
  */
-- (void)jp_portrait;
+- (void)jp_gotoPortrait;
 
 /**
  * Call this method to exit full screen.
@@ -232,6 +225,6 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param animated   need portrait animation or not.
  * @param completion call back when portrait finished.
  */
-- (void)jp_portraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+- (void)jp_gotoPortraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
 
 @end
