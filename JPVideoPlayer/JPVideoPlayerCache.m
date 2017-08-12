@@ -20,6 +20,7 @@
 #include <sys/param.h>
 #include <sys/mount.h>
 #import <CommonCrypto/CommonDigest.h>
+#import "NSURL+QueryStrip.h"
 
 @interface JPVideoPlayerCacheToken()
 
@@ -419,6 +420,11 @@
 }
 
 - (nullable NSString *)cachedFileNameForKey:(nullable NSString *)key {
+    if ([key length]) {
+        NSString *strippedQueryKey = [[NSURL URLWithString:key] absoluteStringByStrippingQuery];
+        key = [strippedQueryKey length] ? strippedQueryKey : key;
+    }
+    
     const char *str = key.UTF8String;
     if (str == NULL) str = "";
     unsigned char r[CC_MD5_DIGEST_LENGTH];
