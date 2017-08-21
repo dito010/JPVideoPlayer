@@ -320,6 +320,9 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 
 - (id<JPVideoPlayerDelegate>)jp_videoPlayerDelegate{
     id (^__weak_block)() = objc_getAssociatedObject(self, _cmd);
+    if (!__weak_block) {
+        return nil;
+    }
     return __weak_block();
 }
 

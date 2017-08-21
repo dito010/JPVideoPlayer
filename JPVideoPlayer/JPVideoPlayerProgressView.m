@@ -88,8 +88,7 @@
 
 - (void)refreshProgressWithProgressVaule:(CGFloat)progressValue forLayer:(CALayer *)layer{
     CGRect frame = layer.frame;
-    CGFloat screenWidth = self.bounds.size.width;
-    frame.size.width = screenWidth * progressValue;
+    frame.size.width = self.bounds.size.width  * progressValue;
     layer.frame = frame;
 }
 

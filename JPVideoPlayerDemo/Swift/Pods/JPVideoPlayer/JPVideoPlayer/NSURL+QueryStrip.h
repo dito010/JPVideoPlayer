@@ -9,10 +9,16 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-#import <UIKit/UIKit.h>
 
-extern NSString *  _Nonnull const JPVideoPlayerLandscapeNotification;
+#import <Foundation/Foundation.h>
 
-@interface UIViewController (Landscape)
+@interface NSURL (StripQuery)
+
+/*
+ * Returns absolute string of URL with the query stripped out.
+ * If there is no query, returns a copy of absolute string.
+ */
+
+- (NSString *)absoluteStringByStrippingQuery;
 
 @end

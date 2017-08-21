@@ -83,16 +83,15 @@ extension JPVideoPlayerDemoVC_push {
     func setupTouchEvents() {
         tapGestureRecognize = UITapGestureRecognizer(target: self, action: #selector(self.didTapVideoView(gestureRecognizer:)))
         videoContainer.addGestureRecognizer(tapGestureRecognize)
-        videoContainer.jp_perfersLandscape(for: self)
     }
     
     func didTapVideoView(gestureRecognizer : UITapGestureRecognizer) {
         if gestureRecognizer.state == UIGestureRecognizerState.ended {
             if videoContainer.viewStatus == JPVideoPlayerVideoViewStatus.portrait {
-                videoContainer.jp_landscape(animated: true, completion: nil)
+                videoContainer.jp_gotoLandscape(animated: true, completion: nil)
             }
             else if (videoContainer.viewStatus == JPVideoPlayerVideoViewStatus.landscape){
-                videoContainer.jp_portrait(animated: true, completion: nil)
+                videoContainer.jp_gotoPortrait(animated: true, completion: nil)
             }
         }
     }

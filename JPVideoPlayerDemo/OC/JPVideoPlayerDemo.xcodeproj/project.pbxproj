@@ -47,6 +47,7 @@
 		48CB2CEF1EDF0436009DD486 /* JPVideoPlayerOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C381EDE4C63009DD486 /* JPVideoPlayerOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48CB2CF01EDF0436009DD486 /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C451EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48CB2CF11EDF0436009DD486 /* UIView+WebVideoCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 48CB2C471EDE4C63009DD486 /* UIView+WebVideoCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		48CD2D761F47358F0038D912 /* NSURL+QueryStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CD2D751F47358F0038D912 /* NSURL+QueryStrip.m */; };
 		48D290401E7842D50024C5C6 /* hello.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 48D2903F1E7842D50024C5C6 /* hello.mp4 */; };
 		48EE51D01E6C069900BA602D /* JPVideoPlayerDemoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48EE51CE1E6C069900BA602D /* JPVideoPlayerDemoCell.m */; };
 		48EE51D11E6C069900BA602D /* JPVideoPlayerDemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48EE51CF1E6C069900BA602D /* JPVideoPlayerDemoCell.xib */; };
@@ -124,6 +125,8 @@
 		48CB2CC91EDF034D009DD486 /* VideoPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48CB2CD61EDF0393009DD486 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48CB2CD71EDF0393009DD486 /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
+		48CD2D741F47358F0038D912 /* NSURL+QueryStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+QueryStrip.h"; sourceTree = "<group>"; };
+		48CD2D751F47358F0038D912 /* NSURL+QueryStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+QueryStrip.m"; sourceTree = "<group>"; };
 		48D2903F1E7842D50024C5C6 /* hello.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hello.mp4; sourceTree = "<group>"; };
 		48EE51CD1E6C069900BA602D /* JPVideoPlayerDemoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDemoCell.h; sourceTree = "<group>"; };
 		48EE51CE1E6C069900BA602D /* JPVideoPlayerDemoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDemoCell.m; sourceTree = "<group>"; };
@@ -176,6 +179,8 @@
 		48CB2C281EDE4C63009DD486 /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				48CD2D741F47358F0038D912 /* NSURL+QueryStrip.h */,
+				48CD2D751F47358F0038D912 /* NSURL+QueryStrip.m */,
 				48CB2C291EDE4C63009DD486 /* JPVideoPlayerActivityIndicator.h */,
 				48CB2C2A1EDE4C63009DD486 /* JPVideoPlayerActivityIndicator.m */,
 				48CB2C2B1EDE4C63009DD486 /* JPVideoPlayerCache.h */,
@@ -532,6 +537,7 @@
 				48EE51D01E6C069900BA602D /* JPVideoPlayerDemoCell.m in Sources */,
 				5FF7BAF21E7F8EC400912ACD /* UITableView+VideoPlay.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
+				48CD2D761F47358F0038D912 /* NSURL+QueryStrip.m in Sources */,
 				48CB2C5A1EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
 				48CB2C521EDE4C63009DD486 /* JPVideoPlayerDownloaderOperation.m in Sources */,
 				48FD32711EB701D400ACCB05 /* JPQRCodeTool.m in Sources */,

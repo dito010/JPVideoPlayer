@@ -7,80 +7,78 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01FF266E789C823099DA3E68BDD948C9 /* JPVideoPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9781C6D06D57CED30371A32233B46E0C /* JPVideoPlayerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		06C451413891B940C036993E3BD44136 /* UINavigationController+FulllScreenPopPush.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E7DE37940DE0DD8B97D77CFF9D83E66 /* UINavigationController+FulllScreenPopPush.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0ACBE68DC549F273F8A20138D80DFBBF /* JPVideoPlayerResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBFA442B1776E02D74DE8840C0CF4C9 /* JPVideoPlayerResourceLoader.m */; };
-		0FBDBDDE05D55F5370B629B913A25A39 /* JPNavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = E1DC44DE2E9AE8E8987E211CF26441E8 /* JPNavigationBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		174A1DC5FA4F2CD44550447C2A0588FE /* JPBaseAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B8FB60B6C922246B5AC63E471B8684C /* JPBaseAnimationTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1789E34787326500DEA5F83614A42CDE /* JPWarpNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D6139C3F689127107998AED995AE3F /* JPWarpNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		181C575371481DB3E5E0E3FAB0458517 /* UIColor+ImageGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 749E38F59C2365948330ACC519F8D556 /* UIColor+ImageGenerate.m */; };
-		185F57E6132F89B10FCA40C48B0CBE27 /* JPWarpViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CCAA0D2F4F5489291C3A967D0B848122 /* JPWarpViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AC9BFABAC03F0DA6CE30E2AD96692DB /* JPNavigationControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 759EF1E2CF75279940F971FF3FFB7793 /* JPNavigationControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1BCCC0D5F54AB2E7C2209A4D61780280 /* UIViewController+ViewControllers.h in Headers */ = {isa = PBXBuildFile; fileRef = EF432B9FB45F583203688ADB1EBB5030 /* UIViewController+ViewControllers.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F4C937430A27044FC32CA4E6D8D8371 /* JPNavigationControllerTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A09431A0364FEB8EFD665BBC1840B98 /* JPNavigationControllerTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		212EE8081AD73836336066D01E186883 /* JPVideoPlayerPlayVideoTool.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B559BF0A357B157E14D95934BF7CA3 /* JPVideoPlayerPlayVideoTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22D6548EB49885A99792242ABC406BEC /* JPNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845D5B9A9B2BDEE4CB209347BFB69F /* JPNavigationBar.m */; };
-		234F13F35811997A429323E143775856 /* JPVideoPlayerCacheConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FB438C98B3B21E8FEA2E926BD459D0F1 /* JPVideoPlayerCacheConfig.m */; };
+		03F0A1E3446A48196FD38B798AC028FC /* JPVideoPlayerCachePathTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 11453C4C20B3AF9EC2DD848B65875DD6 /* JPVideoPlayerCachePathTool.m */; };
+		06C451413891B940C036993E3BD44136 /* UINavigationController+FulllScreenPopPush.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB0FFEF5C8C3C5CEE462FAE9A0794C4 /* UINavigationController+FulllScreenPopPush.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0BAC3A51C8B23664E50551E763D1704A /* JPVideoPlayer-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9116CD6D74528085EFF8451F2C4B6F7F /* JPVideoPlayer-dummy.m */; };
+		0BFFE912A002BDE674C3DE52A55B2FD6 /* JPVideoPlayer-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 993D5456AA756042D63C907512C01135 /* JPVideoPlayer-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0DD8737D1C8D05CED830C4A7DCC3CDC7 /* JPVideoPlayerActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E07AC8126AAB1D65632A1B2AB49E41 /* JPVideoPlayerActivityIndicator.m */; };
+		0E8F4DB5CF7B38C609AA429D59843FEE /* JPVideoPlayerCacheConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = F6F6C8DF9B03517B783C56AFF78A1BFB /* JPVideoPlayerCacheConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0FBDBDDE05D55F5370B629B913A25A39 /* JPNavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = C4CA6CFC707DA04BDDF9F794B8D31CDD /* JPNavigationBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		174A1DC5FA4F2CD44550447C2A0588FE /* JPBaseAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = C85138A459F7FCA789396CF6683BFF78 /* JPBaseAnimationTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1789E34787326500DEA5F83614A42CDE /* JPWarpNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = D7685CD2BA37CF6A38FF36F65EEFC511 /* JPWarpNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		181C575371481DB3E5E0E3FAB0458517 /* UIColor+ImageGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = C0708C2CAC4F2CA6C47EF323C2768A97 /* UIColor+ImageGenerate.m */; };
+		185F57E6132F89B10FCA40C48B0CBE27 /* JPWarpViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A8569B9EF862E844D6022DA64AB7DEB /* JPWarpViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AC9BFABAC03F0DA6CE30E2AD96692DB /* JPNavigationControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 55CBA56D12A4BA37B01EBD50D8D711F6 /* JPNavigationControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BCCC0D5F54AB2E7C2209A4D61780280 /* UIViewController+ViewControllers.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C47FA1EC1DF58EA19960EC7C70DEDB9 /* UIViewController+ViewControllers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F4C937430A27044FC32CA4E6D8D8371 /* JPNavigationControllerTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FACE45B8C8A5F75583F02D24F6AF00 /* JPNavigationControllerTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FEE75A174537A0227A9AE2D7A2B9B33 /* JPVideoPlayerResourceLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF2E7A48EBC7CB086559EA26A2D09B7 /* JPVideoPlayerResourceLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		22D6548EB49885A99792242ABC406BEC /* JPNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 14ED33B444C32D54A237FA97F71ED97B /* JPNavigationBar.m */; };
+		28C77D9DF6BCB06D32652C0D1D582B65 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
+		2938EC4C8A2A115BF1A4DB56E4CCED97 /* JPVideoPlayerPlayVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE78424555070540C8BB6CC3AE081F /* JPVideoPlayerPlayVideoTool.m */; };
 		2EBC61FE92ECDED336D8A6552D699993 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */; };
-		2F9202C73E6E1D9F4CD7C7BB18917696 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FD0CB283BC118A7637733C8725E200C /* UIView+PlayerStatusAndDownloadIndicator.m */; };
-		305D8C70D572F5DF0A67514CB95FE589 /* JPNavigationControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B48F0B8FBC19B8A0CF2D9E20252DEF /* JPNavigationControllerTransition.m */; };
-		338701C33C09370721A7C3B05DDFFE84 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */; };
-		36A34D9D911ADEEB3FF9118F970A0593 /* UIView+WebVideoCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 70EF860CC10A6EA745CC748E6F6116E6 /* UIView+WebVideoCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3799FE1B19FC2DFA40229BE69745D42F /* JPVideoPlayerProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F15A66CD145DF56AF9321EDA60BA5 /* JPVideoPlayerProgressView.m */; };
-		3D0FDEAD34A781122BA936384CDB3F1E /* JPVideoPlayerPlayVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D06BBEC9A9BABEFCDCA89B23CA74E3B /* JPVideoPlayerPlayVideoTool.m */; };
-		43AC9CAD14902D15FD4473B85A0902B4 /* JPVideoPlayerCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 68D08CB42CF6E57CB8B2AB46D11FC829 /* JPVideoPlayerCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		45C09A8D5B81F30EC3A5E48817FD2FB2 /* JPVideoPlayer-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 839BBBF6E592D580CC6316C8561C6D9E /* JPVideoPlayer-dummy.m */; };
-		4C2806FE3E48D1544609AA7F6E5B72BC /* JPVideoPlayerDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F8C1F6F72FFE75F3DE07AF3FCACEBD29 /* JPVideoPlayerDownloaderOperation.m */; };
-		4E6B80CCF82716486C7176540FAC3E5F /* JPNavigationController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FA14AAE0438164D0FA0408B8D28668D6 /* JPNavigationController-dummy.m */; };
-		4F83DC6D2D81551B2AC3EF264C53E545 /* JPVideoPlayerDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = F4580BCAAA6FCC56E0F01CB262082155 /* JPVideoPlayerDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		53698D5E96028DE81B5BD0A8350B37E6 /* JPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E54891C8F905958ABE5FBDB9DC917DC9 /* JPNavigationController.m */; };
-		5376852327E8135547BC7CCFC94759B1 /* JPNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = FF0E68E6ADD2C02932BFEEF8D31F28E1 /* JPNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		59D77B7B88ACCA7895CB58C1A27B0A5E /* UIView+ScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5B432D07CEE0319BD3A4AD9D53969 /* UIView+ScreenCapture.m */; };
+		2F60FC2C7DF0165B68C6DDA0185E3DC7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */; };
+		305D8C70D572F5DF0A67514CB95FE589 /* JPNavigationControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B375A6830AC7C5B2BA854A2A0274A99 /* JPNavigationControllerTransition.m */; };
+		3B4EAB5B8FE4F9E2647CD231A1CECA6A /* JPVideoPlayerCachePathTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F7443D7B52C3B9384176939CA18F2AF /* JPVideoPlayerCachePathTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4687251C593DE8655F63EF3EC7430CA1 /* JPVideoPlayerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EB14BCF4909A16E3B10019DFC756B2 /* JPVideoPlayerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4824A11D4915B913146DFA5EBF0C023F /* UIView+WebVideoCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = EABF57A877434CEF1DEFA72A39E57D79 /* UIView+WebVideoCacheOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4E6B80CCF82716486C7176540FAC3E5F /* JPNavigationController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 74059BBF39B738A8F8BF647DAE1812C8 /* JPNavigationController-dummy.m */; };
+		53698D5E96028DE81B5BD0A8350B37E6 /* JPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD7ECDEC53B040FDE050FEA390DA889 /* JPNavigationController.m */; };
+		5376852327E8135547BC7CCFC94759B1 /* JPNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = D90990FEE8B610DB0215BD7DE1344EB2 /* JPNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59D77B7B88ACCA7895CB58C1A27B0A5E /* UIView+ScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 073D2450B024BC8B6147AE4B00CF818B /* UIView+ScreenCapture.m */; };
+		5B2E71FB3A0694A061273A9CEF22F1BD /* JPVideoPlayerActivityIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 85D59A7957A6BE70C53C20FBD21F9B4C /* JPVideoPlayerActivityIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BBA799C72FD30C339E2BB50B201A45C /* UIView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FA91E9199E554ADB30860BDE46FDC1 /* UIView+WebVideoCache.m */; };
+		5EF47AE15F3BD0263D1207D9B84C8591 /* NSURL+QueryStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 808A96B564E21794CC6CC6588C601210 /* NSURL+QueryStrip.m */; };
 		6007FDE2270901F2CD3F885F64B7C432 /* Pods-JPVideoPlayerDemo_swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B8784309D20B1A18ADAD4D8A0003A49 /* Pods-JPVideoPlayerDemo_swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		68A2AD3968C0CBC4DD0E303359B750AA /* JPVideoPlayerDownloaderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = B3E93B73059423009FAB66E2366948BA /* JPVideoPlayerDownloaderOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6F0E972A9F3DFDC5DE3E0466A3F6DE99 /* JPNavigationControllerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F28552791F2AD18AE281B810150EA7A /* JPNavigationControllerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6FB72955CE9B7D8B24A79888D3181621 /* JPPushAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 00215FA4BB5FA833BC5FACE12755B026 /* JPPushAnimationTransition.m */; };
+		60B65AEC8AD9C0E85DF55BE614853B6E /* JPVideoPlayerResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A98FABCDE3744BA73D0D843FA3CC6 /* JPVideoPlayerResourceLoader.m */; };
+		62ADEB0AC85852F5E9C67CA8F657A50A /* JPVideoPlayerDownloaderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D1F2C082395E0456D914BE3A1622635 /* JPVideoPlayerDownloaderOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6666EE1D663C657D6AF0F2764D63E23E /* JPVideoPlayerCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 623A6B05D3A49E2C8A0B64FD6C8D0477 /* JPVideoPlayerCache.m */; };
+		6B0CE07A3E0A4113BC277B90D8F2E74C /* JPVideoPlayerProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = D004B8FE6FDDB0586AB9F552ADC811FF /* JPVideoPlayerProgressView.m */; };
+		6C238CAA85CCBEF060DD80F92D3D47E4 /* UIView+WebVideoCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E511513F5544224AFEB271BFD97CF6 /* UIView+WebVideoCacheOperation.m */; };
+		6F0E972A9F3DFDC5DE3E0466A3F6DE99 /* JPNavigationControllerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 09E5098B02ABAC68D2B24AEC03E8F424 /* JPNavigationControllerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FB72955CE9B7D8B24A79888D3181621 /* JPPushAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A98E87002CF360E7C525CE21944164A /* JPPushAnimationTransition.m */; };
 		705A75C7BFB4D8B813CE3C40760F82FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
-		7139544BF19292A45E9E0AAEE2C39BC9 /* JPNavigationControllerGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = C85FBE724BE4A9B08C18A760F3C40A55 /* JPNavigationControllerGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		720B5A62249EFE6A647BB67111466F67 /* JPVideoPlayerCacheConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 1034956EFB1AC9829F25C64A1041268E /* JPVideoPlayerCacheConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		748F8E33CE8D21F1DB2D19F3564991BE /* JPWarpNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A590B7B3F2B92D617EF0BD532EA9A776 /* JPWarpNavigationController.m */; };
-		7C8FD8EAA0AC02E6951C6A4973FE4ABC /* JPVideoPlayerActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = A7835380ABF54962B40554403758EA74 /* JPVideoPlayerActivityIndicator.m */; };
+		7139544BF19292A45E9E0AAEE2C39BC9 /* JPNavigationControllerGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3757AF0C61341D364313AE45C48923D6 /* JPNavigationControllerGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		748F8E33CE8D21F1DB2D19F3564991BE /* JPWarpNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4AD5A1260F84BB7E69156B4BBD0531 /* JPWarpNavigationController.m */; };
+		759E11DC1278B342DE8E1213B0AAFBF1 /* JPVideoPlayerProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F7955F650FD578818CDAE66AE44B9BC /* JPVideoPlayerProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		75B17D74AF677C4CD88D62FD96F9534D /* JPVideoPlayerDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C263BDEA47EC9F2864AC64BFA33A61 /* JPVideoPlayerDownloader.m */; };
+		7C3638A3983E0E111596DC9DC716825C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */; };
 		82A6C8EB93E7F448D51D9C5FBB57DB84 /* Pods-JPVideoPlayerDemo_swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD3708B0E0448A24DAE05674D25759 /* Pods-JPVideoPlayerDemo_swift-dummy.m */; };
-		82DCAE9DF24A6C255068A017658E259E /* JPNavigationControllerGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 22BF7E10F58B3FA1EF5B976DFA7A6C4F /* JPNavigationControllerGestureRecognizer.m */; };
-		83849F98F1CB0D4D11D1A3319CD16AB3 /* JPNavigationController-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 89A68EDCD3B2A3F33013314D4F489D6C /* JPNavigationController-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		857762E9DDF49143A8BFE6BB80D1F771 /* UIView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E5EC5CB47DFA57334785C0BC05B536 /* UIView+WebVideoCache.m */; };
-		8879D91DAD3EFCAD036DF18BCC995FD8 /* JPVideoPlayerCachePathTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 6286336D4137F2030E46084E5B9F5504 /* JPVideoPlayerCachePathTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		991131EE255C4B904ADC6CB243C2F377 /* UIColor+ImageGenerate.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FE8B5D7090950370473823B4956364 /* UIColor+ImageGenerate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9D16F7EB276221A479645D8BCF66B34F /* JPVideoPlayerActivityIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = F4B1EB7A6ADDBBC0EE3E90834F3D3756 /* JPVideoPlayerActivityIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A692C91384D79B117500FBD491A2B641 /* JPVideoPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E9400A7281D2C44DB46215559C5F1E /* JPVideoPlayerManager.m */; };
-		A811C72CF7D13A8099C14ED5FCA1446B /* JPVideoPlayerSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA98D165976BB8729F35D674D69EAC /* JPVideoPlayerSwizzle.m */; };
-		A8A353826ABE7ABF7911D9916D650E26 /* JPVideoPlayer-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B87884480086930A1FE13FB9AC80D09C /* JPVideoPlayer-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		82DCAE9DF24A6C255068A017658E259E /* JPNavigationControllerGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B9E16477587D02D59195FB57AEEE30 /* JPNavigationControllerGestureRecognizer.m */; };
+		83849F98F1CB0D4D11D1A3319CD16AB3 /* JPNavigationController-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B9F23DB87F0E1468C5162A3BB324751E /* JPNavigationController-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		991131EE255C4B904ADC6CB243C2F377 /* UIColor+ImageGenerate.h in Headers */ = {isa = PBXBuildFile; fileRef = 21A97A7DB5742E87C47450698775627D /* UIColor+ImageGenerate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E60CA2B9529359AE69C3897938E4FBF /* JPVideoPlayerDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B8DA9E79785774BF741E1DA510965 /* JPVideoPlayerDownloaderOperation.m */; };
 		A8D24347B8A1B7C62ACBBBC25ACCE0C5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
-		B268EA515A662C6BB130FE4A2E51E46F /* UIViewController+Landscape.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C038D6470015232D5452B6B5505A58D /* UIViewController+Landscape.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B649FE586E2793DAF403C638BD9B4046 /* UIView+WebVideoCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = BFEC8707598D7F6291777DE05BD2A5CB /* UIView+WebVideoCacheOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B65D33414FAB625241078365D9A143A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */; };
-		B9B26F793958FBD0016762A75EB0F2FA /* JPVideoPlayerProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA9F5D8F68D91430F0456B8ADBABC5F /* JPVideoPlayerProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BD6EAD00BF72EF909BDB5DAFDF96F4F0 /* JPBaseAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E15AB23E5A95B0C06195CB9BDEFF9470 /* JPBaseAnimationTransition.m */; };
-		BEA91FF916F5D09E4F049D4A546D9AE4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */; };
-		C0D3B7071D6EFB500BBA9864ABE0D25B /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = F06C14A2B346C271CB4F18D9D1A17D09 /* UIView+PlayerStatusAndDownloadIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C1AC58ECE3C115A0181CC48F8C53D83F /* JPVideoPlayerOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C5875B5A915CFAAD482211A0D1708F /* JPVideoPlayerOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C6FD21B0D4709FBBD30C5A6FD5EB278E /* JPTransitionShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DF94614E3A21367FBC8AC482427566 /* JPTransitionShadowView.m */; };
-		D378181BC6F75C902CAACE5791F027B8 /* UIViewController+ViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = EA9060192A319B40EF695F5B1E21D2A0 /* UIViewController+ViewControllers.m */; };
-		D7814957918FF1920F3C4F9FA500277E /* JPVideoPlayerSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FD562FC586CBAB71B2B484C7FAC882C /* JPVideoPlayerSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DA7F0508A5F588B98B220F171401A00D /* JPNavigationController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4374839B4B09443AD72B6F2D316CD058 /* JPNavigationController.bundle */; };
-		E2FCBCF56EA03E69646BC41D3D3C8F92 /* JPVideoPlayerDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 61BFE887F7743144EEAA4ABC2291AD60 /* JPVideoPlayerDownloader.m */; };
-		EB167B75078E1B94769016B0AA7961D3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */; };
-		EDB2E137EA5DE5D341AB509699DD7343 /* JPNavigationControllerKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 69B935DEE9C7E36118017CAEAAFDF6B4 /* JPNavigationControllerKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EDD87F24532C4945786800A2B50DCA7B /* JPVideoPlayerCachePathTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D50FD6703A2F8327E415354BA853962F /* JPVideoPlayerCachePathTool.m */; };
-		F0CB3CDA5B1311FAAA9B41AA0406C9CE /* JPVideoPlayerResourceLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = A45573A0081822157308CEF1FE1C5283 /* JPVideoPlayerResourceLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F321F8ADAA00AA37F603E290613C9D80 /* JPVideoPlayerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AAE3A99401AB63C3F88C381857DB015 /* JPVideoPlayerCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F40AE66311F50BDA225B396F667052A6 /* UIViewController+Landscape.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF412B59EC4590A786E547E3FBFECB0 /* UIViewController+Landscape.m */; };
-		FA13F020DEAA2ABF513FE02A8F1B9085 /* JPPushAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9DEFAA35982B4FF07E52784DAE1E9F /* JPPushAnimationTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FA5B99A8122FD3EDF2624DB3D35E4CD3 /* JPTransitionShadowView.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C7B5CCFA294533BF6F0DE5AE45A875 /* JPTransitionShadowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FB33C438DDDB19CE210D86D7683724C8 /* UIView+ScreenCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = A31B21259A8895A480BB8617A5B27C61 /* UIView+ScreenCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FB786B22F1EBFAAF80506349E2107DAB /* JPWarpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2A03656BCAFB8F667EF44ECB407848 /* JPWarpViewController.m */; };
-		FBC14055CDD4EB9F112E52E614B17119 /* UIView+WebVideoCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A62C3BAE7F5D8298333F5A1FA26A49 /* UIView+WebVideoCacheOperation.m */; };
-		FFA6D192FC7589B9F7C60FCF7FA4FDB1 /* JPVideoPlayerCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E8D205F6110BA1AE7282B088A5CF12B1 /* JPVideoPlayerCache.m */; };
+		B5FBA2A213E14D09899C451FEE3A5921 /* JPVideoPlayerOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E2C4894D44EF4E7014E43DCADCCC27C /* JPVideoPlayerOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B7AA62460DDC44C1FF444B329ECDCE8F /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C08E21B99AC061E935308F19D5A311E8 /* UIView+PlayerStatusAndDownloadIndicator.m */; };
+		B94B7C6FBE068B1584A341AC21BA7853 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */; };
+		BBD6680F82FFB350E1FEFA88D43E0A06 /* JPVideoPlayerDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BC1A1DF5C42D12F70CBC1DC1806E968 /* JPVideoPlayerDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BD6EAD00BF72EF909BDB5DAFDF96F4F0 /* JPBaseAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 83930372A26071DCCF24C981CBCE4BA0 /* JPBaseAnimationTransition.m */; };
+		C6FD21B0D4709FBBD30C5A6FD5EB278E /* JPTransitionShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFF80C6307BBD122BDE41B88A75EE026 /* JPTransitionShadowView.m */; };
+		CD5E9EE35C0F34B0F6F46E12854695D9 /* JPVideoPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C3C55F1B08464A05404BBF26F0B5793 /* JPVideoPlayerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D378181BC6F75C902CAACE5791F027B8 /* UIViewController+ViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = C91722D680E82CE4F5C7366C81DA0ECA /* UIViewController+ViewControllers.m */; };
+		D57C47ADD9325CE9EA54A075B729163B /* UIView+WebVideoCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 55138AB228B4BF453521EF1FD4D0842F /* UIView+WebVideoCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D68EF3C4A77DEDE59ADB148749665B24 /* JPVideoPlayerCache.h in Headers */ = {isa = PBXBuildFile; fileRef = FA540734156A6141CC0F6593F3369F83 /* JPVideoPlayerCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DA7F0508A5F588B98B220F171401A00D /* JPNavigationController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8C3AA4774704794B5C6C0263D1A71C42 /* JPNavigationController.bundle */; };
+		E41D4D5BC00857DB6EBB4D86DA5CF495 /* NSURL+QueryStrip.h in Headers */ = {isa = PBXBuildFile; fileRef = 19B956647809D11CB2896BC6ABE70680 /* NSURL+QueryStrip.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6190511850A51C5A4A0287F08FC7822 /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = F44CBA48246FAA675BCAD28508C2CA07 /* UIView+PlayerStatusAndDownloadIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EA74C017EB26EA3355A8B3C98035B91A /* JPVideoPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE94B28353D070C67B8B4408A19262F /* JPVideoPlayerManager.m */; };
+		EC8AC6B5763F66C026FF4AEDAA57B6F3 /* JPVideoPlayerCacheConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 88B7ADC884605997FB782E75DA9E9B99 /* JPVideoPlayerCacheConfig.m */; };
+		ECF5F96B399E2665B7973FBFBC0F1137 /* JPVideoPlayerPlayVideoTool.h in Headers */ = {isa = PBXBuildFile; fileRef = AB0E15116A37C5158F7B873E44A9C4D7 /* JPVideoPlayerPlayVideoTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EDB2E137EA5DE5D341AB509699DD7343 /* JPNavigationControllerKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 20558C9C7DEA942526276969FE551840 /* JPNavigationControllerKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA13F020DEAA2ABF513FE02A8F1B9085 /* JPPushAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = A38ADCC6694AA7A5763F632570E5674D /* JPPushAnimationTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA5B99A8122FD3EDF2624DB3D35E4CD3 /* JPTransitionShadowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BA02AA6D94E8103C5CF37F42FAA1595 /* JPTransitionShadowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FB33C438DDDB19CE210D86D7683724C8 /* UIView+ScreenCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CB9E801EE7ECFEE94767A0907E9A38 /* UIView+ScreenCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FB786B22F1EBFAAF80506349E2107DAB /* JPWarpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E4858DB3633A6BF52B5E38DC9FBCEAE /* JPWarpViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,103 +93,101 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = FE28069F897636A6D118D6363D2350C8;
+			remoteGlobalIDString = 3993D78FE510A0A5C7B84507B4557EC4;
 			remoteInfo = JPVideoPlayer;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00215FA4BB5FA833BC5FACE12755B026 /* JPPushAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPPushAnimationTransition.m; path = JPNavigationController/JPPushAnimationTransition.m; sourceTree = "<group>"; };
+		0274A7D1FD112EEBB30ED952D8C42015 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05BF1837B0CAEEE35BE3E9D500A5352A /* JPVideoPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JPVideoPlayer.framework; path = JPVideoPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		05EB14BCF4909A16E3B10019DFC756B2 /* JPVideoPlayerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCompat.h; path = JPVideoPlayer/JPVideoPlayerCompat.h; sourceTree = "<group>"; };
 		0708B70863240F1080A188C7EEDDB31F /* Pods-JPVideoPlayerDemo_swift-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo_swift-frameworks.sh"; sourceTree = "<group>"; };
-		0A09431A0364FEB8EFD665BBC1840B98 /* JPNavigationControllerTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerTransition.h; path = JPNavigationController/JPNavigationControllerTransition.h; sourceTree = "<group>"; };
+		073D2450B024BC8B6147AE4B00CF818B /* UIView+ScreenCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ScreenCapture.m"; path = "JPNavigationController/UIView+ScreenCapture.m"; sourceTree = "<group>"; };
+		09E5098B02ABAC68D2B24AEC03E8F424 /* JPNavigationControllerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerCompat.h; path = JPNavigationController/JPNavigationControllerCompat.h; sourceTree = "<group>"; };
 		0C43AAD2BB587ABC99A940A04A411603 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
-		0F28552791F2AD18AE281B810150EA7A /* JPNavigationControllerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerCompat.h; path = JPNavigationController/JPNavigationControllerCompat.h; sourceTree = "<group>"; };
-		1034956EFB1AC9829F25C64A1041268E /* JPVideoPlayerCacheConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCacheConfig.h; path = JPVideoPlayer/JPVideoPlayerCacheConfig.h; sourceTree = "<group>"; };
-		11DED140901E447763B5DBF5CF7DE75B /* JPNavigationController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPNavigationController.xcconfig; sourceTree = "<group>"; };
-		1C9DEFAA35982B4FF07E52784DAE1E9F /* JPPushAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPPushAnimationTransition.h; path = JPNavigationController/JPPushAnimationTransition.h; sourceTree = "<group>"; };
-		226F15A66CD145DF56AF9321EDA60BA5 /* JPVideoPlayerProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerProgressView.m; path = JPVideoPlayer/JPVideoPlayerProgressView.m; sourceTree = "<group>"; };
-		22BF7E10F58B3FA1EF5B976DFA7A6C4F /* JPNavigationControllerGestureRecognizer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerGestureRecognizer.m; path = JPNavigationController/JPNavigationControllerGestureRecognizer.m; sourceTree = "<group>"; };
+		0F7443D7B52C3B9384176939CA18F2AF /* JPVideoPlayerCachePathTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCachePathTool.h; path = JPVideoPlayer/JPVideoPlayerCachePathTool.h; sourceTree = "<group>"; };
+		10A71D935D11C1D4F33B5DE9A9D0BB29 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11453C4C20B3AF9EC2DD848B65875DD6 /* JPVideoPlayerCachePathTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCachePathTool.m; path = JPVideoPlayer/JPVideoPlayerCachePathTool.m; sourceTree = "<group>"; };
+		14ED33B444C32D54A237FA97F71ED97B /* JPNavigationBar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationBar.m; path = JPNavigationController/JPNavigationBar.m; sourceTree = "<group>"; };
+		19B956647809D11CB2896BC6ABE70680 /* NSURL+QueryStrip.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSURL+QueryStrip.h"; path = "JPVideoPlayer/NSURL+QueryStrip.h"; sourceTree = "<group>"; };
+		1E4858DB3633A6BF52B5E38DC9FBCEAE /* JPWarpViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpViewController.m; path = JPNavigationController/JPWarpViewController.m; sourceTree = "<group>"; };
+		1E8B23DF1EACB535ABC9B744FC22B897 /* JPVideoPlayer-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-prefix.pch"; sourceTree = "<group>"; };
+		20558C9C7DEA942526276969FE551840 /* JPNavigationControllerKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerKit.h; path = JPNavigationController/JPNavigationControllerKit.h; sourceTree = "<group>"; };
+		21A97A7DB5742E87C47450698775627D /* UIColor+ImageGenerate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ImageGenerate.h"; path = "JPNavigationController/UIColor+ImageGenerate.h"; sourceTree = "<group>"; };
 		28E672DB1F97453DB995936C84FE94F9 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		32845D5B9A9B2BDEE4CB209347BFB69F /* JPNavigationBar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationBar.m; path = JPNavigationController/JPNavigationBar.m; sourceTree = "<group>"; };
+		2997E891F4AC2D6DD685468B6F60FE10 /* JPVideoPlayer.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = JPVideoPlayer.modulemap; sourceTree = "<group>"; };
+		2E2C4894D44EF4E7014E43DCADCCC27C /* JPVideoPlayerOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerOperation.h; path = JPVideoPlayer/JPVideoPlayerOperation.h; sourceTree = "<group>"; };
+		3757AF0C61341D364313AE45C48923D6 /* JPNavigationControllerGestureRecognizer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerGestureRecognizer.h; path = JPNavigationController/JPNavigationControllerGestureRecognizer.h; sourceTree = "<group>"; };
+		37B9E16477587D02D59195FB57AEEE30 /* JPNavigationControllerGestureRecognizer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerGestureRecognizer.m; path = JPNavigationController/JPNavigationControllerGestureRecognizer.m; sourceTree = "<group>"; };
 		37E1B61D4C52E49C6A0A6BB71831F487 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		3CBFA442B1776E02D74DE8840C0CF4C9 /* JPVideoPlayerResourceLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerResourceLoader.m; path = JPVideoPlayer/JPVideoPlayerResourceLoader.m; sourceTree = "<group>"; };
-		4374839B4B09443AD72B6F2D316CD058 /* JPNavigationController.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = JPNavigationController.bundle; path = JPNavigationController/JPNavigationController.bundle; sourceTree = "<group>"; };
-		4AAE3A99401AB63C3F88C381857DB015 /* JPVideoPlayerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCompat.h; path = JPVideoPlayer/JPVideoPlayerCompat.h; sourceTree = "<group>"; };
-		4FD562FC586CBAB71B2B484C7FAC882C /* JPVideoPlayerSwizzle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerSwizzle.h; path = JPVideoPlayer/JPVideoPlayerSwizzle.h; sourceTree = "<group>"; };
-		5B8FB60B6C922246B5AC63E471B8684C /* JPBaseAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPBaseAnimationTransition.h; path = JPNavigationController/JPBaseAnimationTransition.h; sourceTree = "<group>"; };
-		5D06BBEC9A9BABEFCDCA89B23CA74E3B /* JPVideoPlayerPlayVideoTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerPlayVideoTool.m; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.m; sourceTree = "<group>"; };
+		3D0B8DA9E79785774BF741E1DA510965 /* JPVideoPlayerDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloaderOperation.m; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.m; sourceTree = "<group>"; };
+		3F7955F650FD578818CDAE66AE44B9BC /* JPVideoPlayerProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerProgressView.h; path = JPVideoPlayer/JPVideoPlayerProgressView.h; sourceTree = "<group>"; };
+		4A98E87002CF360E7C525CE21944164A /* JPPushAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPPushAnimationTransition.m; path = JPNavigationController/JPPushAnimationTransition.m; sourceTree = "<group>"; };
+		55138AB228B4BF453521EF1FD4D0842F /* UIView+WebVideoCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCache.h"; path = "JPVideoPlayer/UIView+WebVideoCache.h"; sourceTree = "<group>"; };
+		55CBA56D12A4BA37B01EBD50D8D711F6 /* JPNavigationControllerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerProtocol.h; path = JPNavigationController/JPNavigationControllerProtocol.h; sourceTree = "<group>"; };
+		5BE17C3A4BF34B4FEC2026A8B2397B4C /* JPVideoPlayer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPVideoPlayer.xcconfig; sourceTree = "<group>"; };
 		5E9104F130FC3087616CE55269765E90 /* Pods-JPVideoPlayerDemo_swift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-JPVideoPlayerDemo_swift.modulemap"; sourceTree = "<group>"; };
-		61BFE887F7743144EEAA4ABC2291AD60 /* JPVideoPlayerDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloader.m; path = JPVideoPlayer/JPVideoPlayerDownloader.m; sourceTree = "<group>"; };
-		6286336D4137F2030E46084E5B9F5504 /* JPVideoPlayerCachePathTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCachePathTool.h; path = JPVideoPlayer/JPVideoPlayerCachePathTool.h; sourceTree = "<group>"; };
-		68D08CB42CF6E57CB8B2AB46D11FC829 /* JPVideoPlayerCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCache.h; path = JPVideoPlayer/JPVideoPlayerCache.h; sourceTree = "<group>"; };
-		69B935DEE9C7E36118017CAEAAFDF6B4 /* JPNavigationControllerKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerKit.h; path = JPNavigationController/JPNavigationControllerKit.h; sourceTree = "<group>"; };
+		623A6B05D3A49E2C8A0B64FD6C8D0477 /* JPVideoPlayerCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCache.m; path = JPVideoPlayer/JPVideoPlayerCache.m; sourceTree = "<group>"; };
+		63CB9E801EE7ECFEE94767A0907E9A38 /* UIView+ScreenCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ScreenCapture.h"; path = "JPNavigationController/UIView+ScreenCapture.h"; sourceTree = "<group>"; };
 		6B2D1EC89625083E36B6747AD2FA55FB /* JPNavigationController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JPNavigationController.framework; path = JPNavigationController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		70EF860CC10A6EA745CC748E6F6116E6 /* UIView+WebVideoCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCache.h"; path = "JPVideoPlayer/UIView+WebVideoCache.h"; sourceTree = "<group>"; };
-		749E38F59C2365948330ACC519F8D556 /* UIColor+ImageGenerate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ImageGenerate.m"; path = "JPNavigationController/UIColor+ImageGenerate.m"; sourceTree = "<group>"; };
-		759EF1E2CF75279940F971FF3FFB7793 /* JPNavigationControllerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerProtocol.h; path = JPNavigationController/JPNavigationControllerProtocol.h; sourceTree = "<group>"; };
-		77E5EC5CB47DFA57334785C0BC05B536 /* UIView+WebVideoCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCache.m"; path = "JPVideoPlayer/UIView+WebVideoCache.m"; sourceTree = "<group>"; };
-		78C5875B5A915CFAAD482211A0D1708F /* JPVideoPlayerOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerOperation.h; path = JPVideoPlayer/JPVideoPlayerOperation.h; sourceTree = "<group>"; };
-		78E9400A7281D2C44DB46215559C5F1E /* JPVideoPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerManager.m; path = JPVideoPlayer/JPVideoPlayerManager.m; sourceTree = "<group>"; };
+		6B375A6830AC7C5B2BA854A2A0274A99 /* JPNavigationControllerTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerTransition.m; path = JPNavigationController/JPNavigationControllerTransition.m; sourceTree = "<group>"; };
+		6BA02AA6D94E8103C5CF37F42FAA1595 /* JPTransitionShadowView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPTransitionShadowView.h; path = JPNavigationController/JPTransitionShadowView.h; sourceTree = "<group>"; };
+		6BC1A1DF5C42D12F70CBC1DC1806E968 /* JPVideoPlayerDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloader.h; path = JPVideoPlayer/JPVideoPlayerDownloader.h; sourceTree = "<group>"; };
+		6FE94B28353D070C67B8B4408A19262F /* JPVideoPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerManager.m; path = JPVideoPlayer/JPVideoPlayerManager.m; sourceTree = "<group>"; };
+		73E511513F5544224AFEB271BFD97CF6 /* UIView+WebVideoCacheOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCacheOperation.m"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.m"; sourceTree = "<group>"; };
+		74059BBF39B738A8F8BF647DAE1812C8 /* JPNavigationController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPNavigationController-dummy.m"; sourceTree = "<group>"; };
+		7A8569B9EF862E844D6022DA64AB7DEB /* JPWarpViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpViewController.h; path = JPNavigationController/JPWarpViewController.h; sourceTree = "<group>"; };
 		7B8784309D20B1A18ADAD4D8A0003A49 /* Pods-JPVideoPlayerDemo_swift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JPVideoPlayerDemo_swift-umbrella.h"; sourceTree = "<group>"; };
-		7D2A6457DF395442156597858A92CCED /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7E7DE37940DE0DD8B97D77CFF9D83E66 /* UINavigationController+FulllScreenPopPush.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FulllScreenPopPush.h"; path = "JPNavigationController/UINavigationController+FulllScreenPopPush.h"; sourceTree = "<group>"; };
-		7F255304771BF8B4F76A2973A189B5A5 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		839BBBF6E592D580CC6316C8561C6D9E /* JPVideoPlayer-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPVideoPlayer-dummy.m"; sourceTree = "<group>"; };
+		7C47FA1EC1DF58EA19960EC7C70DEDB9 /* UIViewController+ViewControllers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ViewControllers.h"; path = "JPNavigationController/UIViewController+ViewControllers.h"; sourceTree = "<group>"; };
+		808A96B564E21794CC6CC6588C601210 /* NSURL+QueryStrip.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSURL+QueryStrip.m"; path = "JPVideoPlayer/NSURL+QueryStrip.m"; sourceTree = "<group>"; };
+		808CCF9D04699F06E6FC1F5F5839FD2D /* JPNavigationController.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = JPNavigationController.modulemap; sourceTree = "<group>"; };
+		80FA91E9199E554ADB30860BDE46FDC1 /* UIView+WebVideoCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCache.m"; path = "JPVideoPlayer/UIView+WebVideoCache.m"; sourceTree = "<group>"; };
+		83930372A26071DCCF24C981CBCE4BA0 /* JPBaseAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPBaseAnimationTransition.m; path = JPNavigationController/JPBaseAnimationTransition.m; sourceTree = "<group>"; };
 		85178BEE0B43B9EDF90FCE29D2126EA2 /* Pods-JPVideoPlayerDemo_swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo_swift.release.xcconfig"; sourceTree = "<group>"; };
-		88DF94614E3A21367FBC8AC482427566 /* JPTransitionShadowView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPTransitionShadowView.m; path = JPNavigationController/JPTransitionShadowView.m; sourceTree = "<group>"; };
-		89A68EDCD3B2A3F33013314D4F489D6C /* JPNavigationController-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-umbrella.h"; sourceTree = "<group>"; };
-		8FAC95CCC017355D73202651130FAAEB /* JPNavigationController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-prefix.pch"; sourceTree = "<group>"; };
+		85D59A7957A6BE70C53C20FBD21F9B4C /* JPVideoPlayerActivityIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerActivityIndicator.h; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.h; sourceTree = "<group>"; };
+		88B7ADC884605997FB782E75DA9E9B99 /* JPVideoPlayerCacheConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCacheConfig.m; path = JPVideoPlayer/JPVideoPlayerCacheConfig.m; sourceTree = "<group>"; };
+		8C3AA4774704794B5C6C0263D1A71C42 /* JPNavigationController.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = JPNavigationController.bundle; path = JPNavigationController/JPNavigationController.bundle; sourceTree = "<group>"; };
+		8C3C55F1B08464A05404BBF26F0B5793 /* JPVideoPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerManager.h; path = JPVideoPlayer/JPVideoPlayerManager.h; sourceTree = "<group>"; };
+		9116CD6D74528085EFF8451F2C4B6F7F /* JPVideoPlayer-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPVideoPlayer-dummy.m"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9781C6D06D57CED30371A32233B46E0C /* JPVideoPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerManager.h; path = JPVideoPlayer/JPVideoPlayerManager.h; sourceTree = "<group>"; };
-		9C038D6470015232D5452B6B5505A58D /* UIViewController+Landscape.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+Landscape.h"; path = "JPVideoPlayer/UIViewController+Landscape.h"; sourceTree = "<group>"; };
+		993D5456AA756042D63C907512C01135 /* JPVideoPlayer-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-umbrella.h"; sourceTree = "<group>"; };
+		99FACE45B8C8A5F75583F02D24F6AF00 /* JPNavigationControllerTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerTransition.h; path = JPNavigationController/JPNavigationControllerTransition.h; sourceTree = "<group>"; };
 		9C06E7AF7920BFEAD623C0CFCAE490C7 /* Pods-JPVideoPlayerDemo_swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo_swift.debug.xcconfig"; sourceTree = "<group>"; };
-		9EB5B432D07CEE0319BD3A4AD9D53969 /* UIView+ScreenCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ScreenCapture.m"; path = "JPNavigationController/UIView+ScreenCapture.m"; sourceTree = "<group>"; };
-		9FD0CB283BC118A7637733C8725E200C /* UIView+PlayerStatusAndDownloadIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+PlayerStatusAndDownloadIndicator.m"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.m"; sourceTree = "<group>"; };
-		A31B21259A8895A480BB8617A5B27C61 /* UIView+ScreenCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ScreenCapture.h"; path = "JPNavigationController/UIView+ScreenCapture.h"; sourceTree = "<group>"; };
-		A45573A0081822157308CEF1FE1C5283 /* JPVideoPlayerResourceLoader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerResourceLoader.h; path = JPVideoPlayer/JPVideoPlayerResourceLoader.h; sourceTree = "<group>"; };
-		A590B7B3F2B92D617EF0BD532EA9A776 /* JPWarpNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpNavigationController.m; path = JPNavigationController/JPWarpNavigationController.m; sourceTree = "<group>"; };
-		A5E5B7608EF7ED655197117FA6F7D284 /* JPNavigationController.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = JPNavigationController.modulemap; sourceTree = "<group>"; };
+		9CF2E7A48EBC7CB086559EA26A2D09B7 /* JPVideoPlayerResourceLoader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerResourceLoader.h; path = JPVideoPlayer/JPVideoPlayerResourceLoader.h; sourceTree = "<group>"; };
+		9D1F2C082395E0456D914BE3A1622635 /* JPVideoPlayerDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloaderOperation.h; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.h; sourceTree = "<group>"; };
+		A38ADCC6694AA7A5763F632570E5674D /* JPPushAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPPushAnimationTransition.h; path = JPNavigationController/JPPushAnimationTransition.h; sourceTree = "<group>"; };
 		A6AE1BDD96E5BD436D267A2852AD2C17 /* Pods_JPVideoPlayerDemo_swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JPVideoPlayerDemo_swift.framework; path = "Pods-JPVideoPlayerDemo_swift.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A70639419CA8FDB8149E92661B9CF14A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		A7835380ABF54962B40554403758EA74 /* JPVideoPlayerActivityIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerActivityIndicator.m; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.m; sourceTree = "<group>"; };
-		A7B48F0B8FBC19B8A0CF2D9E20252DEF /* JPNavigationControllerTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerTransition.m; path = JPNavigationController/JPNavigationControllerTransition.m; sourceTree = "<group>"; };
-		AC0E05555C7375F4031AD6AE0077E78C /* JPVideoPlayer-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-prefix.pch"; sourceTree = "<group>"; };
-		AEECBF1FE247691B068B74320D0C78F5 /* JPVideoPlayer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPVideoPlayer.xcconfig; sourceTree = "<group>"; };
+		A8EE5CC9FAA41FA47BBE9B2A22BDB1CB /* JPNavigationController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-prefix.pch"; sourceTree = "<group>"; };
+		AB0E15116A37C5158F7B873E44A9C4D7 /* JPVideoPlayerPlayVideoTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerPlayVideoTool.h; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.h; sourceTree = "<group>"; };
 		B00BD966BECAB0A0BE723A31ABF4F33D /* Pods-JPVideoPlayerDemo_swift-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JPVideoPlayerDemo_swift-acknowledgements.markdown"; sourceTree = "<group>"; };
-		B0E4D909BA1B8E5EF2059765DA164EB9 /* JPVideoPlayer.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = JPVideoPlayer.modulemap; sourceTree = "<group>"; };
-		B3E93B73059423009FAB66E2366948BA /* JPVideoPlayerDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloaderOperation.h; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.h; sourceTree = "<group>"; };
-		B5CA98D165976BB8729F35D674D69EAC /* JPVideoPlayerSwizzle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerSwizzle.m; path = JPVideoPlayer/JPVideoPlayerSwizzle.m; sourceTree = "<group>"; };
-		B87884480086930A1FE13FB9AC80D09C /* JPVideoPlayer-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPVideoPlayer-umbrella.h"; sourceTree = "<group>"; };
-		BFEC8707598D7F6291777DE05BD2A5CB /* UIView+WebVideoCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCacheOperation.h"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.h"; sourceTree = "<group>"; };
-		C85FBE724BE4A9B08C18A760F3C40A55 /* JPNavigationControllerGestureRecognizer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerGestureRecognizer.h; path = JPNavigationController/JPNavigationControllerGestureRecognizer.h; sourceTree = "<group>"; };
-		CCAA0D2F4F5489291C3A967D0B848122 /* JPWarpViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpViewController.h; path = JPNavigationController/JPWarpViewController.h; sourceTree = "<group>"; };
-		CEA9F5D8F68D91430F0456B8ADBABC5F /* JPVideoPlayerProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerProgressView.h; path = JPVideoPlayer/JPVideoPlayerProgressView.h; sourceTree = "<group>"; };
-		CEF412B59EC4590A786E547E3FBFECB0 /* UIViewController+Landscape.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+Landscape.m"; path = "JPVideoPlayer/UIViewController+Landscape.m"; sourceTree = "<group>"; };
-		D0A62C3BAE7F5D8298333F5A1FA26A49 /* UIView+WebVideoCacheOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebVideoCacheOperation.m"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.m"; sourceTree = "<group>"; };
+		B7E07AC8126AAB1D65632A1B2AB49E41 /* JPVideoPlayerActivityIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerActivityIndicator.m; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.m; sourceTree = "<group>"; };
+		B9C263BDEA47EC9F2864AC64BFA33A61 /* JPVideoPlayerDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloader.m; path = JPVideoPlayer/JPVideoPlayerDownloader.m; sourceTree = "<group>"; };
+		B9F23DB87F0E1468C5162A3BB324751E /* JPNavigationController-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-umbrella.h"; sourceTree = "<group>"; };
+		C0708C2CAC4F2CA6C47EF323C2768A97 /* UIColor+ImageGenerate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ImageGenerate.m"; path = "JPNavigationController/UIColor+ImageGenerate.m"; sourceTree = "<group>"; };
+		C08E21B99AC061E935308F19D5A311E8 /* UIView+PlayerStatusAndDownloadIndicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+PlayerStatusAndDownloadIndicator.m"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.m"; sourceTree = "<group>"; };
+		C1DE78424555070540C8BB6CC3AE081F /* JPVideoPlayerPlayVideoTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerPlayVideoTool.m; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.m; sourceTree = "<group>"; };
+		C4CA6CFC707DA04BDDF9F794B8D31CDD /* JPNavigationBar.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationBar.h; path = JPNavigationController/JPNavigationBar.h; sourceTree = "<group>"; };
+		C85138A459F7FCA789396CF6683BFF78 /* JPBaseAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPBaseAnimationTransition.h; path = JPNavigationController/JPBaseAnimationTransition.h; sourceTree = "<group>"; };
+		C91722D680E82CE4F5C7366C81DA0ECA /* UIViewController+ViewControllers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ViewControllers.m"; path = "JPNavigationController/UIViewController+ViewControllers.m"; sourceTree = "<group>"; };
+		CC8DD61E8CE346AE239B02336422D51F /* JPNavigationController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPNavigationController.xcconfig; sourceTree = "<group>"; };
+		CCD7ECDEC53B040FDE050FEA390DA889 /* JPNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationController.m; path = JPNavigationController/JPNavigationController.m; sourceTree = "<group>"; };
+		CEB0FFEF5C8C3C5CEE462FAE9A0794C4 /* UINavigationController+FulllScreenPopPush.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FulllScreenPopPush.h"; path = "JPNavigationController/UINavigationController+FulllScreenPopPush.h"; sourceTree = "<group>"; };
+		D004B8FE6FDDB0586AB9F552ADC811FF /* JPVideoPlayerProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerProgressView.m; path = JPVideoPlayer/JPVideoPlayerProgressView.m; sourceTree = "<group>"; };
+		D09A98FABCDE3744BA73D0D843FA3CC6 /* JPVideoPlayerResourceLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerResourceLoader.m; path = JPVideoPlayer/JPVideoPlayerResourceLoader.m; sourceTree = "<group>"; };
 		D180048B8C308DBCC76A544CEEAA497B /* Pods-JPVideoPlayerDemo_swift-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo_swift-resources.sh"; sourceTree = "<group>"; };
 		D22347F322DEB69F0974C1E343BF532E /* Pods-JPVideoPlayerDemo_swift-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JPVideoPlayerDemo_swift-acknowledgements.plist"; sourceTree = "<group>"; };
-		D50FD6703A2F8327E415354BA853962F /* JPVideoPlayerCachePathTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCachePathTool.m; path = JPVideoPlayer/JPVideoPlayerCachePathTool.m; sourceTree = "<group>"; };
-		D5B559BF0A357B157E14D95934BF7CA3 /* JPVideoPlayerPlayVideoTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerPlayVideoTool.h; path = JPVideoPlayer/JPVideoPlayerPlayVideoTool.h; sourceTree = "<group>"; };
-		D5D6139C3F689127107998AED995AE3F /* JPWarpNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpNavigationController.h; path = JPNavigationController/JPWarpNavigationController.h; sourceTree = "<group>"; };
 		D75C50D0065E99A81B1E51FAEC88278F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		D9C7B5CCFA294533BF6F0DE5AE45A875 /* JPTransitionShadowView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPTransitionShadowView.h; path = JPNavigationController/JPTransitionShadowView.h; sourceTree = "<group>"; };
+		D7685CD2BA37CF6A38FF36F65EEFC511 /* JPWarpNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpNavigationController.h; path = JPNavigationController/JPWarpNavigationController.h; sourceTree = "<group>"; };
+		D90990FEE8B610DB0215BD7DE1344EB2 /* JPNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationController.h; path = JPNavigationController/JPNavigationController.h; sourceTree = "<group>"; };
 		DADD3708B0E0448A24DAE05674D25759 /* Pods-JPVideoPlayerDemo_swift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JPVideoPlayerDemo_swift-dummy.m"; sourceTree = "<group>"; };
-		E15AB23E5A95B0C06195CB9BDEFF9470 /* JPBaseAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPBaseAnimationTransition.m; path = JPNavigationController/JPBaseAnimationTransition.m; sourceTree = "<group>"; };
-		E1DC44DE2E9AE8E8987E211CF26441E8 /* JPNavigationBar.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationBar.h; path = JPNavigationController/JPNavigationBar.h; sourceTree = "<group>"; };
-		E54891C8F905958ABE5FBDB9DC917DC9 /* JPNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationController.m; path = JPNavigationController/JPNavigationController.m; sourceTree = "<group>"; };
-		E8D205F6110BA1AE7282B088A5CF12B1 /* JPVideoPlayerCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCache.m; path = JPVideoPlayer/JPVideoPlayerCache.m; sourceTree = "<group>"; };
-		EA9060192A319B40EF695F5B1E21D2A0 /* UIViewController+ViewControllers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ViewControllers.m"; path = "JPNavigationController/UIViewController+ViewControllers.m"; sourceTree = "<group>"; };
-		EF432B9FB45F583203688ADB1EBB5030 /* UIViewController+ViewControllers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ViewControllers.h"; path = "JPNavigationController/UIViewController+ViewControllers.h"; sourceTree = "<group>"; };
-		F06C14A2B346C271CB4F18D9D1A17D09 /* UIView+PlayerStatusAndDownloadIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+PlayerStatusAndDownloadIndicator.h"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.h"; sourceTree = "<group>"; };
-		F1FE8B5D7090950370473823B4956364 /* UIColor+ImageGenerate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ImageGenerate.h"; path = "JPNavigationController/UIColor+ImageGenerate.h"; sourceTree = "<group>"; };
-		F4580BCAAA6FCC56E0F01CB262082155 /* JPVideoPlayerDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerDownloader.h; path = JPVideoPlayer/JPVideoPlayerDownloader.h; sourceTree = "<group>"; };
-		F4B1EB7A6ADDBBC0EE3E90834F3D3756 /* JPVideoPlayerActivityIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerActivityIndicator.h; path = JPVideoPlayer/JPVideoPlayerActivityIndicator.h; sourceTree = "<group>"; };
-		F8C1F6F72FFE75F3DE07AF3FCACEBD29 /* JPVideoPlayerDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerDownloaderOperation.m; path = JPVideoPlayer/JPVideoPlayerDownloaderOperation.m; sourceTree = "<group>"; };
-		FA14AAE0438164D0FA0408B8D28668D6 /* JPNavigationController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPNavigationController-dummy.m"; sourceTree = "<group>"; };
-		FB438C98B3B21E8FEA2E926BD459D0F1 /* JPVideoPlayerCacheConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPVideoPlayerCacheConfig.m; path = JPVideoPlayer/JPVideoPlayerCacheConfig.m; sourceTree = "<group>"; };
-		FC2A03656BCAFB8F667EF44ECB407848 /* JPWarpViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpViewController.m; path = JPNavigationController/JPWarpViewController.m; sourceTree = "<group>"; };
-		FF0E68E6ADD2C02932BFEEF8D31F28E1 /* JPNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationController.h; path = JPNavigationController/JPNavigationController.h; sourceTree = "<group>"; };
+		DFF80C6307BBD122BDE41B88A75EE026 /* JPTransitionShadowView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPTransitionShadowView.m; path = JPNavigationController/JPTransitionShadowView.m; sourceTree = "<group>"; };
+		EABF57A877434CEF1DEFA72A39E57D79 /* UIView+WebVideoCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebVideoCacheOperation.h"; path = "JPVideoPlayer/UIView+WebVideoCacheOperation.h"; sourceTree = "<group>"; };
+		F44CBA48246FAA675BCAD28508C2CA07 /* UIView+PlayerStatusAndDownloadIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+PlayerStatusAndDownloadIndicator.h"; path = "JPVideoPlayer/UIView+PlayerStatusAndDownloadIndicator.h"; sourceTree = "<group>"; };
+		F6F6C8DF9B03517B783C56AFF78A1BFB /* JPVideoPlayerCacheConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCacheConfig.h; path = JPVideoPlayer/JPVideoPlayerCacheConfig.h; sourceTree = "<group>"; };
+		FA540734156A6141CC0F6593F3369F83 /* JPVideoPlayerCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPVideoPlayerCache.h; path = JPVideoPlayer/JPVideoPlayerCache.h; sourceTree = "<group>"; };
+		FD4AD5A1260F84BB7E69156B4BBD0531 /* JPWarpNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpNavigationController.m; path = JPNavigationController/JPWarpNavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,64 +208,71 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A467BD58F5CE774CA8CC66ABF37D50ED /* Frameworks */ = {
+		DD585ED3D725F4B62A3CC3C6764DBF04 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEA91FF916F5D09E4F049D4A546D9AE4 /* AVFoundation.framework in Frameworks */,
-				EB167B75078E1B94769016B0AA7961D3 /* Foundation.framework in Frameworks */,
-				338701C33C09370721A7C3B05DDFFE84 /* MobileCoreServices.framework in Frameworks */,
-				B65D33414FAB625241078365D9A143A4 /* UIKit.framework in Frameworks */,
+				B94B7C6FBE068B1584A341AC21BA7853 /* AVFoundation.framework in Frameworks */,
+				28C77D9DF6BCB06D32652C0D1D582B65 /* Foundation.framework in Frameworks */,
+				2F60FC2C7DF0165B68C6DDA0185E3DC7 /* MobileCoreServices.framework in Frameworks */,
+				7C3638A3983E0E111596DC9DC716825C /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		040B25001CE9F2DA0729B7A1555C2C1B /* JPNavigationController */ = {
+		10180E96D2AE6EF70E9E826B61AB5371 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				5B8FB60B6C922246B5AC63E471B8684C /* JPBaseAnimationTransition.h */,
-				E15AB23E5A95B0C06195CB9BDEFF9470 /* JPBaseAnimationTransition.m */,
-				E1DC44DE2E9AE8E8987E211CF26441E8 /* JPNavigationBar.h */,
-				32845D5B9A9B2BDEE4CB209347BFB69F /* JPNavigationBar.m */,
-				FF0E68E6ADD2C02932BFEEF8D31F28E1 /* JPNavigationController.h */,
-				E54891C8F905958ABE5FBDB9DC917DC9 /* JPNavigationController.m */,
-				0F28552791F2AD18AE281B810150EA7A /* JPNavigationControllerCompat.h */,
-				C85FBE724BE4A9B08C18A760F3C40A55 /* JPNavigationControllerGestureRecognizer.h */,
-				22BF7E10F58B3FA1EF5B976DFA7A6C4F /* JPNavigationControllerGestureRecognizer.m */,
-				69B935DEE9C7E36118017CAEAAFDF6B4 /* JPNavigationControllerKit.h */,
-				759EF1E2CF75279940F971FF3FFB7793 /* JPNavigationControllerProtocol.h */,
-				0A09431A0364FEB8EFD665BBC1840B98 /* JPNavigationControllerTransition.h */,
-				A7B48F0B8FBC19B8A0CF2D9E20252DEF /* JPNavigationControllerTransition.m */,
-				1C9DEFAA35982B4FF07E52784DAE1E9F /* JPPushAnimationTransition.h */,
-				00215FA4BB5FA833BC5FACE12755B026 /* JPPushAnimationTransition.m */,
-				D9C7B5CCFA294533BF6F0DE5AE45A875 /* JPTransitionShadowView.h */,
-				88DF94614E3A21367FBC8AC482427566 /* JPTransitionShadowView.m */,
-				D5D6139C3F689127107998AED995AE3F /* JPWarpNavigationController.h */,
-				A590B7B3F2B92D617EF0BD532EA9A776 /* JPWarpNavigationController.m */,
-				CCAA0D2F4F5489291C3A967D0B848122 /* JPWarpViewController.h */,
-				FC2A03656BCAFB8F667EF44ECB407848 /* JPWarpViewController.m */,
-				F1FE8B5D7090950370473823B4956364 /* UIColor+ImageGenerate.h */,
-				749E38F59C2365948330ACC519F8D556 /* UIColor+ImageGenerate.m */,
-				7E7DE37940DE0DD8B97D77CFF9D83E66 /* UINavigationController+FulllScreenPopPush.h */,
-				A31B21259A8895A480BB8617A5B27C61 /* UIView+ScreenCapture.h */,
-				9EB5B432D07CEE0319BD3A4AD9D53969 /* UIView+ScreenCapture.m */,
-				EF432B9FB45F583203688ADB1EBB5030 /* UIViewController+ViewControllers.h */,
-				EA9060192A319B40EF695F5B1E21D2A0 /* UIViewController+ViewControllers.m */,
-				09CABCA65F299035C9BBD73DD56B7D90 /* Resources */,
-				D4B3E7D20F01EBC1551B4F85C2F44B42 /* Support Files */,
+				0274A7D1FD112EEBB30ED952D8C42015 /* Info.plist */,
+				808CCF9D04699F06E6FC1F5F5839FD2D /* JPNavigationController.modulemap */,
+				CC8DD61E8CE346AE239B02336422D51F /* JPNavigationController.xcconfig */,
+				74059BBF39B738A8F8BF647DAE1812C8 /* JPNavigationController-dummy.m */,
+				A8EE5CC9FAA41FA47BBE9B2A22BDB1CB /* JPNavigationController-prefix.pch */,
+				B9F23DB87F0E1468C5162A3BB324751E /* JPNavigationController-umbrella.h */,
 			);
-			name = JPNavigationController;
-			path = JPNavigationController;
+			name = "Support Files";
+			path = "../Target Support Files/JPNavigationController";
 			sourceTree = "<group>";
 		};
-		09CABCA65F299035C9BBD73DD56B7D90 /* Resources */ = {
+		13976823053497E50648997BFA7A7E19 /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				4374839B4B09443AD72B6F2D316CD058 /* JPNavigationController.bundle */,
+				85D59A7957A6BE70C53C20FBD21F9B4C /* JPVideoPlayerActivityIndicator.h */,
+				B7E07AC8126AAB1D65632A1B2AB49E41 /* JPVideoPlayerActivityIndicator.m */,
+				FA540734156A6141CC0F6593F3369F83 /* JPVideoPlayerCache.h */,
+				623A6B05D3A49E2C8A0B64FD6C8D0477 /* JPVideoPlayerCache.m */,
+				F6F6C8DF9B03517B783C56AFF78A1BFB /* JPVideoPlayerCacheConfig.h */,
+				88B7ADC884605997FB782E75DA9E9B99 /* JPVideoPlayerCacheConfig.m */,
+				0F7443D7B52C3B9384176939CA18F2AF /* JPVideoPlayerCachePathTool.h */,
+				11453C4C20B3AF9EC2DD848B65875DD6 /* JPVideoPlayerCachePathTool.m */,
+				05EB14BCF4909A16E3B10019DFC756B2 /* JPVideoPlayerCompat.h */,
+				6BC1A1DF5C42D12F70CBC1DC1806E968 /* JPVideoPlayerDownloader.h */,
+				B9C263BDEA47EC9F2864AC64BFA33A61 /* JPVideoPlayerDownloader.m */,
+				9D1F2C082395E0456D914BE3A1622635 /* JPVideoPlayerDownloaderOperation.h */,
+				3D0B8DA9E79785774BF741E1DA510965 /* JPVideoPlayerDownloaderOperation.m */,
+				8C3C55F1B08464A05404BBF26F0B5793 /* JPVideoPlayerManager.h */,
+				6FE94B28353D070C67B8B4408A19262F /* JPVideoPlayerManager.m */,
+				2E2C4894D44EF4E7014E43DCADCCC27C /* JPVideoPlayerOperation.h */,
+				AB0E15116A37C5158F7B873E44A9C4D7 /* JPVideoPlayerPlayVideoTool.h */,
+				C1DE78424555070540C8BB6CC3AE081F /* JPVideoPlayerPlayVideoTool.m */,
+				3F7955F650FD578818CDAE66AE44B9BC /* JPVideoPlayerProgressView.h */,
+				D004B8FE6FDDB0586AB9F552ADC811FF /* JPVideoPlayerProgressView.m */,
+				9CF2E7A48EBC7CB086559EA26A2D09B7 /* JPVideoPlayerResourceLoader.h */,
+				D09A98FABCDE3744BA73D0D843FA3CC6 /* JPVideoPlayerResourceLoader.m */,
+				19B956647809D11CB2896BC6ABE70680 /* NSURL+QueryStrip.h */,
+				808A96B564E21794CC6CC6588C601210 /* NSURL+QueryStrip.m */,
+				F44CBA48246FAA675BCAD28508C2CA07 /* UIView+PlayerStatusAndDownloadIndicator.h */,
+				C08E21B99AC061E935308F19D5A311E8 /* UIView+PlayerStatusAndDownloadIndicator.m */,
+				55138AB228B4BF453521EF1FD4D0842F /* UIView+WebVideoCache.h */,
+				80FA91E9199E554ADB30860BDE46FDC1 /* UIView+WebVideoCache.m */,
+				EABF57A877434CEF1DEFA72A39E57D79 /* UIView+WebVideoCacheOperation.h */,
+				73E511513F5544224AFEB271BFD97CF6 /* UIView+WebVideoCacheOperation.m */,
+				DAB369970B45CFB30D826136DBE0E989 /* Support Files */,
 			);
-			name = Resources;
+			name = JPVideoPlayer;
+			path = JPVideoPlayer;
 			sourceTree = "<group>";
 		};
 		14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */ = {
@@ -278,15 +281,6 @@
 				D2AD1162607AC2E543D529A2FE30C0EF /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5D9AFD9E4D37A6E960608CE7DA89C043 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				040B25001CE9F2DA0729B7A1555C2C1B /* JPNavigationController */,
-				A13E366D9A4BCE3C2BA18CEF68B85DB2 /* JPVideoPlayer */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		5F300122C742DB952BD91A1484BB334D /* Targets Support Files */ = {
@@ -302,7 +296,7 @@
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */,
-				5D9AFD9E4D37A6E960608CE7DA89C043 /* Pods */,
+				BA233A33CED77E7720190D03FF4C7179 /* Pods */,
 				82BB6F7BCBFE2552F8C2E10BA70A86E9 /* Products */,
 				5F300122C742DB952BD91A1484BB334D /* Targets Support Files */,
 			);
@@ -336,45 +330,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A13E366D9A4BCE3C2BA18CEF68B85DB2 /* JPVideoPlayer */ = {
+		BA233A33CED77E7720190D03FF4C7179 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F4B1EB7A6ADDBBC0EE3E90834F3D3756 /* JPVideoPlayerActivityIndicator.h */,
-				A7835380ABF54962B40554403758EA74 /* JPVideoPlayerActivityIndicator.m */,
-				68D08CB42CF6E57CB8B2AB46D11FC829 /* JPVideoPlayerCache.h */,
-				E8D205F6110BA1AE7282B088A5CF12B1 /* JPVideoPlayerCache.m */,
-				1034956EFB1AC9829F25C64A1041268E /* JPVideoPlayerCacheConfig.h */,
-				FB438C98B3B21E8FEA2E926BD459D0F1 /* JPVideoPlayerCacheConfig.m */,
-				6286336D4137F2030E46084E5B9F5504 /* JPVideoPlayerCachePathTool.h */,
-				D50FD6703A2F8327E415354BA853962F /* JPVideoPlayerCachePathTool.m */,
-				4AAE3A99401AB63C3F88C381857DB015 /* JPVideoPlayerCompat.h */,
-				F4580BCAAA6FCC56E0F01CB262082155 /* JPVideoPlayerDownloader.h */,
-				61BFE887F7743144EEAA4ABC2291AD60 /* JPVideoPlayerDownloader.m */,
-				B3E93B73059423009FAB66E2366948BA /* JPVideoPlayerDownloaderOperation.h */,
-				F8C1F6F72FFE75F3DE07AF3FCACEBD29 /* JPVideoPlayerDownloaderOperation.m */,
-				9781C6D06D57CED30371A32233B46E0C /* JPVideoPlayerManager.h */,
-				78E9400A7281D2C44DB46215559C5F1E /* JPVideoPlayerManager.m */,
-				78C5875B5A915CFAAD482211A0D1708F /* JPVideoPlayerOperation.h */,
-				D5B559BF0A357B157E14D95934BF7CA3 /* JPVideoPlayerPlayVideoTool.h */,
-				5D06BBEC9A9BABEFCDCA89B23CA74E3B /* JPVideoPlayerPlayVideoTool.m */,
-				CEA9F5D8F68D91430F0456B8ADBABC5F /* JPVideoPlayerProgressView.h */,
-				226F15A66CD145DF56AF9321EDA60BA5 /* JPVideoPlayerProgressView.m */,
-				A45573A0081822157308CEF1FE1C5283 /* JPVideoPlayerResourceLoader.h */,
-				3CBFA442B1776E02D74DE8840C0CF4C9 /* JPVideoPlayerResourceLoader.m */,
-				4FD562FC586CBAB71B2B484C7FAC882C /* JPVideoPlayerSwizzle.h */,
-				B5CA98D165976BB8729F35D674D69EAC /* JPVideoPlayerSwizzle.m */,
-				F06C14A2B346C271CB4F18D9D1A17D09 /* UIView+PlayerStatusAndDownloadIndicator.h */,
-				9FD0CB283BC118A7637733C8725E200C /* UIView+PlayerStatusAndDownloadIndicator.m */,
-				70EF860CC10A6EA745CC748E6F6116E6 /* UIView+WebVideoCache.h */,
-				77E5EC5CB47DFA57334785C0BC05B536 /* UIView+WebVideoCache.m */,
-				BFEC8707598D7F6291777DE05BD2A5CB /* UIView+WebVideoCacheOperation.h */,
-				D0A62C3BAE7F5D8298333F5A1FA26A49 /* UIView+WebVideoCacheOperation.m */,
-				9C038D6470015232D5452B6B5505A58D /* UIViewController+Landscape.h */,
-				CEF412B59EC4590A786E547E3FBFECB0 /* UIViewController+Landscape.m */,
-				F8349DA448D8C8388CF37D48F3586AE1 /* Support Files */,
+				D8F25EB1BA129010471799700B299E1D /* JPNavigationController */,
+				13976823053497E50648997BFA7A7E19 /* JPVideoPlayer */,
 			);
-			name = JPVideoPlayer;
-			path = JPVideoPlayer;
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		BBC45B606532C98C56811984BB7CE6CC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8C3AA4774704794B5C6C0263D1A71C42 /* JPNavigationController.bundle */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		D2AD1162607AC2E543D529A2FE30C0EF /* iOS */ = {
@@ -388,29 +358,53 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		D4B3E7D20F01EBC1551B4F85C2F44B42 /* Support Files */ = {
+		D8F25EB1BA129010471799700B299E1D /* JPNavigationController */ = {
 			isa = PBXGroup;
 			children = (
-				7F255304771BF8B4F76A2973A189B5A5 /* Info.plist */,
-				A5E5B7608EF7ED655197117FA6F7D284 /* JPNavigationController.modulemap */,
-				11DED140901E447763B5DBF5CF7DE75B /* JPNavigationController.xcconfig */,
-				FA14AAE0438164D0FA0408B8D28668D6 /* JPNavigationController-dummy.m */,
-				8FAC95CCC017355D73202651130FAAEB /* JPNavigationController-prefix.pch */,
-				89A68EDCD3B2A3F33013314D4F489D6C /* JPNavigationController-umbrella.h */,
+				C85138A459F7FCA789396CF6683BFF78 /* JPBaseAnimationTransition.h */,
+				83930372A26071DCCF24C981CBCE4BA0 /* JPBaseAnimationTransition.m */,
+				C4CA6CFC707DA04BDDF9F794B8D31CDD /* JPNavigationBar.h */,
+				14ED33B444C32D54A237FA97F71ED97B /* JPNavigationBar.m */,
+				D90990FEE8B610DB0215BD7DE1344EB2 /* JPNavigationController.h */,
+				CCD7ECDEC53B040FDE050FEA390DA889 /* JPNavigationController.m */,
+				09E5098B02ABAC68D2B24AEC03E8F424 /* JPNavigationControllerCompat.h */,
+				3757AF0C61341D364313AE45C48923D6 /* JPNavigationControllerGestureRecognizer.h */,
+				37B9E16477587D02D59195FB57AEEE30 /* JPNavigationControllerGestureRecognizer.m */,
+				20558C9C7DEA942526276969FE551840 /* JPNavigationControllerKit.h */,
+				55CBA56D12A4BA37B01EBD50D8D711F6 /* JPNavigationControllerProtocol.h */,
+				99FACE45B8C8A5F75583F02D24F6AF00 /* JPNavigationControllerTransition.h */,
+				6B375A6830AC7C5B2BA854A2A0274A99 /* JPNavigationControllerTransition.m */,
+				A38ADCC6694AA7A5763F632570E5674D /* JPPushAnimationTransition.h */,
+				4A98E87002CF360E7C525CE21944164A /* JPPushAnimationTransition.m */,
+				6BA02AA6D94E8103C5CF37F42FAA1595 /* JPTransitionShadowView.h */,
+				DFF80C6307BBD122BDE41B88A75EE026 /* JPTransitionShadowView.m */,
+				D7685CD2BA37CF6A38FF36F65EEFC511 /* JPWarpNavigationController.h */,
+				FD4AD5A1260F84BB7E69156B4BBD0531 /* JPWarpNavigationController.m */,
+				7A8569B9EF862E844D6022DA64AB7DEB /* JPWarpViewController.h */,
+				1E4858DB3633A6BF52B5E38DC9FBCEAE /* JPWarpViewController.m */,
+				21A97A7DB5742E87C47450698775627D /* UIColor+ImageGenerate.h */,
+				C0708C2CAC4F2CA6C47EF323C2768A97 /* UIColor+ImageGenerate.m */,
+				CEB0FFEF5C8C3C5CEE462FAE9A0794C4 /* UINavigationController+FulllScreenPopPush.h */,
+				63CB9E801EE7ECFEE94767A0907E9A38 /* UIView+ScreenCapture.h */,
+				073D2450B024BC8B6147AE4B00CF818B /* UIView+ScreenCapture.m */,
+				7C47FA1EC1DF58EA19960EC7C70DEDB9 /* UIViewController+ViewControllers.h */,
+				C91722D680E82CE4F5C7366C81DA0ECA /* UIViewController+ViewControllers.m */,
+				BBC45B606532C98C56811984BB7CE6CC /* Resources */,
+				10180E96D2AE6EF70E9E826B61AB5371 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/JPNavigationController";
+			name = JPNavigationController;
+			path = JPNavigationController;
 			sourceTree = "<group>";
 		};
-		F8349DA448D8C8388CF37D48F3586AE1 /* Support Files */ = {
+		DAB369970B45CFB30D826136DBE0E989 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				7D2A6457DF395442156597858A92CCED /* Info.plist */,
-				B0E4D909BA1B8E5EF2059765DA164EB9 /* JPVideoPlayer.modulemap */,
-				AEECBF1FE247691B068B74320D0C78F5 /* JPVideoPlayer.xcconfig */,
-				839BBBF6E592D580CC6316C8561C6D9E /* JPVideoPlayer-dummy.m */,
-				AC0E05555C7375F4031AD6AE0077E78C /* JPVideoPlayer-prefix.pch */,
-				B87884480086930A1FE13FB9AC80D09C /* JPVideoPlayer-umbrella.h */,
+				10A71D935D11C1D4F33B5DE9A9D0BB29 /* Info.plist */,
+				2997E891F4AC2D6DD685468B6F60FE10 /* JPVideoPlayer.modulemap */,
+				5BE17C3A4BF34B4FEC2026A8B2397B4C /* JPVideoPlayer.xcconfig */,
+				9116CD6D74528085EFF8451F2C4B6F7F /* JPVideoPlayer-dummy.m */,
+				1E8B23DF1EACB535ABC9B744FC22B897 /* JPVideoPlayer-prefix.pch */,
+				993D5456AA756042D63C907512C01135 /* JPVideoPlayer-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/JPVideoPlayer";
@@ -419,28 +413,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		A31B68D0531AEF50F5BDFE871FBE7012 /* Headers */ = {
+		AEBC9FA401A1144783D535517A3AE0AD /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8A353826ABE7ABF7911D9916D650E26 /* JPVideoPlayer-umbrella.h in Headers */,
-				9D16F7EB276221A479645D8BCF66B34F /* JPVideoPlayerActivityIndicator.h in Headers */,
-				43AC9CAD14902D15FD4473B85A0902B4 /* JPVideoPlayerCache.h in Headers */,
-				720B5A62249EFE6A647BB67111466F67 /* JPVideoPlayerCacheConfig.h in Headers */,
-				8879D91DAD3EFCAD036DF18BCC995FD8 /* JPVideoPlayerCachePathTool.h in Headers */,
-				F321F8ADAA00AA37F603E290613C9D80 /* JPVideoPlayerCompat.h in Headers */,
-				4F83DC6D2D81551B2AC3EF264C53E545 /* JPVideoPlayerDownloader.h in Headers */,
-				68A2AD3968C0CBC4DD0E303359B750AA /* JPVideoPlayerDownloaderOperation.h in Headers */,
-				01FF266E789C823099DA3E68BDD948C9 /* JPVideoPlayerManager.h in Headers */,
-				C1AC58ECE3C115A0181CC48F8C53D83F /* JPVideoPlayerOperation.h in Headers */,
-				212EE8081AD73836336066D01E186883 /* JPVideoPlayerPlayVideoTool.h in Headers */,
-				B9B26F793958FBD0016762A75EB0F2FA /* JPVideoPlayerProgressView.h in Headers */,
-				F0CB3CDA5B1311FAAA9B41AA0406C9CE /* JPVideoPlayerResourceLoader.h in Headers */,
-				D7814957918FF1920F3C4F9FA500277E /* JPVideoPlayerSwizzle.h in Headers */,
-				C0D3B7071D6EFB500BBA9864ABE0D25B /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */,
-				36A34D9D911ADEEB3FF9118F970A0593 /* UIView+WebVideoCache.h in Headers */,
-				B649FE586E2793DAF403C638BD9B4046 /* UIView+WebVideoCacheOperation.h in Headers */,
-				B268EA515A662C6BB130FE4A2E51E46F /* UIViewController+Landscape.h in Headers */,
+				0BFFE912A002BDE674C3DE52A55B2FD6 /* JPVideoPlayer-umbrella.h in Headers */,
+				5B2E71FB3A0694A061273A9CEF22F1BD /* JPVideoPlayerActivityIndicator.h in Headers */,
+				D68EF3C4A77DEDE59ADB148749665B24 /* JPVideoPlayerCache.h in Headers */,
+				0E8F4DB5CF7B38C609AA429D59843FEE /* JPVideoPlayerCacheConfig.h in Headers */,
+				3B4EAB5B8FE4F9E2647CD231A1CECA6A /* JPVideoPlayerCachePathTool.h in Headers */,
+				4687251C593DE8655F63EF3EC7430CA1 /* JPVideoPlayerCompat.h in Headers */,
+				BBD6680F82FFB350E1FEFA88D43E0A06 /* JPVideoPlayerDownloader.h in Headers */,
+				62ADEB0AC85852F5E9C67CA8F657A50A /* JPVideoPlayerDownloaderOperation.h in Headers */,
+				CD5E9EE35C0F34B0F6F46E12854695D9 /* JPVideoPlayerManager.h in Headers */,
+				B5FBA2A213E14D09899C451FEE3A5921 /* JPVideoPlayerOperation.h in Headers */,
+				ECF5F96B399E2665B7973FBFBC0F1137 /* JPVideoPlayerPlayVideoTool.h in Headers */,
+				759E11DC1278B342DE8E1213B0AAFBF1 /* JPVideoPlayerProgressView.h in Headers */,
+				1FEE75A174537A0227A9AE2D7A2B9B33 /* JPVideoPlayerResourceLoader.h in Headers */,
+				E41D4D5BC00857DB6EBB4D86DA5CF495 /* NSURL+QueryStrip.h in Headers */,
+				E6190511850A51C5A4A0287F08FC7822 /* UIView+PlayerStatusAndDownloadIndicator.h in Headers */,
+				D57C47ADD9325CE9EA54A075B729163B /* UIView+WebVideoCache.h in Headers */,
+				4824A11D4915B913146DFA5EBF0C023F /* UIView+WebVideoCacheOperation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,6 +490,23 @@
 			productReference = 6B2D1EC89625083E36B6747AD2FA55FB /* JPNavigationController.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		3993D78FE510A0A5C7B84507B4557EC4 /* JPVideoPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEB0329418C30801F789E62575047BA3 /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */;
+			buildPhases = (
+				3D706ED6D36C7E71CF7B760E31149605 /* Sources */,
+				DD585ED3D725F4B62A3CC3C6764DBF04 /* Frameworks */,
+				AEBC9FA401A1144783D535517A3AE0AD /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JPVideoPlayer;
+			productName = JPVideoPlayer;
+			productReference = 05BF1837B0CAEEE35BE3E9D500A5352A /* JPVideoPlayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		D5630C38511D6B4C922775C2D4267A13 /* Pods-JPVideoPlayerDemo_swift */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 52B10F13B1E3C87C2BFA66E1BAD5B075 /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo_swift" */;
@@ -514,23 +524,6 @@
 			name = "Pods-JPVideoPlayerDemo_swift";
 			productName = "Pods-JPVideoPlayerDemo_swift";
 			productReference = A6AE1BDD96E5BD436D267A2852AD2C17 /* Pods_JPVideoPlayerDemo_swift.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		FE28069F897636A6D118D6363D2350C8 /* JPVideoPlayer */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5BEC6EB7CC0DD56096349E659A0B4A0E /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */;
-			buildPhases = (
-				4B019FEAE5930D2FF3BDA91E6F046440 /* Sources */,
-				A467BD58F5CE774CA8CC66ABF37D50ED /* Frameworks */,
-				A31B68D0531AEF50F5BDFE871FBE7012 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = JPVideoPlayer;
-			productName = JPVideoPlayer;
-			productReference = 05BF1837B0CAEEE35BE3E9D500A5352A /* JPVideoPlayer.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -555,7 +548,7 @@
 			projectRoot = "";
 			targets = (
 				2E45148549DF796F105BF0C2140F9119 /* JPNavigationController */,
-				FE28069F897636A6D118D6363D2350C8 /* JPVideoPlayer */,
+				3993D78FE510A0A5C7B84507B4557EC4 /* JPVideoPlayer */,
 				D5630C38511D6B4C922775C2D4267A13 /* Pods-JPVideoPlayerDemo_swift */,
 			);
 		};
@@ -573,26 +566,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4B019FEAE5930D2FF3BDA91E6F046440 /* Sources */ = {
+		3D706ED6D36C7E71CF7B760E31149605 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C09A8D5B81F30EC3A5E48817FD2FB2 /* JPVideoPlayer-dummy.m in Sources */,
-				7C8FD8EAA0AC02E6951C6A4973FE4ABC /* JPVideoPlayerActivityIndicator.m in Sources */,
-				FFA6D192FC7589B9F7C60FCF7FA4FDB1 /* JPVideoPlayerCache.m in Sources */,
-				234F13F35811997A429323E143775856 /* JPVideoPlayerCacheConfig.m in Sources */,
-				EDD87F24532C4945786800A2B50DCA7B /* JPVideoPlayerCachePathTool.m in Sources */,
-				E2FCBCF56EA03E69646BC41D3D3C8F92 /* JPVideoPlayerDownloader.m in Sources */,
-				4C2806FE3E48D1544609AA7F6E5B72BC /* JPVideoPlayerDownloaderOperation.m in Sources */,
-				A692C91384D79B117500FBD491A2B641 /* JPVideoPlayerManager.m in Sources */,
-				3D0FDEAD34A781122BA936384CDB3F1E /* JPVideoPlayerPlayVideoTool.m in Sources */,
-				3799FE1B19FC2DFA40229BE69745D42F /* JPVideoPlayerProgressView.m in Sources */,
-				0ACBE68DC549F273F8A20138D80DFBBF /* JPVideoPlayerResourceLoader.m in Sources */,
-				A811C72CF7D13A8099C14ED5FCA1446B /* JPVideoPlayerSwizzle.m in Sources */,
-				2F9202C73E6E1D9F4CD7C7BB18917696 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
-				857762E9DDF49143A8BFE6BB80D1F771 /* UIView+WebVideoCache.m in Sources */,
-				FBC14055CDD4EB9F112E52E614B17119 /* UIView+WebVideoCacheOperation.m in Sources */,
-				F40AE66311F50BDA225B396F667052A6 /* UIViewController+Landscape.m in Sources */,
+				0BAC3A51C8B23664E50551E763D1704A /* JPVideoPlayer-dummy.m in Sources */,
+				0DD8737D1C8D05CED830C4A7DCC3CDC7 /* JPVideoPlayerActivityIndicator.m in Sources */,
+				6666EE1D663C657D6AF0F2764D63E23E /* JPVideoPlayerCache.m in Sources */,
+				EC8AC6B5763F66C026FF4AEDAA57B6F3 /* JPVideoPlayerCacheConfig.m in Sources */,
+				03F0A1E3446A48196FD38B798AC028FC /* JPVideoPlayerCachePathTool.m in Sources */,
+				75B17D74AF677C4CD88D62FD96F9534D /* JPVideoPlayerDownloader.m in Sources */,
+				9E60CA2B9529359AE69C3897938E4FBF /* JPVideoPlayerDownloaderOperation.m in Sources */,
+				EA74C017EB26EA3355A8B3C98035B91A /* JPVideoPlayerManager.m in Sources */,
+				2938EC4C8A2A115BF1A4DB56E4CCED97 /* JPVideoPlayerPlayVideoTool.m in Sources */,
+				6B0CE07A3E0A4113BC277B90D8F2E74C /* JPVideoPlayerProgressView.m in Sources */,
+				60B65AEC8AD9C0E85DF55BE614853B6E /* JPVideoPlayerResourceLoader.m in Sources */,
+				5EF47AE15F3BD0263D1207D9B84C8591 /* NSURL+QueryStrip.m in Sources */,
+				B7AA62460DDC44C1FF444B329ECDCE8F /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */,
+				5BBA799C72FD30C339E2BB50B201A45C /* UIView+WebVideoCache.m in Sources */,
+				6C238CAA85CCBEF060DD80F92D3D47E4 /* UIView+WebVideoCacheOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,7 +628,7 @@
 		2195B1C114D925462A7DDAEE7F48E2A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = JPVideoPlayer;
-			target = FE28069F897636A6D118D6363D2350C8 /* JPVideoPlayer */;
+			target = 3993D78FE510A0A5C7B84507B4557EC4 /* JPVideoPlayer */;
 			targetProxy = E50B09887FF66098EE5EFCE92A50C057 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -686,9 +678,41 @@
 			};
 			name = Debug;
 		};
+		1FB920253B55772A78FC041DB6E484E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BE17C3A4BF34B4FEC2026A8B2397B4C /* JPVideoPlayer.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/JPVideoPlayer/JPVideoPlayer-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JPVideoPlayer/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JPVideoPlayer/JPVideoPlayer.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = JPVideoPlayer;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		253614A4416E903ABA46324C51AFFDF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 11DED140901E447763B5DBF5CF7DE75B /* JPNavigationController.xcconfig */;
+			baseConfigurationReference = CC8DD61E8CE346AE239B02336422D51F /* JPNavigationController.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -793,9 +817,9 @@
 			};
 			name = Release;
 		};
-		981AC4F73B5F3F4D7CF9E1ED70A9E770 /* Debug */ = {
+		93E9810CA67620497D9C710DB324F36C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEECBF1FE247691B068B74320D0C78F5 /* JPVideoPlayer.xcconfig */;
+			baseConfigurationReference = 5BE17C3A4BF34B4FEC2026A8B2397B4C /* JPVideoPlayer.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -824,38 +848,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		D9C1642FD989E3F9504B5AB622B2B2A3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEECBF1FE247691B068B74320D0C78F5 /* JPVideoPlayer.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/JPVideoPlayer/JPVideoPlayer-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JPVideoPlayer/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JPVideoPlayer/JPVideoPlayer.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = JPVideoPlayer;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		DC9982902554B9601885BBCA7677AA24 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -894,7 +886,7 @@
 		};
 		E7258157EAAF65F475EA79F1F4DA0A7C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 11DED140901E447763B5DBF5CF7DE75B /* JPNavigationController.xcconfig */;
+			baseConfigurationReference = CC8DD61E8CE346AE239B02336422D51F /* JPNavigationController.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -945,20 +937,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5BEC6EB7CC0DD56096349E659A0B4A0E /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				981AC4F73B5F3F4D7CF9E1ED70A9E770 /* Debug */,
-				D9C1642FD989E3F9504B5AB622B2B2A3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		D3DCD8AA7F4D09A66792A7E651BF6471 /* Build configuration list for PBXNativeTarget "JPNavigationController" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E7258157EAAF65F475EA79F1F4DA0A7C /* Debug */,
 				253614A4416E903ABA46324C51AFFDF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEB0329418C30801F789E62575047BA3 /* Build configuration list for PBXNativeTarget "JPVideoPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93E9810CA67620497D9C710DB324F36C /* Debug */,
+				1FB920253B55772A78FC041DB6E484E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
