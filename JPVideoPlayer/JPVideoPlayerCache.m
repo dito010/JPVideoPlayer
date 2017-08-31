@@ -464,7 +464,7 @@
             
             NSDirectoryEnumerator *fileEnumerator_full = [_fileManager enumeratorAtPath:fullFilePath];
             for (NSString *fileName in fileEnumerator_full) {
-                NSString *filePath = [tempFilePath stringByAppendingPathComponent:fileName];
+                NSString *filePath = [fullFilePath stringByAppendingPathComponent:fileName];
                 NSDictionary<NSString *, id> *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
                 size += [attrs fileSize];
             }
