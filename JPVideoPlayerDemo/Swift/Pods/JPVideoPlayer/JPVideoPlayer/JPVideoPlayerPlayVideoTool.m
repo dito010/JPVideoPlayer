@@ -356,24 +356,24 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         if (self.playVideoItems)
             [self.playVideoItems removeAllObjects];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-        [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusStop];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+        [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusStop];
     }
 }
 
 - (void)pause{
     [self.currentPlayVideoItem pausePlayVideo];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-        [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPause];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+        [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPause];
     }
 }
 
 - (void)resume{
     [self.currentPlayVideoItem resumePlayVideo];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-        [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPlaying];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+        [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPlaying];
     }
 }
 
@@ -399,8 +399,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         self.playingStatus_beforeEnterBackground = self.currentPlayVideoItem.unownShowView.playingStatus;
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-        [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPause];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+        [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPause];
     }
 }
 
@@ -409,15 +409,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (self.currentPlayVideoItem.unownShowView && (self.playingStatus_beforeEnterBackground == JPVideoPlayerPlayingStatusPlaying)) {
         [self.currentPlayVideoItem resumePlayVideo];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-            [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPlaying];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+            [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPlaying];
         }
     }
     else{
         [self.currentPlayVideoItem pausePlayVideo];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-            [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPause];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+            [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPause];
         }
     }
 }
@@ -443,8 +443,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         self.currentPlayVideoItem.lastTime = 0;
         [strong_Item.player play];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-            [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPlaying];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+            [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPlaying];
         }
     }];
 }
@@ -455,8 +455,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
             case AVPlayerItemStatusUnknown:{
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-                    [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusUnkown];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+                    [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusUnkown];
                 }
             }
                 break;
@@ -471,8 +471,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 
                 [self displayVideoPicturesOnShowLayer];
                 
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-                    [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPlaying];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+                    [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPlaying];
                 }
             }
                 break;
@@ -482,8 +482,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 
                 if (self.currentPlayVideoItem.error) self.currentPlayVideoItem.error([NSError errorWithDomain:@"Some errors happen on player" code:0 userInfo:nil]);
                 
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-                    [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusFailed];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+                    [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusFailed];
                 }
             }
                 break;
@@ -502,15 +502,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             [self hideActivaityIndicatorView];
             self.currentPlayVideoItem.lastTime = currentTime;
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-                [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusPlaying];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+                [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusPlaying];
             }
         }
         else{
             [self showActivaityIndicatorView];
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {
-                [self.delegate playVideoTool:self playingStatuDidChanged:JPVideoPlayerPlayingStatusBuffering];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatusDidChanged:)]) {
+                [self.delegate playVideoTool:self playingStatusDidChanged:JPVideoPlayerPlayingStatusBuffering];
             }
         }
     }

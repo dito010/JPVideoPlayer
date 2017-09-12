@@ -52,7 +52,7 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
  * @param videoTool     the current `JPVideoPlayerPlayVideoTool`.
  * @param playingStatus the current playing status.
  */
-- (void)playVideoTool:(nonnull JPVideoPlayerPlayVideoTool *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)playVideoTool:(nonnull JPVideoPlayerPlayVideoTool *)videoTool playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
 
 @end
 
