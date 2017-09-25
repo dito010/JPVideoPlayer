@@ -4,7 +4,7 @@
 <img src="Images/logo.png" title="JPNavigationController logo" float=left>
 </p>
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/pod-2.0.0-green.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/pod-2.1.0-green.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 ![pod](https://img.shields.io/travis/rust-lang/rust/master.svg)
 
 This library provides an fullScreen pop and push gesture for UINavigationController with customize UINavigationBar for each single support and, smooth playing video use `AVPlayer` when perform pop gesture support. 
@@ -34,9 +34,10 @@ This library provides an fullScreen pop and push gesture for UINavigationControl
 
 ## Getting Started
 
-- Read the [[iOS]UINavigationController全屏pop之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
-- Read the [[iOS]UINavigationController全屏pop之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
-- Read the [[iOS]UINavigationController全屏pop之为控制器添加左滑push](http://www.jianshu.com/p/ff68b5e646fc)
+- Read the [[iOS]UINavigationController全屏 pop 之为每个控制器自定义 UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
+- Read the [[iOS]UINavigationController全屏 pop 之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
+- Read the [[iOS]UINavigationController全屏 pop 之为控制器添加左滑 push](http://www.jianshu.com/p/ff68b5e646fc)
+- Read the [[iOS]调和 pop 手势导致 AVPlayer 播放卡顿](http://www.jianshu.com/p/be02059b9e6a)
 - Try the example by downloading the project from Github
 
 
@@ -111,7 +112,7 @@ if (vc) {
 ```
 
 
-#### Customize UINavigationBar
+#### Custom UINavigationBar
 
 ```objective-c
 Objective-C:
@@ -200,8 +201,8 @@ There are two ways to use JPNavigationController in your project:
 #### Podfile
 ```
 platform :ios, '8.0'
-target “YourProjectName” do
-pod 'JPNavigationController', '~> 2.0.0'
+target "YourProjectName" do
+pod 'JPNavigationController', '~> 2.1.0'
 end
 ```
 
@@ -235,9 +236,11 @@ All source code is licensed under the [MIT License](https://github.com/newyjp/JP
 
 ## 了解实现思路和源码解析
 
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
-- 阅读我的简书文章 [[iOS]UINavigationController全屏pop之为控制器添加左滑push](http://www.jianshu.com/p/ff68b5e646fc)
+- 阅读我的简书文章 [[iOS]UINavigationController全屏 pop 之为每个控制器自定义UINavigationBar](http://www.jianshu.com/p/88bc827f0692)
+- 阅读我的简书文章 [[iOS]UINavigationController 全屏 pop 之为每个控制器添加底部联动视图](http://www.jianshu.com/p/3ed21414551a)
+- 阅读我的简书文章 [[iOS]UINavigationController全屏 pop 之为控制器添加左滑 push](http://www.jianshu.com/p/ff68b5e646fc)
+- 阅读我的简书文章 [[iOS]调和 pop 手势导致 AVPlayer 播放卡顿](http://www.jianshu.com/p/be02059b9e6a)
+
 - 下载我Github上的demo
 
 
@@ -399,8 +402,8 @@ self.navigationController.jp_useCustomPopAnimationForCurrentViewController = YES
 #### Podfile
 ```
 platform :ios, '8.0'
-target “YourProjectName” do
-pod 'JPNavigationController', '~> 2.0.0'
+target "YourProjectName" do
+pod 'JPNavigationController', '~> 2.1.0'
 end
 ```
 

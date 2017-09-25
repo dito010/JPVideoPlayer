@@ -17,7 +17,7 @@
 #import "UINavigationController+FulllScreenPopPush.h"
 #import "JPNavigationControllerCompat.h"
 #import "UIView+ScreenCapture.h"
-#import "JPNavigationBar.h"
+#import "UINavigationBar+HitTest.h"
 
 @interface JPWarpNavigationController ()
 
@@ -50,10 +50,6 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
     
     // default color for navigation bar.
     [self.navigationBar setBackgroundImage:[[UIColor whiteColor] jp_image] forBarMetrics:UIBarMetricsDefault];
-    
-    // Replace system's NavigationBar with custom NavigationBar.
-    JPNavigationBar *customNavBar = [[JPNavigationBar alloc]init];
-    [self setValue:customNavBar forKey:@"navigationBar"];
 }
 
 - (UIViewController *)childViewControllerForStatusBarStyle{
@@ -255,8 +251,13 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
 - (JPLinkContainerView *)linkContainerView{
     if (!_linkContainerView) {
         _linkContainerView = [JPLinkContainerView new];
-        _linkContainerView.backgroundColor = [UIColor clearColor];
-        _linkContainerView.frame = CGRectMake(0, JPScreenH - self.linkViewHeight - 20.f, JPScreenW, self.linkViewHeight);
+        _linkContainerView.backgroundColor = self.linkView.backgroundColor;
+        
+        // height == 812 is iPhone X.
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        CGFloat statusBarHeight = (NSInteger)screenSize.height == 812 ? 44.f : 20.f;
+        CGFloat bottomSafeAreaHeight = (NSInteger)screenSize.height == 812 ? 34.f : 0.f;
+        _linkContainerView.frame = CGRectMake(0, JPScreenH - self.linkViewHeight - statusBarHeight - bottomSafeAreaHeight, JPScreenW, self.linkViewHeight + bottomSafeAreaHeight);
         [self.navigationBar addSubview:_linkContainerView];
     }
     return _linkContainerView;

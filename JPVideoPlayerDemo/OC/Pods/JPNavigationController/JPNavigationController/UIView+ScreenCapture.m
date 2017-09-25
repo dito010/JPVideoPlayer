@@ -16,7 +16,7 @@
 
 - (UIImage *)jp_captureCurrentView{
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0);
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
+    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;

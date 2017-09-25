@@ -80,6 +80,7 @@ const CGFloat kJPWarpViewControllerInterlaceFactor = 0.3;
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    _warpedNavigationController.view.frame = self.view.bounds;
     [self.view addSubview:_warpedNavigationController.view];
     _transitionType = JPNavigationControllerTransitionTypeNone;
 }

@@ -9,15 +9,23 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-#import "JPNavigationBar.h"
+#import "UINavigationBar+HitTest.h"
+#import <objc/runtime.h>
 
 @implementation JPLinkContainerView
 
 @end
 
-@implementation JPNavigationBar
+@implementation UINavigationBar (HitTest)
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
++ (void)load {
+    Method cus = class_getInstanceMethod(self, @selector(jp_hitTest:withEvent:));
+    Method sys = class_getInstanceMethod(self, @selector(hitTest:withEvent:));
+    
+    method_exchangeImplementations(sys, cus);
+}
+
+- (UIView *)jp_hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     
     __block JPLinkContainerView *linkView;
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -35,7 +43,7 @@
         return [linkView hitTest:viewP withEvent:event];
     }
     else{
-        return  [super hitTest:point withEvent:event];
+        return  [self jp_hitTest:point withEvent:event];
     }
 }
 
