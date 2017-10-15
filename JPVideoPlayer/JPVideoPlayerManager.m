@@ -349,7 +349,7 @@
                         __strong __typeof(weakOperation) strongOperation = weakOperation;
                         [self safelyRemoveOperationFromRunning:strongOperation];
                     };
-                }];
+                 }];
             }
             else if(videoPath){
                 // full video cache file in disk.
@@ -378,7 +378,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                         if (needDisplayProgressView) {
-                            [showView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
+                            [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
                         }
 #pragma clang diagnostic pop
                     } error:^(NSError * _Nullable error) {
