@@ -88,7 +88,6 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 
 @end
 
-#define JPLog(FORMAT, ...); fprintf(stderr,"%s\n",[[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 static NSString *JPVideoPlayerURLScheme = @"SystemCannotRecognition";
 static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @implementation JPVideoPlayerPlayVideoToolItem
@@ -496,7 +495,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         // else if the player time plus than before, it means begain play.
         // fixed #28.
         NSTimeInterval currentTime = CMTimeGetSeconds(self.currentPlayVideoItem.player.currentTime);
-        // JPLog(@"%f", currentTime)
         
         if (currentTime != 0 && currentTime > self.currentPlayVideoItem.lastTime) {
             [self hideActivaityIndicatorView];
