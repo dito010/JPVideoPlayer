@@ -18,9 +18,3 @@
     dispatch_async(dispatch_get_main_queue(), block);\
     }
 #endif
-
-#ifdef DEBUG
-#define JPLog(FORMAT, ...); fprintf(stderr,"%s\n",[[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
-#else
-#define JPLog(...);
-#endif
