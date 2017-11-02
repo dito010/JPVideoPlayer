@@ -10,8 +10,6 @@
 
 @class JPVideoPlayerDemoCell;
 
-UIKIT_EXTERN CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei; // 导航栏和状态栏高度总和.
-UIKIT_EXTERN CGFloat const JPVideoPlayerDemoTabbarHei; // tabbar 高度.
 #define JPVideoPlayerDemoRowHei ([UIScreen mainScreen].bounds.size.width*9.0/16.0)
 
 /*
@@ -49,6 +47,12 @@ typedef NS_ENUM(NSUInteger, JPVideoPlayerDemoScrollDerection) {
  * 滑动不可及cell字典.
  */
 @property(nonatomic, nonnull)NSDictionary *dictOfVisiableAndNotPlayCells;
+
+/*
+ * tabBarHeight.
+ */
+@property(nonatomic) CGFloat tabBarHeight;
+
 
 - (void)playVideoInVisiableCells;
 

@@ -149,7 +149,7 @@
     
     __weak typeof(showView) wShowView = showView;
     if (isFileURL) {
-        
+#pragma mark - Local File
         // hide activity view.
         [self hideActivityViewWithURL:url options:options];
         
@@ -241,6 +241,7 @@
                                 if (progressBlock) {
                                     progressBlock(data, storedSize, expectedSize, tempVideoCachedPath, targetURL);
                                 }
+#pragma mark - Play video from web
                                 { // play video from web.
                                     if (![JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem) {
                                         __strong typeof(wShowView) sShowView = wShowView;
@@ -279,6 +280,7 @@
                                 }
                             }
                             else{
+#pragma mark - Cache Finished.
                                 // cache finished, and move the full video file from temporary path to full path.
                                 [[JPVideoPlayerPlayVideoTool sharedTool] didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
                                 [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:fullVideoCachePath error:nil cacheType:JPVideoPlayerCacheTypeNone url:url];
@@ -352,6 +354,7 @@
                  }];
             }
             else if(videoPath){
+#pragma mark - Full video cache file in disk
                 // full video cache file in disk.
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                 

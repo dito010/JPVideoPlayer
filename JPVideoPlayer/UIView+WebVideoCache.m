@@ -29,6 +29,11 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
  */
 @property(nonatomic)NSValue *frame_beforeFullScreen;
 
+/*
+ * containerView.
+ */
+@property(nonatomic) UIView *containerView;
+
 @end
 
 @implementation UIView (WebVideoCache)
@@ -70,6 +75,9 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self performSelector:NSSelectorFromString(@"jp_setupVideoLayerViewAndIndicatorView")];
 #pragma clang diagnostic pop
+        self.containerView = [[UIView alloc] initWithFrame:self.bounds];
+        [self insertSubview:self.containerView atIndex:0];
+        self.containerView.backgroundColor = [UIColor clearColor];
         
         id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] loadVideoWithURL:url showOnView:self options:options progress:progressBlock completed:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
             __strong __typeof (wself) sself = wself;
@@ -131,6 +139,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
         return;
     }
     
+    self.containerView.backgroundColor = [UIColor blackColor];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // hide status bar.
@@ -190,6 +199,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
         return;
     }
     
+    self.containerView.backgroundColor = [UIColor clearColor];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // display status bar.
@@ -251,6 +261,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
     self.transform = CGAffineTransformIdentity;
     self.frame = frame;
     
+    self.containerView.frame = self.bounds;
     self.jp_backgroundLayer.frame = self.bounds;
     [JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
@@ -269,6 +280,7 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
     self.bounds = bounds;
     self.center = center;
     
+    self.containerView.frame = bounds;
     self.jp_backgroundLayer.frame = bounds;
     [JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
     self.jp_videoLayerView.frame = bounds;
@@ -332,6 +344,14 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
         return __weak_object;
     };
     objc_setAssociatedObject(self, @selector(jp_videoPlayerDelegate),   __weak_block, OBJC_ASSOCIATION_COPY);
+}
+
+- (void)setContainerView:(UIView *)containerView {
+    objc_setAssociatedObject(self, @selector(containerView), containerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)containerView {
+    return objc_getAssociatedObject(self, _cmd);
 }
 
 

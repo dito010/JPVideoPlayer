@@ -11,13 +11,9 @@
 #import <objc/runtime.h>
 #import "UIView+WebVideoCache.h"
 
-
-CGFloat const JPVideoPlayerDemoNavAndStatusTotalHei = 64;
-CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 @implementation UITableView (VideoPlay)
 
 - (void)playVideoInVisiableCells{
-    
     NSArray *visiableCells = [self visibleCells];
     
     // Find first cell need play video in visiable cells.
@@ -93,9 +89,10 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
     NSArray *visiableCells = [self visibleCells];
     CGFloat gap = MAXFLOAT;
     
+    CGFloat navAndStatusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + 44.f;
     CGRect windowRect = [UIScreen mainScreen].bounds;
-    windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
-    windowRect.size.height -= (JPVideoPlayerDemoNavAndStatusTotalHei + JPVideoPlayerDemoTabbarHei);
+    windowRect.origin.y = navAndStatusBarHeight;
+    windowRect.size.height -= (navAndStatusBarHeight + self.tabBarHeight);
     
     for (JPVideoPlayerDemoCell *cell in visiableCells) {
         
@@ -139,7 +136,7 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
                 }
                 else{
                     CGPoint coorCentre = [cell.superview convertPoint:cell.center toView:nil];
-                    CGFloat delta = fabs(coorCentre.y-JPVideoPlayerDemoNavAndStatusTotalHei-windowRect.size.height*0.5);
+                    CGFloat delta = fabs(coorCentre.y - navAndStatusBarHeight - windowRect.size.height*0.5);
                     if (delta < gap) {
                         gap = delta;
                         finnalCell = cell;
@@ -155,8 +152,9 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
 - (BOOL)playingCellIsVisiable{
     CGRect windowRect = [UIScreen mainScreen].bounds;
     // because have UINavigationBar here.
-    windowRect.origin.y = JPVideoPlayerDemoNavAndStatusTotalHei;
-    windowRect.size.height -= JPVideoPlayerDemoNavAndStatusTotalHei;
+    CGFloat navAndStatusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + 44.f;
+    windowRect.origin.y = navAndStatusBarHeight;
+    windowRect.size.height -= navAndStatusBarHeight;
     
     if (self.currentDerection==JPVideoPlayerDemoScrollDerectionUp) { // 向上滚动
         CGPoint cellLeftUpPoint = self.playingCell.frame.origin;
@@ -251,6 +249,14 @@ CGFloat const JPVideoPlayerDemoTabbarHei = 49;
         objc_setAssociatedObject(self, @selector(setDictOfVisiableAndNotPlayCells:), dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return dict;
+}
+
+- (void)setTabBarHeight:(CGFloat)tabBarHeight {
+    objc_setAssociatedObject(self, @selector(tabBarHeight), @(tabBarHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)tabBarHeight {
+    return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
 @end

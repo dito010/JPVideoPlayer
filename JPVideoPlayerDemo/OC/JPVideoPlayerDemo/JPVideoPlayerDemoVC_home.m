@@ -47,7 +47,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [super viewDidLoad];
     
     [self setup];
-    
     [self insertLineInScreenCenter];
 }
 
@@ -179,22 +178,26 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)setup{
     // 自定义导航栏
     UIImageView *navBarImageView = [UIImageView new];
-    navBarImageView.image = [UIImage imageNamed:@"navbar"];
-    navBarImageView.frame = CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, JPVideoPlayerDemoNavAndStatusTotalHei);
+    UIImage *navImage = [UIImage imageNamed:@"navbar"];
+    navBarImageView.image = navImage;
+    navBarImageView.frame = CGRectMake(0, -navImage.size.height + 44.f, [UIScreen mainScreen].bounds.size.width, navImage.size.height);
     [self.navigationController.navigationBar addSubview:navBarImageView];
-    
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerDemoCell class]) bundle:nil] forCellReuseIdentifier:JPVideoPlayerDemoReuseID];
+    self.tableView.tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
     
     // location file in disk.
     // 本地视频播放.
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
                          // location video path.
                          url.absoluteString,
+                         
+                         @"http://ac-qguazwk4.clouddn.com/936ab1cda3fab48f1aad.mp4",
                          
                          // This url will redirect.
                          @"http://v.polyv.net/uc/video/getMp4?vid=9c9f71f62d5f24a7f9c6273e469a71a0_9",
@@ -250,20 +253,22 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 - (UIView *)tableViewRange{
+    CGFloat navAndStatusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.bounds.size.height;
+    CGFloat tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
     if (!_tableViewRange) {
         _tableViewRange = [UIView new];
         _tableViewRange.userInteractionEnabled = NO;
         CGSize screenSize = [UIScreen mainScreen].bounds.size;
         _tableViewRange.backgroundColor = [UIColor clearColor];
-        _tableViewRange.frame = CGRectMake(0, JPVideoPlayerDemoNavAndStatusTotalHei, screenSize.width, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei);
+        _tableViewRange.frame = CGRectMake(0, navAndStatusBarHeight, screenSize.width, screenSize.height -  navAndStatusBarHeight - tabBarHeight);
         _tableViewRange.hidden = YES;
         
         UIBezierPath *linePath1 = [UIBezierPath bezierPath];
         {
             [linePath1 moveToPoint:CGPointMake(1, 1)];
             [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, 1)];
-            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1)];
-            [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1)];
+            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, screenSize.height-navAndStatusBarHeight-tabBarHeight-1)];
+            [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-navAndStatusBarHeight-tabBarHeight-1)];
             [linePath1 addLineToPoint:CGPointMake(1, 1)];
         }
         
@@ -283,8 +288,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
         
         UIBezierPath *linePath2 = [UIBezierPath bezierPath];
         {
-            [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1))];
-            [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-JPVideoPlayerDemoNavAndStatusTotalHei-JPVideoPlayerDemoTabbarHei-1))];
+            [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
+            [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
         }
         
         CAShapeLayer *layer2 = [CAShapeLayer layer];
