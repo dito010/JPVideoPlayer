@@ -39,7 +39,7 @@ typedef void(^JPVideoPlayerCheckCacheCompletionBlock)(BOOL isInDiskCache);
 
 typedef void(^JPVideoPlayerCalculateSizeBlock)(NSUInteger fileCount, NSUInteger totalSize);
 
-typedef void(^JPVideoPlayerNoParamsBlock)();
+typedef void(^JPVideoPlayerNoParamsBlock)(void);
 
 typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSError * _Nullable error, NSString * _Nullable fullVideoCachePath);
 

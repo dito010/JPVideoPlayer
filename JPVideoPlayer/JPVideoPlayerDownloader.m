@@ -151,7 +151,7 @@
 
 #pragma mark - Private
 
-- (nullable JPVideoPlayerDownloadToken *)addProgressCallback:(JPVideoPlayerDownloaderProgressBlock)progressBlock completedBlock:(JPVideoPlayerDownloaderErrorBlock)errorBlock forURL:(nullable NSURL *)url createCallback:(JPVideoPlayerDownloaderOperation *(^)())createCallback {
+- (nullable JPVideoPlayerDownloadToken *)addProgressCallback:(JPVideoPlayerDownloaderProgressBlock)progressBlock completedBlock:(JPVideoPlayerDownloaderErrorBlock)errorBlock forURL:(nullable NSURL *)url createCallback:(JPVideoPlayerDownloaderOperation *(^)(void))createCallback {
     
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil. If it is nil immediately call the completed block with no video or data.
     if (url == nil) {

@@ -75,11 +75,11 @@
 		7E5B49DA9ECFBD3AFCA3C3F63D56DB86 /* JPWarpViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpViewController.h; path = JPNavigationController/JPWarpViewController.h; sourceTree = "<group>"; };
 		86CFCE68FF5A2F036112D93BAB5D3352 /* JPNavigationController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPNavigationController-dummy.m"; sourceTree = "<group>"; };
 		938C6819ED29F581BA50870024B1DBF0 /* Pods-JPVideoPlayerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9B27FEA91C3FBC9A75A8F49F2FB5D4FC /* JPNavigationControllerGestureRecognizer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerGestureRecognizer.m; path = JPNavigationController/JPNavigationControllerGestureRecognizer.m; sourceTree = "<group>"; };
 		A5443760E7317933C26799F5EC9F3A47 /* JPPushAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPPushAnimationTransition.m; path = JPNavigationController/JPPushAnimationTransition.m; sourceTree = "<group>"; };
 		AD7F5A3300762A7C3B41C1803E8D7B98 /* Pods-JPVideoPlayerDemo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JPVideoPlayerDemo-acknowledgements.markdown"; sourceTree = "<group>"; };
-		AFD8C227ED35DADF2E206150209CFAA2 /* libJPNavigationController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libJPNavigationController.a; path = libJPNavigationController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AFD8C227ED35DADF2E206150209CFAA2 /* libJPNavigationController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJPNavigationController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B098FC7A6302C741FC803FAE22776A9B /* UINavigationBar+HitTest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+HitTest.h"; path = "JPNavigationController/UINavigationBar+HitTest.h"; sourceTree = "<group>"; };
 		B4D2A5B8B2F56DB657FB61C0BA949784 /* JPBaseAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPBaseAnimationTransition.m; path = JPNavigationController/JPBaseAnimationTransition.m; sourceTree = "<group>"; };
 		B59D9EDD32E5CD2169BCE087AB85B4FF /* JPNavigationControllerKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerKit.h; path = JPNavigationController/JPNavigationControllerKit.h; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 		E19EEDF9A3B516F0ECB9275DB3D1AF08 /* UINavigationController+FulllScreenPopPush.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FulllScreenPopPush.h"; path = "JPNavigationController/UINavigationController+FulllScreenPopPush.h"; sourceTree = "<group>"; };
 		E671CE415B51483261C1B213B2AFF4E9 /* JPNavigationControllerGestureRecognizer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerGestureRecognizer.h; path = JPNavigationController/JPNavigationControllerGestureRecognizer.h; sourceTree = "<group>"; };
 		E81D59866D297BC34DEC605D096FFD10 /* JPBaseAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPBaseAnimationTransition.h; path = JPNavigationController/JPBaseAnimationTransition.h; sourceTree = "<group>"; };
-		EA89E73F44EFE9E5CDD66F4F83F84ADB /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-JPVideoPlayerDemo.a"; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA89E73F44EFE9E5CDD66F4F83F84ADB /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F290204D8D9AA506BFE9B7B1F76271EE /* Pods-JPVideoPlayerDemo-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo-resources.sh"; sourceTree = "<group>"; };
 		F62DF44C5B1FC87F090937A0AF11182A /* UIColor+ImageGenerate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ImageGenerate.m"; path = "JPNavigationController/UIColor+ImageGenerate.m"; sourceTree = "<group>"; };
 		F76771709F6A4F31200174F31F948520 /* JPNavigationControllerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerCompat.h; path = JPNavigationController/JPNavigationControllerCompat.h; sourceTree = "<group>"; };
@@ -199,7 +199,6 @@
 				9ED737AE094936A622DAEC1440B23227 /* Resources */,
 				4BB70C382E108D8DA6553022D68C781B /* Support Files */,
 			);
-			name = JPNavigationController;
 			path = JPNavigationController;
 			sourceTree = "<group>";
 		};
@@ -315,7 +314,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0910;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -386,7 +385,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -394,15 +395,21 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_DEBUG=1",
@@ -435,7 +442,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -443,14 +452,20 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_RELEASE=1",
 					"$(inherited)",
