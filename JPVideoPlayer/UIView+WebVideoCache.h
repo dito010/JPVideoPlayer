@@ -157,16 +157,16 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param options        The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
  * @param progressBlock  A block called while video is downloading.
  *                       @note the progress block is executed on a background queue.
- * @param completedBlock A block called when operation has been completed. This block has no return value 
+ * @param completedBlock A block called when operation has been completed. This block has no return value
  *   and takes the requested video temporary cache path as first parameter. In case of error the fullCacheVideoPath parameter
  *                       is nil and the second parameter may contain an NSError. The third parameter is a enum
  *                       indicating if the video was retrieved from the local cache or from the network.
  *                       The fourth parameter is the original image url.
  */
 - (void)jp_playVideoWithURL:(nullable NSURL *)url
-                           options:(JPVideoPlayerOptions)options
-                          progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
-                         completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+                    options:(JPVideoPlayerOptions)options
+                   progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
+                  completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
 
 #pragma mark - Play Control
 

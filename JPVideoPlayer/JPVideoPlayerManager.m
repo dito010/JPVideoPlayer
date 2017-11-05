@@ -264,7 +264,8 @@
                                             if (error) {
                                                 if (completedBlock) {
                                                     [self callCompletionBlockForOperation:strongOperation completion:completedBlock videoPath:videoPath error:error cacheType:JPVideoPlayerCacheTypeNone url:targetURL];
-                                                    [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
+                                                    // hide indicator.
+                                                    // [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
                                                     [self safelyRemoveOperationFromRunning:operation];
                                                 }
                                             }

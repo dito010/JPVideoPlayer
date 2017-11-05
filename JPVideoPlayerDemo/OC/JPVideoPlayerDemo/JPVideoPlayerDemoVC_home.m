@@ -193,7 +193,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
-                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
                          // location video path.
                          url.absoluteString,
                          
@@ -234,14 +233,15 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          // The vertical video.
                          @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
                          
-                          @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-                          @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
-                          @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-                          @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
-                          @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
-                          @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-                          @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
-                          @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
+                         @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
+                         @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
+                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+                         @"http://static.smartisanos.cn/common/video/m1-white.mp4",
+                         @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
+                         @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
+                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+                         @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
+                         @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
                          ];
 }
 
