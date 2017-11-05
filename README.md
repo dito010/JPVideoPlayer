@@ -4,7 +4,7 @@
 </p>
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Chris-Pan/JPVideoPlayer)
-[![pod](https://img.shields.io/badge/pod-2.3.4-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) 
+[![pod](https://img.shields.io/badge/pod-2.4.0-green.svg)](https://github.com/Chris-Pan/JPVideoPlayer) 
 [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) 
 [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
 [![pod](https://img.shields.io/badge/Carthage-support-green.svg)](https://github.com/Carthage/Carthage)
@@ -178,7 +178,7 @@ There are three ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target "YourProjectName" do
-pod 'JPVideoPlayer', '~> 2.3.4'
+pod 'JPVideoPlayer', '~> 2.4.0'
 end
 ```
 
@@ -359,7 +359,7 @@ NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%
 ```
 platform :ios, '8.0'
 target "你的项目名称" do
-pod 'JPVideoPlayer', '~> 2.3.4'
+pod 'JPVideoPlayer', '~> 2.4.0'
 end
 ```
 
