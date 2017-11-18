@@ -18,6 +18,7 @@
 #import "JPWarpNavigationController.h"
 #import "JPNavigationControllerGestureRecognizer.h"
 #import "JPNavigationControllerTransition.h"
+#import "UIColor+ImageGenerate.h"
 
 @interface JPNavigationController ()
 

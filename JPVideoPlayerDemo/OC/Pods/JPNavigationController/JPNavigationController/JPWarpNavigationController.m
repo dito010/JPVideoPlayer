@@ -31,9 +31,14 @@
  */
 @property(nonatomic, strong) JPLinkContainerView *linkContainerView;
 
+/*
+ * initializedFlagOfTopViewController.
+ */
+@property(nonatomic, assign) BOOL initializedTopViewController;
+
 @end
 
-static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigationController.bundle/backImage";
+static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigationController.bundle/jp_navigation_controller_back";
 
 @implementation JPWarpNavigationController
 
@@ -50,6 +55,20 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
     
     // default color for navigation bar.
     [self.navigationBar setBackgroundImage:[[UIColor whiteColor] jp_image] forBarMetrics:UIBarMetricsDefault];
+    self.initializedTopViewController = NO;
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    NSArray<UIScrollView *> *scrollViews = [self  findAllScrollViewInView:self.topViewController.view];
+    for (UIScrollView *scrollView in scrollViews) {
+        // offset to the correct position.
+        if (!self.initializedTopViewController) {
+            [scrollView setContentOffset:CGPointMake(0, -scrollView.contentInset.top)];
+            self.initializedTopViewController = YES;
+        }
+    }
 }
 
 - (UIViewController *)childViewControllerForStatusBarStyle{
@@ -170,11 +189,7 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
 #pragma mark - Link View
 
 - (void)addLinkView{
-    
     // If jp_linkViewHeight > 0, we think have a link view in bottom.
-    // framework will check the viewController passed in by use is a class of `UITableViewController` or not, if YES, framework will add a contentInset for this viewController.
-    
-    UIViewController *childViewController = self.viewControllers.firstObject;
     if (self.linkViewHeight > 0 && self.linkView) {
         
         if (self.linkView.superview) {
@@ -183,13 +198,6 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
         
         self.linkView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.linkViewHeight);
         [self.linkContainerView addSubview:self.linkView];
-        
-        if ([childViewController isKindOfClass:[UITableViewController class]]) {
-            UITableViewController *aVc = (UITableViewController *)self.viewControllers.firstObject;
-            aVc.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.linkViewHeight, 0);
-            // for test
-            // NSLog(@"avc%@", NSStringFromUIEdgeInsets(aVc.tableView.contentInset));
-        }
     }
 }
 
@@ -210,6 +218,7 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
     
     UIImage *backImg = [[UIImage imageNamed:kJPWarpNavigationControllerBackImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(didTapBackButton)];
+    
     
     JPWarpViewController *warpViewController = [[JPWarpViewController alloc]initWithRootViewController:viewController rootNavigationController:_rootNavigationController];
     
@@ -247,6 +256,28 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
 
 
 #pragma mark - Private
+
+static NSMutableArray<UIScrollView *>*_allScrollViews;
+- (NSArray<UIScrollView *> *)findAllScrollViewInView:(UIView *)view {
+    if (!_allScrollViews) {
+        _allScrollViews = [NSMutableArray array];
+    }
+    [_allScrollViews removeAllObjects];
+    return [self internalFindAllScrollViewInView:view];
+}
+
+- (NSArray<UIScrollView *> *)internalFindAllScrollViewInView:(UIView *)view {
+    if ([view isKindOfClass:[UIScrollView class]]) {
+        [_allScrollViews addObject:(UIScrollView *)view];
+    }
+    else {
+        for (UIView *subview in view.subviews) {
+            [self internalFindAllScrollViewInView:subview];
+        }
+    }
+    
+    return _allScrollViews;
+}
 
 - (JPLinkContainerView *)linkContainerView{
     if (!_linkContainerView) {

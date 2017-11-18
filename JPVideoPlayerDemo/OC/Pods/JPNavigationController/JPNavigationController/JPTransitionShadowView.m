@@ -12,7 +12,7 @@
 #import "JPTransitionShadowView.h"
 #import "JPNavigationControllerCompat.h"
 
-static NSString *const kJPNavigationControllerShadowImagePath = @"JPNavigationController.bundle/shadow";
+static NSString *const kJPNavigationControllerShadowImagePath = @"JPNavigationController.bundle/jp_navigation_controller_shadow";
 const CGFloat JPMixShadowViewShadowWidth = 21.f;
 @implementation JPTransitionShadowView
 

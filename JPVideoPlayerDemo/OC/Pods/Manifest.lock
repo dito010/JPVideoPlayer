@@ -1,12 +1,12 @@
 PODS:
-  - JPNavigationController (2.1.0)
+  - JPNavigationController (2.1.2)
 
 DEPENDENCIES:
-  - JPNavigationController (~> 2.1.0)
+  - JPNavigationController (~> 2.1.2)
 
 SPEC CHECKSUMS:
-  JPNavigationController: 47ab9e9881e3ca3232e654aed963585fe11e43eb
+  JPNavigationController: 5e46b52c827dfe27bd909f5292b3bebb75e588b4
 
-PODFILE CHECKSUM: 028c27c9345f51fc589571e7989a5e8f28bb7f9b
+PODFILE CHECKSUM: 120282f530fbfe4ddc340fb9d20530f09b18f28a
 
 COCOAPODS: 1.3.1

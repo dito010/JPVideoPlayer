@@ -18,6 +18,8 @@ typedef UIViewController *_Nullable(^JPNavigationContollerPopHandle)(NSArray<UIV
 
 @protocol JPNavigationControllerProtocol <NSObject>
 
+#pragma mark - Properties
+
 /**
  * The root navigation controller.
  *
@@ -63,11 +65,12 @@ typedef UIViewController *_Nullable(^JPNavigationContollerPopHandle)(NSArray<UIV
 /**
  * Link view at screen bottom.
  * You just need pass your link view to this property, framework will display your link view automatically.
- * @warning if the viewController display in window currently is a `UITableViewController` class, frame will add a contentInset automatically to avoid the link view cover on `UITableViewController`. but if you add a `UITableView` on `UIViewController`, framework will do nothing for that, you may handle this by yourself.
  *
  * @see `JPWarpNavigationController`.
  */
 @property(nonatomic)UIView * jp_linkView;
+
+#pragma mark - Method
 
 /**
  * Register delegate to observer the delegate events.
