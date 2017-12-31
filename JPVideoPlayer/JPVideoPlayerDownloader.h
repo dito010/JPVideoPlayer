@@ -13,6 +13,8 @@
 #import <Foundation/Foundation.h>
 #import "JPVideoPlayerCompat.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
     
     /**
@@ -38,38 +40,17 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
      * Useful for testing purposes. Use with caution in production.
      */
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
-    
-    /**
-     * Use this flag to display progress view when play video from web.
-     */
-    JPVideoPlayerDownloaderShowProgressView = 1 << 4,
-    
-    /**
-     * Use this flag to display activity indicator view when video player is buffering.
-     */
-    JPVideoPlayerDownloaderShowActivityIndicatorView = 1 << 5,
 };
 
 typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString *_Nullable tempCachedVideoPath, NSURL * _Nullable targetURL);
 
-typedef void(^JPVideoPlayerDownloaderErrorBlock)(NSError *_Nullable error);
+typedef void(^JPVideoPlayerDownloaderCompletion)(NSError *_Nullable error);
 
 typedef NSDictionary<NSString *, NSString *> JPHTTPHeadersDictionary;
 
 typedef NSMutableDictionary<NSString *, NSString *> JPHTTPHeadersMutableDictionary;
 
 typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilterBlock)(NSURL * _Nullable url, JPHTTPHeadersDictionary * _Nullable headers);
-
-/**
- *  A token associated with each download. Can be used to cancel a download.
- */
-@interface JPVideoPlayerDownloadToken : NSObject
-
-@property (nonatomic, strong, nullable) NSURL *url;
-
-@property (nonatomic, strong, nullable) id downloadOperationCancelToken;
-
-@end
 
 @interface JPVideoPlayerDownloader : NSObject
 
@@ -87,14 +68,6 @@ typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilt
  * Set password
  */
 @property (strong, nonatomic, nullable) NSString *password;
-
-/**
- * Set filter to pick headers for downloading image HTTP request.
- *
- * This block will be invoked for each downloading image request, returned
- * NSDictionary will be used as headers in corresponding HTTP request.
- */
-@property (nonatomic, copy, nullable) JPVideoPlayerDownloaderHeadersFilterBlock headersFilter;
 
 /**
  * Creates an instance of a downloader with specified session configuration.
@@ -126,7 +99,7 @@ typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilt
 - (nullable NSString *)valueForHTTPHeaderField:(nullable NSString *)field;
 
 /**
- *  The timeout value (in seconds) for the download operation. Default: 15.0.
+ *  The timeout value (in seconds) for the download operation. Default: 15.0s.
  */
 @property (assign, nonatomic) NSTimeInterval downloadTimeout;
 
@@ -136,22 +109,15 @@ typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilt
  * @param url            The URL to the video to download.
  * @param options        The options to be used for this download.
  * @param progressBlock  A block called repeatedly while the video is downloading.
- * @param errorBlock     A block called once the download happens some error.
- *
- * @return A token (@see JPVideoPlayerDownloadToken) that can be passed to -cancel: to cancel this operation.
+ * @param completion     A block called once the download completed.
  */
-- (nullable JPVideoPlayerDownloadToken *)downloadVideoWithURL:(nullable NSURL *)url options:(JPVideoPlayerDownloaderOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerDownloaderErrorBlock)errorBlock;
+- (void)downloadVideoWithURL:(nullable NSURL *)url options:(JPVideoPlayerDownloaderOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completion:(nullable JPVideoPlayerDownloaderCompletion)completion;
 
 /**
- * Cancels a download that was previously queued using -downloadVideoWithURL:options:progress:completed:
- *
- * @param token The token received from -downloadVideoWithURL:options:progress:completed: that should be canceled.
+ * Cancels a download that was previously queued using -downloadVideoWithURL:options:progress:completion:
  */
-- (void)cancel:(nullable JPVideoPlayerDownloadToken *)token;
-
-/**
- * Cancels all download operations in the queue.
- */
-- (void)cancelAllDownloads;
+- (void)cancel;
 
 @end
+
+NS_ASSUME_NONNULL_END

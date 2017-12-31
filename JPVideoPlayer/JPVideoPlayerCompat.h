@@ -9,12 +9,23 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
+#ifndef JPVideoPlayerCompat
+#define JPVideoPlayerCompat
 
-#ifndef dispatch_main_async_safe
+#import <UIKit/UIKit.h>
+
 #define dispatch_main_async_safe(block)\
-    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
-    block();\
-    } else {\
-    dispatch_async(dispatch_get_main_queue(), block);\
-    }
+if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
+block();\
+} else {\
+dispatch_async(dispatch_get_main_queue(), block);\
+}
+
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotification;
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStopNotification;
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadFinishNotification;
+
+
 #endif
+

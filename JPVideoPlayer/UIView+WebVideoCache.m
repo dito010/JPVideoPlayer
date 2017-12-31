@@ -15,7 +15,7 @@
 #import <objc/runtime.h>
 #import "JPVideoPlayerPlayVideoTool.h"
 
-static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
+static NSString *JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";
 
 @interface UIView()
 
@@ -98,8 +98,8 @@ static NSString *JPVideoPlayerErrorDomain = @"JPVideoPlayerErrorDomain";
 #pragma mark - Play Control
 
 - (void)jp_stopPlay{
-    [[JPVideoPlayerCache sharedCache] cancelCurrentComletionBlock];
-    [[JPVideoPlayerDownloader sharedDownloader] cancelAllDownloads];
+    [[JPVideoPlayerCache sharedCache] disableCurrentCompletion];
+    [[JPVideoPlayerDownloader sharedDownloader] cancel];
     [[JPVideoPlayerManager sharedManager]stopPlay];
 }
 

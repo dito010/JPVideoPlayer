@@ -15,6 +15,8 @@
 
 @class JPVideoPlayerCacheConfig;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType) {
    
     /**
@@ -44,7 +46,7 @@ typedef void(^JPVideoPlayerNoParamsBlock)(void);
 typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSError * _Nullable error, NSString * _Nullable fullVideoCachePath);
 
 
-@interface JPVideoPlayerCacheToken : NSObject
+@interface  JPVideoPlayerCacheToken : NSObject
 
 @end
 
@@ -60,6 +62,13 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *  Cache Config object - storing all kind of settings.
  */
 @property (nonatomic, nonnull, readonly)JPVideoPlayerCacheConfig *config;
+
+/**
+ * Init with given cacheConfig.
+ *
+ * @see `JPVideoPlayerCacheConfig`.
+ */
+- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfig * _Nullable)cacheConfig NS_DESIGNATED_INITIALIZER;
 
 /**
  * Returns global shared cache instance.
@@ -85,6 +94,22 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
 - (nullable JPVideoPlayerCacheToken *)storeVideoData:(nullable NSData *)videoData expectedSize:(NSUInteger)expectedSize forKey:(nullable NSString *)key completion:(nullable JPVideoPlayerStoreDataFinishedBlock)completionBlock;
 
 /**
+ * Asynchronously store a piece of video data into disk for the given key.
+ *
+ * @param videoData       The video data as returned by the server, it is a piece of full video file.
+ * @param key             The unique video cache key, usually it's video absolute URL
+ * @param completionBlock A block executed after the operation is finished.
+ *                        The first paramater is the cached video data size. the second paramater is the possiable error.
+ *                        the last paramater is the full cache video data path, it is nil until the video data download finished.
+ */
+- (void)_storeVideoData:(nullable NSData *)videoData expectedSize:(NSUInteger)expectedSize forKey:(nullable NSString *)key completion:(nullable JPVideoPlayerStoreDataFinishedBlock)completionBlock;
+
+/**
+ * Reset cache when store data finished.
+ */
+- (void)reset;
+
+/**
  * Cancels a cache that was previously queued using -storeVideoData:expectedSize:progress:forKey:completion:.
  *
  * @param token The token received from -storeVideoData:expectedSize:progress:forKey:completion: that should be canceled.
@@ -94,7 +119,7 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
 /**
  * This method is be used to cancel current completion block when cache a peice of video data finished.
  */
-- (void)cancelCurrentComletionBlock;
+- (void)disableCurrentCompletion;
 
 
 # pragma - Query and Retrieve Options
@@ -209,3 +234,5 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
 - (nullable NSString *)cacheFileNameForKey:(nullable NSString *)key;
 
 @end
+
+NS_ASSUME_NONNULL_END

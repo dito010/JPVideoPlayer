@@ -12,7 +12,7 @@
 
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerCompat.h"
-#import "JPVideoPlayerCachePathTool.h"
+#import "JPVideoPlayerCachePathManager.h"
 #import "JPVideoPlayerPlayVideoTool.h"
 #import "JPVideoPlayerDownloaderOperation.h"
 #import "UIView+WebVideoCacheOperation.h"
@@ -216,10 +216,6 @@
                         downloaderOptions |= JPVideoPlayerDownloaderHandleCookies;
                     if (options & JPVideoPlayerAllowInvalidSSLCertificates)
                         downloaderOptions |= JPVideoPlayerDownloaderAllowInvalidSSLCertificates;
-                    if (options & JPVideoPlayerShowProgressView)
-                        downloaderOptions |= JPVideoPlayerDownloaderShowProgressView;
-                    if (options & JPVideoPlayerShowActivityIndicatorView)
-                        downloaderOptions |= JPVideoPlayerDownloaderShowActivityIndicatorView;
                 }
                 
                 // Save received data to disk.
@@ -305,8 +301,7 @@
                 
                 // delete all temporary first, then download video from web.
                 [self.videoCache deleteAllTempCacheOnCompletion:^{
-                    
-                    JPVideoPlayerDownloadToken *subOperationToken = [self.videoDownloader downloadVideoWithURL:url options:downloaderOptions progress:handleProgressBlock completed:^(NSError * _Nullable error) {
+                    [self.videoDownloader downloadVideoWithURL:url options:downloaderOptions progress:handleProgressBlock completion:^(NSError * _Nullable error) {
                         
                         __strong __typeof(weakOperation) strongOperation = weakOperation;
                         if (!strongOperation || strongOperation.isCancelled) {
@@ -343,7 +338,7 @@
                     
                     operation.cancelBlock = ^{
                         [self.videoCache cancel:cacheToken];
-                        [self.videoDownloader cancel:subOperationToken];
+                        [self.videoDownloader cancel];
                         [[JPVideoPlayerManager sharedManager] stopPlay];
                         
                         // hide indicator view.
@@ -415,7 +410,7 @@
 }
 
 - (void)cancelAllDownloads{
-    [self.videoDownloader cancelAllDownloads];
+    [self.videoDownloader cancel];
 }
 
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url {

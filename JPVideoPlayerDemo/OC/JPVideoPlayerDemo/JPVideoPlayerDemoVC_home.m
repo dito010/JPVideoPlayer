@@ -15,6 +15,8 @@
 #import "JPVideoPlayerDemoCell.h"
 #import "UITableView+VideoPlay.h"
 #import "JPVideoPlayerDemoVC_push.h"
+#import "JPVideoPlayerDownloader.h"
+#import "JPVideoPlayerCache.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -46,8 +48,23 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setup];
-    [self insertLineInScreenCenter];
+    NSString *string = @"http://static.smartisanos.cn/common/video/smartisanT2.mp4";
+    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=0-5000" forHTTPHeaderField:@"Range"];
+    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=5001-" forHTTPHeaderField:@"Range"];
+    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:[NSURL URLWithString:string] options:0 progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
+        
+        if (data.length) {        
+            [JPVideoPlayerCache.sharedCache _storeVideoData:data expectedSize:expectedSize forKey:targetURL.absoluteString completion:nil];
+        }
+        
+    } completion:^(NSError * _Nullable error) {
+        
+        
+        
+    }];
+//    [self setup];
+//    [self insertLineInScreenCenter];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -193,6 +210,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+                         @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
                          // location video path.
                          url.absoluteString,
                          
@@ -234,7 +252,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
                          @"https://bb-bang.com:9002/Test/Vedio/20170425/74ba5b355c6742c084414d4ebd520696.mp4",
                          
                          @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-                         @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
                          @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
                          @"http://static.smartisanos.cn/common/video/m1-white.mp4",
                          @"http://static.smartisanos.cn/common/video/t1-ui.mp4",

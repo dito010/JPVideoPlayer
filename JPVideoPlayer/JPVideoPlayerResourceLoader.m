@@ -12,6 +12,7 @@
 
 #import "JPVideoPlayerResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "JPVideoPlayerDownloader.h"
 
 @interface JPVideoPlayerResourceLoader()
 
@@ -74,7 +75,33 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
         [self.pendingRequests addObject:loadingRequest];
         [self internalPendingRequests];
     }
+    AVAssetResourceLoadingDataRequest *request = [loadingRequest valueForKey:@"dataRequest"];
+    NSString *rangeString = [self fetchRequestRangeStringWtthDataRequest:request];
+    NSURL *url = [NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"];
+    [JPVideoPlayerDownloader.sharedDownloader setValue:rangeString forHTTPHeaderField:@"Range"];
+    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:url options:JPVideoPlayerDownloaderIgnoreCachedResponse progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
+        
+    } completion:^(NSError * _Nullable error) {
+        
+    }];
     return YES;
+}
+
+- (NSString *)fetchRequestRangeStringWtthDataRequest:(AVAssetResourceLoadingDataRequest *)request {
+    long long currentOffset = request.currentOffset;
+    long long requestedOffset = request.requestedOffset;
+    long long requestedLength = request.requestedLength;
+    BOOL requestsAllDataToEndOfResource = request.requestsAllDataToEndOfResource;
+    
+    NSString *rangeString = nil;
+    if (requestsAllDataToEndOfResource) {
+        rangeString = [NSString stringWithFormat:@"bytes=%lld-", requestedOffset];
+    }
+    else {
+        rangeString = [NSString stringWithFormat:@"bytes=%lld-%lld", requestedOffset, requestedOffset + requestedLength];
+    }
+    NSLog(@"currentOffset: %lld, requestedOffset: %lld, requestedLength: %lld, requestsAllDataToEndOfResource: %d", currentOffset, requestedOffset, requestedLength, requestsAllDataToEndOfResource);
+    return rangeString;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{

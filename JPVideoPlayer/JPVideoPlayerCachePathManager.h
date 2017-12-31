@@ -10,22 +10,36 @@
  */
 
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-extern NSString * _Nonnull const JPVideoPlayerCacheVideoPathForTemporaryFile;
-extern NSString * _Nonnull const JPVideoPlayerCacheVideoPathForFullFile;
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForTemporaryFile;
+UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForFullFile;
 
-@interface JPVideoPlayerCachePathTool : NSObject
+@interface JPVideoPlayerCachePathManager : NSObject
 
 /**
- *  Get the local video cache path for all temporary video file.
+ *  Get the local video cache path for all temporary video file on version 3.x.
+ *
+ *  @return the temporary file path.
+ */
++(nonnull NSString *)newVideoCachePathForAllTemporaryFile;
+
+/**
+ *  Get the local video cache path for all full video file on version 3.x.
+ *
+ *  @return the full file path.
+ */
++(nonnull NSString *)newVideoCachePathForAllFullFile;
+
+/**
+ *  Get the local video cache path for all temporary video file on version 2.x.
  *
  *  @return the temporary file path.
  */
 +(nonnull NSString *)videoCachePathForAllTemporaryFile;
 
 /**
- *  Get the local video cache path for all full video file.
+ *  Get the local video cache path for all full video file on version 2.x.
  *
  *  @return the full file path.
  */
