@@ -352,8 +352,8 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
         if (!self.currentCacheTask) {
             JPVideoPlayerCacheTask *cacheTask = [JPVideoPlayerCacheTask new];
             // 存储模型的路径.
-            NSString *path = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:kJPVideoPlayerCacheModelKey];
-            NSData *modelsData =  [NSData dataWithContentsOfFile:path];
+            NSString *modelsSavePath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:kJPVideoPlayerCacheModelKey];
+            NSData *modelsData =  [NSData dataWithContentsOfFile:modelsSavePath];
             
             NSMutableArray<NSData *> *modelDatasM = [NSMutableArray array];
             JPVideoPlayerCacheModel *model = nil;
@@ -363,7 +363,7 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
                 // first save video data for key.
                 dataName = @"pieceOfVideoData0";
                 model = [[JPVideoPlayerCacheModel alloc] initWithKey:key videoDataSize:videoData.length expectedSize:expectedSize dataName:dataName isMetedata:YES];
-                NSLog(@"某个视频第一次请求返回数据: %@", path);
+                NSLog(@"某个视频第一次请求返回数据: %@", modelsSavePath);
             }
             else{
                 NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
@@ -377,21 +377,17 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
             NSData *data = [NSKeyedArchiver archivedDataWithRootObject:model];
             [modelDatasM addObject:data];
             modelsData = [NSKeyedArchiver archivedDataWithRootObject:modelDatasM];
-            NSOutputStream *stream = [[NSOutputStream alloc]initToFileAtPath:path append:YES];
-            [stream open];
-            [stream write:modelsData.bytes maxLength:modelsData.length];
-            [stream close];
+            NSOutputStream *modelsStream = [self internalStoreModelsData:modelsData aPath:modelsSavePath];
+            [self internalCloseOutputStream:modelsStream];
             
             NSString *videoDataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:dataName];
             cacheTask.videoSavePath =  videoDataPath;
-            NSOutputStream *outputStream = [[NSOutputStream alloc] initToFileAtPath:videoDataPath append:YES];
-            [outputStream open];
-            [outputStream write:videoData.bytes maxLength:videoData.length];
-            [outputStream close];
+            NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:self.currentCacheTask.videoSavePath];
             cacheTask.receivedVideoSize += videoData.length;
             cacheTask.path = videoDataPath;
             cacheTask.model = model;
             self.currentCacheTask = cacheTask;
+            [self internalCloseOutputStream:videoStream];
             
             if (completionBlock) {
 //                completionBlock();
@@ -400,10 +396,8 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
         else {
             // 某个请求的接下来的响应数据, 继续存储.
             NSParameterAssert(self.currentCacheTask.videoSavePath.length);
-            NSOutputStream *outputStream = [[NSOutputStream alloc] initToFileAtPath:self.currentCacheTask.videoSavePath append:YES];
-            [outputStream open];
-            [outputStream write:videoData.bytes maxLength:videoData.length];
-            [outputStream close];
+            NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:self.currentCacheTask.videoSavePath];
+            [self internalCloseOutputStream:videoStream];
         }
         
     });
@@ -422,6 +416,35 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
 
 - (void)disableCurrentCompletion{
     self.completionBlockEnable = NO;
+}
+
+
+#pragma mark - Store Private
+
+- (NSOutputStream *)internalStoreVideoData:(NSData *)videoData videoPath:(NSString *)videoPath {
+    return [self internalStoreData:videoData aPath:videoPath];
+}
+
+- (NSOutputStream *)internalStoreModelsData:(NSData *)modelsData aPath:(NSString *)aPath {
+    return [self internalStoreData:modelsData aPath:aPath];
+}
+
+- (NSOutputStream *)internalStoreData:(NSData *)aData aPath:(NSString *)aPath {
+    NSParameterAssert(aData);
+    NSParameterAssert(aPath);
+    if (!aPath.length || !aData.length) {
+        return nil;
+    }
+    
+    NSOutputStream *outputStream = [[NSOutputStream alloc] initToFileAtPath:aPath append:YES];
+    [outputStream open];
+    [outputStream write:aData.bytes maxLength:ULONG_MAX];
+    return outputStream;
+}
+
+- (void)internalCloseOutputStream:(NSOutputStream *)outputStream {
+    NSParameterAssert(outputStream);
+    [outputStream close];
 }
 
 
