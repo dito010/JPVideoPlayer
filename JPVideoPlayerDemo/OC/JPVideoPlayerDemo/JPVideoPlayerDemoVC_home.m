@@ -50,7 +50,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     
     NSString *string = @"http://static.smartisanos.cn/common/video/smartisanT2.mp4";
     [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=0-5000" forHTTPHeaderField:@"Range"];
-    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=5001-" forHTTPHeaderField:@"Range"];
+//    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=5001-" forHTTPHeaderField:@"Range"];
     [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:[NSURL URLWithString:string] options:0 progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
         
         if (data.length) {        

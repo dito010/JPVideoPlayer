@@ -55,11 +55,6 @@
 @property(nonnull, nonatomic, copy)NSString *key;
 
 /**
- * video size.
- */
-@property(nonatomic, assign)NSUInteger videoDataSize;
-
-/**
  * expected size.
  */
 @property(nonatomic, assign)NSUInteger expectedSize;
@@ -80,14 +75,12 @@
 @implementation JPVideoPlayerCacheModel
 
 - (instancetype)initWithKey:(NSString *)key
-              videoDataSize:(NSUInteger)videoDataSize
                expectedSize:(NSUInteger)expectedSize
                    dataName:(NSString *)dataName
                  isMetedata:(BOOL)isMetedata {
     self = [super init];
     if (self) {
         _key = key;
-        _videoDataSize = videoDataSize;
         _expectedSize = expectedSize;
         _dataName = dataName;
         _isMetedata = isMetedata;
@@ -97,7 +90,6 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.key forKey:@"key"];
-    [aCoder encodeInteger:self.videoDataSize forKey:@"videoDataSize"];
     [aCoder encodeInteger:self.expectedSize forKey:@"expectedSize"];
     [aCoder encodeObject:self.dataName forKey:@"dataName"];
     [aCoder encodeBool:self.isMetedata forKey:@"isMetedata"];
@@ -107,7 +99,6 @@
     self = [super init];
     if (self) {
         self.key = [aDecoder decodeObjectForKey:@"key"];
-        self.videoDataSize = [aDecoder decodeIntegerForKey:@"videoDataSize"];
         self.expectedSize = [aDecoder decodeIntegerForKey:@"expectedSize"];
         self.dataName = [aDecoder decodeObjectForKey:@"dataName"];
         self.isMetedata = [aDecoder decodeBoolForKey:@"isMetedata"];
@@ -123,17 +114,12 @@
 /**
  * videoSavePath.
  */
-@property(nonnull, nonatomic, strong)NSString *videoSavePath;
+@property(nonnull, nonatomic, copy)NSString *videoSavePath;
 
 /**
  * Received video size.
  */
 @property(nonatomic, assign)NSUInteger receivedVideoSize;
-
-/*
- * path.
- */
-@property(nonatomic, copy, nonnull) NSString *path;
 
 /*
  * model.
@@ -339,6 +325,7 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
     }
     
     // Check the free size of the device.
+    // 检查是否有足够的磁盘缓存.
     if (![self haveFreeSizeToCacheFileWithSize:expectedSize]) {
         if (completionBlock){
             NSError *error = [NSError errorWithDomain:kJPVideoPlayerCacheErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
@@ -348,43 +335,52 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
     }
     
     dispatch_async(self.ioQueue, ^{
+        // the first time receive the video data for given key.
         // 某个请求第一次返回数据.
         if (!self.currentCacheTask) {
             JPVideoPlayerCacheTask *cacheTask = [JPVideoPlayerCacheTask new];
-            // 存储模型的路径.
+            // the path of models(model recorde the video data message).
+            // 存储模型的路径(模型里记录了存储视频的信息).
             NSString *modelsSavePath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:kJPVideoPlayerCacheModelKey];
-            NSData *modelsData =  [NSData dataWithContentsOfFile:modelsSavePath];
+            NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
             
-            NSMutableArray<NSData *> *modelDatasM = [NSMutableArray array];
+            NSMutableArray<NSData *> *modelDatasM = [@[] mutableCopy];
             JPVideoPlayerCacheModel *model = nil;
             NSString *dataName = nil;
             if (!modelsData.length) {
-                // 某个视频第一次请求返回数据.
                 // first save video data for key.
-                dataName = @"pieceOfVideoData0";
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key videoDataSize:videoData.length expectedSize:expectedSize dataName:dataName isMetedata:YES];
+                // 某个视频第一次请求返回数据.
+                dataName = @"dataDebris0";
+                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key expectedSize:expectedSize dataName:dataName isMetedata:YES];
                 NSLog(@"某个视频第一次请求返回数据: %@", modelsSavePath);
             }
             else{
                 NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
-                [modelDatasM addObjectsFromArray:modelDatasExisted];
-                dataName = [NSString stringWithFormat:@"pieceOfVideoData%ld", modelDatasExisted.count];
-                // 某个请求第一次返回数据.
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key videoDataSize:videoData.length expectedSize:expectedSize dataName:dataName isMetedata:NO];
+                NSParameterAssert(modelDatasExisted);
+                if (modelDatasExisted) {
+                    [modelDatasM addObjectsFromArray:modelDatasExisted];
+                }
+                dataName = [NSString stringWithFormat:@"dataDebris%ld", modelDatasExisted.count];
+                // frist time receive video for a request(but not first request for given key).
+                // 某个请求第一次返回数据(但不是第一次请求).
+                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key expectedSize:expectedSize dataName:dataName isMetedata:NO];
             }
             
+            // archiver models then store it.
             // 归档模型, 并存储.
             NSData *data = [NSKeyedArchiver archivedDataWithRootObject:model];
-            [modelDatasM addObject:data];
-            modelsData = [NSKeyedArchiver archivedDataWithRootObject:modelDatasM];
-            NSOutputStream *modelsStream = [self internalStoreModelsData:modelsData aPath:modelsSavePath];
+            NSParameterAssert(data);
+            if (data) {
+                [modelDatasM addObject:data];
+            }
+            NSOutputStream *modelsStream = [self internalStoreModelsData:[NSKeyedArchiver archivedDataWithRootObject:modelDatasM] aPath:modelsSavePath];
             [self internalCloseOutputStream:modelsStream];
             
-            NSString *videoDataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:dataName];
-            cacheTask.videoSavePath =  videoDataPath;
-            NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:self.currentCacheTask.videoSavePath];
+            NSString *videoSavePath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:dataName];
+            cacheTask.videoSavePath =  videoSavePath;
+            NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:videoSavePath];
             cacheTask.receivedVideoSize += videoData.length;
-            cacheTask.path = videoDataPath;
+            cacheTask.videoSavePath = videoSavePath;
             cacheTask.model = model;
             self.currentCacheTask = cacheTask;
             [self internalCloseOutputStream:videoStream];
@@ -394,6 +390,7 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
             }
         }
         else {
+            // store the last video data for a request.
             // 某个请求的接下来的响应数据, 继续存储.
             NSParameterAssert(self.currentCacheTask.videoSavePath.length);
             NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:self.currentCacheTask.videoSavePath];
@@ -404,7 +401,11 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
 }
 
 - (void)reset {
+    if (!self.currentCacheTask) {
+        return;
+    }
     
+    self.currentCacheTask = nil;
 }
 
 - (void)cancel:(nullable JPVideoPlayerCacheToken *)token{
@@ -422,23 +423,27 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
 #pragma mark - Store Private
 
 - (NSOutputStream *)internalStoreVideoData:(NSData *)videoData videoPath:(NSString *)videoPath {
-    return [self internalStoreData:videoData aPath:videoPath];
+    // watch out that video data need appending.
+    // 注意: 视频数据的写入是需要 append 的.
+    return [self internalStoreData:videoData aPath:videoPath append:YES];
 }
 
 - (NSOutputStream *)internalStoreModelsData:(NSData *)modelsData aPath:(NSString *)aPath {
-    return [self internalStoreData:modelsData aPath:aPath];
+    // models data forbid appending.
+    // 注意: 模型数据的写入是禁止 append 的.
+    return [self internalStoreData:modelsData aPath:aPath append:NO];
 }
 
-- (NSOutputStream *)internalStoreData:(NSData *)aData aPath:(NSString *)aPath {
+- (NSOutputStream *)internalStoreData:(NSData *)aData aPath:(NSString *)aPath append:(BOOL)append {
     NSParameterAssert(aData);
     NSParameterAssert(aPath);
     if (!aPath.length || !aData.length) {
         return nil;
     }
     
-    NSOutputStream *outputStream = [[NSOutputStream alloc] initToFileAtPath:aPath append:YES];
+    NSOutputStream *outputStream = [[NSOutputStream alloc] initToFileAtPath:aPath append:append];
     [outputStream open];
-    [outputStream write:aData.bytes maxLength:ULONG_MAX];
+    [outputStream write:aData.bytes maxLength:aData.length];
     return outputStream;
 }
 
