@@ -77,13 +77,13 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     }
     AVAssetResourceLoadingDataRequest *request = [loadingRequest valueForKey:@"dataRequest"];
     NSString *rangeString = [self fetchRequestRangeStringWtthDataRequest:request];
-    NSURL *url = [NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"];
-    [JPVideoPlayerDownloader.sharedDownloader setValue:rangeString forHTTPHeaderField:@"Range"];
-    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:url options:JPVideoPlayerDownloaderIgnoreCachedResponse progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
-        
-    } completion:^(NSError * _Nullable error) {
-        
-    }];
+//    NSURL *url = [NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"];
+//    [JPVideoPlayerDownloader.sharedDownloader setValue:rangeString forHTTPHeaderField:@"Range"];
+//    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:url options:JPVideoPlayerDownloaderIgnoreCachedResponse progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
+//
+//    } completion:^(NSError * _Nullable error) {
+//
+//    }];
     return YES;
 }
 

@@ -16,10 +16,10 @@
 NSString * const JPVideoPlayerCacheVideoPathForTemporaryFile = @"/TemporaryFile";
 NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 
-NSString * const kJPVideoPlayerCacheVideoPathDomain = @"/com.jpvideoplayer.www";
-NSString * const kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion = @"/temporaryFile";
-NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile";
-
+static NSString * const kJPVideoPlayerCacheVideoPathDomain = @"/com.jpvideoplayer.www";
+static NSString * const kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion = @"/temporaryFile";
+static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile";
+static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.model.www";
 @implementation JPVideoPlayerCachePathManager
 
 #pragma mark - Public
@@ -40,7 +40,21 @@ NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile
     return [self newGetFilePathWithAppendingString:kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion];
 }
 
-+(nonnull NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key{
++ (NSString *)videoCacheModelsSavePathForKey:(NSString *)key {
+    NSParameterAssert(key);
+    if (!key) {
+        return nil;
+    }
+    
+    return [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:kJPVideoPlayerCacheModelKey];
+}
+
++(nullable NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key{
+    NSParameterAssert(key);
+    if (!key) {
+        return nil;
+    }
+    
     NSString *path = [self newVideoCachePathForAllTemporaryFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -50,7 +64,12 @@ NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile
     return path;
 }
 
-+(nonnull NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
++(nullable NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
+    NSParameterAssert(key);
+    if (!key) {
+        return nil;
+    }
+    
     NSString *path = [self newVideoCachePathForAllFullFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     return path;

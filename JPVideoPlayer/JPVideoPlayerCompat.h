@@ -26,6 +26,7 @@ UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotif
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStopNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadFinishNotification;
 
+#define JPDEPRECATED_ATTRIBUTE(msg) __attribute__((deprecated(msg)));
 
 #endif
 

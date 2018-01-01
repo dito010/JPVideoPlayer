@@ -16,6 +16,7 @@
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerDownloaderOperation.h"
+#import "JPVideoPlayerCacheModel.h"
 
 #include <sys/param.h>
 #include <sys/mount.h>
@@ -43,68 +44,6 @@
 @end
 
 @implementation JPVideoPlayerCacheToken
-
-@end
-
-
-@interface JPVideoPlayerCacheModel: NSObject<NSCoding>
-
-/**
- * key.
- */
-@property(nonnull, nonatomic, copy)NSString *key;
-
-/**
- * expected size.
- */
-@property(nonatomic, assign)NSUInteger expectedSize;
-
-/*
- * the token to map video data.
- */
-@property(nonatomic, copy, nonnull) NSString *dataName;
-
-/*
- * the first response data of request flag.
- */
-@property(nonatomic, assign) BOOL isMetedata;
-
-
-@end
-
-@implementation JPVideoPlayerCacheModel
-
-- (instancetype)initWithKey:(NSString *)key
-               expectedSize:(NSUInteger)expectedSize
-                   dataName:(NSString *)dataName
-                 isMetedata:(BOOL)isMetedata {
-    self = [super init];
-    if (self) {
-        _key = key;
-        _expectedSize = expectedSize;
-        _dataName = dataName;
-        _isMetedata = isMetedata;
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.key forKey:@"key"];
-    [aCoder encodeInteger:self.expectedSize forKey:@"expectedSize"];
-    [aCoder encodeObject:self.dataName forKey:@"dataName"];
-    [aCoder encodeBool:self.isMetedata forKey:@"isMetedata"];
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        self.key = [aDecoder decodeObjectForKey:@"key"];
-        self.expectedSize = [aDecoder decodeIntegerForKey:@"expectedSize"];
-        self.dataName = [aDecoder decodeObjectForKey:@"dataName"];
-        self.isMetedata = [aDecoder decodeBoolForKey:@"isMetedata"];
-    }
-    return self;
-}
 
 @end
 
@@ -156,7 +95,6 @@
 @end
 
 static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.error.domain.www";
-static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.model.www";
 @implementation JPVideoPlayerCache{
     NSFileManager *_fileManager;
 }
@@ -341,7 +279,8 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
             JPVideoPlayerCacheTask *cacheTask = [JPVideoPlayerCacheTask new];
             // the path of models(model recorde the video data message).
             // 存储模型的路径(模型里记录了存储视频的信息).
-            NSString *modelsSavePath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:kJPVideoPlayerCacheModelKey];
+            NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
+            NSLog(@"modelsSavePath: %@", modelsSavePath);
             NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
             
             NSMutableArray<NSData *> *modelDatasM = [@[] mutableCopy];
@@ -351,8 +290,11 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
                 // first save video data for key.
                 // 某个视频第一次请求返回数据.
                 dataName = @"dataDebris0";
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key expectedSize:expectedSize dataName:dataName isMetedata:YES];
-                NSLog(@"某个视频第一次请求返回数据: %@", modelsSavePath);
+                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
+                                                        expectedSize:expectedSize
+                                                            dataName:dataName
+                                                               index:0
+                                                          isMetadata:YES];
             }
             else{
                 NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
@@ -363,7 +305,11 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
                 dataName = [NSString stringWithFormat:@"dataDebris%ld", modelDatasExisted.count];
                 // frist time receive video for a request(but not first request for given key).
                 // 某个请求第一次返回数据(但不是第一次请求).
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key expectedSize:expectedSize dataName:dataName isMetedata:NO];
+                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
+                                                        expectedSize:expectedSize
+                                                            dataName:dataName
+                                                               index:modelDatasExisted.count
+                                                          isMetadata:NO];
             }
             
             // archiver models then store it.
