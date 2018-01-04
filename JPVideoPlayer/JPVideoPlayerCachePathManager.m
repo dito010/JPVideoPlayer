@@ -71,7 +71,8 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
     }
     
     NSString *path = [self newVideoCachePathForAllFullFile];
-    path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
+    NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key] stringByAppendingString:@".mp4"];
+    path = [path stringByAppendingPathComponent:fileName];
     return path;
 }
 

@@ -18,7 +18,6 @@
 
 static NSString *const kProgressCallbackKey = @"www.jpvideplayer.progress.callback";
 static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
-static NSString *const kJPVideoPlayerDownloaderErrorDomain = @"com.jpvideoplayer.error.domain";
 @interface JPVideoPlayerDownloader()<NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 @property (strong, nonatomic, nullable) JPHTTPHeadersMutableDictionary *HTTPHeaders;
@@ -135,7 +134,7 @@ static NSString *const kJPVideoPlayerDownloaderErrorDomain = @"com.jpvideoplayer
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil. If it is nil immediately call the completed block with no video or data.
     if (url == nil) {
         if (completion) {
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerDownloaderErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Please check the URL, because it is nil"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Please check the URL, because it is nil"}];
             completion(error);
         }
         return;
@@ -213,7 +212,7 @@ static NSString *const kJPVideoPlayerDownloaderErrorDomain = @"com.jpvideoplayer
                 [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
             });
             
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerDownloaderErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
             if (self.completion) {
                 self.completion(error);
             }

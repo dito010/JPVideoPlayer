@@ -10,19 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^JPVideoPlayerDebrisJointCompletion)(NSString *);
+typedef void(^JPVideoPlayerDebrisJointCompletion)(NSString  *_Nullable fullVideoPath, NSError  *_Nullable error);
 
 @interface JPVideoPlayerDebrisJointManager : NSObject
 
 /**
- *  try to joint the debris video data for given key.
+ *  Try to joint the debris video data for given key.
  *
- *  @param key  The unique flag for the given url in this framework.
- *
- *  @return the flag of joint is successed or not.
+ *  @param key        The unique flag for the given url in this framework.
+ *  @param completion The completion handler after joint finished.
  */
 
-- (BOOL)tryToJointDataDebrisForKey:(NSString *)key ;
+- (void)tryToJointDataDebrisForKey:(NSString *)key
+                        completion:(JPVideoPlayerDebrisJointCompletion)completion;
 
 @end
 

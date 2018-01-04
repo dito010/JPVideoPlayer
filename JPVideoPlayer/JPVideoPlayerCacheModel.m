@@ -44,6 +44,8 @@
                    dataName:(NSString *)dataName
                       index:(NSUInteger)index
                  isMetadata:(BOOL)isMetadata {
+    NSParameterAssert(key);
+    NSParameterAssert(dataName);
     self = [super init];
     if (self) {
         _key = key;
@@ -81,6 +83,32 @@
         self.isMetadata = [aDecoder decodeBoolForKey:@"isMetadata"];
     }
     return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (!object) {
+        return NO;
+    }
+    
+    if (self == object) {
+        return YES;
+    }
+    
+    if (![object isKindOfClass:[JPVideoPlayerCacheModel class]]) {
+        return NO;
+    }
+    
+    return [self isEqualToCacheModel:(JPVideoPlayerCacheModel *)object];
+}
+
+- (BOOL)isEqualToCacheModel:(JPVideoPlayerCacheModel *)cacheModel {
+    NSParameterAssert(self.key);
+    NSParameterAssert(self.dataName);
+    NSParameterAssert(cacheModel.key);
+    NSParameterAssert(cacheModel.dataName);
+    BOOL keyMatch = [self.key isEqualToString:cacheModel.key];
+    BOOL dataNameMatch = [self.dataName isEqualToString:cacheModel.dataName];
+    return keyMatch && dataNameMatch;
 }
 
 @end

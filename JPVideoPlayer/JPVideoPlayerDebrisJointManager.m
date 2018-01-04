@@ -30,32 +30,27 @@
 - (void)tryToJointDataDebrisForKey:(NSString *)key
                         completion:(JPVideoPlayerDebrisJointCompletion)completion {
     NSParameterAssert(key);
-    if (!key.length && completion) {
-        completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data need a key"]);
+    if (!key.length) {
+        [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data need a key"];
+        return;
     }
     
     dispatch_async(self.ioQueue, ^{
         if (![self debrisVideoDataIsCacheFinishedForKey:key]) {
-            if (completion) {
-                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data cache file not finished"]);
-            }
+            [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data cache file not finished"];
             return;
         }
         
         NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
         NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
-        if (!modelsData.length) {
-            if (completion) {
-                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
-            }
+        if (!modelsData) {
+            [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data have no debris data"];
             return;
         }
         
         NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
         if (!modelDatasExisted.count) {
-            if (completion) {
-                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
-            }
+            [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data have no debris data"];
             return;
         }
         
@@ -72,27 +67,16 @@
             }
         }
         if (!modelsM.count || !metadataModel) {
-            if (completion) {
-                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
-            }
+            [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data have no debris data"];
             return;
         }
         
-        NSMutableDictionary *dictM = [@{} mutableCopy];
-        for (JPVideoPlayerCacheModel *model in modelsM) {
-            NSString *dataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:model.key] stringByAppendingPathComponent:model.dataName];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-                NSData *data = [NSData dataWithContentsOfFile:dataPath];
-                if (data.length) {
-                    [dictM setObject:data forKey:model];
-                }
-            }
-        }
-        
         NSString *metadataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:metadataModel.dataName];
-        while (dictM.allKeys.count != 1) {
+        while (modelsM.count != 1) {
+            // joint debris video data by index.
+            // 按照 index 进行拼接.
             JPVideoPlayerCacheModel *targetModel = nil;
-            for (JPVideoPlayerCacheModel *model in dictM.allKeys) {
+            for (JPVideoPlayerCacheModel *model in modelsM) {
                 if (model.isMetadata) {
                     continue;
                 }
@@ -107,12 +91,26 @@
                 }
             }
             
-            
             NSString *videoPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:targetModel.dataName];
-            if (targetModel && videoPath && metadataPath) {
-                [self internalStoreData:[NSData dataWithContentsOfFile:videoPath] aPath:metadataPath append:YES];
+            if (targetModel && videoPath && metadataPath && [[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+                [self internalJointData:[NSData dataWithContentsOfFile:videoPath] aPath:metadataPath append:YES];
+                // remove model.
+                [modelsM removeObject:targetModel];
             }
         }
+        
+        // joint finished.
+        NSString *fullVideoPath = [JPVideoPlayerCachePathManager videoCacheFullPathForKey:key];
+        NSError *error;
+        [[NSFileManager defaultManager] moveItemAtPath:metadataPath toPath:fullVideoPath error:&error];
+        if (error) {
+            [self callCompletion:completion fullVideoPath:nil errorMessage:error.localizedDescription];
+            return;
+        }
+        
+        [self callCompletion:completion fullVideoPath:fullVideoPath errorMessage:nil];
+        // remove temporary file.
+        [[NSFileManager defaultManager] removeItemAtPath:[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key]  error:nil];
     });
     
 }
@@ -173,7 +171,7 @@
     return metadataModel.expectedSize == totalCacheVideoSize;
 }
 
-- (void)internalStoreData:(NSData *)aData aPath:(NSString *)aPath append:(BOOL)append {
+- (void)internalJointData:(NSData *)aData aPath:(NSString *)aPath append:(BOOL)append {
     NSParameterAssert(aData);
     NSParameterAssert(aPath);
     if (!aPath.length || !aData.length) {
@@ -186,9 +184,20 @@
     [outputStream close];
 }
 
-- (NSError *)generateErrorWithErrorMessage:(NSString *)msg {
-    NSCParameterAssert(msg);
-    return [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : msg}];
+- (void)callCompletion:(JPVideoPlayerDebrisJointCompletion)completion
+         fullVideoPath:(NSString *)fullVideoPath
+          errorMessage:(NSString *)msg {
+    if (!completion) {
+        return;
+    }
+    
+    NSError *error = nil;
+    if (msg) {
+        error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : msg}];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completion(fullVideoPath, error);
+    });
 }
 
 @end

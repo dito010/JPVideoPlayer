@@ -102,7 +102,10 @@ typedef void(^JPVideoPlayerStoreDataFinishedBlock)(NSUInteger storedSize, NSErro
  *                        The first paramater is the cached video data size. the second paramater is the possiable error.
  *                        the last paramater is the full cache video data path, it is nil until the video data download finished.
  */
-- (void)_storeVideoData:(nullable NSData *)videoData expectedSize:(NSUInteger)expectedSize forKey:(nullable NSString *)key completion:(nullable JPVideoPlayerStoreDataFinishedBlock)completionBlock;
+- (void)_storeVideoData:(nullable NSData *)videoData
+           expectedSize:(NSUInteger)expectedSize
+                 forKey:(nullable NSString *)key
+             completion:(nullable JPVideoPlayerStoreDataFinishedBlock)completionBlock;
 
 /**
  * Reset cache when store data finished.
