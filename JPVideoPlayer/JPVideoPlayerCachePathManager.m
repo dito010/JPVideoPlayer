@@ -80,7 +80,7 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
 
 +(nonnull NSString *)newGetFilePathWithAppendingString:(nonnull NSString *)apdStr {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:kJPVideoPlayerCacheVideoPathDomain];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPathDomain];
     if (![fileManager fileExistsAtPath:path]){
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     }
@@ -95,7 +95,7 @@ static NSString *const kJPVideoPlayerCacheModelKey = @"com.jpvideoplayer.cache.m
 
 +(nonnull NSString *)getFilePathWithAppendingString:(nonnull NSString *)apdStr{
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingString:apdStr];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:apdStr];
     
     if (![fileManager fileExistsAtPath:path]){
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];

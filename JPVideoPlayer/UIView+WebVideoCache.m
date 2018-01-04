@@ -15,8 +15,6 @@
 #import <objc/runtime.h>
 #import "JPVideoPlayerPlayVideoTool.h"
 
-static NSString *JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";
-
 @interface UIView()
 
 /**

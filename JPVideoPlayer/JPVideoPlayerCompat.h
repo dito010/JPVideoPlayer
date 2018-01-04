@@ -14,6 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #define dispatch_main_async_safe(block)\
 if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
 block();\
@@ -26,7 +28,10 @@ UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotif
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStopNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadFinishNotification;
 
+UIKIT_EXTERN NSString *const JPVideoPlayerErrorDomain;
+
 #define JPDEPRECATED_ATTRIBUTE(msg) __attribute__((deprecated(msg)));
 
 #endif
 
+NS_ASSUME_NONNULL_END

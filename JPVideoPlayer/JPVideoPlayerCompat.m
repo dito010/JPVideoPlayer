@@ -12,3 +12,5 @@ NSString *const JPVideoPlayerDownloadStartNotification = @"www.jpvideplayer.down
 NSString *const JPVideoPlayerDownloadReceiveResponseNotification = @"www.jpvideoplayer.download.received.response.notification";
 NSString *const JPVideoPlayerDownloadStopNotification = @"www.jpvideplayer.download.stop.notification";
 NSString *const JPVideoPlayerDownloadFinishNotification = @"www.jpvideplayer.download.finished.notification";
+
+NSString *const JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";

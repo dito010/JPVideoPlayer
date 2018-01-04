@@ -27,26 +27,36 @@
     return self;
 }
 
-- (BOOL)tryToJointDataDebrisForKey:(NSString *)key {
+- (void)tryToJointDataDebrisForKey:(NSString *)key
+                        completion:(JPVideoPlayerDebrisJointCompletion)completion {
     NSParameterAssert(key);
-    if (!key.length) {
-        return NO;
+    if (!key.length && completion) {
+        completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data need a key"]);
     }
     
     dispatch_async(self.ioQueue, ^{
         if (![self debrisVideoDataIsCacheFinishedForKey:key]) {
-            return NO;
+            if (completion) {
+                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data cache file not finished"]);
+            }
+            return;
         }
         
         NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
         NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
         if (!modelsData.length) {
-            return NO;
+            if (completion) {
+                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
+            }
+            return;
         }
         
         NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
         if (!modelDatasExisted.count) {
-            return NO;
+            if (completion) {
+                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
+            }
+            return;
         }
         
         JPVideoPlayerCacheModel *metadataModel = nil;
@@ -62,7 +72,10 @@
             }
         }
         if (!modelsM.count || !metadataModel) {
-            return NO;
+            if (completion) {
+                completion(nil, [self generateErrorWithErrorMessage:@"Joint debris data have no debris data"]);
+            }
+            return;
         }
         
         NSMutableDictionary *dictM = [@{} mutableCopy];
@@ -100,8 +113,6 @@
                 [self internalStoreData:[NSData dataWithContentsOfFile:videoPath] aPath:metadataPath append:YES];
             }
         }
-        
-        return YES;
     });
     
 }
@@ -173,6 +184,11 @@
     [outputStream open];
     [outputStream write:aData.bytes maxLength:aData.length];
     [outputStream close];
+}
+
+- (NSError *)generateErrorWithErrorMessage:(NSString *)msg {
+    NSCParameterAssert(msg);
+    return [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : msg}];
 }
 
 @end

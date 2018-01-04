@@ -157,7 +157,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 @end
 
-static NSString *const kJPVideoPlayerPlayVideoToolErrorDomain = @"com.jpvideoplayer.playvideotool.error.domain.www";
 @implementation JPVideoPlayerPlayVideoTool
 
 + (nonnull instancetype)sharedTool{
@@ -184,13 +183,13 @@ static NSString *const kJPVideoPlayerPlayVideoToolErrorDomain = @"com.jpvideopla
 - (nullable JPVideoPlayerPlayVideoToolItem *)playExistedVideoWithURL:(NSURL * _Nullable)url fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath options:(JPVideoPlayerOptions)options showOnView:(UIView * _Nullable)showView playingProgress:(JPVideoPlayerPlayVideoToolPlayingProgressBlock _Nullable )progress error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error{
     
     if (fullVideoCachePath.length==0) {
-        NSError *e = [NSError errorWithDomain:kJPVideoPlayerPlayVideoToolErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
         if (error) error(e);
         return nil;
     }
     
     if (!showView) {
-        NSError *e = [NSError errorWithDomain:kJPVideoPlayerPlayVideoToolErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
         if (error) error(e);
         return nil;
     }
@@ -257,13 +256,13 @@ static NSString *const kJPVideoPlayerPlayVideoToolErrorDomain = @"com.jpvideopla
 - (nullable JPVideoPlayerPlayVideoToolItem *)playVideoWithURL:(NSURL * _Nullable)url tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath options:(JPVideoPlayerOptions)options videoFileExceptSize:(NSUInteger)exceptSize videoFileReceivedSize:(NSUInteger)receivedSize showOnView:(UIView * _Nullable)showView playingProgress:(JPVideoPlayerPlayVideoToolPlayingProgressBlock _Nullable )progress error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error{
     
     if (tempVideoCachePath.length==0) {
-        NSError *e = [NSError errorWithDomain:kJPVideoPlayerPlayVideoToolErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
         if (error) error(e);
         return nil;
     }
     
     if (!showView) {
-        NSError *e = [NSError errorWithDomain:kJPVideoPlayerPlayVideoToolErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
         if (error) error(e);
         return nil;
     }
@@ -484,7 +483,7 @@ static NSString *const kJPVideoPlayerPlayVideoToolErrorDomain = @"com.jpvideopla
             case AVPlayerItemStatusFailed:{
                 [self hideActivaityIndicatorView];
                 
-                NSError *e = [NSError errorWithDomain:kJPVideoPlayerPlayVideoToolErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"some errors happen on player"}];
+                NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"some errors happen on player"}];
                 if (self.currentPlayVideoItem.error) self.currentPlayVideoItem.error(e);
                 
                 if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoTool:playingStatuDidChanged:)]) {

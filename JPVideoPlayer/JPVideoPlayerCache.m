@@ -94,7 +94,6 @@
 
 @end
 
-static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.error.domain.www";
 @implementation JPVideoPlayerCache{
     NSFileManager *_fileManager;
 }
@@ -167,7 +166,7 @@ static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.erro
     
     if (key.length==0) {
         if (completionBlock){
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerCacheErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
             completionBlock(0, error, nil);
         }
         return nil;
@@ -176,7 +175,7 @@ static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.erro
     // Check the free size of the device.
     if (![self haveFreeSizeToCacheFileWithSize:expectedSize]) {
         if (completionBlock){
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerCacheErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
             completionBlock(0, error, nil);
         }
         return nil;
@@ -256,7 +255,7 @@ static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.erro
     
     if (!key.length) {
         if (completionBlock){
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerCacheErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
             completionBlock(0, error, nil);
         }
         return;
@@ -266,7 +265,7 @@ static NSString *const kJPVideoPlayerCacheErrorDomain = @"com.jpvideoplayer.erro
     // 检查是否有足够的磁盘缓存.
     if (![self haveFreeSizeToCacheFileWithSize:expectedSize]) {
         if (completionBlock){
-            NSError *error = [NSError errorWithDomain:kJPVideoPlayerCacheErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
             completionBlock(0, error, nil);
         }
         return;
