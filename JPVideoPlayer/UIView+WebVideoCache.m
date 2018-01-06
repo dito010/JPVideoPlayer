@@ -12,7 +12,7 @@
 #import "UIView+WebVideoCache.h"
 #import "UIView+WebVideoCacheOperation.h"
 #import <objc/runtime.h>
-#import "JPPlayVideoManager.h"
+#import "JPVideoPlayer.h"
 
 @interface UIView()
 
@@ -233,7 +233,7 @@
     self.frame = [self.frame_beforeFullScreen CGRectValue];
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -251,7 +251,7 @@
     self.frame = frame;
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -269,7 +269,7 @@
     self.center = center;
     
     self.jp_backgroundLayer.frame = bounds;
-    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
+    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
     self.jp_videoLayerView.frame = bounds;
     self.jp_indicatorView.frame = bounds;
 #pragma clang diagnostic push

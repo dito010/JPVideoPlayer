@@ -28,9 +28,9 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
 
 @end
 
-@class JPPlayVideoManager;
+@class JPVideoPlayer;
 
-@protocol JPPlayVideoManagerDelegate <NSObject>
+@protocol JPVideoPlayerInternalDelegate <NSObject>
 
 @optional
 
@@ -42,7 +42,7 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)playVideoManager:(nonnull JPPlayVideoManager *)videoManager shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
+- (BOOL)playVideoManager:(nonnull JPVideoPlayer *)videoManager shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
 
 /**
  * Notify the playing status.
@@ -50,17 +50,17 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
  * @param videoManager     the current `JPVideoPlayerPlayVideoManager`.
  * @param playingStatus the current playing status.
  */
-- (void)playVideoManager:(nonnull JPPlayVideoManager *)videoManager playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)playVideoManager:(nonnull JPVideoPlayer *)videoManager playingStatuDidChange:(JPVideoPlayerPlayingStatus)playingStatus;
 
 @end
 
 typedef void(^JPPlayVideoManagerErrorBlock)(NSError * _Nullable error);
 
-typedef void(^JPPlayVideoManagerPlayProgressBlock)(CGFloat progress);
+typedef void(^JPPlayVideoManagerPlayProgressBlock)(double currentSeconds, double totalSeconds);
 
-@interface JPPlayVideoManager : NSObject
+@interface JPVideoPlayer : NSObject
 
-@property(nullable, nonatomic, weak)id<JPPlayVideoManagerDelegate> delegate;
+@property(nullable, nonatomic, weak)id<JPVideoPlayerInternalDelegate> delegate;
 
 /**
  * Singleton method, returns the shared instance.

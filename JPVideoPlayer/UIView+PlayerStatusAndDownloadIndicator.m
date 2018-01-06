@@ -11,7 +11,7 @@
 
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import <objc/runtime.h>
-#import "JPPlayVideoManager.h"
+#import "JPVideoPlayer.h"
 #import "JPVideoPlayerActivityIndicator.h"
 #import "JPVideoPlayerProgressView.h"
 #import "UIView+WebVideoCache.h"
