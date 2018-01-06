@@ -82,7 +82,7 @@ typedef void(^JPPlayVideoManagerPlayProgressBlock)(double currentSeconds, double
 /**
  * The current play video item.
  */
-@property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentPlayVideoItem;
+@property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentVideoPlayerModel;
 
 
 # pragma mark - Play video existed in disk.

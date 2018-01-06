@@ -233,7 +233,7 @@
     self.frame = [self.frame_beforeFullScreen CGRectValue];
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -251,7 +251,7 @@
     self.frame = frame;
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -269,7 +269,7 @@
     self.center = center;
     
     self.jp_backgroundLayer.frame = bounds;
-    [JPVideoPlayer sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
+    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
     self.jp_videoLayerView.frame = bounds;
     self.jp_indicatorView.frame = bounds;
 #pragma clang diagnostic push

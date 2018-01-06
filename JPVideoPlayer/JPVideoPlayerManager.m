@@ -249,7 +249,7 @@
                                 }
 #pragma mark - Play video from web
                                 { // play video from web.
-                                    if (![JPVideoPlayer sharedManager].currentPlayVideoItem) {
+                                    if (![JPVideoPlayer sharedManager].currentVideoPlayerModel) {
                                         __strong typeof(wShowView) sShowView = wShowView;
                                         if (!sShowView) return;
 #pragma clang diagnostic push
@@ -281,7 +281,7 @@
                                     }
                                     else{
                                         NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:targetURL];
-                                        if ([JPVideoPlayer sharedManager].currentPlayVideoItem && [key isEqualToString:[JPVideoPlayer sharedManager].currentPlayVideoItem.playingKey]) {
+                                        if ([JPVideoPlayer sharedManager].currentVideoPlayerModel && [key isEqualToString:[JPVideoPlayer sharedManager].currentVideoPlayerModel.playingKey]) {
                                             [[JPVideoPlayer sharedManager] didReceivedDataCacheInDiskByTempPath:tempVideoCachedPath videoFileExceptSize:expectedSize videoFileReceivedSize:receivedSize];
                                         }
                                     }
@@ -675,7 +675,7 @@
 }
 
 - (void)setPlayerMute:(BOOL)mute{
-    if ([JPVideoPlayer sharedManager].currentPlayVideoItem) {
+    if ([JPVideoPlayer sharedManager].currentVideoPlayerModel) {
         [[JPVideoPlayer sharedManager] setMute:mute];
     }
     self.mute = mute;
