@@ -70,13 +70,13 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
     JPVideoPlayerLayerVideoGravityResizeAspectFill = 1 << 9,
 };
 
-typedef NS_ENUM(NSInteger, JPVideoPlayerPlayingStatus) {
-    JPVideoPlayerPlayingStatusUnkown,
-    JPVideoPlayerPlayingStatusBuffering,
-    JPVideoPlayerPlayingStatusPlaying,
-    JPVideoPlayerPlayingStatusPause,
-    JPVideoPlayerPlayingStatusFailed,
-    JPVideoPlayerPlayingStatusStop
+typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
+    JPVideoPlayerStatusUnkown,
+    JPVideoPlayerStatusBuffering,
+    JPVideoPlayerStatusPlaying,
+    JPVideoPlayerStatusPause,
+    JPVideoPlayerStatusFailed,
+    JPVideoPlayerStatusStop
 };
 
 typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL);
@@ -113,7 +113,7 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  * @param videoPlayerManager The current `JPVideoPlayerManager`.
  * @param playingStatus      The current playing status.
  */
-- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus;
 
 /**
  * Notify the download progress value. this method will be called on main thread. 

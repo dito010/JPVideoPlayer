@@ -151,7 +151,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 /**
  * The playing status of video player before app enter background.
  */
-@property(nonatomic, assign)JPVideoPlayerPlayingStatus playingStatus_beforeEnterBackground;
+@property(nonatomic, assign)JPVideoPlayerStatus playingStatus_beforeEnterBackground;
 
 @end
 
@@ -372,24 +372,24 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         if (self.playVideoItems)
             [self.playVideoItems removeAllObjects];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-        [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusStop];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+        [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusStop];
     }
 }
 
 - (void)pause{
     [self.currentPlayVideoItem pausePlayVideo];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-        [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPause];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+        [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPause];
     }
 }
 
 - (void)resume{
     [self.currentPlayVideoItem resumePlayVideo];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-        [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPlaying];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+        [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
     }
 }
 
@@ -422,25 +422,25 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         self.playingStatus_beforeEnterBackground = self.currentPlayVideoItem.unownShowView.playingStatus;
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-        [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPause];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+        [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPause];
     }
 }
 
 - (void)appDidEnterPlayGround{
     // fixed #35.
-    if (self.currentPlayVideoItem.unownShowView && (self.playingStatus_beforeEnterBackground == JPVideoPlayerPlayingStatusPlaying)) {
+    if (self.currentPlayVideoItem.unownShowView && (self.playingStatus_beforeEnterBackground == JPVideoPlayerStatusPlaying)) {
         [self.currentPlayVideoItem resumePlayVideo];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-            [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPlaying];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+            [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
         }
     }
     else{
         [self.currentPlayVideoItem pausePlayVideo];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-            [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPause];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+            [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPause];
         }
     }
 }
@@ -451,8 +451,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification{
     
     // ask need automatic replay or not.
-    if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:shouldAutoReplayVideoForURL:)]) {
-        if (![self.delegate playVideoManager:self shouldAutoReplayVideoForURL:self.currentPlayVideoItem.url]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:shouldAutoReplayVideoForURL:)]) {
+        if (![self.delegate videoPlayer:self shouldAutoReplayVideoForURL:self.currentPlayVideoItem.url]) {
             return;
         }
     }
@@ -466,8 +466,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         self.currentPlayVideoItem.lastTime = 0;
         [strong_Item.player play];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-            [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPlaying];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+            [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
         }
     }];
 }
@@ -478,8 +478,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
             case AVPlayerItemStatusUnknown:{
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-                    [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusUnkown];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+                    [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusUnkown];
                 }
             }
                 break;
@@ -494,8 +494,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 
                 [self displayVideoPicturesOnShowLayer];
                 
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-                    [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPlaying];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+                    [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
                 }
             }
                 break;
@@ -506,8 +506,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"some errors happen on player"}];
                 if (self.currentPlayVideoItem.error) self.currentPlayVideoItem.error(e);
                 
-                if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-                    [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusFailed];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+                    [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusFailed];
                 }
             }
                 break;
@@ -525,15 +525,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             [self hideActivaityIndicatorView];
             self.currentPlayVideoItem.lastTime = currentTime;
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-                [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusPlaying];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+                [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
             }
         }
         else{
             [self showActivaityIndicatorView];
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(playVideoManager:playingStatuDidChange:)]) {
-                [self.delegate playVideoManager:self playingStatuDidChange:JPVideoPlayerPlayingStatusBuffering];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
+                [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusBuffering];
             }
         }
     }

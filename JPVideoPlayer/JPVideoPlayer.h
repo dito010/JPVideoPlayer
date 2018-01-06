@@ -37,20 +37,20 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
 /**
  * Controls which video should automatic replay when the video is play completed.
  *
- * @param videoManager     the current `JPVideoPlayerPlayVideoManager`.
+ * @param videoPlayer   the current `JPVideoPlayerPlayVideoManager`.
  * @param videoURL      the url of the video to be play.
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)playVideoManager:(nonnull JPVideoPlayer *)videoManager shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
+- (BOOL)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
 
 /**
  * Notify the playing status.
  *
- * @param videoManager     the current `JPVideoPlayerPlayVideoManager`.
+ * @param videoPlayer   the current `JPVideoPlayerPlayVideoManager`.
  * @param playingStatus the current playing status.
  */
-- (void)playVideoManager:(nonnull JPVideoPlayer *)videoManager playingStatuDidChange:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer playStatusDidChange:(JPVideoPlayerStatus)playingStatus;
 
 @end
 

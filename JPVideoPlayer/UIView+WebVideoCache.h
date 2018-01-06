@@ -62,7 +62,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * @param playingStatus      The current playing status.
  */
-- (void)playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus;
 
 /**
  * Notify the download progress value. this method will be called on main thread.
@@ -95,7 +95,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 /**
  * Playing status of video player.
  */
-@property(nonatomic, readonly)JPVideoPlayerPlayingStatus playingStatus;
+@property(nonatomic, readonly)JPVideoPlayerStatus playingStatus;
 
 #pragma mark - Play Video Methods
 

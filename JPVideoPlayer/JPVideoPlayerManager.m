@@ -695,7 +695,7 @@
     return YES;
 }
 
-- (void)playVideoTool:(JPVideoPlayer *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)playVideoTool:(JPVideoPlayer *)videoTool playingStatuDidChanged:(JPVideoPlayerStatus)playingStatus{
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingStatusDidChanged:)]) {
         [self.delegate videoPlayerManager:self playingStatusDidChanged:playingStatus];
     }

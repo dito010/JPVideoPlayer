@@ -289,11 +289,11 @@
     objc_setAssociatedObject(self, @selector(parentView_beforeFullScreen), parentView_beforeFullScreen, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (void)setPlayingStatus:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)setPlayingStatus:(JPVideoPlayerStatus)playingStatus{
     objc_setAssociatedObject(self, @selector(playingStatus), @(playingStatus), OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (JPVideoPlayerPlayingStatus)playingStatus{
+- (JPVideoPlayerStatus)playingStatus{
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
@@ -349,7 +349,7 @@
     return YES;
 }
 
-- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
     self.playingStatus = playingStatus;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingStatusDidChanged:)]) {
         [self.jp_videoPlayerDelegate playingStatusDidChanged:playingStatus];

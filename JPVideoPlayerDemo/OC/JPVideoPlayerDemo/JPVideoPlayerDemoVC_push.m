@@ -61,7 +61,7 @@
     [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
     [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
     self.muteSwitch.on = ![self.videoContainer jp_playerIsMute];
-    self.playOrPauseSwitch.on = self.videoContainer.playingStatus == JPVideoPlayerPlayingStatusPlaying ? NO : YES;
+    self.playOrPauseSwitch.on = self.videoContainer.playingStatus == JPVideoPlayerStatusPlaying ? NO : YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -99,8 +99,8 @@
 }
 
 - (IBAction)playOrPause:(id)sender {
-    JPVideoPlayerPlayingStatus status = self.videoContainer.playingStatus;
-    if (status == JPVideoPlayerPlayingStatusPlaying) {
+    JPVideoPlayerStatus status = self.videoContainer.playingStatus;
+    if (status == JPVideoPlayerStatusPlaying) {
         [self.videoContainer jp_pause];
     }
     else{
@@ -123,7 +123,7 @@
     return NO;
 }
 
-- (void)playingStatusDidChanged:(JPVideoPlayerPlayingStatus)playingStatus{
+- (void)playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
 }
 
 //- (void)downloadingProgressDidChanged:(CGFloat)downloadingProgress{
