@@ -9,10 +9,9 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import <objc/runtime.h>
-#import "JPVideoPlayerPlayVideoTool.h"
+#import "JPPlayVideoManager.h"
 #import "JPVideoPlayerActivityIndicator.h"
 #import "JPVideoPlayerProgressView.h"
 #import "UIView+WebVideoCache.h"

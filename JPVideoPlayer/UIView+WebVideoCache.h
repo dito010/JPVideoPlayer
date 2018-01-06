@@ -9,7 +9,6 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerManager.h"
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
@@ -166,7 +165,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 - (void)jp_playVideoWithURL:(nullable NSURL *)url
                     options:(JPVideoPlayerOptions)options
                    progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
-                  completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+                  completion:(nullable JPVideoPlayerCompletionBlock)completedBlock;
 
 #pragma mark - Play Control
 

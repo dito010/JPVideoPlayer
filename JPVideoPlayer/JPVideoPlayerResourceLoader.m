@@ -9,10 +9,8 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import "JPVideoPlayerResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "JPVideoPlayerDownloader.h"
 
 @interface JPVideoPlayerResourceLoader()
 
@@ -20,7 +18,7 @@
  * The request queues.
  * It save the requests waiting for being given video data.
  */
-@property (nonatomic, strong, nullable)NSMutableArray *pendingRequests;
+@property (nonatomic, strong, nullable)NSMutableArray<AVAssetResourceLoadingRequest *> *pendingRequests;
 
 /**
  * The video data total length.
@@ -45,7 +43,7 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        self.pendingRequests = [NSMutableArray array];
+        _pendingRequests = [@[] mutableCopy];
     }
     return self;
 }
@@ -53,7 +51,9 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
 
 #pragma mark - Public
 
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath videoFileExceptSize:(NSUInteger)expectedSize videoFileReceivedSize:(NSUInteger)receivedSize{
+- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
+                         videoFileExceptSize:(NSUInteger)expectedSize
+                       videoFileReceivedSize:(NSUInteger)receivedSize{
     self.tempCacheVideoPath = tempCacheVideoPath;
     self.expectedSize = expectedSize;
     self.receivedSize = receivedSize;
@@ -75,19 +75,17 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
         [self.pendingRequests addObject:loadingRequest];
         [self internalPendingRequests];
     }
-    AVAssetResourceLoadingDataRequest *request = [loadingRequest valueForKey:@"dataRequest"];
-    NSString *rangeString = [self fetchRequestRangeStringWtthDataRequest:request];
-//    NSURL *url = [NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"];
-//    [JPVideoPlayerDownloader.sharedDownloader setValue:rangeString forHTTPHeaderField:@"Range"];
-//    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:url options:JPVideoPlayerDownloaderIgnoreCachedResponse progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
-//
-//    } completion:^(NSError * _Nullable error) {
-//
-//    }];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:requestRangeDidChange:)]) {
+        AVAssetResourceLoadingDataRequest *request = [loadingRequest valueForKey:@"dataRequest"];
+        NSString *rangeString = [self fetchRequestRangeStringWithDataRequest:request];
+        [self.delegate resourceLoader:self requestRangeDidChange:rangeString];
+    }
+    
     return YES;
 }
 
-- (NSString *)fetchRequestRangeStringWtthDataRequest:(AVAssetResourceLoadingDataRequest *)request {
+- (NSString *)fetchRequestRangeStringWithDataRequest:(AVAssetResourceLoadingDataRequest *)request {
     long long currentOffset = request.currentOffset;
     long long requestedOffset = request.requestedOffset;
     long long requestedLength = request.requestedLength;
@@ -101,6 +99,7 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
         rangeString = [NSString stringWithFormat:@"bytes=%lld-%lld", requestedOffset, requestedOffset + requestedLength];
     }
     NSLog(@"currentOffset: %lld, requestedOffset: %lld, requestedLength: %lld, requestsAllDataToEndOfResource: %d", currentOffset, requestedOffset, requestedLength, requestsAllDataToEndOfResource);
+    NSParameterAssert(rangeString);
     return rangeString;
 }
 

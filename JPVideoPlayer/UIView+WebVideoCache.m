@@ -9,11 +9,10 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import "UIView+WebVideoCache.h"
 #import "UIView+WebVideoCacheOperation.h"
 #import <objc/runtime.h>
-#import "JPVideoPlayerPlayVideoTool.h"
+#import "JPPlayVideoManager.h"
 
 @interface UIView()
 
@@ -34,22 +33,22 @@
 #pragma mark - Play Video Methods
 
 - (void)jp_playVideoWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView progress:nil completion:nil];
 }
 
 - (void)jp_playVideoHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completion:nil];
 }
 
 - (void)jp_playVideoMutedDisplayStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay progress:nil completion:nil];
 }
 
 - (void)jp_playVideoMutedHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView progress:nil completed:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView progress:nil completion:nil];
 }
 
-- (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(JPVideoPlayerCompletionBlock)completedBlock{
+- (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock completion:(JPVideoPlayerCompletionBlock)completedBlock{
     
     NSString *validOperationKey = NSStringFromClass([self class]);
     [self jp_cancelVideoLoadOperationWithKey:validOperationKey];
@@ -69,7 +68,7 @@
         [self performSelector:NSSelectorFromString(@"jp_setupVideoLayerViewAndIndicatorView")];
 #pragma clang diagnostic pop
         
-        id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] loadVideoWithURL:url showOnView:self options:options progress:progressBlock completed:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
+        id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] loadVideoWithURL:url showOnView:self options:options progress:progressBlock completion:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
             __strong __typeof (wself) sself = wself;
             if (!sself) return;
             
@@ -234,7 +233,7 @@
     self.frame = [self.frame_beforeFullScreen CGRectValue];
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -252,7 +251,7 @@
     self.frame = frame;
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
+    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -270,7 +269,7 @@
     self.center = center;
     
     self.jp_backgroundLayer.frame = bounds;
-    [JPVideoPlayerPlayVideoTool sharedTool].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
+    [JPPlayVideoManager sharedManager].currentPlayVideoItem.currentPlayerLayer.frame = bounds;
     self.jp_videoLayerView.frame = bounds;
     self.jp_indicatorView.frame = bounds;
 #pragma clang diagnostic push
@@ -357,20 +356,16 @@
     }
 }
 
-- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress{
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress{
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadingProgressDidChanged:)]) {
         [self.jp_videoPlayerDelegate downloadingProgressDidChanged:downloadingProgress];
-        return NO;
     }
-    return YES;
 }
 
-- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress{
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress{
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingProgressDidChanged:)]) {
         [self.jp_videoPlayerDelegate playingProgressDidChanged:playingProgress];
-        return NO;
     }
-    return YES;
 }
 
 @end

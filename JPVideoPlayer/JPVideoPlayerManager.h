@@ -8,8 +8,6 @@
  * Click https://github.com/Chris-Pan
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
-
-
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerDownloader.h"
 #import "JPVideoPlayerCache.h"
@@ -123,20 +121,16 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @param videoPlayerManager  The current `JPVideoPlayerManager`.
  * @param downloadingProgress The current download progress value.
- *
- * @return return YES means need automatic display progress view, return NO means hidden progress view.
  */
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress;
+- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress;
 
 /**
  * Notify the playing progress value. this method will be called on main thread.
  *
  * @param videoPlayerManager The current `JPVideoPlayerManager`.
  * @param playingProgress    The current playing progress value.
- *
- * @return return YES means need automatic display progress view, return NO means hidden progress view.
  */
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress;
+- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress;
 
 @end
 
@@ -186,7 +180,36 @@ typedef void(^JPVideoPlayerCompletionBlock)(NSString * _Nullable fullVideoCacheP
  *
  * @return Returns an NSObject conforming to JPVideoPlayerOperation. Should be an instance of JPVideoPlayerDownloaderOperation.
  */
-- (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url showOnView:(nullable UIView *)showView options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completed:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+- (nullable id <JPVideoPlayerOperation>)loadVideoWithURL:(nullable NSURL *)url showOnView:(nullable UIView *)showView options:(JPVideoPlayerOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completion:(nullable JPVideoPlayerCompletionBlock)completionBlock;
+
+/**
+ * Play the video for the given URL if not present in cache or return the cached version otherwise.
+ 
+ * @param url             The URL of video.
+ * @param showView        The view of video layer display on.
+ * @param options         A flag to specify options to use for this request.
+ * @param progressBlock   A block called while video on downloading.
+ * @param completionBlock A block called when operation has been completed.
+ *
+ *   This parameter is required.
+ *
+ *   This block has no return value and takes the requested video cache path as first parameter.
+ *   In case of error the video path parameter is nil and the second parameter may contain an NSError.
+ *
+ *   The third parameter is an `JPVideoPlayerCacheType` enum indicating if the video was retrieved from the disk cache from the network.
+ *
+ *   The last parameter is the original video URL.
+ *
+ * @return Returns an NSObject conforming to JPVideoPlayerOperation. Should be an instance of JPVideoPlayerDownloaderOperation.
+ */
+- (nullable id <JPVideoPlayerOperation>)playVideoWithURL:(nonnull NSURL *)url
+                                              showOnView:(nonnull UIView *)showView
+                                                 options:(JPVideoPlayerOptions)options
+                                                progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
+                                              completion:(nullable JPVideoPlayerCompletionBlock)completionBlock;
+
+
+
 
 /**
  * Cancels all download operations in the queue.

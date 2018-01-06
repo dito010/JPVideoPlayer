@@ -9,7 +9,6 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import <UIKit/UIKit.h>
 
 @interface UIView (WebVideoCacheOperation)

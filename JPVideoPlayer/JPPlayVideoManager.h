@@ -8,15 +8,13 @@
  * Click https://github.com/Chris-Pan
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
-
-
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "JPVideoPlayerManager.h"
 
 extern CGFloat const JPVideoPlayerLayerFrameY;
 
-@interface JPVideoPlayerPlayVideoToolItem : NSObject
+@interface JPPlayVideoManagerModel : NSObject
 
 /** 
  * The current playing url key.
@@ -30,51 +28,51 @@ extern CGFloat const JPVideoPlayerLayerFrameY;
 
 @end
 
-@class JPVideoPlayerPlayVideoTool;
+@class JPPlayVideoManager;
 
-@protocol JPVideoPlayerPlayVideoToolDelegate <NSObject>
+@protocol JPPlayVideoManagerDelegate <NSObject>
 
 @optional
 
 /**
  * Controls which video should automatic replay when the video is play completed.
  *
- * @param videoTool     the current `JPVideoPlayerPlayVideoTool`.
+ * @param videoManager     the current `JPVideoPlayerPlayVideoManager`.
  * @param videoURL      the url of the video to be play.
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)playVideoTool:(nonnull JPVideoPlayerPlayVideoTool *)videoTool shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
+- (BOOL)playVideoManager:(nonnull JPPlayVideoManager *)videoManager shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
 
 /**
  * Notify the playing status.
  *
- * @param videoTool     the current `JPVideoPlayerPlayVideoTool`.
+ * @param videoManager     the current `JPVideoPlayerPlayVideoManager`.
  * @param playingStatus the current playing status.
  */
-- (void)playVideoTool:(nonnull JPVideoPlayerPlayVideoTool *)videoTool playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
+- (void)playVideoManager:(nonnull JPPlayVideoManager *)videoManager playingStatuDidChanged:(JPVideoPlayerPlayingStatus)playingStatus;
 
 @end
 
-typedef void(^JPVideoPlayerPlayVideoToolErrorBlock)(NSError * _Nullable error);
+typedef void(^JPPlayVideoManagerErrorBlock)(NSError * _Nullable error);
 
-typedef void(^JPVideoPlayerPlayVideoToolPlayingProgressBlock)(CGFloat progress);
+typedef void(^JPPlayVideoManagerPlayProgressBlock)(CGFloat progress);
 
-@interface JPVideoPlayerPlayVideoTool : NSObject
+@interface JPPlayVideoManager : NSObject
 
-@property(nullable, nonatomic, weak)id<JPVideoPlayerPlayVideoToolDelegate> delegate;
+@property(nullable, nonatomic, weak)id<JPPlayVideoManagerDelegate> delegate;
 
 /**
  * Singleton method, returns the shared instance.
  *
- * @return global shared instance of play video tool class. 
+ * @return global shared instance of play video Manager class.
  */
-+ (nonnull instancetype)sharedTool;
++ (nonnull instancetype)sharedManager;
 
 /**
  * The current play video item.
  */
-@property(nonatomic, strong, readonly, nullable)JPVideoPlayerPlayVideoToolItem *currentPlayVideoItem;
+@property(nonatomic, strong, readonly, nullable)JPPlayVideoManagerModel *currentPlayVideoItem;
 
 
 # pragma mark - Play video existed in disk.
@@ -88,9 +86,14 @@ typedef void(^JPVideoPlayerPlayVideoToolPlayingProgressBlock)(CGFloat progress);
  * @param progress           the playing progress of video player.
  * @param error              the error for 'fullVideoCachePath' and 'showLayer'.
  *
- * @return  token (@see JPVideoPlayerPlayVideoToolItem) that can be passed to -stopPlayVideo: to stop play.
+ * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerPlayVideoToolItem *)playExistedVideoWithURL:(NSURL * _Nullable)url fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath options:(JPVideoPlayerOptions)options showOnView:(UIView * _Nullable)showView playingProgress:(JPVideoPlayerPlayVideoToolPlayingProgressBlock _Nullable )progress error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error;
+- (nullable JPPlayVideoManagerModel *)playExistedVideoWithURL:(NSURL * _Nullable)url
+                                                     fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
+                                                                options:(JPVideoPlayerOptions)options
+                                                             showOnView:(UIView * _Nullable)showView
+                                                        progress:(JPPlayVideoManagerPlayProgressBlock _Nullable )progress
+                                                                  error:(nullable JPPlayVideoManagerErrorBlock)error;
 
 
 # pragma mark - Play video from Web.
@@ -105,9 +108,16 @@ typedef void(^JPVideoPlayerPlayVideoToolPlayingProgressBlock)(CGFloat progress);
  * @param progress           the playing progress of video player.
  * @param error              the error for 'fullVideoCachePath' and 'showLayer'.
  *
- * @return  token (@see JPVideoPlayerPlayVideoToolItem) that can be passed to -stopPlayVideo: to stop play.
+ * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerPlayVideoToolItem *)playVideoWithURL:(NSURL * _Nullable)url tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath options:(JPVideoPlayerOptions)options videoFileExceptSize:(NSUInteger)exceptSize videoFileReceivedSize:(NSUInteger)receivedSize showOnView:(UIView * _Nullable)showView playingProgress:(JPVideoPlayerPlayVideoToolPlayingProgressBlock _Nullable )progress error:(nullable JPVideoPlayerPlayVideoToolErrorBlock)error;
+- (nullable JPPlayVideoManagerModel *)playVideoWithURL:(NSURL * _Nullable)url
+                                              tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath
+                                                         options:(JPVideoPlayerOptions)options
+                                             videoFileExceptSize:(NSUInteger)exceptSize
+                                           videoFileReceivedSize:(NSUInteger)receivedSize
+                                                      showOnView:(UIView * _Nullable)showView
+                                                        progress:(JPPlayVideoManagerPlayProgressBlock _Nullable )progress
+                                                           error:(nullable JPPlayVideoManagerErrorBlock)error;
 
 /**
  * Call this method to make this instance to handle video data for videoplayer.
@@ -116,7 +126,9 @@ typedef void(^JPVideoPlayerPlayVideoToolPlayingProgressBlock)(CGFloat progress);
  * @param expectedSize       The video data total length.
  * @param receivedSize       The video data cached in disk.
  */
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath videoFileExceptSize:(NSUInteger)expectedSize videoFileReceivedSize:(NSUInteger)receivedSize;
+- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
+                         videoFileExceptSize:(NSUInteger)expectedSize
+                       videoFileReceivedSize:(NSUInteger)receivedSize;
 
 /**
  * Call this method to change the video path from temporary path to full path.

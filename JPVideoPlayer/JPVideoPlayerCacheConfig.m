@@ -9,7 +9,6 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import "JPVideoPlayerCacheConfig.h"
 
 static const NSInteger kDefaultCacheMaxCacheAge = 60*60*24*7; // 1 week

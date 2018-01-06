@@ -18,7 +18,7 @@
 		48CB2C511EDE4C63009DD486 /* JPVideoPlayerDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C331EDE4C63009DD486 /* JPVideoPlayerDownloader.m */; };
 		48CB2C521EDE4C63009DD486 /* JPVideoPlayerDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C351EDE4C63009DD486 /* JPVideoPlayerDownloaderOperation.m */; };
 		48CB2C531EDE4C63009DD486 /* JPVideoPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C371EDE4C63009DD486 /* JPVideoPlayerManager.m */; };
-		48CB2C541EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C3A1EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.m */; };
+		48CB2C541EDE4C63009DD486 /* JPPlayVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C3A1EDE4C63009DD486 /* JPPlayVideoManager.m */; };
 		48CB2C551EDE4C63009DD486 /* JPVideoPlayerProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C3C1EDE4C63009DD486 /* JPVideoPlayerProgressView.m */; };
 		48CB2C561EDE4C63009DD486 /* JPVideoPlayerResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C3E1EDE4C63009DD486 /* JPVideoPlayerResourceLoader.m */; };
 		48CB2C5A1EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CB2C461EDE4C63009DD486 /* UIView+PlayerStatusAndDownloadIndicator.m */; };
@@ -78,8 +78,8 @@
 		48CB2C361EDE4C63009DD486 /* JPVideoPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerManager.h; sourceTree = "<group>"; };
 		48CB2C371EDE4C63009DD486 /* JPVideoPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerManager.m; sourceTree = "<group>"; };
 		48CB2C381EDE4C63009DD486 /* JPVideoPlayerOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerOperation.h; sourceTree = "<group>"; };
-		48CB2C391EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerPlayVideoTool.h; sourceTree = "<group>"; };
-		48CB2C3A1EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerPlayVideoTool.m; sourceTree = "<group>"; };
+		48CB2C391EDE4C63009DD486 /* JPPlayVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPPlayVideoManager.h; sourceTree = "<group>"; };
+		48CB2C3A1EDE4C63009DD486 /* JPPlayVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPPlayVideoManager.m; sourceTree = "<group>"; };
 		48CB2C3B1EDE4C63009DD486 /* JPVideoPlayerProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerProgressView.h; sourceTree = "<group>"; };
 		48CB2C3C1EDE4C63009DD486 /* JPVideoPlayerProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerProgressView.m; sourceTree = "<group>"; };
 		48CB2C3D1EDE4C63009DD486 /* JPVideoPlayerResourceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerResourceLoader.h; sourceTree = "<group>"; };
@@ -163,8 +163,8 @@
 				48CB2C361EDE4C63009DD486 /* JPVideoPlayerManager.h */,
 				48CB2C371EDE4C63009DD486 /* JPVideoPlayerManager.m */,
 				48CB2C381EDE4C63009DD486 /* JPVideoPlayerOperation.h */,
-				48CB2C391EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.h */,
-				48CB2C3A1EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.m */,
+				48CB2C391EDE4C63009DD486 /* JPPlayVideoManager.h */,
+				48CB2C3A1EDE4C63009DD486 /* JPPlayVideoManager.m */,
 				48CB2C3B1EDE4C63009DD486 /* JPVideoPlayerProgressView.h */,
 				48CB2C3C1EDE4C63009DD486 /* JPVideoPlayerProgressView.m */,
 				48CB2C3D1EDE4C63009DD486 /* JPVideoPlayerResourceLoader.h */,
@@ -416,7 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48CB2C5C1EDE4C63009DD486 /* UIView+WebVideoCacheOperation.m in Sources */,
-				48CB2C541EDE4C63009DD486 /* JPVideoPlayerPlayVideoTool.m in Sources */,
+				48CB2C541EDE4C63009DD486 /* JPPlayVideoManager.m in Sources */,
 				48CB2C561EDE4C63009DD486 /* JPVideoPlayerResourceLoader.m in Sources */,
 				48CB2C501EDE4C63009DD486 /* JPVideoPlayerCachePathManager.m in Sources */,
 				48CB2C511EDE4C63009DD486 /* JPVideoPlayerDownloader.m in Sources */,

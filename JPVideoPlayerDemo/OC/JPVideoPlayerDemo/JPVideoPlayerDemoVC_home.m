@@ -9,7 +9,6 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-
 #import "JPVideoPlayerDemoVC_home.h"
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerDemoCell.h"
@@ -49,30 +48,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSString *string = @"http://static.smartisanos.cn/common/video/smartisanT2.mp4";
-    [[JPVideoPlayerDebrisJointManager new] tryToJointDataDebrisForKey:string completion:^(NSString * _Nullable fullVideoPath, NSError * _Nullable error) {
-
-        NSLog(@"%@", fullVideoPath);
-        NSLog(@"%@", error);
-
-    }];
-    return;
-    
-    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=0-5000" forHTTPHeaderField:@"Range"];
-    [JPVideoPlayerDownloader.sharedDownloader setValue:@"bytes=5001-" forHTTPHeaderField:@"Range"];
-    [JPVideoPlayerDownloader.sharedDownloader downloadVideoWithURL:[NSURL URLWithString:string] options:0 progress:^(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString * _Nullable tempCachedVideoPath, NSURL * _Nullable targetURL) {
-
-        if (data.length) {
-            [JPVideoPlayerCache.sharedCache _storeVideoData:data expectedSize:expectedSize forKey:targetURL.absoluteString completion:nil];
-        }
-
-    } completion:^(NSError * _Nullable error) {
-
-
-
-    }];
-//    [self setup];
-//    [self insertLineInScreenCenter];
+    [self setup];
+    [self insertLineInScreenCenter];
     
 }
 
