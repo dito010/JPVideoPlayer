@@ -111,13 +111,15 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
 #pragma mark - Private
 
 - (void)internalPendingRequests{
-    
     // Enumerate all loadingRequest
     // For every singal loadingRequest, combine response-data length and file mimeType
     // Then judge the download file data is contain the loadingRequest's data or not, if Yes, take out the request's data and return to loadingRequest, next to colse this loadingRequest. if No, continue wait for download finished.
+    if (!self.tempCacheVideoPath) {
+        return;
+    }
     
     NSError *error;
-    NSData *tempVideoData = [NSData dataWithContentsOfFile:_tempCacheVideoPath options:NSDataReadingMappedIfSafe error:&error];
+    NSData *tempVideoData = [NSData dataWithContentsOfFile:self.tempCacheVideoPath options:NSDataReadingMappedIfSafe error:&error];
     if (!error) {
         NSMutableArray *requestsCompleted = [NSMutableArray array];
         @autoreleasepool {
@@ -166,7 +168,7 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     long long endOffset = startOffset + dataRequest.requestedLength;
     
     // if the received data greater than the requestLength.
-    if (_receivedSize >= endOffset) {
+    if (self.receivedSize >= endOffset) {
         return YES;
     }
     // if the received data less than the requestLength.

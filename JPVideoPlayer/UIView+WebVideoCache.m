@@ -68,7 +68,8 @@
         [self performSelector:NSSelectorFromString(@"jp_setupVideoLayerViewAndIndicatorView")];
 #pragma clang diagnostic pop
         
-        id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] loadVideoWithURL:url showOnView:self options:options progress:progressBlock completion:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
+        id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] playVideoWithURL:url showOnView:self options:options progress:progressBlock completion:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
+            
             __strong __typeof (wself) sself = wself;
             if (!sself) return;
             
@@ -95,7 +96,6 @@
 #pragma mark - Play Control
 
 - (void)jp_stopPlay{
-    [[JPVideoPlayerCache sharedCache] disableCurrentCompletion];
     [[JPVideoPlayerDownloader sharedDownloader] cancel];
     [[JPVideoPlayerManager sharedManager]stopPlay];
 }
@@ -233,7 +233,7 @@
     self.frame = [self.frame_beforeFullScreen CGRectValue];
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -251,7 +251,7 @@
     self.frame = frame;
     
     self.jp_backgroundLayer.frame = self.bounds;
-    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
@@ -269,7 +269,7 @@
     self.center = center;
     
     self.jp_backgroundLayer.frame = bounds;
-    [JPVideoPlayer sharedManager].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
     self.jp_videoLayerView.frame = bounds;
     self.jp_indicatorView.frame = bounds;
 #pragma clang diagnostic push

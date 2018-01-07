@@ -8,6 +8,7 @@
  * Click https://github.com/Chris-Pan
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
+
 #import <Foundation/Foundation.h>
 
 @protocol JPVideoPlayerOperation <NSObject>

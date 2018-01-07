@@ -27,6 +27,16 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 @property(nonatomic, strong, nullable)NSURL *url;
 
 /**
+ * The view of the video picture will show on.
+ */
+@property(nonatomic, weak, nullable)UIView *unownShowView;
+
+/**
+ * options
+ */
+@property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
+
+/**
  * The Player to play video.
  */
 @property(nonatomic, strong, nullable)AVPlayer *player;
@@ -47,11 +57,6 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 @property(nonatomic, strong, nullable)AVURLAsset *videoURLAsset;
 
 /**
- * The view of the video picture will show on.
- */
-@property(nonatomic, weak, nullable)UIView *unownShowView;
-
-/**
  * A flag to book is cancel play or not.
  */
 @property(nonatomic, assign, getter=isCancelled)BOOL cancelled;
@@ -59,17 +64,12 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 /**
  * Error message.
  */
-@property(nonatomic, strong, nullable)JPPlayVideoManagerErrorBlock error;
+@property(nonatomic, strong, nullable)JPVideoPlayerErrorBlock error;
 
 /**
  * The resourceLoader for the videoPlayer.
  */
 @property(nonatomic, strong, nullable)JPVideoPlayerResourceLoader *resourceLoader;
-
-/**
- * options
- */
-@property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
 
 /**
  * The current playing url key.
@@ -85,6 +85,11 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
  * The play progress observer.
  */
 @property(nonatomic, strong)id timeObserver;
+
+/*
+ * videoPlayer.
+ */
+@property(nonatomic, weak) JPVideoPlayer *videoPlayer;
 
 @end
 
@@ -126,9 +131,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }
     
     // remove observer.
-    JPVideoPlayer *Manager = [JPVideoPlayer sharedManager];
-    [_currentPlayerItem removeObserver:Manager forKeyPath:@"status"];
-    [_currentPlayerItem removeObserver:Manager forKeyPath:@"loadedTimeRanges"];
+    [self.currentPlayerItem removeObserver:self.videoPlayer forKeyPath:@"status"];
+    [self.currentPlayerItem removeObserver:self.videoPlayer forKeyPath:@"loadedTimeRanges"];
     [self.player removeTimeObserver:self.timeObserver];
     
     // remove player
@@ -167,18 +171,16 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 @implementation JPVideoPlayer
 
-+ (nonnull instancetype)sharedManager{
-    return [JPVideoPlayer new];
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
 }
 
 - (instancetype)init{
-    static JPVideoPlayer *_sharedManager;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedManager = [super init];
+    self = [super init];
+    if (self) {
         pthread_mutex_init(&(_lock), NULL);
-    });
-    return _sharedManager;
+    }
+    return self;
 }
 
 
@@ -188,8 +190,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                                      fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
                                                                 options:(JPVideoPlayerOptions)options
                                                              showOnView:(UIView * _Nullable)showView
-                                                               progress:(JPPlayVideoManagerPlayProgressBlock _Nullable )progress
-                                                                  error:(nullable JPPlayVideoManagerErrorBlock)error {
+                                                               progress:(JPVideoPlayerProgressBlock _Nullable )progress
+                                                                  error:(nullable JPVideoPlayerErrorBlock)error {
     
     if (fullVideoCachePath.length==0) {
         NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
@@ -219,59 +221,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     return model;
 }
 
-- (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL * _Nullable)url
-                                              tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath
-                                                         options:(JPVideoPlayerOptions)options
-                                             videoFileExceptSize:(NSUInteger)exceptSize
-                                           videoFileReceivedSize:(NSUInteger)receivedSize
-                                                      showOnView:(UIView * _Nullable)showView
-                                                        progress:(JPPlayVideoManagerPlayProgressBlock _Nullable )progress
-                                                           error:(nullable JPPlayVideoManagerErrorBlock)error {
-    
-    if (tempVideoCachePath.length==0) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
-        if (error) error(e);
-        return nil;
-    }
-    
-    if (!showView) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
-        if (error) error(e);
-        return nil;
-    }
-    
-    // Re-create all all configuration agian.
-    // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
-    
-    JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader new];
-    resourceLoader.delegate = self;
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self handleVideoURL] options:nil];
-    [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
-    JPVideoPlayerModel *model = [self generatePlayerModelWithURL:url
-                                                      playerItem:playerItem
-                                                         options:options
-                                                      showOnView:showView
-                                                        progress:progress
-                                                           error:error];
-    self.currentVideoPlayerModel = model;
-    model.resourceLoader = resourceLoader;
-    if (options & JPVideoPlayerMutedPlay) {
-        model.player.muted = YES;
-    }
-    
-    // play.
-    [self.currentVideoPlayerModel.resourceLoader didReceivedDataCacheInDiskByTempPath:tempVideoCachePath
-                                                               videoFileExceptSize:exceptSize
-                                                             videoFileReceivedSize:receivedSize];
-    return model;
-}
-
 - (JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                       options:(JPVideoPlayerOptions)options
                                    showOnView:(UIView *)showView
-                                     progress:(JPPlayVideoManagerPlayProgressBlock)progress
-                                        error:(JPPlayVideoManagerErrorBlock)error {
+                                     progress:(JPVideoPlayerProgressBlock)progress
+                                        error:(JPVideoPlayerErrorBlock)error {
     // Re-create all all configuration agian.
     // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
     JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader new];
@@ -394,7 +348,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 #pragma mark - AVPlayer Observer
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification{
-    
     // ask need automatic replay or not.
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:shouldAutoReplayVideoForURL:)]) {
         if (![self.delegate videoPlayer:self shouldAutoReplayVideoForURL:self.currentVideoPlayerModel.url]) {
@@ -430,7 +383,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 break;
                 
             case AVPlayerItemStatusReadyToPlay:{
-                
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 if (!self.currentVideoPlayerModel) return;
                 
@@ -491,8 +443,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                         playerItem:(AVPlayerItem *)playerItem
                                            options:(JPVideoPlayerOptions)options
                                         showOnView:(UIView *)showView
-                                          progress:(JPPlayVideoManagerPlayProgressBlock)progress
-                                             error:(JPPlayVideoManagerErrorBlock)error {
+                                          progress:(JPVideoPlayerProgressBlock)progress
+                                             error:(JPVideoPlayerErrorBlock)error {
     JPVideoPlayerModel *item = [JPVideoPlayerModel new];
     item.unownShowView = showView;
     item.url = url;
@@ -528,9 +480,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         double current = CMTimeGetSeconds(time);
         double total = CMTimeGetSeconds(sItem.currentPlayerItem.duration);
         if (current && progress) {
-            progress(total, total);
+            progress(current, total);
         }
     }];
+    item.videoPlayer = self;
     return item;
 }
 

@@ -10,7 +10,7 @@
  */
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "JPVideoPlayerManager.h"
+#import "JPVideoPlayerCompat.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +28,10 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  */
 @property(nonatomic, strong, readonly, nullable)AVPlayerLayer *currentPlayerLayer;
 
+/**
+ * The player to play video.
+ */
+@property(nonatomic, strong, readonly, nullable)AVPlayer *player;
 @end
 
 @class JPVideoPlayer;
@@ -64,20 +68,13 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 
 @end
 
-typedef void(^JPPlayVideoManagerErrorBlock)(NSError * _Nullable error);
+typedef void(^JPVideoPlayerErrorBlock)(NSError * _Nullable error);
 
-typedef void(^JPPlayVideoManagerPlayProgressBlock)(double currentSeconds, double totalSeconds);
+typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSeconds);
 
 @interface JPVideoPlayer : NSObject
 
 @property(nullable, nonatomic, weak)id<JPVideoPlayerInternalDelegate> delegate;
-
-/**
- * Singleton method, returns the shared instance.
- *
- * @return global shared instance of play video Manager class.
- */
-+ (nonnull instancetype)sharedManager;
 
 /**
  * The current play video item.
@@ -102,32 +99,11 @@ typedef void(^JPPlayVideoManagerPlayProgressBlock)(double currentSeconds, double
                                            fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
                                                       options:(JPVideoPlayerOptions)options
                                                    showOnView:(UIView * _Nullable)showView
-                                                     progress:(JPPlayVideoManagerPlayProgressBlock _Nullable )progress
-                                                        error:(nullable JPPlayVideoManagerErrorBlock)error;
+                                                     progress:(JPVideoPlayerProgressBlock _Nullable )progress
+                                                        error:(nullable JPVideoPlayerErrorBlock)error;
 
 
 # pragma mark - Play video from Web.
-
-/**
- * Play the not existed video file from web.
- *
- * @param url                the video url to play.
- * @param tempVideoCachePath the temporary video file path in disk.
- * @param options            the options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param showView           the view to show the video display layer.
- * @param progress           the playing progress of video player.
- * @param error              the error for 'fullVideoCachePath' and 'showLayer'.
- *
- * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
- */
-- (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL * _Nullable)url
-                                    tempVideoCachePath:(NSString * _Nullable)tempVideoCachePath
-                                               options:(JPVideoPlayerOptions)options
-                                   videoFileExceptSize:(NSUInteger)exceptSize
-                                 videoFileReceivedSize:(NSUInteger)receivedSize
-                                            showOnView:(UIView * _Nullable)showView
-                                              progress:(JPPlayVideoManagerPlayProgressBlock _Nullable)progress
-                                                 error:(nullable JPPlayVideoManagerErrorBlock)error;
 
 /**
  * Play the not existed video from web.
@@ -143,8 +119,8 @@ typedef void(^JPPlayVideoManagerPlayProgressBlock)(double currentSeconds, double
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL * _Nullable)url
                                                options:(JPVideoPlayerOptions)options
                                             showOnView:(UIView * _Nullable)showView
-                                              progress:(JPPlayVideoManagerPlayProgressBlock _Nullable)progress
-                                                 error:(nullable JPPlayVideoManagerErrorBlock)error;
+                                              progress:(JPVideoPlayerProgressBlock _Nullable)progress
+                                                 error:(nullable JPVideoPlayerErrorBlock)error;
 
 /**
  * Call this method to make this instance to handle video data for player.

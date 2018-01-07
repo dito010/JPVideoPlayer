@@ -41,7 +41,11 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
 
-typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data, NSInteger receivedSize, NSInteger expectedSize, NSString *_Nullable tempCachedVideoPath, NSURL * _Nullable targetURL);
+typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data,
+                                                    NSUInteger receivedSize,
+                                                    NSUInteger expectedSize,
+                                                    NSString *_Nullable tempCachedVideoPath,
+                                                    NSURL * _Nullable url);
 
 typedef void(^JPVideoPlayerDownloaderCompletion)(NSError *_Nullable error);
 
@@ -50,6 +54,8 @@ typedef NSDictionary<NSString *, NSString *> JPHTTPHeadersDictionary;
 typedef NSMutableDictionary<NSString *, NSString *> JPHTTPHeadersMutableDictionary;
 
 typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilterBlock)(NSURL * _Nullable url, JPHTTPHeadersDictionary * _Nullable headers);
+
+typedef void(^JPFetchExpectedSizeCompletion)(NSURL *url, NSUInteger expectedSize, NSError *_Nullable error);
 
 @interface JPVideoPlayerDownloader : NSObject
 
@@ -105,12 +111,26 @@ typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilt
 /**
  * Creates a JPVideoPlayerDownloader async downloader instance with a given URL.
  *
- * @param url            The URL to the video to download.
+ * @param url            The URL of the video to download.
  * @param options        The options to be used for this download.
  * @param progressBlock  A block called repeatedly while the video is downloading.
  * @param completion     A block called once the download completed.
  */
-- (void)downloadVideoWithURL:(nullable NSURL *)url options:(JPVideoPlayerDownloaderOptions)options progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock completion:(nullable JPVideoPlayerDownloaderCompletion)completion;
+- (void)downloadVideoWithURL:(NSURL *)url
+                     options:(JPVideoPlayerDownloaderOptions)options
+                    progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
+                  completion:(JPVideoPlayerDownloaderCompletion)completion;
+
+/**
+ * Try to fetch the total length for given url.
+ *
+ * @param url        The URL of the video to download.
+ * @param options    The options to be used for this download.
+ * @param completion A block called once the fetching completed.
+ */
+- (void)tryToFetchVideoExpectedSizeWithURL:(NSURL *)url
+                                   options:(JPVideoPlayerDownloaderOptions)options
+                                completion:(JPFetchExpectedSizeCompletion)completion;
 
 /**
  * Cancels a download that was previously queued using -downloadVideoWithURL:options:progress:completion:

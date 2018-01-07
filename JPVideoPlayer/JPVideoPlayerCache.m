@@ -16,36 +16,13 @@
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerDownloaderOperation.h"
 #import "JPVideoPlayerCacheModel.h"
+#import "JPVideoPlayerDebrisJointManager.h"
 
 #include <sys/param.h>
 #include <sys/mount.h>
 #import <CommonCrypto/CommonDigest.h>
 #import "NSURL+QueryStrip.h"
 #import <pthread.h>
-
-@interface JPVideoPlayerCacheToken()
-
-/**
- * outputStream.
- */
-@property(nonnull, nonatomic, strong)NSOutputStream *outputStream;
-
-/**
- * Received video size.
- */
-@property(nonatomic, assign)NSUInteger receivedVideoSize;
-
-/**
- * key.
- */
-@property(nonnull, nonatomic, strong)NSString *key;
-
-@end
-
-@implementation JPVideoPlayerCacheToken
-
-@end
-
 
 @interface JPVideoPlayerCacheTask: NSObject
 
@@ -60,9 +37,9 @@
 @property(nonatomic, assign)NSUInteger receivedVideoSize;
 
 /*
- * model.
+ * Joint Manager.
  */
-@property(nonatomic, strong, nonnull) JPVideoPlayerCacheModel *model;
+@property(nonatomic, strong, nonnull) JPVideoPlayerDebrisJointManager *joinManager;
 
 @end
 
@@ -73,11 +50,6 @@
 @interface JPVideoPlayerCache()
 
 @property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
-
-/**
- * OutputStreams.
- */
-@property(nonatomic, strong, nonnull)NSMutableArray<JPVideoPlayerCacheToken *> *outputStreams;
 
 /**
  * completionBlock can be call or not.
@@ -97,11 +69,6 @@
     NSFileManager *_fileManager;
 }
 
-- (void)dealloc {
-    pthread_mutex_destroy(&_lock);
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfig *)cacheConfig {
     self = [super init];
     if (self) {
@@ -114,10 +81,8 @@
         }
         _config = config;
         _fileManager = [NSFileManager defaultManager];
-        _outputStreams = [NSMutableArray array];
         _currentCacheTask = nil;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadVideoDidStart:) name:JPVideoPlayerDownloadStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(deleteOldFiles)
                                                      name:UIApplicationWillTerminateNotification
@@ -148,114 +113,60 @@
 
 #pragma mark - Store Video Options
 
-- (void)downloadVideoDidStart:(NSNotification *)notification{
-    JPVideoPlayerDownloaderOperation *operation = notification.object;
-    NSURL *url = operation.request.URL;
-    NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
-    [self removeTempCacheForKey:key withCompletion:nil];
+- (void)storeExpectedSize:(NSUInteger)expectedSize
+                   forKey:(NSString *)key
+               completion:(JPStoreExpectedSizeCompletion)completion {
+    NSParameterAssert(key.length);
     
-    @autoreleasepool {
-        [self.outputStreams removeAllObjects];
-    }
-}
-
-- (nullable JPVideoPlayerCacheToken *)storeVideoData:(nullable NSData *)videoData expectedSize:(NSUInteger)expectedSize forKey:(nullable NSString *)key completion:(nullable JPVideoPlayerStoreDataFinishedBlock)completionBlock{
-    
-    if (videoData.length==0) return nil;
-    
-    if (key.length==0) {
-        if (completionBlock){
+    if (!key.length) {
+        if (completion){
             NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
-            completionBlock(0, error, nil);
+            completion(key, expectedSize, error);
         }
-        return nil;
+        return;
     }
     
-    // Check the free size of the device.
-    if (![self haveFreeSizeToCacheFileWithSize:expectedSize]) {
-        if (completionBlock){
-            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
-            completionBlock(0, error, nil);
-        }
-        return nil;
+    // first save video data for key.
+    // 某个视频第一次请求返回数据.
+    NSString *dataName = @"dataDebris0";
+    JPVideoPlayerCacheModel *model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
+                                                                     expectedSize:expectedSize
+                                                                         dataName:dataName
+                                                                            index:0
+                                                                       isMetadata:YES];
+    NSData *modelData = [NSKeyedArchiver archivedDataWithRootObject:model];
+    NSParameterAssert(modelData);
+    if (!modelData) {
+        return;
     }
     
-    @synchronized (self) {
-        self.completionBlockEnable = YES;
-        JPVideoPlayerCacheToken *targetToken = nil;
-        for (JPVideoPlayerCacheToken *token in self.outputStreams) {
-            if ([token.key isEqualToString:key]) {
-                targetToken = token;
-                break;
-            }
-        }
-        if (!targetToken) {
-            NSString *path = [JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key];
-            NSOutputStream *stream = [[NSOutputStream alloc]initToFileAtPath:path append:YES];
-            [stream open];
-            JPVideoPlayerCacheToken *token = [JPVideoPlayerCacheToken new];
-            token.key = key;
-            token.outputStream = stream;
-            [self.outputStreams addObject:token];
-            targetToken = token;
-        }
-
-        if (videoData.length>0) {
-            dispatch_async(self.ioQueue, ^{
-                [targetToken.outputStream write:videoData.bytes maxLength:videoData.length];
-                targetToken.receivedVideoSize += videoData.length;
-                
-                NSString *tempVideoCachePath = [JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key];
-                
-                // transform to NSUrl
-                NSURL *fileURL = [NSURL fileURLWithPath:tempVideoCachePath];
-                
-                // disable iCloud backup
-                if (self.config.shouldDisableiCloud) {
-                    [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:nil];
-                }
-                
-                if (completionBlock) {
-                    NSString *fullVideoCachePath = nil;
-                    NSError *error = nil;
-                    if (targetToken.receivedVideoSize==expectedSize) {
-                        fullVideoCachePath = [JPVideoPlayerCachePathManager videoCacheFullPathForKey:key];
-                        [_fileManager moveItemAtPath:tempVideoCachePath toPath:fullVideoCachePath error:&error];
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (self.completionBlockEnable) {
-                            completionBlock(targetToken.receivedVideoSize, error, fullVideoCachePath);
-                        }
-                    });
-                }
-                
-                // cache temporary video data finished.
-                // close the stream.
-                // remove the cache operation.
-                if (targetToken.receivedVideoSize==expectedSize) {
-                    [targetToken.outputStream close];
-                    [self.outputStreams removeObject:targetToken];
-                    self.completionBlockEnable = NO;
-                }
-            });
-        }
-        return targetToken;
+    NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
+    NSLog(@"modelsSavePath: %@", modelsSavePath);
+    NSData *modelsData = [NSKeyedArchiver archivedDataWithRootObject:@[modelData]];
+    NSParameterAssert(modelsData.length);
+    NSParameterAssert(modelsSavePath);
+    if (!modelData) {
+        return;
+    }
+    NSOutputStream *modelsStream = [self internalStoreModelsData:modelsData aPath:modelsSavePath];
+    [self internalCloseOutputStream:modelsStream];
+    
+    if (completion) {
+        completion(key, expectedSize, nil);
     }
 }
 
-- (void)_storeVideoData:(NSData *)videoData
-           expectedSize:(NSUInteger)expectedSize
-                 forKey:(NSString *)key
-             completion:(JPVideoPlayerStoreDataFinishedBlock)completionBlock {
-    NSParameterAssert(videoData.length);
+- (void)storeVideoData:(NSData *)videoData
+          expectedSize:(NSUInteger)expectedSize
+                forKey:(NSString *)key
+            completion:(JPStoreDataCompletion)completion {
     NSParameterAssert(key.length);
     if (!videoData.length) return;
     
     if (!key.length) {
-        if (completionBlock){
+        if (completion){
             NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Need a key for storing video data"}];
-            completionBlock(0, error, nil);
+            completion(key, 0, nil, nil, error);
         }
         return;
     }
@@ -263,9 +174,9 @@
     // Check the free size of the device.
     // 检查是否有足够的磁盘缓存.
     if (![self haveFreeSizeToCacheFileWithSize:expectedSize]) {
-        if (completionBlock){
+        if (completion){
             NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
-            completionBlock(0, error, nil);
+            completion(key, 0, nil, nil, error);
         }
         return;
     }
@@ -278,37 +189,19 @@
             // the path of models(model recorde the video data message).
             // 存储模型的路径(模型里记录了存储视频的信息).
             NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
-            NSLog(@"modelsSavePath: %@", modelsSavePath);
-            NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
-            
             NSMutableArray<NSData *> *modelDatasM = [@[] mutableCopy];
-            JPVideoPlayerCacheModel *model = nil;
             NSString *dataName = nil;
-            if (!modelsData.length) {
-                // first save video data for key.
-                // 某个视频第一次请求返回数据.
-                dataName = @"dataDebris0";
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
-                                                        expectedSize:expectedSize
-                                                            dataName:dataName
-                                                               index:0
-                                                          isMetadata:YES];
-            }
-            else{
-                NSArray<NSData *> *modelDatasExisted = [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
-                NSParameterAssert(modelDatasExisted);
-                if (modelDatasExisted) {
-                    [modelDatasM addObjectsFromArray:modelDatasExisted];
-                }
-                dataName = [NSString stringWithFormat:@"dataDebris%ld", modelDatasExisted.count];
-                // frist time receive video for a request(but not first request for given key).
-                // 某个请求第一次返回数据(但不是第一次请求).
-                model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
-                                                        expectedSize:expectedSize
-                                                            dataName:dataName
-                                                               index:modelDatasExisted.count
-                                                          isMetadata:NO];
-            }
+            NSArray<NSData *> *modelsData = [self fetchModelsExistedForKey:key];
+            NSParameterAssert(modelsData);
+            [modelDatasM addObjectsFromArray:modelsData];
+            dataName = [NSString stringWithFormat:@"dataDebris%ld", modelsData.count];
+            // frist time receive video for a request(but not first request for given key).
+            // 某个请求第一次返回数据(但不是第一次请求).
+            JPVideoPlayerCacheModel *model = [[JPVideoPlayerCacheModel alloc] initWithKey:key
+                                                                             expectedSize:expectedSize
+                                                                                 dataName:dataName
+                                                                                    index:modelsData.count
+                                                                               isMetadata:NO];
             
             // archiver models then store it.
             // 归档模型, 并存储.
@@ -325,13 +218,9 @@
             NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:videoSavePath];
             cacheTask.receivedVideoSize += videoData.length;
             cacheTask.videoSavePath = videoSavePath;
-            cacheTask.model = model;
+            cacheTask.joinManager = [JPVideoPlayerDebrisJointManager new];
             self.currentCacheTask = cacheTask;
             [self internalCloseOutputStream:videoStream];
-            
-            if (completionBlock) {
-//                completionBlock();
-            }
         }
         else {
             // store the last video data for a request.
@@ -341,6 +230,21 @@
             [self internalCloseOutputStream:videoStream];
         }
         
+        // try to joint debris video data.
+        // 尝试合并数据.
+        [self.currentCacheTask.joinManager tryToJointDataDebrisForKey:key completion:^(NSString * _Nullable fullVideoPath, NSError * _Nullable error) {
+           
+            if (completion) {
+                if (!error && fullVideoPath) {
+                    completion(key, videoData.length, nil, fullVideoPath, nil);
+                }
+                else {
+                    completion(key, videoData.length, self.currentCacheTask.videoSavePath, nil, nil);
+                }
+            }
+            
+        }];
+        
     });
 }
 
@@ -349,22 +253,23 @@
         return;
     }
     
+    // 如果当前缓存的数据大小不等于期望大小, 此时应该更新对应的模型.
     self.currentCacheTask = nil;
-}
-
-- (void)cancel:(nullable JPVideoPlayerCacheToken *)token{
-    if (token) {
-        [self.outputStreams removeObject:token];
-        [self disableCurrentCompletion];
-    }
-}
-
-- (void)disableCurrentCompletion{
-    self.completionBlockEnable = NO;
 }
 
 
 #pragma mark - Store Private
+
+- (NSArray<NSData *> *)fetchModelsExistedForKey:(NSString *)key {
+    NSParameterAssert(key);
+    NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
+    NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
+    if (!modelsData.length) {
+        return nil;
+    }
+    
+    return [NSKeyedUnarchiver unarchiveObjectWithData:modelsData];
+}
 
 - (NSOutputStream *)internalStoreVideoData:(NSData *)videoData videoPath:(NSString *)videoPath {
     // watch out that video data need appending.
@@ -399,7 +304,7 @@
 
 #pragma mark - Query and Retrieve Options
 
-- (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key done:(nullable JPVideoPlayerCacheQueryCompletedBlock)doneBlock {
+- (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key done:(nullable JPVideoPlayerCacheQueryCompletion)doneBlock {
     if (!key) {
         if (doneBlock) {
             doneBlock(nil, JPVideoPlayerCacheTypeNone);
@@ -441,10 +346,10 @@
     return operation;
 }
 
-- (void)diskVideoExistsWithKey:(NSString *)key completion:(JPVideoPlayerCheckCacheCompletionBlock)completionBlock{
+- (void)diskVideoExistsWithKey:(NSString *)key completion:(JPVideoPlayerCheckCacheCompletion)completionBlock{
     dispatch_async(_ioQueue, ^{
         BOOL exists = [_fileManager fileExistsAtPath:[JPVideoPlayerCachePathManager videoCacheFullPathForKey:key]];
-
+        
         if (!exists) {
             exists = [_fileManager fileExistsAtPath:[JPVideoPlayerCachePathManager videoCacheFullPathForKey:key].stringByDeletingPathExtension];
         }
@@ -515,7 +420,7 @@
         //  1. Removing files that are older than the expiration date.
         //  2. Storing file attributes for the size-based cleanup pass.
         NSMutableArray<NSURL *> *urlsToDelete = [[NSMutableArray alloc] init];
-       
+        
         @autoreleasepool {
             for (NSURL *fileURL in fileEnumerator) {
                 NSError *error;
@@ -675,7 +580,7 @@
     return count;
 }
 
-- (void)calculateSizeWithCompletionBlock:(JPVideoPlayerCalculateSizeBlock)completionBlock{
+- (void)calculateSizeWithCompletionBlock:(JPVideoPlayerCalculateSizeCompletion)completionBlock{
     
     NSString *tempFilePath = [JPVideoPlayerCachePathManager videoCachePathForAllTemporaryFile];
     NSString *fullFilePath = [JPVideoPlayerCachePathManager videoCachePathForAllFullFile];

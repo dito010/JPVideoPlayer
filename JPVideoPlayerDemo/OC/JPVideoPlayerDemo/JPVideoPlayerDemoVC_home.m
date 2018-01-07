@@ -196,6 +196,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+                         @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
                          @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
                          // location video path.
                          url.absoluteString,
