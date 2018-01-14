@@ -96,11 +96,11 @@ typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSec
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
 - (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL * _Nullable)url
-                                           fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
-                                                      options:(JPVideoPlayerOptions)options
-                                                   showOnView:(UIView * _Nullable)showView
-                                                     progress:(JPVideoPlayerProgressBlock _Nullable )progress
-                                                        error:(nullable JPVideoPlayerErrorBlock)error;
+                                      fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
+                                                 options:(JPVideoPlayerOptions)options
+                                              showOnView:(UIView * _Nullable)showView
+                                                progress:(JPVideoPlayerProgressBlock _Nullable )progress
+                                                   error:(nullable JPVideoPlayerErrorBlock)error;
 
 
 # pragma mark - Play video from Web.
@@ -117,10 +117,10 @@ typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSec
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL * _Nullable)url
-                                               options:(JPVideoPlayerOptions)options
-                                            showOnView:(UIView * _Nullable)showView
-                                              progress:(JPVideoPlayerProgressBlock _Nullable)progress
-                                                 error:(nullable JPVideoPlayerErrorBlock)error;
+                                          options:(JPVideoPlayerOptions)options
+                                       showOnView:(UIView * _Nullable)showView
+                                         progress:(JPVideoPlayerProgressBlock _Nullable)progress
+                                            error:(nullable JPVideoPlayerErrorBlock)error;
 
 /**
  * Call this method to make this instance to handle video data for player.

@@ -173,12 +173,16 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (void)dealloc {
     pthread_mutex_destroy(&_lock);
+    [self.currentVideoPlayerModel.currentPlayerItem removeObserver:self forKeyPath:@"status"];
+    [self.currentVideoPlayerModel.currentPlayerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (instancetype)init{
     self = [super init];
     if (self) {
         pthread_mutex_init(&(_lock), NULL);
+        [self addObserver];
     }
     return self;
 }
@@ -187,11 +191,16 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 #pragma mark - Public
 
 - (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL * _Nullable)url
-                                                     fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
-                                                                options:(JPVideoPlayerOptions)options
-                                                             showOnView:(UIView * _Nullable)showView
-                                                               progress:(JPVideoPlayerProgressBlock _Nullable )progress
-                                                                  error:(nullable JPVideoPlayerErrorBlock)error {
+                                      fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
+                                                 options:(JPVideoPlayerOptions)options
+                                              showOnView:(UIView * _Nullable)showView
+                                                progress:(JPVideoPlayerProgressBlock _Nullable )progress
+                                                   error:(nullable JPVideoPlayerErrorBlock)error {
+    if (!url.absoluteString.length) {
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the url is disable"}];
+        if (error) error(e);
+        return nil;
+    }
     
     if (fullVideoCachePath.length==0) {
         NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the file path is disable"}];
@@ -222,15 +231,27 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 }
 
 - (JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
-                                      options:(JPVideoPlayerOptions)options
-                                   showOnView:(UIView *)showView
-                                     progress:(JPVideoPlayerProgressBlock)progress
-                                        error:(JPVideoPlayerErrorBlock)error {
+                                 options:(JPVideoPlayerOptions)options
+                              showOnView:(UIView *)showView
+                                progress:(JPVideoPlayerProgressBlock)progress
+                                   error:(JPVideoPlayerErrorBlock)error {
+    if (!url.absoluteString.length) {
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the url is disable"}];
+        if (error) error(e);
+        return nil;
+    }
+    
+    if (!showView) {
+        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"the layer to display video layer is nil"}];
+        if (error) error(e);
+        return nil;
+    }
+    
     // Re-create all all configuration agian.
     // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
     JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader new];
     resourceLoader.delegate = self;
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self handleVideoURL] options:nil];
+    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
     JPVideoPlayerModel *model = [self generatePlayerModelWithURL:url
@@ -241,7 +262,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                                            error:error];
     self.currentVideoPlayerModel = model;
     model.resourceLoader = resourceLoader;
-    self.currentVideoPlayerModel = model;
     if (options & JPVideoPlayerMutedPlay) {
         model.player.muted = YES;
     }
@@ -252,8 +272,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                          videoFileExceptSize:(NSUInteger)expectedSize
                        videoFileReceivedSize:(NSUInteger)receivedSize{
     [self.currentVideoPlayerModel.resourceLoader didReceivedDataCacheInDiskByTempPath:tempCacheVideoPath
-                                                               videoFileExceptSize:expectedSize
-                                                             videoFileReceivedSize:receivedSize];
+                                                                  videoFileExceptSize:expectedSize
+                                                                videoFileReceivedSize:receivedSize];
 }
 
 - (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath{
@@ -302,13 +322,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 #pragma mark - App Observer
 
-- (void)addObserverOnce{
+- (void)addObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayGround) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appReceivedMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startDownload) name:JPVideoPlayerDownloadStartNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedDownload) name:JPVideoPlayerDownloadFinishNotification object:nil];
 }
 
 - (void)appReceivedMemoryWarning{
@@ -387,9 +405,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 if (!self.currentVideoPlayerModel) return;
                 
                 [self.currentVideoPlayerModel.player play];
-                [self hideActivaityIndicatorView];
+                [self stopPlay];
                 
                 [self displayVideoPicturesOnShowLayer];
+                [self hideActivaityIndicatorView];
                 
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
                     [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
@@ -400,7 +419,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             case AVPlayerItemStatusFailed:{
                 [self hideActivaityIndicatorView];
                 
-                NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"some errors happen on player"}];
+                NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"AVPlayerItemStatusFailed"}];
                 if (self.currentVideoPlayerModel.error) self.currentVideoPlayerModel.error(e);
                 
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
@@ -417,18 +436,18 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         // else if the player time plus than before, it means begain play.
         // fixed #28.
         NSTimeInterval currentTime = CMTimeGetSeconds(self.currentVideoPlayerModel.player.currentTime);
-        
+
         if (currentTime != 0 && currentTime > self.currentVideoPlayerModel.lastTime) {
             [self hideActivaityIndicatorView];
             self.currentVideoPlayerModel.lastTime = currentTime;
-            
+
             if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
                 [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusPlaying];
             }
         }
         else{
             [self showActivaityIndicatorView];
-            
+
             if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playStatusDidChange:)]) {
                 [self.delegate videoPlayer:self playStatusDidChange:JPVideoPlayerStatusBuffering];
             }
@@ -445,15 +464,16 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                         showOnView:(UIView *)showView
                                           progress:(JPVideoPlayerProgressBlock)progress
                                              error:(JPVideoPlayerErrorBlock)error {
-    JPVideoPlayerModel *item = [JPVideoPlayerModel new];
-    item.unownShowView = showView;
-    item.url = url;
-    item.currentPlayerItem = playerItem;
+    JPVideoPlayerModel *model = [JPVideoPlayerModel new];
+    model.unownShowView = showView;
+    model.url = url;
+    model.playerOptions = options;
+    model.currentPlayerItem = playerItem;
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
     
-    item.player = [AVPlayer playerWithPlayerItem:playerItem];
-    item.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:item.player];
+    model.player = [AVPlayer playerWithPlayerItem:playerItem];
+    model.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
     
     NSString *videoGravity = nil;
     if (options&JPVideoPlayerLayerVideoGravityResizeAspect) {
@@ -465,15 +485,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     else if (options&JPVideoPlayerLayerVideoGravityResizeAspectFill){
         videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
-    item.currentPlayerLayer.videoGravity = videoGravity;
-    item.unownShowView.jp_backgroundLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
-    item.currentPlayerLayer.frame = item.unownShowView.jp_backgroundLayer.bounds;
-    item.error = error;
-    item.playingKey = [[JPVideoPlayerManager sharedManager]cacheKeyForURL:url];
+    model.currentPlayerLayer.videoGravity = videoGravity;
+    model.unownShowView.jp_backgroundLayer.frame = CGRectMake(0, 0, showView.bounds.size.width, showView.bounds.size.height);
+    model.currentPlayerLayer.frame = model.unownShowView.jp_backgroundLayer.bounds;
+    model.error = error;
+    model.playingKey = [[JPVideoPlayerManager sharedManager]cacheKeyForURL:url];
     
     // add observer for video playing progress.
-    __weak typeof(item) wItem = item;
-    [item.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 10.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+    __weak typeof(model) wItem = model;
+    [model.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 10.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         __strong typeof(wItem) sItem = wItem;
         if (!sItem) return;
         
@@ -483,16 +503,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
             progress(current, total);
         }
     }];
-    item.videoPlayer = self;
-    return item;
-}
-
-- (void)startDownload{
-    [self showActivaityIndicatorView];
-}
-
-- (void)finishedDownload{
-    [self hideActivaityIndicatorView];
+    model.videoPlayer = self;
+    return model;
 }
 
 - (void)showActivaityIndicatorView{
@@ -519,8 +531,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self didChangeValueForKey:@"currentPlayVideoItem"];
 }
 
-- (NSURL *)handleVideoURL{
-    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:[NSURL URLWithString:JPVideoPlayerURL] resolvingAgainstBaseURL:NO];
+- (NSURL *)handleVideoURL:(NSURL *)url {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     components.scheme = JPVideoPlayerURLScheme;
     return [components URL];
 }
@@ -528,7 +540,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (void)displayVideoPicturesOnShowLayer{
     if (!self.currentVideoPlayerModel.isCancelled) {
         // fixed #26.
-        [self.currentVideoPlayerModel.unownShowView.jp_backgroundLayer addSublayer:self.currentVideoPlayerModel.currentPlayerLayer];
+//        [self.currentVideoPlayerModel.unownShowView.jp_backgroundLayer addSublayer:self.currentVideoPlayerModel.currentPlayerLayer];
+        [self.currentVideoPlayerModel.unownShowView.layer addSublayer:self.currentVideoPlayerModel.currentPlayerLayer];
     }
 }
 

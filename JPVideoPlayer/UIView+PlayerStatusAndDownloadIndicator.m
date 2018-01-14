@@ -54,7 +54,7 @@ static char backgroundLayerKey;
         view.userInteractionEnabled = NO;
         objc_setAssociatedObject(self, &indicatorViewKey, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return view;
+    return nil;
 }
 
 - (void)jp_perfersPlayingProgressViewColor:(UIColor *)color{
@@ -227,7 +227,7 @@ static char backgroundLayerKey;
         progressView.backgroundColor = [UIColor clearColor];
         objc_setAssociatedObject(self, &progressViewKey, progressView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return progressView;
+    return nil;
 }
 
 - (JPVideoPlayerActivityIndicator *)activityIndicatorView{
@@ -238,7 +238,7 @@ static char backgroundLayerKey;
         acv.hidden = YES;
         objc_setAssociatedObject(self, &activityIndicatorViewKey, acv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return acv;
+    return nil;
 }
 
 - (UIView *)jp_videoLayerView{
@@ -250,7 +250,7 @@ static char backgroundLayerKey;
         view.userInteractionEnabled = NO;
         objc_setAssociatedObject(self, &videoLayerViewKey, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return view;
+    return nil;
 }
 
 

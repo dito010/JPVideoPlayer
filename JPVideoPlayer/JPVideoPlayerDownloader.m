@@ -77,7 +77,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
 - (nonnull instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)sessionConfiguration {
     if ((self = [super init])) {
         pthread_mutex_init(&(_lock), NULL);
-        _HTTPHeaders = [@{} mutableCopy];
+        _HTTPHeaders = [@{@"Accept": @"video/mp4"} mutableCopy];
         _downloadProgressBlock = nil;
         _downloadCompletion = nil;
         _expectedSize = 0;

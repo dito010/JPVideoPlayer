@@ -260,11 +260,11 @@
     [self downloadProgressDidChangeWithURL:url options:options receiveSize:0 exceptSize:1];
     
     __weak __typeof(showView) wshowView = showView;
-    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.runningOperation.playerOptions];
-    [self.videoDownloader tryToFetchVideoExpectedSizeWithURL:url options:downloaderOptions completion:^(NSURL * _Nonnull url, NSUInteger expectedSize, NSError * _Nullable error) {
-       
-        [self.videoCache storeExpectedSize:expectedSize forKey:[self cacheKeyForURL:url] completion:^(NSString * _Nonnull key, NSUInteger expectedSize, NSError * _Nonnull error) {
-           
+//    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.runningOperation.playerOptions];
+//    [self.videoDownloader tryToFetchVideoExpectedSizeWithURL:url options:downloaderOptions completion:^(NSURL * _Nonnull url, NSUInteger expectedSize, NSError * _Nullable error) {
+//
+//        [self.videoCache storeExpectedSize:expectedSize forKey:[self cacheKeyForURL:url] completion:^(NSString * _Nonnull key, NSUInteger expectedSize, NSError * _Nonnull error) {
+    
             [self.videoPlayer playVideoWithURL:url
                                        options:options
                                     showOnView:showView
@@ -296,9 +296,9 @@
                                           
                                       }];
             
-        }];
-        
-    }];
+//        }];
+//
+//    }];
 }
 
 - (void)playExistedVideoWithShowView:(UIView *)showView
@@ -753,6 +753,9 @@
 }
  
 - (void)setRunningOperation:(JPVideoPlayerCombinedOperation *)runningOperation {
+    if (runningOperation == nil) {
+        return;
+    }
     _runningOperation = runningOperation;
 }
 
