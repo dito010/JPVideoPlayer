@@ -229,21 +229,25 @@
             NSOutputStream *videoStream = [self internalStoreVideoData:videoData videoPath:self.currentCacheTask.videoSavePath];
             [self internalCloseOutputStream:videoStream];
         }
+
+        if (completion) {
+            completion(key, videoData.length, self.currentCacheTask.videoSavePath, nil, nil);
+        }
         
         // try to joint debris video data.
         // 尝试合并数据.
-        [self.currentCacheTask.joinManager tryToJointDataDebrisForKey:key completion:^(NSString * _Nullable fullVideoPath, NSError * _Nullable error) {
-           
-            if (completion) {
-                if (!error && fullVideoPath) {
-                    completion(key, videoData.length, nil, fullVideoPath, nil);
-                }
-                else {
-                    completion(key, videoData.length, self.currentCacheTask.videoSavePath, nil, nil);
-                }
-            }
-            
-        }];
+//        [self.currentCacheTask.joinManager tryToJointDataDebrisForKey:key completion:^(NSString * _Nullable fullVideoPath, NSError * _Nullable error) {
+//
+//            if (completion) {
+//                if (!error && fullVideoPath) {
+//                    completion(key, videoData.length, nil, fullVideoPath, nil);
+//                }
+//                else {
+//                    completion(key, videoData.length, self.currentCacheTask.videoSavePath, nil, nil);
+//                }
+//            }
+//
+//        }];
         
     });
 }

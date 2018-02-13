@@ -4,7 +4,7 @@
 <img src="Images/logo.png" title="JPNavigationController logo" float=left>
 </p>
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/pod-2.1.1-green.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/pod-2.1.2-green.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/platform-iOS-yellow.svg)](https://github.com/newyjp/JPNavigationController) [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 ![pod](https://img.shields.io/travis/rust-lang/rust/master.svg)
 
 This library provides an fullScreen pop and push gesture for UINavigationController with customize UINavigationBar for each single support and, smooth playing video use `AVPlayer` when perform pop gesture support. 
@@ -202,7 +202,7 @@ There are two ways to use JPNavigationController in your project:
 ```
 platform :ios, '8.0'
 target "YourProjectName" do
-pod 'JPNavigationController', '~> 2.1.1'
+pod 'JPNavigationController', '~> 2.1.2'
 end
 ```
 
@@ -403,7 +403,7 @@ self.navigationController.jp_useCustomPopAnimationForCurrentViewController = YES
 ```
 platform :ios, '8.0'
 target "YourProjectName" do
-pod 'JPNavigationController', '~> 2.1.1'
+pod 'JPNavigationController', '~> 2.1.2'
 end
 ```
 

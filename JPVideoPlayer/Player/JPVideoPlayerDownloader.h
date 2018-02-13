@@ -44,7 +44,7 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
 typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data,
                                                     NSUInteger receivedSize,
                                                     NSUInteger expectedSize,
-                                                    NSString *_Nullable tempCachedVideoPath,
+                                                    NSURLResponse *response,
                                                     NSURL * _Nullable url);
 
 typedef void(^JPVideoPlayerDownloaderCompletion)(NSError *_Nullable error);

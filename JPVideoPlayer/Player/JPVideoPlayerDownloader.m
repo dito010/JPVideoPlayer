@@ -51,6 +51,11 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
  */
 @property(nonatomic, copy) JPFetchExpectedSizeCompletion fetchExpectedSizeCompletion;
 
+/**
+ * 请求响应.
+ */
+@property (nonatomic, strong) NSURLResponse *response;
+
 @end
 
 @implementation JPVideoPlayerDownloader
@@ -229,6 +234,7 @@ didReceiveResponse:(NSURLResponse *)response
         
         NSInteger expected = MAX((NSInteger)response.expectedContentLength, 0);
         self.expectedSize = expected;
+        self.response = response;
         
         // May the free size of the device less than the expected size of the video data.
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
@@ -254,9 +260,8 @@ didReceiveResponse:(NSURLResponse *)response
             return;
         }
         else{
-            NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:self.runningOperation.request.URL];
             if (self.downloadProgressBlock) {
-                self.downloadProgressBlock(nil, 0, expected, [JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key], response.URL);
+                self.downloadProgressBlock(nil, 0, expected, self.response, response.URL);
             }
             if (self.fetchExpectedSizeCompletion) {
                 self.fetchExpectedSizeCompletion(self.runningOperation.request.URL, expected, nil);
@@ -286,11 +291,9 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:self.runningOperation.request.URL];
     self.receiveredSize += data.length;
-
     if (self.downloadProgressBlock) {
-        self.downloadProgressBlock(data, self.receiveredSize, self.expectedSize, [JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key], self.runningOperation.request.URL);
+        self.downloadProgressBlock(data, self.receiveredSize, self.expectedSize, self.response, self.runningOperation.request.URL);
     }
 }
 

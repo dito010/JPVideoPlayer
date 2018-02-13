@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // When use jp_popToViewControllerClass:handle:animated:, may some error happened, or may more than one viewControllers are the same class, developers will be notificated use this block if this situation happened.
-typedef UIViewController *_Nullable(^JPNavigationContollerPopHandle)(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error);
+typedef UIViewController *_Nullable(^JPNavigationContollerPopHandler)(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error);
 
 @protocol JPNavigationControllerProtocol <NSObject>
 
@@ -84,8 +84,8 @@ typedef UIViewController *_Nullable(^JPNavigationContollerPopHandle)(NSArray<UIV
 /**
  * Pop to target view controller, you just need to pass in the class of target view controller. It's easy to use than system's popToViewController: animated: method.
  *
- * @param targetClassString The class of viewController need pop to, it should be pushed in root navigationController.
- * @param handle            May some error happened, or may more than one viewControllers are the same class, developers will be notificated use this block if this situation happened.
+ * @param targetClass        The class of viewController need pop to, it should be pushed in root navigationController.
+ * @param handler            May some error happened, or may more than one viewControllers are the same class, developers will be notificated use this block if this situation happened.
  *   Pass nil means that if existed many viewControllers for given class, framework will pop the first object in viewControllers array.
  *
  *   First param viewControllers  This method will find all the `UIViewController` instance in stack of root navigation controller for given class,so this array may have multi-elements. And all the viewControllers will ordered by the order of the instance in stack of root navigation controller.
@@ -98,21 +98,21 @@ typedef UIViewController *_Nullable(^JPNavigationContollerPopHandle)(NSArray<UIV
  * 
  * @code
  *
- *  [self.navigationController jp_popToViewControllerClassString:@"JPNavigationControllerDemo_linkBar" handle:^UIViewController * _Nullable(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error) {
+ *  [self.navigationController jp_popToViewControllerWithClass:[JPNavigationControllerDemo_linkBar class] handler:^UIViewController * _Nullable(NSArray<UIViewController *> * _Nullable viewControllers, NSError * _Nullable error) {
  *
- *   if (!error) {
- *     return viewControllers.firstObject;
- *   }
- *   else{
- *     NSLog(@"%@", error);
- *     return nil;
- *   }
+ *      if (!error) {
+ *           return viewControllers.firstObject;
+ *      }
+ *       else{
+ *          NSLog(@"%@", error);
+ *          return nil;
+ *      }
  *
  *   } animated:YES];
  *
  * @endcode
  */
-- (void)jp_popToViewControllerClassString:(NSString *_Nonnull)targetClassString handle:(JPNavigationContollerPopHandle _Nullable)handle animated:(BOOL)animated;
+- (void)jp_popToViewControllerWithClass:(Class _Nonnull __unsafe_unretained)targetClass handler:(JPNavigationContollerPopHandler _Nullable)handler animated:(BOOL)animated;
 
 @end
 

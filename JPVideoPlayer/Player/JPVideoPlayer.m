@@ -251,7 +251,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
     JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader new];
     resourceLoader.delegate = self;
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self handleVideoURL] options:nil];
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
     JPVideoPlayerModel *model = [self generatePlayerModelWithURL:url
@@ -405,7 +405,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                 if (!self.currentVideoPlayerModel) return;
                 
                 [self.currentVideoPlayerModel.player play];
-                [self stopPlay];
                 
                 [self displayVideoPicturesOnShowLayer];
                 [self hideActivaityIndicatorView];
@@ -531,8 +530,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self didChangeValueForKey:@"currentPlayVideoItem"];
 }
 
-- (NSURL *)handleVideoURL:(NSURL *)url {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
+- (NSURL *)handleVideoURL {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:[NSURL URLWithString:JPVideoPlayerURL] resolvingAgainstBaseURL:NO];
     components.scheme = JPVideoPlayerURLScheme;
     return [components URL];
 }

@@ -18,6 +18,7 @@
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "UIView+WebVideoCache.h"
 #import <pthread.h>
+#import <GCDWebServer.h>
 
 @interface JPVideoPlayerCombinedOperation : NSObject <JPVideoPlayerOperation>
 
@@ -102,6 +103,11 @@
 
 
 @property (nonatomic) pthread_mutex_t lock;
+
+/*
+ * webServer.
+ */
+@property(nonatomic, strong, nonnull) GCDWebServer *webServer;
 
 @end
 
@@ -260,10 +266,10 @@
     [self downloadProgressDidChangeWithURL:url options:options receiveSize:0 exceptSize:1];
     
     __weak __typeof(showView) wshowView = showView;
-//    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.runningOperation.playerOptions];
-//    [self.videoDownloader tryToFetchVideoExpectedSizeWithURL:url options:downloaderOptions completion:^(NSURL * _Nonnull url, NSUInteger expectedSize, NSError * _Nullable error) {
-//
-//        [self.videoCache storeExpectedSize:expectedSize forKey:[self cacheKeyForURL:url] completion:^(NSString * _Nonnull key, NSUInteger expectedSize, NSError * _Nonnull error) {
+    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.runningOperation.playerOptions];
+    [self.videoDownloader tryToFetchVideoExpectedSizeWithURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/proud-driver.mp4"] options:downloaderOptions completion:^(NSURL * _Nonnull url, NSUInteger expectedSize, NSError * _Nullable error) {
+
+        [self.videoCache storeExpectedSize:expectedSize forKey:[self cacheKeyForURL:url] completion:^(NSString * _Nonnull key, NSUInteger expectedSize, NSError * _Nonnull error) {
     
             [self.videoPlayer playVideoWithURL:url
                                        options:options
@@ -296,9 +302,9 @@
                                           
                                       }];
             
-//        }];
-//
-//    }];
+        }];
+
+    }];
 }
 
 - (void)playExistedVideoWithShowView:(UIView *)showView
@@ -486,8 +492,12 @@
     JPVideoPlayerOptions options = self.runningOperation.playerOptions;
     JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:options];
     // Save received data to disk.
-    JPVideoPlayerDownloaderProgressBlock handleProgressBlock = ^(NSData * _Nullable data, NSUInteger receivedSize, NSUInteger expectedSize, NSString *_Nullable tempVideoCachedPath, NSURL * _Nullable url){
-        
+    JPVideoPlayerDownloaderProgressBlock handleProgressBlock = ^(NSData * _Nullable data,
+            NSUInteger receivedSize,
+            NSUInteger expectedSize,
+            NSURLResponse *response,
+            NSURL * _Nullable url){
+
         NSParameterAssert(self.runningOperation);
         [self storeVideoData:data
                 expectedSize:expectedSize
@@ -497,12 +507,12 @@
                      options:options
                     progress:self.runningOperation.progressBlock
                   completion:self.runningOperation.completionBlock];
-        
+
     };
     
     
     // download video from web.
-    [self.videoDownloader downloadVideoWithURL:self.runningOperation.url
+    [self.videoDownloader downloadVideoWithURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/proud-driver.mp4"]
                                        options:downloaderOptions
                                       progress:handleProgressBlock
                                     completion:^(NSError * _Nullable error) {
