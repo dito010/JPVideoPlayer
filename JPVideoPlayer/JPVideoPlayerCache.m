@@ -192,8 +192,10 @@
             NSMutableArray<NSData *> *modelDatasM = [@[] mutableCopy];
             NSString *dataName = nil;
             NSArray<NSData *> *modelsData = [self fetchModelsExistedForKey:key];
-            NSParameterAssert(modelsData);
-            [modelDatasM addObjectsFromArray:modelsData];
+//            NSParameterAssert(modelsData);
+            if (modelsData.count) {
+                [modelDatasM addObjectsFromArray:modelsData];
+            }
             dataName = [NSString stringWithFormat:@"dataDebris%ld", modelsData.count];
             // frist time receive video for a request(but not first request for given key).
             // 某个请求第一次返回数据(但不是第一次请求).

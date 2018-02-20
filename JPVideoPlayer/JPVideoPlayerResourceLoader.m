@@ -152,7 +152,7 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     }
     startOffset = MAX(0, startOffset);
     
-    // Don't have any data at all for this reques
+    // Don't have any data at all for this request.
     if (self.receivedSize<startOffset) {
         return NO;
     }

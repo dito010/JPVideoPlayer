@@ -175,6 +175,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
 }
 
 - (void)cancel {
+    NSLog(@"取消原有请求.");
     pthread_mutex_lock(&_lock);
     if (self.runningOperation) {
         [self.runningOperation cancel];
@@ -219,6 +220,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
         self.runningOperation = [[JPVideoPlayerDownloaderOperation alloc] initWithRequest:request inSession:self.session options:options];
     }
     [self.runningOperation start];
+    NSLog(@"发送新的请求");
 }
 
 
@@ -297,22 +299,26 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
-- (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
-didCompleteWithError:(NSError *)error{
-    dispatch_main_async_safe(^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
-        if (!error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
-        }
-    });
-    
-    if (self.downloadCompletion) {
-        self.downloadCompletion(error);
-    }
-    
-    [self cancel];
-}
+//- (void)URLSession:(NSURLSession *)session
+//              task:(NSURLSessionTask *)task
+//didCompleteWithError:(NSError *)error{
+//    if (self.runningOperation.dataTask != task) {
+//        return;
+//    }
+//
+//    dispatch_main_async_safe(^{
+//        [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+//        if (!error) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
+//        }
+//    });
+//
+//    if (self.downloadCompletion) {
+//        self.downloadCompletion(error);
+//    }
+//
+//    [self cancel];
+//}
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task

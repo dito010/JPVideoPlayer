@@ -18,7 +18,6 @@
 #import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "UIView+WebVideoCache.h"
 #import <pthread.h>
-#import <GCDWebServer.h>
 
 @interface JPVideoPlayerCombinedOperation : NSObject <JPVideoPlayerOperation>
 
@@ -103,11 +102,6 @@
 
 
 @property (nonatomic) pthread_mutex_t lock;
-
-/*
- * webServer.
- */
-@property(nonatomic, strong, nonnull) GCDWebServer *webServer;
 
 @end
 
@@ -505,6 +499,7 @@
                     showView:self.showView
                    operation:self.runningOperation
                      options:options
+                    response:response
                     progress:self.runningOperation.progressBlock
                   completion:self.runningOperation.completionBlock];
 
@@ -579,6 +574,7 @@
               showView:(UIView *)showView
              operation:(JPVideoPlayerCombinedOperation *)operation
                options:(JPVideoPlayerOptions)options
+              response:(NSURLResponse *)response
               progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
             completion:(JPVideoPlayerCompletionBlock)completionBlock {
     __weak __typeof(operation) wOperation = operation;
@@ -605,7 +601,7 @@
                                  
                                  if (!fullVideoCachePath) {
                                      if (progressBlock) {
-                                         progressBlock(videoData, storedSize, expectedSize, tempVideoCachePath, url);
+                                         progressBlock(videoData, storedSize, expectedSize, response, url);
                                      }
                                      if (!sShowView) return;
                                      

@@ -17,7 +17,6 @@
 #import "JPVideoPlayerDownloader.h"
 #import "JPVideoPlayerCache.h"
 #import "JPVideoPlayerDebrisJointManager.h"
-#import "JPVideoPlayerProxy.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -39,8 +38,6 @@
  */
 @property(nonatomic, strong, nonnull)UIView *tableViewRange;
 
-@property (nonatomic, strong) JPVideoPlayerProxy *playerProxy;
-
 /*
  * videoPlayer.
  */
@@ -56,22 +53,13 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.playerProxy = [JPVideoPlayerProxy new];
-    [self.playerProxy startPlayerProxy];
     [self setup];
     [self insertLineInScreenCenter];
-
-    NSString *proxyVideoPath = [self.playerProxy fetchLocalProxyURLForURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"]].absoluteString;
-    self.videoPlayer = [AVPlayer playerWithURL:[NSURL URLWithString:proxyVideoPath]];
-    AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:self.videoPlayer];
-    layer.frame = self.view.bounds;
-    [self.view.layer addSublayer:layer];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-
-    return;
+    
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
     self.tableView.delegate = self;
 
@@ -212,9 +200,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     // 本地视频播放.
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
-    NSString *proxyVideoPath = [self.playerProxy fetchLocalProxyURLForURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/smartisanT2.mp4"]].absoluteString;
     self.pathStrings = @[
-            proxyVideoPath,
+            @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
             // location video path.
             url.absoluteString,
 
