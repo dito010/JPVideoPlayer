@@ -137,6 +137,10 @@
 
 #pragma mark - Public
 
++ (void)preferLogLevel:(JPLogLevel)logLevel {
+    _logLevel = logLevel;
+}
+
 - (nullable id <JPVideoPlayerOperation>)playVideoWithURL:(nonnull NSURL *)url
                                               showOnView:(nonnull UIView *)showView
                                                  options:(JPVideoPlayerOptions)options

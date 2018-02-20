@@ -141,7 +141,7 @@
     }
     
     NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
-    NSLog(@"modelsSavePath: %@", modelsSavePath);
+    JPLogDebug(@"modelsSavePath: %@", modelsSavePath);
     NSData *modelsData = [NSKeyedArchiver archivedDataWithRootObject:@[modelData]];
     NSParameterAssert(modelsData.length);
     NSParameterAssert(modelsSavePath);

@@ -8,18 +8,19 @@
  * Click https://github.com/Chris-Pan
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
-#ifndef JPVideoPlayerCompat
-#define JPVideoPlayerCompat
 
 #import <UIKit/UIKit.h>
 
+#ifndef JPVideoPlayerCompat
+#define JPVideoPlayerCompat
+
 NS_ASSUME_NONNULL_BEGIN
 
-#define dispatch_main_async_safe(block)\
+#define dispatch_main_async_safe(JPock)\
 if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
-block();\
+JPock();\
 } else {\
-dispatch_async(dispatch_get_main_queue(), block);\
+dispatch_async(dispatch_get_main_queue(), JPock);\
 }
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
@@ -42,8 +43,8 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
 
 typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
     /**
-     * By default, when a URL fail to be downloaded, the URL is blacklisted so the library won't keep trying.
-     * This flag disable this blacklisting.
+     * By default, when a URL fail to be downloaded, the URL is JPacklisted so the library won't keep trying.
+     * This flag disaJPe this JPacklisting.
      */
     JPVideoPlayerRetryFailed = 1 << 0,
     
@@ -55,12 +56,12 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
     
     /**
      * Handles cookies stored in NSHTTPCookieStore by setting
-     * NSMutableURLRequest.HTTPShouldHandleCookies = YES;
+     * NSMutaJPeURLRequest.HTTPShouldHandleCookies = YES;
      */
     JPVideoPlayerHandleCookies = 1 << 2,
     
     /**
-     * Enable to allow untrusted SSL certificates.
+     * EnaJPe to allow untrusted SSL certificates.
      * Useful for testing purposes. Use with caution in production.
      */
     JPVideoPlayerAllowInvalidSSLCertificates = 1 << 3,
@@ -98,5 +99,79 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
 };
 
 #endif
+
+typedef NS_ENUM(NSUInteger, JPLogLevel) {
+    // no log output.
+    JPLogLevelNone = 0,
+    
+    // output debug log.
+    JPLogLevelDebug = 1,
+    
+    // output debug and warning log.
+    JPLogLevelWarning = 2,
+    
+    // output debug, warning and error log.
+    JPLogLevelError = 3,
+};
+
+static JPLogLevel _logLevel;
+
+@interface JPLog : NSObject
+
+/**
+ * Output message to console.
+ *
+ *  @param flag         The log type.
+ *  @param file         The current file name.
+ *  @param function     The current function name.
+ *  @param line         The current line number.
+ *  @param format       The log format.
+ */
++ (void)logWithFlag:(JPLogLevel)flag
+               file:(const char *)file
+           function:(const char *)function
+               line:(NSUInteger)line
+             format:(NSString *)format, ...;
+
+@end
+
+#ifdef __OBJC__
+
+#define JP_LOG_MACRO(logFlag, frmt, ...) \
+                                        [JPLog logWithFlag:logFlag\
+                                                      file:__FILE__ \
+                                                  function:__FUNCTION__ \
+                                                      line:__LINE__ \
+                                                    format:(frmt), ##__VA_ARGS__]
+
+
+#define JP_LOG_MAYBE(logFlag, frmt, ...) JP_LOG_MACRO(logFlag, frmt, ##__VA_ARGS__)
+
+#if DEBUG
+
+/**
+ * Log debug log.
+ */
+#define JPLogDebug(frmt, ...) JP_LOG_MAYBE(JPLogLevelDebug, frmt, ##__VA_ARGS__)
+
+/**
+ * Log debug and warning log.
+ */
+#define JPLogWarning(frmt, ...) JP_LOG_MAYBE(JPLogLevelWarning, frmt, ##__VA_ARGS__)
+
+/**
+ * Log debug, warning and error log.
+ */
+#define JPLogError(frmt, ...) JP_LOG_MAYBE(JPLogLevelError, frmt, ##__VA_ARGS__)
+
+#else
+
+#define JPLogDebug(frmt, ...)
+#define JPLogWarning(frmt, ...)
+#define JPLogError(frmt, ...)
+#endif
+
+#endif
+
 
 NS_ASSUME_NONNULL_END

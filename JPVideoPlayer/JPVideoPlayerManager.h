@@ -91,11 +91,20 @@ playProgressDidChangeCurrentSeconds:(double)currentSeconds
 #pragma mark - Singleton and initialization
 
 /**
- * Returns global JPVideoPlayerManager instance.
+ * Returns global `JPVideoPlayerManager` instance.
  *
- * @return JPVideoPlayerManager shared instance
+ * @return `JPVideoPlayerManager` shared instance
  */
 + (nonnull instancetype)sharedManager;
+
+/**
+ * Set the log level. `JPLogLevelError` by default.
+ *
+ * @see `JPLogLevel`.
+ *
+ * @param logLevel The log level to control log type.
+ */
++ (void)preferLogLevel:(JPLogLevel)logLevel;
 
 /**
  * Allows to specify instance of cache and video downloader used with video manager.

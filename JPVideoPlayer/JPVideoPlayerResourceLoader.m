@@ -11,6 +11,7 @@
 
 #import "JPVideoPlayerResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "JPVideoPlayerCompat.h"
 
 @interface JPVideoPlayerResourceLoader()
 
@@ -98,7 +99,7 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     else {
         rangeString = [NSString stringWithFormat:@"bytes=%lld-%lld", requestedOffset, requestedOffset + requestedLength];
     }
-    NSLog(@"currentOffset: %lld, requestedOffset: %lld, requestedLength: %lld, requestsAllDataToEndOfResource: %d", currentOffset, requestedOffset, requestedLength, requestsAllDataToEndOfResource);
+    JPLogDebug(@"currentOffset: %lld, requestedOffset: %lld, requestedLength: %lld, requestsAllDataToEndOfResource: %d", currentOffset, requestedOffset, requestedLength, requestsAllDataToEndOfResource);
     NSParameterAssert(rangeString);
     return rangeString;
 }

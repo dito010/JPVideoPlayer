@@ -175,7 +175,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
 }
 
 - (void)cancel {
-    NSLog(@"取消原有请求.");
+    JPLogDebug(@"Cancel current request");
     pthread_mutex_lock(&_lock);
     if (self.runningOperation) {
         [self.runningOperation cancel];
@@ -220,7 +220,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
         self.runningOperation = [[JPVideoPlayerDownloaderOperation alloc] initWithRequest:request inSession:self.session options:options];
     }
     [self.runningOperation start];
-    NSLog(@"发送新的请求");
+    JPLogDebug(@"Send new request");
 }
 
 
