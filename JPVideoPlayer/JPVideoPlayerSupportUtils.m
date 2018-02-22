@@ -8,6 +8,7 @@
 #import "JPVideoPlayer.h"
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerControlViews.h"
+#import "JPVideoPlayerCompat.h"
 
 @implementation NSURL (StripQuery)
 
@@ -312,6 +313,35 @@ static char backgroundLayerKey;
     CGFloat selfX = (width-JPVideoPlayerActivityIndicatorWH)*0.5;
     CGFloat selfY = (hei-JPVideoPlayerActivityIndicatorWH)*0.5;
     acv.frame = CGRectMake(selfX, selfY, JPVideoPlayerActivityIndicatorWH, JPVideoPlayerActivityIndicatorWH);
+}
+
+@end
+
+@implementation NSFileHandle (MCCacheSupport)
+
+- (BOOL)jp_safeWriteData:(NSData *)data {
+    NSInteger retry = 3;
+    size_t bytesLeft = data.length;
+    const void *bytes = [data bytes];
+    int fileDescriptor = [self fileDescriptor];
+    while (bytesLeft > 0 && retry > 0) {
+        ssize_t amountSent = write(fileDescriptor, bytes + data.length - bytesLeft, bytesLeft);
+        if (amountSent < 0) {
+            // write failed.
+            JPLogError(@"Write file failed");
+            break;
+        }
+        else {
+            bytesLeft = bytesLeft - amountSent;
+            if (bytesLeft > 0) {
+                // not finished continue write after sleep 1 second.
+                JPLogWarning(@"Write file retry");
+                sleep(1);  //probably too long, but this is quite rare.
+                retry--;
+            }
+        }
+    }
+    return bytesLeft == 0;
 }
 
 @end

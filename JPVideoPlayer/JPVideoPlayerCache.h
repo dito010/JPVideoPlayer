@@ -102,39 +102,6 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
  */
 + (nonnull instancetype)sharedCache;
 
-
-# pragma mark - Store Video Options
-
-/**
- * Store expected size for given key.
- *
- * @param expectedSize The length of data.
- * @param key          The unique video cache key, usually it's video absolute URL
- * @param completion   A block executed after the operation is finished.
- */
-- (void)storeExpectedSize:(NSUInteger)expectedSize
-                   forKey:(nullable NSString *)key
-               completion:(JPStoreExpectedSizeCompletion)completion;
-
-/**
- * Asynchronously store a piece of video data into disk for the given key.
- *
- * @param videoData       The video data as returned by the server, it is a piece of full video file.
- * @param expectedSize    The length of data.
- * @param key             The unique video cache key, usually it's video absolute URL
- * @param completionBlock A block executed after the operation is finished.
- */
-- (void)storeVideoData:(nullable NSData *)videoData
-          expectedSize:(NSUInteger)expectedSize
-                forKey:(nullable NSString *)key
-            completion:(nullable JPStoreDataCompletion)completionBlock;
-
-/**
- * Reset cache when store data finished.
- */
-- (void)reset;
-
-
 # pragma mark - Query and Retrieve Options
 /**
  * Async check if video exists in disk cache already (does not load the video).

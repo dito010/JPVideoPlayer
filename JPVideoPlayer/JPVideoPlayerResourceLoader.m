@@ -71,7 +71,8 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
 
 #pragma mark - AVAssetResourceLoaderDelegate
 
-- (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
+- (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
+shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (resourceLoader && loadingRequest){
         [self.pendingRequests addObject:loadingRequest];
         [self internalPendingRequests];
@@ -86,12 +87,17 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     return YES;
 }
 
+- (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
+didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
+    [self.pendingRequests removeObject:loadingRequest];
+}
+
 - (NSString *)fetchRequestRangeStringWithDataRequest:(AVAssetResourceLoadingDataRequest *)request {
     long long currentOffset = request.currentOffset;
     long long requestedOffset = request.requestedOffset;
     long long requestedLength = request.requestedLength;
     BOOL requestsAllDataToEndOfResource = request.requestsAllDataToEndOfResource;
-    
+
     NSString *rangeString = nil;
     if (requestsAllDataToEndOfResource) {
         rangeString = [NSString stringWithFormat:@"bytes=%lld-", requestedOffset];
@@ -102,10 +108,6 @@ static NSString *JPVideoPlayerMimeType = @"video/mp4";
     JPLogDebug(@"currentOffset: %lld, requestedOffset: %lld, requestedLength: %lld, requestsAllDataToEndOfResource: %d", currentOffset, requestedOffset, requestedLength, requestsAllDataToEndOfResource);
     NSParameterAssert(rangeString);
     return rangeString;
-}
-
-- (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
-    [self.pendingRequests removeObject:loadingRequest];
 }
 
 

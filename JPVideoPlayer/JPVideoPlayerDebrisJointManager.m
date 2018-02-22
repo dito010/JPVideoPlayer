@@ -8,7 +8,7 @@
 
 #import "JPVideoPlayerDebrisJointManager.h"
 #import "JPVideoPlayerCachePath.h"
-#import "JPVideoPlayerCacheModel.h"
+#import "JPVideoPlayerCacheFile.h"
 
 @interface JPVideoPlayerDebrisJointManager()
 
@@ -54,11 +54,11 @@
             return;
         }
         
-        JPVideoPlayerCacheModel *metadataModel = nil;
-        NSMutableArray<JPVideoPlayerCacheModel *> *modelsM = [@[] mutableCopy];
+        JPVideoPlayerCacheFile *metadataModel = nil;
+        NSMutableArray<JPVideoPlayerCacheFile *> *modelsM = [@[] mutableCopy];
         for (NSData *data in modelDatasExisted) {
-            JPVideoPlayerCacheModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-            NSParameterAssert(model && [model isKindOfClass:[JPVideoPlayerCacheModel class]]);
+            JPVideoPlayerCacheFile *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            NSParameterAssert(model && [model isKindOfClass:[JPVideoPlayerCacheFile class]]);
             if (model) {
                 [modelsM addObject:model];
                 if (model.isMetadata == YES) {
@@ -75,8 +75,8 @@
         while (modelsM.count != 1) {
             // joint debris video data by index.
             // 按照 index 进行拼接.
-            JPVideoPlayerCacheModel *targetModel = nil;
-            for (JPVideoPlayerCacheModel *model in modelsM) {
+            JPVideoPlayerCacheFile *targetModel = nil;
+            for (JPVideoPlayerCacheFile *model in modelsM) {
                 if (model.isMetadata) {
                     continue;
                 }
@@ -132,11 +132,11 @@
         return NO;
     }
     
-    JPVideoPlayerCacheModel *metadataModel = nil;
-    NSMutableArray<JPVideoPlayerCacheModel *> *modelsM = [@[] mutableCopy];
+    JPVideoPlayerCacheFile *metadataModel = nil;
+    NSMutableArray<JPVideoPlayerCacheFile *> *modelsM = [@[] mutableCopy];
     for (NSData *data in modelDatasExisted) {
-        JPVideoPlayerCacheModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        NSParameterAssert(model && [model isKindOfClass:[JPVideoPlayerCacheModel class]]);
+        JPVideoPlayerCacheFile *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        NSParameterAssert(model && [model isKindOfClass:[JPVideoPlayerCacheFile class]]);
         if (model) {
             [modelsM addObject:model];
             if (model.isMetadata == YES) {
@@ -154,7 +154,7 @@
     // 将这个长度和已经缓存的视频数据的总长度进行对比, 如果相等则说明视频已经全部缓存完毕, 否则就是视频还未缓存完毕.
     NSUInteger totalCacheVideoSize = 0;
     
-    for (JPVideoPlayerCacheModel *model in modelsM) {
+    for (JPVideoPlayerCacheFile *model in modelsM) {
         NSString *dataPath = [[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:model.key] stringByAppendingPathComponent:model.dataName];
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
             return NO;

@@ -16,7 +16,6 @@
 #import "JPVideoPlayerDemoVC_push.h"
 #import "JPVideoPlayerDownloader.h"
 #import "JPVideoPlayerCache.h"
-#import "JPVideoPlayerDebrisJointManager.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 

@@ -323,7 +323,6 @@ playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
 }
 
 - (void)videoPlayer:(JPVideoPlayer *)videoPlayer playerRequestRangeDidChange:(NSString *)requestRangeString {
-    [self.videoCache reset];
     [self.videoDownloader cancel];
     [self.videoDownloader setValue:requestRangeString forHTTPHeaderField:@"Range"];
     [self startDownloadVideo];
@@ -447,50 +446,50 @@ didCompleteWithError:(NSError *)error {
     __weak __typeof(showView) wshowView = showView;
     
     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
-    [self.videoCache storeVideoData:videoData
-                       expectedSize:expectedSize
-                             forKey:key
-                         completion:^(NSString *key, NSUInteger storedSize, NSString * _Nullable tempVideoCachePath, NSString * _Nullable fullVideoCachePath, NSError * _Nullable error) {
-                             // refresh progress view.
-                             [self callDownloadDelegateMethodWithReceivedSize:storedSize
-                                                                 expectedSize:expectedSize
-                                                                    cacheType:JPVideoPlayerCacheTypeWeb
-                                                                        error:nil];
-                             __strong __typeof(wshowView) sShowView = wshowView;
-                             if (!error) {
-                                 if (!fullVideoCachePath) {
-                                     if (!sShowView) {
-                                         [self reset];
-                                         return;
-                                     }
-                                     
-                                     // play video from web.
-                                     if (!self.videoPlayer.currentVideoPlayerModel) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                                         // display backLayer.
-                                         [sShowView performSelector:NSSelectorFromString(@"displayBackLayer")];
-#pragma clang diagnostic pop
-                                     }
-                                     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
-                                     if (self.videoPlayer.currentVideoPlayerModel && [key isEqualToString:self.videoPlayer.currentVideoPlayerModel.playingKey]) {
-                                         [self.videoPlayer didReceivedDataCacheInDiskByTempPath:tempVideoCachePath
-                                                                            videoFileExceptSize:expectedSize
-                                                                          videoFileReceivedSize:storedSize];
-                                     }
-                                 }
-                                 else{
-                                     // cache finished, and move the full video file from temporary path to full path.
-                                     [self.videoPlayer didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
-                                 }
-                             }
-                             else{
-                                 // some error happens.
-                                 // hide indicator view.
-                                 [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
-                                 [self reset];
-                             }
-                         }];
+//    [self.videoCache storeVideoData:videoData
+//                       expectedSize:expectedSize
+//                             forKey:key
+//                         completion:^(NSString *key, NSUInteger storedSize, NSString * _Nullable tempVideoCachePath, NSString * _Nullable fullVideoCachePath, NSError * _Nullable error) {
+//                             // refresh progress view.
+//                             [self callDownloadDelegateMethodWithReceivedSize:storedSize
+//                                                                 expectedSize:expectedSize
+//                                                                    cacheType:JPVideoPlayerCacheTypeWeb
+//                                                                        error:nil];
+//                             __strong __typeof(wshowView) sShowView = wshowView;
+//                             if (!error) {
+//                                 if (!fullVideoCachePath) {
+//                                     if (!sShowView) {
+//                                         [self reset];
+//                                         return;
+//                                     }
+//
+//                                     // play video from web.
+//                                     if (!self.videoPlayer.currentVideoPlayerModel) {
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+//                                         // display backLayer.
+//                                         [sShowView performSelector:NSSelectorFromString(@"displayBackLayer")];
+//#pragma clang diagnostic pop
+//                                     }
+//                                     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
+//                                     if (self.videoPlayer.currentVideoPlayerModel && [key isEqualToString:self.videoPlayer.currentVideoPlayerModel.playingKey]) {
+//                                         [self.videoPlayer didReceivedDataCacheInDiskByTempPath:tempVideoCachePath
+//                                                                            videoFileExceptSize:expectedSize
+//                                                                          videoFileReceivedSize:storedSize];
+//                                     }
+//                                 }
+//                                 else{
+//                                     // cache finished, and move the full video file from temporary path to full path.
+//                                     [self.videoPlayer didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
+//                                 }
+//                             }
+//                             else{
+//                                 // some error happens.
+//                                 // hide indicator view.
+//                                 [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
+//                                 [self reset];
+//                             }
+//                         }];
 }
 
 - (void)tryToShowProgressViewForView:(UIView *)view

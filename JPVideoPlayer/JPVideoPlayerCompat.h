@@ -16,17 +16,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * Dispatch block excute on main queue.
- */
-void JPDispatchSyncOnMainQueue(dispatch_block_t block);
-
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStopNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadFinishNotification;
-
 UIKIT_EXTERN NSString *const JPVideoPlayerErrorDomain;
+FOUNDATION_EXTERN const NSRange JPInvalidRange;
 
 #define JPDEPRECATED_ATTRIBUTE(msg) __attribute__((deprecated(msg)));
 
@@ -45,56 +40,67 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
      * This flag disaJPe this JPacklisting.
      */
     JPVideoPlayerRetryFailed = 1 << 0,
-    
+
     /**
      * In iOS 4+, continue the download of the video if the app goes to background. This is achieved by asking the system for
      * extra time in background to let the request finish. If the background task expires the operation will be cancelled.
      */
     JPVideoPlayerContinueInBackground = 1 << 1,
-    
+
     /**
      * Handles cookies stored in NSHTTPCookieStore by setting
      * NSMutaJPeURLRequest.HTTPShouldHandleCookies = YES;
      */
     JPVideoPlayerHandleCookies = 1 << 2,
-    
+
     /**
      * EnaJPe to allow untrusted SSL certificates.
      * Useful for testing purposes. Use with caution in production.
      */
     JPVideoPlayerAllowInvalidSSLCertificates = 1 << 3,
-    
+
     /**
      * Use this flag to display progress view when play video from web.
      */
     JPVideoPlayerShowProgressView = 1 << 4,
-    
+
     /**
      * Use this flag to display activity indicator view when video player is buffering.
      */
     JPVideoPlayerShowActivityIndicatorView = 1 << 5,
-    
+
     /**
      * Playing video muted.
      */
     JPVideoPlayerMutedPlay = 1 << 6,
-    
+
     /**
      * Stretch to fill layer bounds.
      */
     JPVideoPlayerLayerVideoGravityResize = 1 << 7,
-    
+
     /**
      * Preserve aspect ratio; fit within layer bounds.
      * Default value.
      */
     JPVideoPlayerLayerVideoGravityResizeAspect = 1 << 8,
-    
+
     /**
      * Preserve aspect ratio; fill layer bounds.
      */
     JPVideoPlayerLayerVideoGravityResizeAspectFill = 1 << 9,
 };
+
+/**
+ * Dispatch block excute on main queue.
+ */
+void JPDispatchSyncOnMainQueue(dispatch_block_t block);
+
+BOOL JPValidByteRange(NSRange range);
+BOOL JPValidFileRange(NSRange range);
+BOOL JPRangeCanMerge(NSRange range1, NSRange range2);
+NSString* JPRangeToHTTPRangeHeader(NSRange range);
+NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length);
 
 #endif
 
