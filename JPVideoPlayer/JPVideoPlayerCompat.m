@@ -74,7 +74,7 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range,NSUInteger length) {
 
 @implementation JPLog
 + (void)initialize {
-    _logLevel = JPLogLevelError;
+    _logLevel = JPLogLevelDebug;
 }
 
 + (void)logWithFlag:(JPLogLevel)logLevel

@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nonnull instancetype)sharedManager;
 
 /**
- * Set the log level. `JPLogLevelError` by default.
+ * Set the log level. `JPLogLevelDebug` by default.
  *
  * @see `JPLogLevel`.
  *

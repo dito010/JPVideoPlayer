@@ -107,15 +107,15 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length);
 typedef NS_ENUM(NSUInteger, JPLogLevel) {
     // no log output.
     JPLogLevelNone = 0,
-    
-    // output debug log.
-    JPLogLevelDebug = 1,
-    
+
+    // output debug, warning and error log.
+    JPLogLevelError = 1,
+
     // output debug and warning log.
     JPLogLevelWarning = 2,
-    
-    // output debug, warning and error log.
-    JPLogLevelError = 3,
+
+    // output debug log.
+    JPLogLevelDebug = 3,
 };
 
 static JPLogLevel _logLevel;
