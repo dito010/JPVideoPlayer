@@ -10,9 +10,9 @@
  */
 
 #import "UIView+WebVideoCache.h"
-#import "UIView+WebVideoCacheOperation.h"
 #import <objc/runtime.h>
 #import "JPVideoPlayer.h"
+#import "JPVideoPlayerSupportUtils.h"
 
 @interface UIView()
 
@@ -33,28 +33,26 @@
 #pragma mark - Play Video Methods
 
 - (void)jp_playVideoWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView progress:nil completion:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView];
 }
 
 - (void)jp_playVideoHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect progress:nil completion:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect];
 }
 
 - (void)jp_playVideoMutedDisplayStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay progress:nil completion:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay];
 }
 
 - (void)jp_playVideoMutedHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView progress:nil completion:nil];
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView];
 }
 
-- (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock completion:(JPVideoPlayerCompletionBlock)completedBlock{
-    
+- (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options {
     NSString *validOperationKey = NSStringFromClass([self class]);
-    [self jp_cancelVideoLoadOperationWithKey:validOperationKey];
     [self jp_stopPlay];
     self.currentPlayingURL = url;
-    self.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
     
     if (url) {
         __weak typeof(self) wself = self;
@@ -68,25 +66,14 @@
         [self performSelector:NSSelectorFromString(@"jp_setupVideoLayerViewAndIndicatorView")];
 #pragma clang diagnostic pop
         
-        id <JPVideoPlayerOperation> operation = [[JPVideoPlayerManager sharedManager] playVideoWithURL:url showOnView:self options:options progress:progressBlock completion:^(NSString * _Nullable fullVideoCachePath, NSError * _Nullable error, JPVideoPlayerCacheType cacheType, NSURL * _Nullable videoURL) {
-            
-            __strong __typeof (wself) sself = wself;
-            if (!sself) return;
-            
-            dispatch_main_async_safe(^{
-                if (completedBlock) {
-                    completedBlock(fullVideoCachePath, error, cacheType, url);
-                }
-            });
-        }];
-        
-        [self jp_setVideoLoadOperation:operation forKey:validOperationKey];
+        [[JPVideoPlayerManager sharedManager] playVideoWithURL:url showOnView:self options:options];
+
     }
     else {
-        dispatch_main_async_safe(^{
-            if (completedBlock) {
-                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Trying to load a nil url"}];
-                completedBlock(nil, error, JPVideoPlayerCacheTypeNone, url);
+        JPDispatchSyncOnMainQueue(^{
+            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadProgressDidChangeReceivedSize:expectedSize:error:)]) {
+                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Try to load a nil url"}];
+                [self.jp_videoPlayerDelegate downloadProgressDidChangeReceivedSize:0 expectedSize:0 error:error];
             }
         });
     }
@@ -124,7 +111,7 @@
 }
 
 - (void)jp_gotoLandscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion {
-    if (self.viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
+    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
         return;
     }
     
@@ -135,7 +122,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 #pragma clang diagnostic pop
     
-    self.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
     
     self.parentView_beforeFullScreen = self.superview;
     self.frame_beforeFullScreen = [NSValue valueWithCGRect:self.frame];
@@ -153,7 +140,7 @@
             
         } completion:^(BOOL finished) {
             
-            self.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+            self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
             if (completion) {
                 completion();
             }
@@ -166,7 +153,7 @@
     }
     else{
         [self executeLandscape];
-        self.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+        self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
         if (completion) {
             completion();
         }
@@ -183,8 +170,9 @@
     [self jp_gotoPortraitAnimated:YES completion:nil];
 }
 
-- (void)jp_gotoPortraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion{
-    if (self.viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
+- (void)jp_gotoPortraitAnimated:(BOOL)animated
+                     completion:(JPVideoPlayerScreenAnimationCompletion)completion{
+    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
         return;
     }
     
@@ -195,7 +183,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 #pragma clang diagnostic pop
     
-    self.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
     
     self.jp_indicatorView.alpha = 0;
     
@@ -237,7 +225,7 @@
     self.jp_videoLayerView.frame = self.bounds;
     self.jp_indicatorView.frame = self.bounds;
     
-    self.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
     
     [UIView animateWithDuration:0.5 animations:^{
         
@@ -289,14 +277,6 @@
     objc_setAssociatedObject(self, @selector(parentView_beforeFullScreen), parentView_beforeFullScreen, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (void)setPlayingStatus:(JPVideoPlayerStatus)playingStatus{
-    objc_setAssociatedObject(self, @selector(playingStatus), @(playingStatus), OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (JPVideoPlayerStatus)playingStatus{
-    return [objc_getAssociatedObject(self, _cmd) integerValue];
-}
-
 - (UIView *)parentView_beforeFullScreen{
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -309,11 +289,11 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setViewStatus:(JPVideoPlayerVideoViewStatus)viewStatus{
-    objc_setAssociatedObject(self, @selector(viewStatus), @(viewStatus), OBJC_ASSOCIATION_ASSIGN);
+- (void)setJp_viewStatus:(JPVideoPlayerVideoViewStatus)jp_viewStatus {
+    objc_setAssociatedObject(self, @selector(jp_viewStatus), @(jp_viewStatus), OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (JPVideoPlayerVideoViewStatus)viewStatus{
+- (JPVideoPlayerVideoViewStatus)jp_viewStatus {
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
@@ -333,39 +313,48 @@
     objc_setAssociatedObject(self, @selector(jp_videoPlayerDelegate),   __weak_block, OBJC_ASSOCIATION_COPY);
 }
 
+- (void)setJp_playerStatus:(JPVideoPlayerStatus)jp_playerStatus {
+    objc_setAssociatedObject(self, @selector(jp_playerStatus), @(jp_playerStatus), OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (JPVideoPlayerStatus)jp_playerStatus {
+    return [objc_getAssociatedObject(self, _cmd) integerValue];
+}
+
+
 #pragma mark - JPVideoPlayerManager
 
-- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(NSURL *)videoURL{
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldDownloadVideoForURL:)]) {
-        return [self.jp_videoPlayerDelegate shouldDownloadVideoForURL:videoURL];
-    }
-    return YES;
-}
-
-- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(NSURL *)videoURL{
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayAfterPlayCompleteForURL:)]) {
-        return [self.jp_videoPlayerDelegate shouldAutoReplayAfterPlayCompleteForURL:videoURL];
-    }
-    return YES;
-}
-
-- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
-    self.playingStatus = playingStatus;
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingStatusDidChanged:)]) {
-        [self.jp_videoPlayerDelegate playingStatusDidChanged:playingStatus];
-    }
-}
-
-- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress{
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadingProgressDidChanged:)]) {
-        [self.jp_videoPlayerDelegate downloadingProgressDidChanged:downloadingProgress];
-    }
-}
-
-- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress{
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingProgressDidChanged:)]) {
-        [self.jp_videoPlayerDelegate playingProgressDidChanged:playingProgress];
-    }
-}
+//- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(NSURL *)videoURL{
+//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldDownloadVideoForURL:)]) {
+//        return [self.jp_videoPlayerDelegate shouldDownloadVideoForURL:videoURL];
+//    }
+//    return YES;
+//}
+//
+//- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(NSURL *)videoURL{
+//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayAfterPlayCompleteForURL:)]) {
+//        return [self.jp_videoPlayerDelegate shouldAutoReplayAfterPlayCompleteForURL:videoURL];
+//    }
+//    return YES;
+//}
+//
+//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
+//    self.playingStatus = playingStatus;
+//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingStatusDidChanged:)]) {
+//        [self.jp_videoPlayerDelegate playingStatusDidChanged:playingStatus];
+//    }
+//}
+//
+//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress{
+//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadingProgressDidChanged:)]) {
+//        [self.jp_videoPlayerDelegate downloadingProgressDidChanged:downloadingProgress];
+//    }
+//}
+//
+//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress{
+//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingProgressDidChanged:)]) {
+//        [self.jp_videoPlayerDelegate playingProgressDidChanged:playingProgress];
+//    }
+//}
 
 @end

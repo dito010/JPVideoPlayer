@@ -10,13 +10,111 @@
  */
 
 #import "JPVideoPlayerDownloader.h"
-#import "JPVideoPlayerDownloaderOperation.h"
 #import <pthread.h>
-#import "JPVideoPlayerCachePathManager.h"
+#import "JPVideoPlayerCachePath.h"
 #import "JPVideoPlayerManager.h"
 
-static NSString *const kProgressCallbackKey = @"www.jpvideplayer.progress.callback";
-static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
+@interface JPVideoPlayerDownloaderOperation()
+
+// This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run.
+// the task associated with this operation.
+@property (weak, nonatomic, nullable) NSURLSession *unownedSession;
+
+@property (strong, nonatomic, readwrite, nullable) NSURLSessionDataTask *dataTask;
+
+@property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTaskId;
+
+@property(nonatomic, assign, getter=isCancelled) BOOL cancelled;
+
+
+@end
+
+@implementation JPVideoPlayerDownloaderOperation
+
+- (nonnull instancetype)init{
+    NSAssert(NO, @"please use given init method");
+    return [self initWithRequest:nil inSession:nil options:0];
+}
+
+- (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
+                              inSession:(nullable NSURLSession *)session
+                                options:(JPVideoPlayerDownloaderOptions)options {
+    if ((self = [super init])) {
+        _request = [request copy];
+        _options = options;
+        _unownedSession = session;
+    }
+    return self;
+}
+
+
+#pragma mark - Public
+
+- (void)start {
+    @synchronized (self) {
+        if (self.isCancelled) {
+            return;
+        }
+        Class UIApplicationClass = NSClassFromString(@"UIApplication");
+        BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
+        if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
+            __weak __typeof__ (self) wself = self;
+            UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
+            self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
+                __strong __typeof (wself) sself = wself;
+
+                if (sself) {
+                    [sself cancel];
+                    [app endBackgroundTask:sself.backgroundTaskId];
+                    sself.backgroundTaskId = UIBackgroundTaskInvalid;
+                }
+            }];
+        }
+
+        NSURLSession *session = self.unownedSession;
+        self.dataTask = [session dataTaskWithRequest:self.request];
+    }
+
+    [self.dataTask resume];
+
+    if (self.dataTask) {
+        JPDispatchSyncOnMainQueue(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStartNotification object:self];
+        });
+    }
+
+    if (self.backgroundTaskId != UIBackgroundTaskInvalid) {
+        UIApplication * app = [UIApplication performSelector:@selector(sharedApplication)];
+        [app endBackgroundTask:self.backgroundTaskId];
+        self.backgroundTaskId = UIBackgroundTaskInvalid;
+    }
+}
+
+- (void)cancel {
+    @synchronized (self) {
+        self.cancelled = YES;
+        [self cancelInternal];
+    }
+}
+
+
+#pragma mark - Private
+
+- (void)cancelInternal {
+    if (self.dataTask) {
+        [self.dataTask cancel];
+        JPDispatchSyncOnMainQueue(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+        });
+    }
+}
+
+- (BOOL)shouldContinueWhenAppEntersBackground {
+    return self.options & JPVideoPlayerDownloaderContinueInBackground;
+}
+
+@end
+
 @interface JPVideoPlayerDownloader()<NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 @property (strong, nonatomic, nullable) JPHTTPHeadersMutableDictionary *HTTPHeaders;
@@ -32,24 +130,12 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
  */
 @property(nonatomic, assign) NSUInteger expectedSize;
 
-@property (copy, nonatomic)JPVideoPlayerDownloaderProgressBlock downloadProgressBlock;
-
-/*
- * downloaddownloadCompletion.
- */
-@property(nonatomic, copy) JPVideoPlayerDownloaderCompletion downloadCompletion;
-
 @property (nonatomic) pthread_mutex_t lock;
 
 /*
  * the running operation.
  */
 @property(nonatomic, strong, nullable) JPVideoPlayerDownloaderOperation *runningOperation;
-
-/*
- * the fetch expected size downloadCompletion.
- */
-@property(nonatomic, copy) JPFetchExpectedSizeCompletion fetchExpectedSizeCompletion;
 
 /**
  * 请求响应.
@@ -83,16 +169,14 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
     if ((self = [super init])) {
         pthread_mutex_init(&(_lock), NULL);
         _HTTPHeaders = [@{@"Accept": @"video/mp4"} mutableCopy];
-        _downloadProgressBlock = nil;
-        _downloadCompletion = nil;
         _expectedSize = 0;
         _receiveredSize = 0;
-        
+
         if (!sessionConfiguration) {
             sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         }
         sessionConfiguration.timeoutIntervalForRequest = 15.f;
-        
+
         /**
          *  Create the session for this task
          *  We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate
@@ -111,7 +195,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
     if (!field) {
         return;
     }
-    
+
     value ? self.HTTPHeaders[field] = value : [self.HTTPHeaders removeObjectForKey:field];
 }
 
@@ -120,62 +204,31 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
     if (!field) {
         return nil;
     }
-    
+
     return self.HTTPHeaders[field];
 }
 
 - (void)downloadVideoWithURL:(NSURL *)url
-                     options:(JPVideoPlayerDownloaderOptions)options
-                    progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
-                  completion:(JPVideoPlayerDownloaderCompletion)completion {
+             downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
     NSParameterAssert(url.absoluteString.length);
-    NSParameterAssert(completion);
-    
     if (self.runningOperation) {
         [self cancel];
     }
-    
-    self.downloadProgressBlock = progressBlock;
-    self.downloadCompletion = completion;
-    
+
+    _url = url;
+    _downloaderOptions = downloadOptions;
+
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil. If it is nil immediately call the completed block with no video or data.
     if (url == nil) {
-        if (completion) {
-            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Please check the URL, because it is nil"}];
-            completion(error);
-        }
+        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Please check the URL, because it is nil"}];
+        [self callCompleteDelegateIfNeedWithError:error];
         return;
     }
-    
-    [self startDownloadOpeartionWithURL:url options:options];
+
+    [self startDownloadOpeartionWithURL:url options:downloadOptions];
 }
 
-- (void)tryToFetchVideoExpectedSizeWithURL:(NSURL *)url
-                                   options:(JPVideoPlayerDownloaderOptions)options
-                                completion:(JPFetchExpectedSizeCompletion)completion {
-    NSParameterAssert(url.absoluteString.length);
-    NSParameterAssert(completion);
-    
-    if (self.runningOperation) {
-        [self cancel];
-    }
-    
-    self.fetchExpectedSizeCompletion = completion;
-    
-    // The URL will be used as the key to the callbacks dictionary so it cannot be nil. If it is nil immediately call the completed block with no video or data.
-    if (url == nil) {
-        if (completion) {
-            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Please check the URL, because it is nil"}];
-            completion(url, 0, error);
-        }
-        return;
-    }
-    
-    [self startDownloadOpeartionWithURL:url options:options];
-}
-
-- (void)cancel {
-    JPLogDebug(@"Cancel current request");
+- (void) cancel {
     pthread_mutex_lock(&_lock);
     if (self.runningOperation) {
         [self.runningOperation cancel];
@@ -183,9 +236,7 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
         self.expectedSize = 0;
         self.receiveredSize = 0;
     }
-    self.downloadProgressBlock = nil;
-    self.downloadCompletion = nil;
-    self.fetchExpectedSizeCompletion = nil;
+    JPLogDebug(@"Cancel current request");
     pthread_mutex_unlock(&_lock);
 }
 
@@ -196,31 +247,31 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
     if (!self.downloadTimeout) {
         self.downloadTimeout = 15.f;
     }
-    
+
     // In order to prevent from potential duplicate caching (NSURLCache + JPVideoPlayerCache) we disable the cache for video requests if told otherwise.
     NSURLComponents *actualURLComponents = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     actualURLComponents.scheme = url.scheme;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[actualURLComponents URL] cachePolicy:(NSURLRequestReloadIgnoringLocalCacheData) timeoutInterval:self.downloadTimeout];
-    
+
     request.HTTPShouldHandleCookies = (options & JPVideoPlayerDownloaderHandleCookies);
     request.HTTPShouldUsePipelining = YES;
     if (self.HTTPHeaders.allKeys.count) {
         [self.HTTPHeaders enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-            
+
             [request setValue:obj forHTTPHeaderField:key];
-            
+
         }];
     }
-    
+
     if (!self.urlCredential && self.username && self.password) {
         self.urlCredential = [NSURLCredential credentialWithUser:self.username password:self.password persistence:NSURLCredentialPersistenceForSession];
     }
-    
+
     if (!self.runningOperation) {
         self.runningOperation = [[JPVideoPlayerDownloaderOperation alloc] initWithRequest:request inSession:self.session options:options];
     }
     [self.runningOperation start];
-    JPLogDebug(@"Send new request");
+    JPLogDebug(@"Send a new request");
 }
 
 
@@ -230,61 +281,49 @@ static NSString *const kErrorCallbackKey = @"www.jpvideplayer.error.callback";
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-    
+
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
-        
+
         NSInteger expected = MAX((NSInteger)response.expectedContentLength, 0);
         self.expectedSize = expected;
         self.response = response;
-        
+
         // May the free size of the device less than the expected size of the video data.
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
             if (completionHandler) {
                 completionHandler(NSURLSessionResponseCancel);
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
+            JPDispatchSyncOnMainQueue(^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
+                [self callCompleteDelegateIfNeedWithError:error];
             });
-            
-            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
-            if (self.downloadCompletion) {
-                self.downloadCompletion(error);
-            }
-            if (self.fetchExpectedSizeCompletion) {
-                self.fetchExpectedSizeCompletion(self.runningOperation.request.URL, 0, error);
-            }
-            if (completionHandler) {
-                completionHandler(NSURLSessionResponseCancel);
-            }
             [self cancel];
-            
-            return;
         }
         else{
-            if (self.downloadProgressBlock) {
-                self.downloadProgressBlock(nil, 0, expected, self.response, response.URL);
+            if (completionHandler) {
+                completionHandler(NSURLSessionResponseAllow);
             }
-            if (self.fetchExpectedSizeCompletion) {
-                self.fetchExpectedSizeCompletion(self.runningOperation.request.URL, expected, nil);
-                [self cancel];
-                return;
-            }
+            JPDispatchSyncOnMainQueue(^{
+                if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveResponse:)]) {
+                    [self.delegate downloader:self didReceiveResponse:response];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadReceiveResponseNotification object:self];
+            });
         }
-        
-        if (completionHandler) {
-            completionHandler(NSURLSessionResponseAllow);
-        }
-        dispatch_main_async_safe(^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadReceiveResponseNotification object:self];
-        });
+
     }
     else {
         if (completionHandler) {
             completionHandler(NSURLSessionResponseCancel);
         }
         [self.runningOperation cancel];
-        dispatch_main_async_safe(^{
+        
+        JPDispatchSyncOnMainQueue(^{
+            NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", ((NSHTTPURLResponse *)response).statusCode];
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : errorMsg}];
+            [self callCompleteDelegateIfNeedWithError:error];
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
     }
@@ -294,36 +333,36 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     self.receiveredSize += data.length;
-    if (self.downloadProgressBlock) {
-        self.downloadProgressBlock(data, self.receiveredSize, self.expectedSize, self.response, self.runningOperation.request.URL);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
+        [self.delegate downloader:self
+                   didReceiveData:data
+                     receivedSize:self.receiveredSize
+                     expectedSize:self.expectedSize];
     }
+
 }
 
-//- (void)URLSession:(NSURLSession *)session
-//              task:(NSURLSessionTask *)task
-//didCompleteWithError:(NSError *)error{
-//    if (self.runningOperation.dataTask != task) {
-//        return;
-//    }
-//
-//    dispatch_main_async_safe(^{
-//        [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
-//        if (!error) {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
-//        }
-//    });
-//
-//    if (self.downloadCompletion) {
-//        self.downloadCompletion(error);
-//    }
-//
-//    [self cancel];
-//}
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(NSError *)error {
+    if (self.runningOperation.dataTask != task) {
+        return;
+    }
+
+    JPDispatchSyncOnMainQueue(^{
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didCompleteWithError:)]) {
+            [self.delegate downloader:self didCompleteWithError:error];
+        }
+    });
+}
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- downloadCompletionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))downloadCompletionHandler {
+        downloadCompletionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))downloadCompletionHandler {
 
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     __block NSURLCredential *credential = nil;
@@ -360,7 +399,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
  willCacheResponse:(NSCachedURLResponse *)proposedResponse
- downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloadCompletionHandler {
+downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloadCompletionHandler {
 
     // If this method is called, it means the response wasn't read from cache
     NSCachedURLResponse *cachedResponse = proposedResponse;
@@ -371,6 +410,15 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     }
     if (downloadCompletionHandler) {
         downloadCompletionHandler(cachedResponse);
+    }
+}
+
+
+#pragma mark - Private
+
+- (void)callCompleteDelegateIfNeedWithError:(NSError *)error {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didCompleteWithError:)]) {
+        [self.delegate downloader:self didCompleteWithError:error];
     }
 }
 

@@ -11,13 +11,15 @@
 
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerManager.h"
-#import "UIView+PlayerStatusAndDownloadIndicator.h"
+#import "JPVideoPlayerSupportUtils.h"
 
 typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
     JPVideoPlayerVideoViewStatusPortrait,
     JPVideoPlayerVideoViewStatusLandscape,
     JPVideoPlayerVideoViewStatusAnimating
 };
+
+NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 
@@ -41,7 +43,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)shouldAutoReplayAfterPlayCompleteForURL:(nonnull NSURL *)videoURL;
+- (BOOL)shouldAutoReplayForURL:(nonnull NSURL *)videoURL;
 
 /**
  * Controls the progress view's frame on top or on bottom, by default it is on bottom.
@@ -58,26 +60,34 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 - (BOOL)shouldDisplayBlackLayerBeforePlayStart;
 
 /**
- * Notify the playing status.
+ * Notify the player status.
  *
  * @param playingStatus      The current playing status.
  */
-- (void)playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus;
+- (void)playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
 /**
  * Notify the download progress value. this method will be called on main thread.
- * If the video is local or cached file, this method will be called once and the progress value is 1.0, if video is existed on web, this method will be called when the progress value changed, else if some error happened, this method will never be called.
+ * If the video is local or cached file, this method will be called once and the receive size equal to expected size,
+ * if video is existed on web, this method will be called when the download progress value changed, else if some error happened,
+ * this method will never be called.
  *
- * @param downloadingProgress The current download progress value.
+ * @param receivedSize        The current received data size.
+ * @param expectedSize        The expected data size.
+ * @param error               The error when download video data.
  */
-- (void)downloadingProgressDidChanged:(CGFloat)downloadingProgress;
+- (void)downloadProgressDidChangeReceivedSize:(NSUInteger)receivedSize
+                                 expectedSize:(NSUInteger)expectedSize
+                                        error:(NSError *)error;
 
 /**
  * Notify the playing progress value. this method will be called on main thread.
  *
- * @param playingProgress    The current playing progress value.
+ * @param elapsedSeconds     The current played seconds.
+ * @param totalSeconds       The total seconds of this video for given url.
  */
-- (void)playingProgressDidChanged:(CGFloat)playingProgress;
+- (void)playProgressDidChangeElapsedSeconds:(double)elapsedSeconds
+                               totalSeconds:(double)totalSeconds;
 
 @end
 
@@ -90,12 +100,12 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 /**
  * View status.
  */
-@property(nonatomic, readonly)JPVideoPlayerVideoViewStatus viewStatus;
+@property(nonatomic, readonly)JPVideoPlayerVideoViewStatus jp_viewStatus;
 
 /**
  * Playing status of video player.
  */
-@property(nonatomic, readonly)JPVideoPlayerStatus playingStatus;
+@property(nonatomic, readonly)JPVideoPlayerStatus jp_playerStatus;
 
 #pragma mark - Play Video Methods
 
@@ -154,18 +164,9 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * @param url            The url for the video.
  * @param options        The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param progressBlock  A block called while video is downloading.
- *                       @note the progress block is executed on a background queue.
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *   and takes the requested video temporary cache path as first parameter. In case of error the fullCacheVideoPath parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a enum
- *                       indicating if the video was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
  */
 - (void)jp_playVideoWithURL:(nullable NSURL *)url
-                    options:(JPVideoPlayerOptions)options
-                   progress:(nullable JPVideoPlayerDownloaderProgressBlock)progressBlock
-                  completion:(nullable JPVideoPlayerCompletionBlock)completedBlock;
+                    options:(JPVideoPlayerOptions)options;
 
 #pragma mark - Play Control
 
@@ -211,7 +212,8 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param animated   need landscape animation or not.
  * @param completion call back when landscape finished.
  */
-- (void)jp_gotoLandscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+- (void)jp_gotoLandscapeAnimated:(BOOL)animated
+                      completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
 
 /**
  * Call this method to exit full screen.
@@ -224,6 +226,9 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param animated   need portrait animation or not.
  * @param completion call back when portrait finished.
  */
-- (void)jp_gotoPortraitAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+- (void)jp_gotoPortraitAnimated:(BOOL)animated
+                     completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

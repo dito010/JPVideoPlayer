@@ -7,7 +7,7 @@
 //
 
 #import "JPVideoPlayerDebrisJointManager.h"
-#import "JPVideoPlayerCachePathManager.h"
+#import "JPVideoPlayerCachePath.h"
 #import "JPVideoPlayerCacheModel.h"
 
 @interface JPVideoPlayerDebrisJointManager()
@@ -41,7 +41,7 @@
             return;
         }
         
-        NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
+        NSString *modelsSavePath = [JPVideoPlayerCachePath videoCacheIndexSavePathForKey:key];
         NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
         if (!modelsData) {
             [self callCompletion:completion fullVideoPath:nil errorMessage:@"Joint debris data have no debris data"];
@@ -71,7 +71,7 @@
             return;
         }
         
-        NSString *metadataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:metadataModel.dataName];
+        NSString *metadataPath = [[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:metadataModel.dataName];
         while (modelsM.count != 1) {
             // joint debris video data by index.
             // 按照 index 进行拼接.
@@ -91,7 +91,7 @@
                 }
             }
             
-            NSString *videoPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:targetModel.dataName];
+            NSString *videoPath = [[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:key] stringByAppendingPathComponent:targetModel.dataName];
             if (targetModel && videoPath && metadataPath && [[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
                 [self internalJointData:[NSData dataWithContentsOfFile:videoPath] aPath:metadataPath append:YES];
                 // remove model.
@@ -100,7 +100,7 @@
         }
         
         // joint finished.
-        NSString *fullVideoPath = [JPVideoPlayerCachePathManager videoCacheFullPathForKey:key];
+        NSString *fullVideoPath = [JPVideoPlayerCachePath videoCacheFullPathForKey:key];
         NSError *error;
         [[NSFileManager defaultManager] moveItemAtPath:metadataPath toPath:fullVideoPath error:&error];
         if (error) {
@@ -110,7 +110,7 @@
         
         [self callCompletion:completion fullVideoPath:fullVideoPath errorMessage:nil];
         // remove temporary file.
-        [[NSFileManager defaultManager] removeItemAtPath:[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:key]  error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:key]  error:nil];
     });
     
 }
@@ -121,7 +121,7 @@
         return NO;
     }
     
-    NSString *modelsSavePath = [JPVideoPlayerCachePathManager videoCacheModelsSavePathForKey:key];
+    NSString *modelsSavePath = [JPVideoPlayerCachePath videoCacheIndexSavePathForKey:key];
     NSData *modelsData = [NSData dataWithContentsOfFile:modelsSavePath];
     if (!modelsData.length) {
         return NO;
@@ -155,7 +155,7 @@
     NSUInteger totalCacheVideoSize = 0;
     
     for (JPVideoPlayerCacheModel *model in modelsM) {
-        NSString *dataPath = [[JPVideoPlayerCachePathManager videoCacheTemporaryPathForKey:model.key] stringByAppendingPathComponent:model.dataName];
+        NSString *dataPath = [[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:model.key] stringByAppendingPathComponent:model.dataName];
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
             return NO;
         }

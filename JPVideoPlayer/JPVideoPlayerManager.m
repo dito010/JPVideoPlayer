@@ -11,74 +11,14 @@
 
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerCompat.h"
-#import "JPVideoPlayerCachePathManager.h"
+#import "JPVideoPlayerCachePath.h"
 #import "JPVideoPlayer.h"
-#import "JPVideoPlayerDownloaderOperation.h"
-#import "UIView+WebVideoCacheOperation.h"
-#import "UIView+PlayerStatusAndDownloadIndicator.h"
 #import "UIView+WebVideoCache.h"
 #import <pthread.h>
-
-@interface JPVideoPlayerCombinedOperation : NSObject <JPVideoPlayerOperation>
-
-@property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
-
-@property (copy, nonatomic, nullable) JPVideoPlayerNoParamsBlock cancelBlock;
-
-@property (strong, nonatomic, nullable) NSOperation *cacheOperation;
-
-/*
- * progressBlock.
- */
-@property(nonatomic, copy, nonnull) JPVideoPlayerDownloaderProgressBlock progressBlock;
-
-/*
- * completionBlock.
- */
-@property(nonatomic, copy, nonnull) JPVideoPlayerCompletionBlock completionBlock;
-
-/*
- * url.
- */
-@property(nonatomic, strong, nonnull) NSURL *url;
-
-/**
- * options
- */
-@property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
-
-@end
-
-@implementation JPVideoPlayerCombinedOperation
-
-- (void)setCancelBlock:(nullable JPVideoPlayerNoParamsBlock)cancelBlock {
-    // check if the operation is already cancelled, then we just call the cancelBlock
-    if (self.isCancelled) {
-        if (cancelBlock) {
-            cancelBlock();
-        }
-        _cancelBlock = nil; // don't forget to nil the cancelBlock, otherwise we will get crashes
-    } else {
-        _cancelBlock = [cancelBlock copy];
-    }
-}
-
-- (void)cancel {
-    self.cancelled = YES;
-    if (self.cacheOperation) {
-        [self.cacheOperation cancel];
-        self.cacheOperation = nil;
-    }
-    if (self.cancelBlock) {
-        self.cancelBlock();
-        _cancelBlock = nil;
-    }
-}
-
-@end
+#import "JPVideoPlayerSupportUtils.h"
 
 
-@interface JPVideoPlayerManager()<JPVideoPlayerInternalDelegate>
+@interface JPVideoPlayerManager()<JPVideoPlayerInternalDelegate, JPVideoPlayerDownloaderDelegate>
 
 @property (strong, nonatomic, readwrite, nonnull) JPVideoPlayerCache *videoCache;
 
@@ -86,7 +26,15 @@
 
 @property (strong, nonatomic, nonnull) NSMutableSet<NSURL *> *failedURLs;
 
-@property (strong, nonatomic) JPVideoPlayerCombinedOperation *runningOperation;
+/*
+ * url.
+ */
+@property(nonatomic, strong) NSURL *url;
+
+/**
+ * options
+ */
+@property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
 
 @property(nonatomic, getter=isMuted) BOOL mute;
 
@@ -119,6 +67,7 @@
 - (nonnull instancetype)init {
     JPVideoPlayerCache *cache = [JPVideoPlayerCache sharedCache];
     JPVideoPlayerDownloader *downloader = [JPVideoPlayerDownloader sharedDownloader];
+    downloader.delegate = self;
     return [self initWithCache:cache downloader:downloader];
 }
 
@@ -141,11 +90,9 @@
     _logLevel = logLevel;
 }
 
-- (nullable id <JPVideoPlayerOperation>)playVideoWithURL:(nonnull NSURL *)url
-                                              showOnView:(nonnull UIView *)showView
-                                                 options:(JPVideoPlayerOptions)options
-                                                progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
-                                              completion:(nullable JPVideoPlayerCompletionBlock)completionBlock {
+- (void)playVideoWithURL:(NSURL *)url
+              showOnView:(UIView *)showView
+                 options:(JPVideoPlayerOptions)options {
     NSParameterAssert([[NSThread currentThread] isMainThread]);
     
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
@@ -158,15 +105,10 @@
     if (![url isKindOfClass:NSURL.class]) {
         url = nil;
     }
-    
-    __block JPVideoPlayerCombinedOperation *operation = [JPVideoPlayerCombinedOperation new];
-    operation.progressBlock = progressBlock;
-    operation.completionBlock = completionBlock;
-    operation.url = url;
-    operation.playerOptions = options;
-    self.runningOperation = operation;
+
+    self.url = url;
+    self.playerOptions = options;
     self.showView = showView;
-    __weak JPVideoPlayerCombinedOperation *weakOperation = operation;
     __weak typeof(showView) wShowView = showView;
     
     BOOL isFailedUrl = NO;
@@ -177,12 +119,14 @@
     }
     
     if (url.absoluteString.length == 0 || (!(options & JPVideoPlayerRetryFailed) && isFailedUrl)) {
-        [self callCompletionBlockWithCompletion:completionBlock
-                                      videoPath:nil
-                                          error:[NSError errorWithDomain:JPVideoPlayerErrorDomain code:NSURLErrorFileDoesNotExist userInfo:@{NSLocalizedDescriptionKey : @"the file of given URL not exists"}]
-                                      cacheType:JPVideoPlayerCacheTypeNone
-                                            url:url];
-        return operation;
+        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                                             code:NSURLErrorFileDoesNotExist
+                                         userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
+        [self callDownloadDelegateMethodWithReceivedSize:0
+                                            expectedSize:1
+                                               cacheType:JPVideoPlayerCacheTypeNone
+                                                   error:error];
+        return;
     }
     
     NSString *key = [self cacheKeyForURL:url];
@@ -191,23 +135,14 @@
         // play file URL.
         [self playLocalVideoWithShowView:showView
                                      url:url
-                                 options:options
-                               operation:operation
-                         completionBlock:completionBlock];
-        return operation;
+                                 options:options];
+        return;
     }
     else {
-        operation.cacheOperation = [self.videoCache queryCacheOperationForKey:key done:^(NSString * _Nullable videoPath, JPVideoPlayerCacheType cacheType) {
-            
-            __strong __typeof(weakOperation) strongOperation = weakOperation;
+        [self.videoCache queryCacheOperationForKey:key done:^(NSString * _Nullable videoPath, JPVideoPlayerCacheType cacheType) {
             __strong __typeof(wShowView) sShowView = wShowView;
-            if (!strongOperation || !sShowView) {
-                self.runningOperation = nil;
-                return;
-            }
-            
-            if (operation.isCancelled) {
-                self.runningOperation = nil;
+            if (!sShowView) {
+                [self reset];
                 return;
             }
             
@@ -216,105 +151,55 @@
                 [self playWebVideoWithShowView:wShowView
                                            url:url
                                        options:options
-                                     operation:operation
-                                      progress:progressBlock
-                               completionBlock:completionBlock
                                      cacheType:cacheType];
             }
             else if(videoPath){
-                if (cacheType != JPVideoPlayerCacheTypeDisk) {
-                    return;
-                }
-                
                 // full video cache file in disk.
                 [self playExistedVideoWithShowView:wShowView
                                                url:url
                                          videoPath:videoPath
                                            options:options
-                                         operation:weakOperation
-                                   completionBlock:completionBlock
                                          cacheType:cacheType];
                 
             }
             else {
                 // video not in cache and download disallowed by delegate.
-                [self callCompletionBlockWithCompletion:completionBlock
-                                              videoPath:nil
-                                                  error:nil
-                                              cacheType:JPVideoPlayerCacheTypeNone
-                                                    url:url];
-                self.runningOperation = nil;
+                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                                                     code:NSURLErrorFileDoesNotExist
+                                                 userInfo:@{NSLocalizedDescriptionKey : @"Video not in cache and download disallowed by delegate"}];
+                [self callDownloadDelegateMethodWithReceivedSize:0
+                                                    expectedSize:1
+                                                       cacheType:JPVideoPlayerCacheTypeNone
+                                                           error:error];
+                [self reset];
             }
         }];
     }
-    return operation;
 }
 
 - (void)playWebVideoWithShowView:(UIView *)showView
                              url:(NSURL *)url
                          options:(JPVideoPlayerOptions)options
-                       operation:(JPVideoPlayerCombinedOperation *)operation
-                        progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
-                 completionBlock:(JPVideoPlayerCompletionBlock)completionBlock
                        cacheType:(JPVideoPlayerCacheType)cacheType {
     // show progress view if need.
     [self tryToShowProgressViewForView:showView options:options];
     // show activity view if need.
     [self tryToShowActivityIndicatorViewForView:showView options:options];
-    [self downloadProgressDidChangeWithURL:url options:options receiveSize:0 exceptSize:1];
-    
-    __weak __typeof(showView) wshowView = showView;
-    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.runningOperation.playerOptions];
-    [self.videoDownloader tryToFetchVideoExpectedSizeWithURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/proud-driver.mp4"] options:downloaderOptions completion:^(NSURL * _Nonnull url, NSUInteger expectedSize, NSError * _Nullable error) {
 
-        [self.videoCache storeExpectedSize:expectedSize forKey:[self cacheKeyForURL:url] completion:^(NSString * _Nonnull key, NSUInteger expectedSize, NSError * _Nonnull error) {
-    
-            [self.videoPlayer playVideoWithURL:url
-                                       options:options
-                                    showOnView:showView
-                                      progress:^(double currentSeconds, double totalSeconds) {
-                                          
-                                          __strong __typeof(wshowView) sShowView = wshowView;
-                                          double progress = currentSeconds / totalSeconds;
-                                          BOOL needDisplayProgress = options & JPVideoPlayerShowProgressView;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                                          if (needDisplayProgress) {
-                                              [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
-                                          }
-#pragma clang diagnostic pop
-                                          
-                                          
-                                      } error:^(NSError * _Nullable error) {
-                                          
-                                          if (error) {
-                                              if (completionBlock) {
-                                                  [self callCompletionBlockWithCompletion:completionBlock
-                                                                                videoPath:nil
-                                                                                    error:error
-                                                                                cacheType:JPVideoPlayerCacheTypeNone
-                                                                                      url:url];
-                                                  self.runningOperation = nil;
-                                              }
-                                          }
-                                          
-                                      }];
-            
-        }];
-
-    }];
+    [self.videoPlayer playVideoWithURL:url options:options showOnView:showView];
 }
 
 - (void)playExistedVideoWithShowView:(UIView *)showView
                                  url:(NSURL *)url
                            videoPath:(NSString *)videoPath
                              options:(JPVideoPlayerOptions)options
-                           operation:(JPVideoPlayerCombinedOperation *)operation
-                     completionBlock:(JPVideoPlayerCompletionBlock)completionBlock
                            cacheType:(JPVideoPlayerCacheType)cacheType {
     // show progress view if need.
     [self tryToShowProgressViewForView:showView options:options];
-    [self downloadProgressDidChangeWithURL:url options:options receiveSize:1 exceptSize:1];
+    [self callDownloadDelegateMethodWithReceivedSize:1
+                                        expectedSize:1
+                                           cacheType:JPVideoPlayerCacheTypeDisk
+                                               error:nil];
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -322,48 +207,25 @@
     // display backLayer.
     [showView performSelector:NSSelectorFromString(@"displayBackLayer")];
 #pragma clang diagnostic pop
-    
+
     [self.videoPlayer playExistedVideoWithURL:url
                            fullVideoCachePath:videoPath
                                       options:options
-                                   showOnView:showView
-                                     progress:^(double currentSeconds, double totalSeconds) {
-                                         double progress = currentSeconds / totalSeconds;
-                                         BOOL needDisplayProgressView = options & JPVideoPlayerShowProgressView;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                                         if (needDisplayProgressView) {
-                                             [showView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
-                                         }
-#pragma clang diagnostic pop
-                                         
-                                     } error:^(NSError * _Nullable error) {
-                                         
-                                         if (completionBlock) {
-                                             completionBlock(nil, error, JPVideoPlayerCacheTypeLocation, url);
-                                         }
-                                         
-                                     }];
-    
-    [self callCompletionBlockWithCompletion:completionBlock
-                                  videoPath:videoPath
-                                      error:nil
-                                  cacheType:JPVideoPlayerCacheTypeDisk
-                                        url:url];
+                                   showOnView:showView];
 }
 
 - (void)playLocalVideoWithShowView:(UIView *)showView
                                url:(NSURL *)url
-                           options:(JPVideoPlayerOptions)options
-                         operation:(JPVideoPlayerCombinedOperation *)operation
-                   completionBlock:(JPVideoPlayerCompletionBlock)completionBlock {
+                           options:(JPVideoPlayerOptions)options {
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         // show progress view if need.
         [self tryToShowProgressViewForView:showView options:options];
-        [self downloadProgressDidChangeWithURL:url options:options receiveSize:1 exceptSize:1];
-        
+        [self callDownloadDelegateMethodWithReceivedSize:1
+                                            expectedSize:1
+                                               cacheType:JPVideoPlayerCacheTypeLocation
+                                                   error:nil];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [showView performSelector:NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:") withObject:@1];
@@ -376,40 +238,21 @@
         [self.videoPlayer playExistedVideoWithURL:url
                                fullVideoCachePath:path
                                           options:options
-                                       showOnView:showView
-                                         progress:^(double currentSeconds, double totalSeconds) {
-                                             double progress = currentSeconds / totalSeconds;
-                                             
-                                             __strong typeof(wShowView) sShowView = wShowView;
-                                             if (!sShowView) return;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                                             BOOL needDisplayProgressView = options & JPVideoPlayerShowProgressView;
-                                             if (needDisplayProgressView) {
-                                                 [sShowView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
-                                             }
-#pragma clang diagnostic pop
-                                             
-                                         } error:^(NSError * _Nullable error) {
-                                             
-                                             if (completionBlock) {
-                                                 completionBlock(nil, error, JPVideoPlayerCacheTypeLocation, url);
-                                             }
-                                             
-                                         }];
-        self.videoPlayer.delegate = self;
+                                       showOnView:showView];
     }
     else{
-        [self callCompletionBlockWithCompletion:completionBlock
-                                      videoPath:nil
-                                          error:[NSError errorWithDomain:JPVideoPlayerErrorDomain code:NSURLErrorFileDoesNotExist userInfo:@{NSLocalizedDescriptionKey : @"the file of given URL not exists"}]
-                                      cacheType:JPVideoPlayerCacheTypeNone
-                                            url:url];
+        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                                             code:NSURLErrorFileDoesNotExist
+                                         userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
+        [self callDownloadDelegateMethodWithReceivedSize:0
+                                            expectedSize:1
+                                               cacheType:JPVideoPlayerCacheTypeNone
+                                                   error:error];
     }
 }
 
 
-- (void)cancelAllDownloads{
+- (void)cancelAllDownloads {
     [self.videoDownloader cancel];
 }
 
@@ -427,7 +270,7 @@
 - (void)stopPlay{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    dispatch_main_async_safe(^{
+    JPDispatchSyncOnMainQueue(^{
         if (self.showView) {
             [self.showView performSelector:NSSelectorFromString(@"jp_removeVideoLayerViewAndIndicatorView")];
             [self.showView performSelector:NSSelectorFromString(@"jp_hideActivityIndicatorView")];
@@ -439,6 +282,7 @@
         [self.videoPlayer stopPlay];
     });
 #pragma clang diagnostic pop
+    [self reset];
 }
 
 - (void)pause{
@@ -463,16 +307,18 @@
 
 #pragma mark - JPVideoPlayerInternalDelegate
 
-- (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer shouldAutoReplayVideoForURL:(NSURL *)videoURL {
+- (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer
+shouldAutoReplayVideoForURL:(NSURL *)videoURL {
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
         return [self.delegate videoPlayerManager:self shouldAutoReplayForURL:videoURL];
     }
     return YES;
 }
 
-- (void)videoPlayer:(JPVideoPlayer *)videoPlayer playStatusDidChange:(JPVideoPlayerStatus)playingStatus {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playingStatusDidChanged:)]) {
-        [self.delegate videoPlayerManager:self playingStatusDidChanged:playingStatus];
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playerStatusDidChanged:)]) {
+        [self.delegate videoPlayerManager:self playerStatusDidChanged:playerStatus];
     }
 }
 
@@ -483,81 +329,101 @@
     [self startDownloadVideo];
 }
 
+- (void)videoPlayerPlayProgressDidChange:(nonnull JPVideoPlayer *)videoPlayer
+                          elapsedSeconds:(double)elapsedSeconds
+                            totalSeconds:(double)totalSeconds {
+    BOOL needDisplayProgressView = self.playerOptions & JPVideoPlayerShowProgressView;
+    if (needDisplayProgressView) {
+        double progress = 0;
+        if(totalSeconds != 0){
+           progress = elapsedSeconds / totalSeconds;
+        }
+        [self.showView performSelector:NSSelectorFromString(@"jp_progressViewPlayingStatusChangedWithProgressValue:") withObject:@(progress)];
+    }
 
-#pragma mark - Private
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerPlayProgressDidChange:elapsedSeconds:totalSeconds:error:)]) {
+        [self.delegate videoPlayerManagerPlayProgressDidChange:self
+                                                elapsedSeconds:elapsedSeconds
+                                                  totalSeconds:totalSeconds
+                                                         error:nil];
+    }
+}
 
-- (void)startDownloadVideo {
-    JPVideoPlayerOptions options = self.runningOperation.playerOptions;
-    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:options];
-    // Save received data to disk.
-    JPVideoPlayerDownloaderProgressBlock handleProgressBlock = ^(NSData * _Nullable data,
-            NSUInteger receivedSize,
-            NSUInteger expectedSize,
-            NSURLResponse *response,
-            NSURL * _Nullable url){
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+playFailedWithError:(NSError *)error {
+    [self stopPlay];
+    [self callPlayDelegateMethodWithElapsedSeconds:0
+                                      totalSeconds:0
+                                             error:error];
+}
 
-        NSParameterAssert(self.runningOperation);
-        [self storeVideoData:data
-                expectedSize:expectedSize
-                         url:self.runningOperation.url
-                    showView:self.showView
-                   operation:self.runningOperation
-                     options:options
-                    response:response
-                    progress:self.runningOperation.progressBlock
-                  completion:self.runningOperation.completionBlock];
 
-    };
-    
-    
-    // download video from web.
-    [self.videoDownloader downloadVideoWithURL:[NSURL URLWithString:@"http://static.smartisanos.cn/common/video/proud-driver.mp4"]
-                                       options:downloaderOptions
-                                      progress:handleProgressBlock
-                                    completion:^(NSError * _Nullable error) {
-        
-        if (error){
-            [self callCompletionBlockWithCompletion:self.runningOperation.completionBlock
-                                          videoPath:nil
-                                              error:error
-                                          cacheType:JPVideoPlayerCacheTypeNone
-                                                url:self.runningOperation.url];
-            
-            if (error.code != NSURLErrorNotConnectedToInternet
+#pragma mark - JPVideoPlayerDownloaderDelegate
+
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+didReceiveResponse:(NSURLResponse *)response {
+}
+
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+    didReceiveData:(NSData *)data
+      receivedSize:(NSUInteger)receivedSize
+      expectedSize:(NSUInteger)expectedSize {
+//    [self storeVideoData:data
+//            expectedSize:expectedSize
+//                     url:self.runningOperation.url
+//                showView:self.showView
+//               operation:self.runningOperation
+//                 options:options
+//                response:response];
+}
+
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+didCompleteWithError:(NSError *)error {
+    if (error){
+        [self callDownloadDelegateMethodWithReceivedSize:0
+                                            expectedSize:1
+                                               cacheType:JPVideoPlayerCacheTypeNone
+                                                   error:error];
+
+        if (error.code != NSURLErrorNotConnectedToInternet
                 && error.code != NSURLErrorCancelled
                 && error.code != NSURLErrorTimedOut
                 && error.code != NSURLErrorInternationalRoamingOff
                 && error.code != NSURLErrorDataNotAllowed
                 && error.code != NSURLErrorCannotFindHost
                 && error.code != NSURLErrorCannotConnectToHost) {
-                pthread_mutex_lock(&_lock);
-                [self.failedURLs addObject:self.runningOperation.url];
-                pthread_mutex_unlock(&_lock);
-            }
-            
-            self.runningOperation = nil;
+            pthread_mutex_lock(&_lock);
+            [self.failedURLs addObject:self.url];
+            pthread_mutex_unlock(&_lock);
         }
-        else {
-            if ((options & JPVideoPlayerRetryFailed)) {
-                pthread_mutex_lock(&_lock);
-                if ([self.failedURLs containsObject:self.runningOperation.url]) {
-                    [self.failedURLs removeObject:self.runningOperation.url];
-                }
-                pthread_mutex_unlock(&_lock);
+        [self reset];
+    }
+    else {
+        if ((self.playerOptions & JPVideoPlayerRetryFailed)) {
+            pthread_mutex_lock(&_lock);
+            if ([self.failedURLs containsObject:self.url]) {
+                [self.failedURLs removeObject:self.url];
             }
+            pthread_mutex_unlock(&_lock);
         }
-    }];
-    
-    __weak typeof(self) wself = self;
-    self.runningOperation.cancelBlock = ^{
-        __strong typeof(self) sself = wself;
-        [sself.videoDownloader cancel];
-        [[JPVideoPlayerManager sharedManager] stopPlay];
-        
-        // hide indicator view.
-        [sself hideAllIndicatorAndProgressViewsWithURL:sself.runningOperation.url options:options];
-        sself.runningOperation = nil;
-    };
+    }
+}
+
+
+#pragma mark - Private
+
+- (void)reset {
+    pthread_mutex_lock(&_lock);
+    self.url = nil;
+    self.playerOptions = 0;
+    self.showView = nil;
+    pthread_mutex_unlock(&_lock);
+}
+
+- (void)startDownloadVideo {
+    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
+    // download video from web.
+    [self.videoDownloader downloadVideoWithURL:self.url downloadOptions:downloaderOptions];
 }
 
 - (JPVideoPlayerDownloaderOptions)fetchDownloadOptionsWithOptions:(JPVideoPlayerOptions)options {
@@ -576,12 +442,8 @@
           expectedSize:(NSUInteger)expectedSize
                    url:(NSURL *)url
               showView:(UIView *)showView
-             operation:(JPVideoPlayerCombinedOperation *)operation
                options:(JPVideoPlayerOptions)options
-              response:(NSURLResponse *)response
-              progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
-            completion:(JPVideoPlayerCompletionBlock)completionBlock {
-    __weak __typeof(operation) wOperation = operation;
+              response:(NSURLResponse *)response {
     __weak __typeof(showView) wshowView = showView;
     
     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
@@ -589,25 +451,18 @@
                        expectedSize:expectedSize
                              forKey:key
                          completion:^(NSString *key, NSUInteger storedSize, NSString * _Nullable tempVideoCachePath, NSString * _Nullable fullVideoCachePath, NSError * _Nullable error) {
-                             
-                             __strong __typeof(wOperation) sOperation = wOperation;
+                             // refresh progress view.
+                             [self callDownloadDelegateMethodWithReceivedSize:storedSize
+                                                                 expectedSize:expectedSize
+                                                                    cacheType:JPVideoPlayerCacheTypeWeb
+                                                                        error:nil];
                              __strong __typeof(wshowView) sShowView = wshowView;
-                             if (!sOperation || sOperation.isCancelled) {
-                                 // Do nothing if the operation was cancelled
-                                 // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data.
-                             }
                              if (!error) {
-                                 // refresh progress view.
-                                 [self downloadProgressDidChangeWithURL:url
-                                                                options:options
-                                                            receiveSize:storedSize
-                                                             exceptSize:expectedSize];
-                                 
                                  if (!fullVideoCachePath) {
-                                     if (progressBlock) {
-                                         progressBlock(videoData, storedSize, expectedSize, response, url);
+                                     if (!sShowView) {
+                                         [self reset];
+                                         return;
                                      }
-                                     if (!sShowView) return;
                                      
                                      // play video from web.
                                      if (!self.videoPlayer.currentVideoPlayerModel) {
@@ -627,29 +482,13 @@
                                  else{
                                      // cache finished, and move the full video file from temporary path to full path.
                                      [self.videoPlayer didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
-                                     [self callCompletionBlockWithCompletion:completionBlock
-                                                                   videoPath:fullVideoCachePath
-                                                                       error:nil
-                                                                   cacheType:JPVideoPlayerCacheTypeWeb
-                                                                         url:url];
-                                     self.runningOperation = nil;
-                                     
-                                     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadProgressDidChangeReceivedSize:expectedSize:)]) {
-                                         [self.delegate videoPlayerManager:self downloadProgressDidChangeReceivedSize:storedSize expectedSize:expectedSize];
-                                     }
                                  }
                              }
                              else{
                                  // some error happens.
-                                 [self callCompletionBlockWithCompletion:completionBlock
-                                                               videoPath:nil
-                                                                   error:error
-                                                               cacheType:JPVideoPlayerCacheTypeNone
-                                                                     url:url];
-                                 
                                  // hide indicator view.
                                  [self hideAllIndicatorAndProgressViewsWithURL:url options:options];
-                                 self.runningOperation = nil;
+                                 [self reset];
                              }
                          }];
 }
@@ -658,7 +497,7 @@
                              options:(JPVideoPlayerOptions)options{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    dispatch_main_async_safe(^{
+    JPDispatchSyncOnMainQueue(^{
         if (options & JPVideoPlayerShowProgressView) {
             [view performSelector:NSSelectorFromString(@"jp_showProgressView")];
         }
@@ -670,44 +509,12 @@
                                       options:(JPVideoPlayerOptions)options{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    dispatch_main_async_safe(^{
+    JPDispatchSyncOnMainQueue(^{
         if ((options & JPVideoPlayerShowActivityIndicatorView)) {
             [view performSelector:NSSelectorFromString(@"jp_showActivityIndicatorView")];
         }
     });
 #pragma clang diagnostic pop
-}
-
-- (void)playProgressDidChangeWithOptions:(JPVideoPlayerOptions)options
-                          currentSeconds:(NSUInteger)currentSeconds
-                            totalSeconds:(NSUInteger)totalSeconds {
-    BOOL respond = self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playProgressDidChangeCurrentSeconds:totalSeconds:)];
-    if (respond) {
-        [self.delegate videoPlayerManager:self playProgressDidChangeCurrentSeconds:currentSeconds totalSeconds:totalSeconds];
-    }
-}
-
-- (void)downloadProgressDidChangeWithURL:(nullable NSURL *)url
-                                 options:(JPVideoPlayerOptions)options
-                             receiveSize:(NSUInteger)receiveSize
-                              exceptSize:(NSUInteger)expectedSize {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:downloadProgressDidChangeReceivedSize:expectedSize:)]) {
-        [self.delegate videoPlayerManager:self
-    downloadProgressDidChangeReceivedSize:receiveSize
-                             expectedSize:expectedSize];
-    }
-    
-    if (options & JPVideoPlayerShowProgressView) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        dispatch_main_async_safe(^{
-            SEL sel = NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:");
-            if (self.showView) {
-                [self.showView performSelector:sel withObject:@((CGFloat)receiveSize/expectedSize)];
-            }
-        });
-#pragma clang diagnostic pop
-    }
 }
 
 - (void)hideAllIndicatorAndProgressViewsWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
@@ -719,7 +526,7 @@
     if (options & JPVideoPlayerShowActivityIndicatorView){
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        dispatch_main_async_safe(^{
+        JPDispatchSyncOnMainQueue(^{
             if (self.showView) {
                 [self.showView performSelector:NSSelectorFromString(@"jp_hideActivityIndicatorView")];
             }
@@ -732,7 +539,7 @@
     if (options & JPVideoPlayerShowProgressView){
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        dispatch_main_async_safe(^{
+        JPDispatchSyncOnMainQueue(^{
             if (self.showView) {
                 [self.showView performSelector:NSSelectorFromString(@"jp_hideProgressView")];
             }
@@ -741,14 +548,42 @@
 #pragma clang diagnostic pop
 }
 
-- (void)callCompletionBlockWithCompletion:(nullable JPVideoPlayerCompletionBlock)completionBlock
-                                videoPath:(nullable NSString *)videoPath
-                                    error:(nullable NSError *)error
-                                cacheType:(JPVideoPlayerCacheType)cacheType
-                                      url:(nullable NSURL *)url {
-    dispatch_main_async_safe(^{
-        if (self.runningOperation && !self.runningOperation.isCancelled && completionBlock) {
-            completionBlock(videoPath, error, cacheType, url);
+- (void)callDownloadDelegateMethodWithReceivedSize:(NSUInteger)receivedSize
+                                      expectedSize:(NSUInteger)expectedSize
+                                         cacheType:(JPVideoPlayerCacheType)cacheType
+                                             error:(nullable NSError *)error {
+    JPDispatchSyncOnMainQueue(^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerDownloadProgressDidChange:cacheType:receivedSize:expectedSize:error:)]) {
+            [self.delegate videoPlayerManagerDownloadProgressDidChange:self
+                                                             cacheType:cacheType
+                                                          receivedSize:receivedSize
+                                                          expectedSize:expectedSize
+                                                                 error:error];
+        }
+
+        if (self.playerOptions & JPVideoPlayerShowProgressView) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            JPDispatchSyncOnMainQueue(^{
+                SEL sel = NSSelectorFromString(@"jp_progressViewDownloadingStatusChangedWithProgressValue:");
+                if (self.showView) {
+                    [self.showView performSelector:sel withObject:@((CGFloat)receivedSize/expectedSize)];
+                }
+            });
+#pragma clang diagnostic pop
+        }
+    });
+}
+
+- (void)callPlayDelegateMethodWithElapsedSeconds:(double)elapsedSeconds
+                                    totalSeconds:(double)totalSeconds
+                                           error:(nullable NSError *)error {
+    JPDispatchSyncOnMainQueue(^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerPlayProgressDidChange:elapsedSeconds:totalSeconds:error:)]) {
+            [self.delegate videoPlayerManagerPlayProgressDidChange:self
+                                                    elapsedSeconds:elapsedSeconds
+                                                      totalSeconds:totalSeconds
+                                                             error:error];
         }
     });
 }
@@ -760,13 +595,6 @@
             completionBlock(isInDiskCache);
         }
     }];
-}
- 
-- (void)setRunningOperation:(JPVideoPlayerCombinedOperation *)runningOperation {
-    if (runningOperation == nil) {
-        return;
-    }
-    _runningOperation = runningOperation;
 }
 
 @end

@@ -1,14 +1,14 @@
-/*
- * This file is part of the JPVideoPlayer package.
- * (c) NewPan <13246884282@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Click https://github.com/Chris-Pan
- * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
- */
+//
+//  JPVideoPlayerControlViews.h
+//  JPVideoPlayerDemo
+//
+//  Created by NewPan on 2018/2/20.
+//  Copyright © 2018年 NewPan. All rights reserved.
+//
+
 #import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface JPVideoPlayerProgressView : UIView
 
@@ -56,3 +56,15 @@
 - (void)refreshProgressViewForScreenEvents;
 
 @end
+
+UIKIT_EXTERN CGFloat const JPVideoPlayerActivityIndicatorWH;
+
+@interface JPVideoPlayerActivityIndicator : UIView
+
+- (void)startAnimating;
+
+- (void)stopAnimating;
+
+@end
+
+NS_ASSUME_NONNULL_END

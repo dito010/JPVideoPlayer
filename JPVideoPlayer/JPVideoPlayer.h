@@ -32,6 +32,7 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  * The player to play video.
  */
 @property(nonatomic, strong, readonly, nullable)AVPlayer *player;
+
 @end
 
 @class JPVideoPlayer;
@@ -48,15 +49,17 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
+- (BOOL)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
 
 /**
  * Notify the player status.
  *
  * @param videoPlayer   the current `JPVideoPlayer`.
- * @param playingStatus the current playing status.
+ * @param playerStatus the current player status.
  */
-- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer playStatusDidChange:(JPVideoPlayerStatus)playingStatus;
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+playerStatusDidChange:(JPVideoPlayerStatus)playerStatus;
 
 /**
  * Called on the request range of player did change.
@@ -64,13 +67,30 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  * @param videoPlayer        the current `JPVideoPlayer`.
  * @param requestRangeString the current request range of player.
  */
-- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer playerRequestRangeDidChange:(NSString *)requestRangeString;
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+playerRequestRangeDidChange:(NSString *)requestRangeString;
+
+/**
+ * Notify the playing progress value. this method will be called on main thread.
+ *
+ * @param videoPlayer        The current `videoPlayer`.
+ * @param elapsedSeconds     The current played seconds.
+ * @param totalSeconds       The total seconds of this video for given url.
+ */
+- (void)videoPlayerPlayProgressDidChange:(nonnull JPVideoPlayer *)videoPlayer
+                          elapsedSeconds:(double)elapsedSeconds
+                            totalSeconds:(double)totalSeconds;
+
+/**
+ * Called on some error raise in player.
+ *
+ * @param videoPlayer The current instance.
+ * @param error       The error.
+ */
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+playFailedWithError:(NSError *)error;
 
 @end
-
-typedef void(^JPVideoPlayerErrorBlock)(NSError * _Nullable error);
-
-typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSeconds);
 
 @interface JPVideoPlayer : NSObject
 
@@ -90,17 +110,13 @@ typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSec
  * @param url                the video url to play.
  * @param fullVideoCachePath the full video file path in disk.
  * @param showView           the view to show the video display layer.
- * @param progress           the playing progress of video player.
- * @param error              the error for 'fullVideoCachePath' and 'showLayer'.
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
 - (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL * _Nullable)url
                                       fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
-                                              showOnView:(UIView * _Nullable)showView
-                                                progress:(JPVideoPlayerProgressBlock _Nullable )progress
-                                                   error:(nullable JPVideoPlayerErrorBlock)error;
+                                              showOnView:(UIView * _Nullable)showView;
 
 
 # pragma mark - Play video from Web.
@@ -111,16 +127,12 @@ typedef void(^JPVideoPlayerProgressBlock)(double currentSeconds, double totalSec
  * @param url                the video url to play.
  * @param options            the options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
  * @param showView           the view to show the video display layer.
- * @param progress           the playing progress of video player.
- * @param error              the error for 'fullVideoCachePath' and 'showLayer'.
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL * _Nullable)url
+- (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
-                                       showOnView:(UIView * _Nullable)showView
-                                         progress:(JPVideoPlayerProgressBlock _Nullable)progress
-                                            error:(nullable JPVideoPlayerErrorBlock)error;
+                                       showOnView:(UIView *)showView;
 
 /**
  * Call this method to make this instance to handle video data for player.

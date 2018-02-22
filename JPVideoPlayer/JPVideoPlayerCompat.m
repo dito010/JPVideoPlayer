@@ -15,18 +15,27 @@ NSString *const JPVideoPlayerDownloadFinishNotification = @"www.jpvideplayer.dow
 
 NSString *const JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";
 
-@implementation JPLog
+void JPDispatchSyncOnMainQueue(dispatch_block_t block) {
+    if (!block) { return; }
+    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
+        block();
+    }
+    else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}
 
+@implementation JPLog
 + (void)initialize {
     _logLevel = JPLogLevelError;
 }
 
-+ (void)logWithFlag:(JPLogLevel)flag
++ (void)logWithFlag:(JPLogLevel)logLevel
                file:(const char *)file
            function:(const char *)function
                line:(NSUInteger)line
              format:(NSString *)format, ... {
-    if (flag > _logLevel) {
+    if (logLevel > _logLevel) {
         return;
     }
     
@@ -42,20 +51,31 @@ NSString *const JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www"
     
     if (message.length) {
         NSString *tempString = @"";
-        NSString *fileName = [NSString stringWithCString:file encoding:NSUTF8StringEncoding];
-        if (fileName.length && [fileName containsString:@"/"]) {
-            tempString = [tempString stringByAppendingString:[fileName componentsSeparatedByString:@"/"].lastObject];
-            tempString = [tempString stringByAppendingString:@"-"];
-        }
-        
         NSString *functionName = [NSString stringWithCString:function encoding:NSUTF8StringEncoding];
         if (functionName.length && ([functionName containsString:@"-"] || [functionName containsString:@"+"])) {
             tempString = [tempString stringByAppendingString:[functionName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"- :+"]]];
         }
-        
-        message = [NSString stringWithFormat:@"%@-%ld: %@", tempString, line, message];
+
+        NSString *flag;
+        switch (logLevel) {
+            case JPLogLevelDebug:
+                flag = @"DEBUG";
+                break;
+
+            case JPLogLevelWarning:
+                flag = @"Waring";
+                break;
+
+            case JPLogLevelError:
+                flag = @"Error";
+                break;
+                
+            default:
+                break;
+        }
+        message = [NSString stringWithFormat:@"[%@] %@ [Line %ld] => %@", flag, tempString, line, message];
+        printf("%s\n", message.UTF8String);
     }
-    NSLog(@"%@", message);
 }
 
 

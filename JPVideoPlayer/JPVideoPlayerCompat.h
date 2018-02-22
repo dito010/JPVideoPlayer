@@ -16,12 +16,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define dispatch_main_async_safe(JPock)\
-if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
-JPock();\
-} else {\
-dispatch_async(dispatch_get_main_queue(), JPock);\
-}
+/**
+ * Dispatch block excute on main queue.
+ */
+void JPDispatchSyncOnMainQueue(dispatch_block_t block);
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotification;
@@ -121,13 +119,13 @@ static JPLogLevel _logLevel;
 /**
  * Output message to console.
  *
- *  @param flag         The log type.
+ *  @param logLevel         The log type.
  *  @param file         The current file name.
  *  @param function     The current function name.
  *  @param line         The current line number.
  *  @param format       The log format.
  */
-+ (void)logWithFlag:(JPLogLevel)flag
++ (void)logWithFlag:(JPLogLevel)logLevel
                file:(const char *)file
            function:(const char *)function
                line:(NSUInteger)line

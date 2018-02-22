@@ -12,6 +12,26 @@
 #import <Foundation/Foundation.h>
 #import "JPVideoPlayerCompat.h"
 
+@interface JPVideoPlayerCacheConfig : NSObject
+
+/**
+ * The maximum length of time to keep an video in the cache, in seconds
+ */
+@property (assign, nonatomic) NSInteger maxCacheAge;
+
+/**
+ * The maximum size of the cache, in bytes.
+ * If the cache Beyond this value, it will delete the video file by the cache time automatic.
+ */
+@property (assign, nonatomic) NSUInteger maxCacheSize;
+
+/**
+ *  disable iCloud backup [defaults to YES]
+ */
+@property (assign, nonatomic) BOOL shouldDisableiCloud;
+
+@end
+
 @class JPVideoPlayerCacheConfig;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,8 +64,6 @@ typedef void(^JPVideoPlayerCacheQueryCompletion)(NSString * _Nullable videoPath,
 typedef void(^JPVideoPlayerCheckCacheCompletion)(BOOL isInDiskCache);
 
 typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInteger totalSize);
-
-typedef void(^JPVideoPlayerNoParamsBlock)(void);
 
 typedef void(^JPStoreDataCompletion)(NSString *key,
                                         NSUInteger storedSize,
@@ -117,7 +135,7 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
 - (void)reset;
 
 
-# pragma - Query and Retrieve Options
+# pragma mark - Query and Retrieve Options
 /**
  * Async check if video exists in disk cache already (does not load the video).
  *
@@ -147,7 +165,7 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
 - (BOOL)diskVideoExistsWithPath:(NSString * _Nullable)fullVideoCachePath;
 
 
-# pragma - Clear Cache Events
+# pragma mark - Clear Cache Events
 
 /**
  * Remove the video data from disk cache asynchronously
@@ -155,7 +173,7 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
  * @param key             The unique video cache key.
  * @param completion      A block that should be executed after the video has been removed (optional).
  */
-- (void)removeFullCacheForKey:(nullable NSString *)key withCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
+- (void)removeFullCacheForKey:(nullable NSString *)key withCompletion:(nullable dispatch_block_t)completion;
 
 /**
  * Clear the temporary cache video for given key.
@@ -163,26 +181,26 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
  * @param key  The unique flag for the given url in this framework.
  * @param completion      A block that should be executed after the video has been removed (optional).
  */
-- (void)removeTempCacheForKey:(NSString * _Nonnull)key withCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
+- (void)removeTempCacheForKey:(NSString * _Nonnull)key withCompletion:(nullable dispatch_block_t)completion;
 
 /**
  * Async remove all expired cached video from disk. Non-blocking method - returns immediately.
  *
  * @param completionBlock A block that should be executed after cache expiration completes (optional)
  */
-- (void)deleteOldFilesWithCompletionBlock:(nullable JPVideoPlayerNoParamsBlock)completionBlock;
+- (void)deleteOldFilesWithCompletionBlock:(nullable dispatch_block_t)completionBlock;
 
 /**
  * Async delete all temporary cached videos. Non-blocking method - returns immediately.
  * @param completion    A block that should be executed after cache expiration completes (optional).
  */
-- (void)deleteAllTempCacheOnCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
+- (void)deleteAllTempCacheOnCompletion:(nullable dispatch_block_t)completion;
 
 /**
  * Async clear all disk cached videos. Non-blocking method - returns immediately.
  * @param completion    A block that should be executed after cache expiration completes (optional).
  */
-- (void)clearDiskOnCompletion:(nullable JPVideoPlayerNoParamsBlock)completion;
+- (void)clearDiskOnCompletion:(nullable dispatch_block_t)completion;
 
 
 # pragma mark - Cache Info
@@ -217,7 +235,6 @@ typedef void(^JPStoreExpectedSizeCompletion)(NSString *key,
  * Calculate the disk cache's size, asynchronously .
  */
 - (void)calculateSizeWithCompletionBlock:(nullable JPVideoPlayerCalculateSizeCompletion)completionBlock;
-
 
 # pragma mark - File Name
 

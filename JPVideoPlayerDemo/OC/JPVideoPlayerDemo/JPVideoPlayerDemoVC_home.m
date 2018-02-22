@@ -53,7 +53,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    JPLogDebug(@"debug");
     [self setup];
     [self insertLineInScreenCenter];
 }

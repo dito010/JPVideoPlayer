@@ -41,13 +41,43 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
 
-typedef void(^JPVideoPlayerDownloaderProgressBlock)(NSData * _Nullable data,
-                                                    NSUInteger receivedSize,
-                                                    NSUInteger expectedSize,
-                                                    NSURLResponse *response,
-                                                    NSURL * _Nullable url);
+@interface JPVideoPlayerDownloaderOperation : NSObject
 
-typedef void(^JPVideoPlayerDownloaderCompletion)(NSError *_Nullable error);
+/**
+ * The request used by the operation's task.
+ */
+@property (strong, nonatomic, readonly, nullable) NSURLRequest *request;
+
+/**
+ * The operation's task
+ */
+@property (strong, nonatomic, readonly, nullable) NSURLSessionDataTask *dataTask;
+
+/**
+ * The JPVideoPlayerDownloaderOptions for the receiver.
+ */
+@property (assign, nonatomic, readonly) JPVideoPlayerDownloaderOptions options;
+
+/**
+ *  Initializes a `JPVideoPlayerDownloaderOperation` object.
+ *
+ *  @see JPVideoPlayerDownloaderOperation.
+ *
+ *  @param request        the URL request.
+ *  @param session        the URL session in which this operation will run.
+ *  @param options        downloader options.
+ *
+ *  @return the initialized instance.
+ */
+- (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
+                              inSession:(nullable NSURLSession *)session
+                                options:(JPVideoPlayerDownloaderOptions)options NS_DESIGNATED_INITIALIZER;
+
+- (void)start;
+
+- (void)cancel;
+
+@end
 
 typedef NSDictionary<NSString *, NSString *> JPHTTPHeadersDictionary;
 
@@ -56,6 +86,48 @@ typedef NSMutableDictionary<NSString *, NSString *> JPHTTPHeadersMutableDictiona
 typedef JPHTTPHeadersDictionary * _Nullable (^JPVideoPlayerDownloaderHeadersFilterBlock)(NSURL * _Nullable url, JPHTTPHeadersDictionary * _Nullable headers);
 
 typedef void(^JPFetchExpectedSizeCompletion)(NSURL *url, NSUInteger expectedSize, NSError *_Nullable error);
+
+@class JPVideoPlayerDownloader;
+
+@protocol JPVideoPlayerDownloaderDelegate<NSObject>
+
+@optional
+
+/**
+ * This method will be called when received response from web,
+ * this method will execute on main-thread.
+ *
+ * @param downloader The current instance.
+ * @param response   The response content.
+ */
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+didReceiveResponse:(NSURLResponse *)response;
+
+/**
+ * This method will be called when received data.
+ * this method will execute on any-thread.
+ *
+ * @param downloader   The current instance.
+ * @param data         The received new data.
+ * @param receivedSize The size of received data.
+ * @param expectedSize The expexted size of request.
+ */
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+    didReceiveData:(NSData *)data
+      receivedSize:(NSUInteger)receivedSize
+      expectedSize:(NSUInteger)expectedSize;
+
+/**s
+ * This method will be called when request completed or some error happened other situations.
+ * this method will execute on main-thread.
+ *
+ * @param downloader The current instance.
+ * @param error      The error when request, maybe nil if successed.
+ */
+- (void)downloader:(JPVideoPlayerDownloader *)downloader
+didCompleteWithError:(NSError *)error;
+
+@end
 
 @interface JPVideoPlayerDownloader : NSObject
 
@@ -73,6 +145,23 @@ typedef void(^JPFetchExpectedSizeCompletion)(NSURL *url, NSUInteger expectedSize
  * Set password
  */
 @property (strong, nonatomic, nullable) NSString *password;
+
+/**
+ *  The timeout value (in seconds) for the download operation. Default: 15.0s.
+ */
+@property (assign, nonatomic) NSTimeInterval downloadTimeout;
+
+/**
+ * The current url, may nil if no download operation.
+ */
+@property (nonatomic, strong, readonly, nullable) NSURL *url;
+
+/**
+ * The current downloaderOptions, may nil if no download operation.
+ */
+@property(nonatomic, assign) JPVideoPlayerDownloaderOptions downloaderOptions;
+
+@property (nonatomic, weak) id<JPVideoPlayerDownloaderDelegate> delegate;
 
 /**
  * Creates an instance of a downloader with specified session configuration.
@@ -104,33 +193,13 @@ typedef void(^JPFetchExpectedSizeCompletion)(NSURL *url, NSUInteger expectedSize
 - (nullable NSString *)valueForHTTPHeaderField:(nullable NSString *)field;
 
 /**
- *  The timeout value (in seconds) for the download operation. Default: 15.0s.
- */
-@property (assign, nonatomic) NSTimeInterval downloadTimeout;
-
-/**
- * Creates a JPVideoPlayerDownloader async downloader instance with a given URL.
+ * Start download video data for given url.
  *
- * @param url            The URL of the video to download.
- * @param options        The options to be used for this download.
- * @param progressBlock  A block called repeatedly while the video is downloading.
- * @param completion     A block called once the download completed.
+ * @param url             The URL of the video to download.
+ * @param downloadOptions The options to be used for this download.
  */
 - (void)downloadVideoWithURL:(NSURL *)url
-                     options:(JPVideoPlayerDownloaderOptions)options
-                    progress:(JPVideoPlayerDownloaderProgressBlock)progressBlock
-                  completion:(JPVideoPlayerDownloaderCompletion)completion;
-
-/**
- * Try to fetch the total length for given url.
- *
- * @param url        The URL of the video to download.
- * @param options    The options to be used for this download.
- * @param completion A block called once the fetching completed.
- */
-- (void)tryToFetchVideoExpectedSizeWithURL:(NSURL *)url
-                                   options:(JPVideoPlayerDownloaderOptions)options
-                                completion:(JPFetchExpectedSizeCompletion)completion;
+             downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions;
 
 /**
  * Cancels a download that was previously queued using -downloadVideoWithURL:options:progress:completion:

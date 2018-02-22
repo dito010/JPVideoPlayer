@@ -1,15 +1,31 @@
-/*
- * This file is part of the JPVideoPlayer package.
- * (c) NewPan <13246884282@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Click https://github.com/Chris-Pan
- * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
- */
+//
+// Created by NewPan on 2018/2/20.
+// Copyright (c) 2018 NewPan. All rights reserved.
+//
 
 #import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface NSURL (StripQuery)
+
+/*
+ * Returns absolute string of URL with the query stripped out.
+ * If there is no query, returns a copy of absolute string.
+ */
+
+- (NSString *)absoluteStringByStrippingQuery;
+
+@end
+
+@interface UIView (WebVideoCacheOperation)
+
+/**
+ * The url of current playing video data.
+ */
+@property(nonatomic, nullable)NSURL *currentPlayingURL;
+
+@end
 
 @class JPVideoPlayerProgressView;
 
@@ -55,3 +71,5 @@
 - (void)jp_perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
 
 @end
+
+NS_ASSUME_NONNULL_END

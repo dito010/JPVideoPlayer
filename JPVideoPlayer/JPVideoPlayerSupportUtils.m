@@ -1,20 +1,45 @@
-/*
- * This file is part of the JPVideoPlayer package.
- * (c) NewPan <13246884282@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Click https://github.com/Chris-Pan
- * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
- */
+//
+// Created by NewPan on 2018/2/20.
+// Copyright (c) 2018 NewPan. All rights reserved.
+//
 
-#import "UIView+PlayerStatusAndDownloadIndicator.h"
-#import <objc/runtime.h>
+#import "JPVideoPlayerSupportUtils.h"
+#import "objc/runtime.h"
 #import "JPVideoPlayer.h"
-#import "JPVideoPlayerActivityIndicator.h"
-#import "JPVideoPlayerProgressView.h"
 #import "UIView+WebVideoCache.h"
+#import "JPVideoPlayerControlViews.h"
+
+@implementation NSURL (StripQuery)
+
+- (NSString *)absoluteStringByStrippingQuery{
+    NSString *absoluteString = [self absoluteString];
+    NSUInteger queryLength = [[self query] length];
+    NSString* strippedString = (queryLength ? [absoluteString substringToIndex:[absoluteString length] - (queryLength + 1)] : absoluteString);
+
+    if ([strippedString hasSuffix:@"?"]) {
+        strippedString = [strippedString substringToIndex:absoluteString.length-1];
+    }
+    return strippedString;
+}
+
+@end
+
+static char loadOperationKey;
+static char currentPlayingURLKey;
+
+@implementation UIView (WebVideoCacheOperation)
+
+#pragma mark - Public
+
+- (void)setCurrentPlayingURL:(NSURL *)currentPlayingURL{
+    objc_setAssociatedObject(self, &currentPlayingURLKey, currentPlayingURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSURL *)currentPlayingURL{
+    return objc_getAssociatedObject(self, &currentPlayingURLKey);
+}
+
+@end
 
 @interface UIView ()
 
@@ -185,7 +210,7 @@ static char backgroundLayerKey;
 }
 
 - (void)setJp_downloadProgressValue:(CGFloat)jp_downloadProgressValue{
-   objc_setAssociatedObject(self, &downloadProgressValueKey, @(jp_downloadProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &downloadProgressValueKey, @(jp_downloadProgressValue), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)jp_downloadProgressValue{
