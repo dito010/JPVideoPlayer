@@ -39,7 +39,7 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 /**
  * The Player to play video.
  */
-@property(nonatomic, strong, nullable)AVPlayer *player;
+@property(nonatomic, strong, nullable)AVQueuePlayer *player;
 
 /**
  * The current player's layer.
@@ -456,7 +456,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
     
-    model.player = [AVPlayer playerWithPlayerItem:playerItem];
+    model.player = [AVQueuePlayer new];
+    [model.player insertItem:playerItem afterItem:nil];
     model.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
     
     NSString *videoGravity = nil;

@@ -14,18 +14,50 @@
 #import "JPVideoPlayerCachePath.h"
 #import "JPVideoPlayerManager.h"
 
-@interface JPVideoPlayerDownloaderOperation()
+
+@interface JPVideoPlayerDownloaderOperation : NSObject
+
+/**
+ * The request used by the operation's task.
+ */
+@property (strong, nonatomic, readonly, nullable) NSURLRequest *request;
+
+/**
+ * The operation's task
+ */
+@property (strong, nonatomic, nullable) NSURLSessionDataTask *dataTask;
+
+/**
+ * The JPVideoPlayerDownloaderOptions for the receiver.
+ */
+@property (assign, nonatomic, readonly) JPVideoPlayerDownloaderOptions options;
 
 // This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run.
 // the task associated with this operation.
 @property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 
-@property (strong, nonatomic, readwrite, nullable) NSURLSessionDataTask *dataTask;
-
 @property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTaskId;
 
 @property(nonatomic, assign, getter=isCancelled) BOOL cancelled;
 
+/**
+ *  Initializes a `JPVideoPlayerDownloaderOperation` object.
+ *
+ *  @see JPVideoPlayerDownloaderOperation.
+ *
+ *  @param request        the URL request.
+ *  @param session        the URL session in which this operation will run.
+ *  @param options        downloader options.
+ *
+ *  @return the initialized instance.
+ */
+- (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
+                              inSession:(nullable NSURLSession *)session
+                                options:(JPVideoPlayerDownloaderOptions)options NS_DESIGNATED_INITIALIZER;
+
+- (void)start;
+
+- (void)cancel;
 
 @end
 

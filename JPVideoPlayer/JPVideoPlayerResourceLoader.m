@@ -12,6 +12,7 @@
 #import "JPVideoPlayerResourceLoader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPVideoPlayerCompat.h"
+#import "JPVideoPlayerCacheFile.h"
 
 @interface JPVideoPlayerResourceLoader()
 
@@ -35,6 +36,8 @@
  * The cache video data temporary cache path in disk.
  */
 @property(nonatomic, strong, nullable)NSString *tempCacheVideoPath;
+
+@property (nonatomic, strong) JPVideoPlayerCacheFile *cacheFile;
 
 @end
 

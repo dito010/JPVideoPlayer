@@ -41,44 +41,6 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
 
-@interface JPVideoPlayerDownloaderOperation : NSObject
-
-/**
- * The request used by the operation's task.
- */
-@property (strong, nonatomic, readonly, nullable) NSURLRequest *request;
-
-/**
- * The operation's task
- */
-@property (strong, nonatomic, readonly, nullable) NSURLSessionDataTask *dataTask;
-
-/**
- * The JPVideoPlayerDownloaderOptions for the receiver.
- */
-@property (assign, nonatomic, readonly) JPVideoPlayerDownloaderOptions options;
-
-/**
- *  Initializes a `JPVideoPlayerDownloaderOperation` object.
- *
- *  @see JPVideoPlayerDownloaderOperation.
- *
- *  @param request        the URL request.
- *  @param session        the URL session in which this operation will run.
- *  @param options        downloader options.
- *
- *  @return the initialized instance.
- */
-- (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
-                              inSession:(nullable NSURLSession *)session
-                                options:(JPVideoPlayerDownloaderOptions)options NS_DESIGNATED_INITIALIZER;
-
-- (void)start;
-
-- (void)cancel;
-
-@end
-
 typedef NSDictionary<NSString *, NSString *> JPHTTPHeadersDictionary;
 
 typedef NSMutableDictionary<NSString *, NSString *> JPHTTPHeadersMutableDictionary;
@@ -183,7 +145,8 @@ didCompleteWithError:(NSError *)error;
  * @param value The value for the header field. Use `nil` value to remove the header.
  * @param field The name of the header field to set.
  */
-- (void)setValue:(nullable NSString *)value forHTTPHeaderField:(nullable NSString *)field;
+- (void)setValue:(nullable NSString *)value
+forHTTPHeaderField:(nullable NSString *)field;
 
 /**
  * Returns the value of the specified HTTP header field.
@@ -202,7 +165,7 @@ didCompleteWithError:(NSError *)error;
              downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions;
 
 /**
- * Cancels a download that was previously queued using -downloadVideoWithURL:options:progress:completion:
+ * Cancels a download that was previously queued using `downloadVideoWithURL:downloadOptions:`.
  */
 - (void)cancel;
 

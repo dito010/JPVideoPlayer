@@ -31,7 +31,7 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 /**
  * The player to play video.
  */
-@property(nonatomic, strong, readonly, nullable)AVPlayer *player;
+@property(nonatomic, strong, readonly, nullable)AVQueuePlayer *player;
 
 @end
 
