@@ -13,6 +13,8 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerCacheFile.h"
+#import "JPVideoPlayerCachePath.h"
+#import "JPVideoPlayerManager.h"
 
 @interface JPVideoPlayerResourceLoader()
 
@@ -44,31 +46,28 @@
 static NSString *JPVideoPlayerMimeType = @"video/mp4";
 @implementation JPVideoPlayerResourceLoader
 
-- (instancetype)init{
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _pendingRequests = [@[] mutableCopy];
     }
     return self;
 }
 
+- (instancetype)initWithCustomURL:(NSURL *)customURL {
+    NSParameterAssert(customURL);
+    if(!customURL){
+        return nil;
+    }
 
-#pragma mark - Public
-
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
-                         videoFileExceptSize:(NSUInteger)expectedSize
-                       videoFileReceivedSize:(NSUInteger)receivedSize{
-    self.tempCacheVideoPath = tempCacheVideoPath;
-    self.expectedSize = expectedSize;
-    self.receivedSize = receivedSize;
-    
-    [self internalPendingRequests];
-}
-
-- (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath{
-    self.tempCacheVideoPath = fullVideoCachePath;
-    self.receivedSize = self.expectedSize;
-    [self internalPendingRequests];
+    self = [super init];
+    if(self){
+        _customURL = customURL;
+        _pendingRequests = [@[] mutableCopy];
+        NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
+        _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:key]
+                                                     indexFilePath:[JPVideoPlayerCachePath videoCacheIndexSavePathForKey:key]];
+    }
+    return self;
 }
 
 

@@ -38,22 +38,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) id<JPVideoPlayerResourceLoaderDelegate> delegate;
 
 /**
- * Call this method to make this instance to handle video data for videoplayer.
- *
- * @param tempCacheVideoPath The cache video data temporary cache path in disk.
- * @param expectedSize         The video data total length.
- * @param receivedSize       The video data cached in disk.
+ * The url custom passed in.
  */
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
-                         videoFileExceptSize:(NSUInteger)expectedSize
-                       videoFileReceivedSize:(NSUInteger)receivedSize;
+@property (nonatomic, strong, readonly) NSURL *customURL;
 
 /**
- * Call this method to change the video path from temporary path to full path.
+ * Convenience method to fetch instance of this class.
  *
- * @param fullVideoCachePath the full video file path in disk.
+ * @param customURL The url custom passed in.
+ *
+ * @return A instance of this class.
  */
-- (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath;
++ (instancetype)resourceLoaderWithCustomURL:(NSURL *)customURL NS_DESIGNATED_INITIALIZER;
+
+/**
+ * Designated initializer method.
+ *
+ * @param customURL The url custom passed in.
+ *
+ * @return A instance of this class.
+ */
+- (instancetype)initWithCustomURL:(NSURL *)customURL NS_DESIGNATED_INITIALIZER;
 
 @end
 
