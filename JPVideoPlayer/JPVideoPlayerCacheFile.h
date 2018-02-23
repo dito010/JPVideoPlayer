@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return A instance of this class.
  */
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath NS_DESIGNATED_INITIALIZER;
+                        indexFilePath:(NSString *)indexFilePath;
 
 /**
  * Designated initializer method.

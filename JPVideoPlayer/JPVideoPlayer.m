@@ -11,11 +11,8 @@
 
 #import "JPVideoPlayer.h"
 #import "JPVideoPlayerResourceLoader.h"
-#import "JPVideoPlayerCompat.h"
 #import "UIView+WebVideoCache.h"
 #import <pthread.h>
-#import "JPVideoPlayerSupportUtils.h"
-#import "JPVideoPlayerDownloader.h"
 
 CGFloat const JPVideoPlayerLayerFrameY = 1;
 
@@ -238,7 +235,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     
     // Re-create all all configuration again.
     // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
-    JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader new];
+    JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader resourceLoaderWithCustomURL:url];
     resourceLoader.delegate = self;
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self handleVideoURL] options:nil];
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
@@ -253,20 +250,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         model.player.muted = YES;
     }
     return model;
-}
-
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
-                         videoFileExceptSize:(NSUInteger)expectedSize
-                       videoFileReceivedSize:(NSUInteger)receivedSize{
-    [self.currentVideoPlayerModel.resourceLoader didReceivedDataCacheInDiskByTempPath:tempCacheVideoPath
-                                                                  videoFileExceptSize:expectedSize
-                                                                videoFileReceivedSize:receivedSize];
-}
-
-- (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath{
-    if (self.currentVideoPlayerModel.resourceLoader) {
-        [self.currentVideoPlayerModel.resourceLoader didCachedVideoDataFinishedFromWebFullVideoCachePath:fullVideoCachePath];
-    }
 }
 
 - (void)setMute:(BOOL)mute{
@@ -300,9 +283,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 #pragma mark - JPVideoPlayerResourceLoaderDelegate
 
-- (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader requestRangeDidChange:(NSString *)requestRangeString {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerRequestRangeDidChange:)]) {
-        [self.delegate videoPlayer:self playerRequestRangeDidChange:requestRangeString];
+- (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:didReceiveLoadingRequestTask:)]) {
+        [self.delegate videoPlayer:self didReceiveLoadingRequestTask:requestTask];
     }
 }
 

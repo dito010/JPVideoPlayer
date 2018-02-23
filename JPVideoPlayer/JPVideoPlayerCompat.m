@@ -7,6 +7,8 @@
 //
 
 #import "JPVideoPlayerCompat.h"
+#import <AVFoundation/AVFoundation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 NSString *const JPVideoPlayerDownloadStartNotification = @"www.jpvideplayer.download.start.notification";
 NSString *const JPVideoPlayerDownloadReceiveResponseNotification = @"www.jpvideoplayer.download.received.response.notification";
@@ -54,7 +56,7 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range) {
     }
 }
 
-NSString* JPRangeToHTTPRangeReponseHeader(NSRange range,NSUInteger length) {
+NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
     if (JPValidByteRange(range)) {
         NSUInteger start = range.location;
         NSUInteger end = NSMaxRange(range) - 1;
@@ -72,7 +74,52 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range,NSUInteger length) {
     }
 }
 
+@implementation NSHTTPURLResponse (JPVideoPlayer)
+
+- (long long)jp_fileLength {
+    NSString *range = [self allHeaderFields][@"Content-Range"];
+    if (range) {
+        NSArray *ranges = [range componentsSeparatedByString:@"/"];
+        if (ranges.count > 0) {
+            NSString *lengthString = [[ranges lastObject] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            return [lengthString longLongValue];
+        }
+    }
+    else {
+        return [self expectedContentLength];
+    }
+    return 0;
+}
+
+- (BOOL)jp_supportRange {
+    return [self allHeaderFields][@"Content-Range"] != nil;
+}
+
+@end
+
+@implementation AVAssetResourceLoadingRequest (JPVideoPlayer)
+
+- (void)jp_fillContentInformationWithResponse:(NSHTTPURLResponse *)response {
+    if (!response) {
+        return;
+    }
+
+    self.response = response;
+    if (!self.contentInformationRequest) {
+        return;
+    }
+
+    NSString *mimeType = [response MIMEType];
+    CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
+    self.contentInformationRequest.byteRangeAccessSupported = [response jp_supportRange];
+    self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
+    self.contentInformationRequest.contentLength = [response jp_fileLength];
+}
+
+@end
+
 @implementation JPLog
+
 + (void)initialize {
     _logLevel = JPLogLevelDebug;
 }
@@ -124,6 +171,5 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range,NSUInteger length) {
         printf("%s\n", message.UTF8String);
     }
 }
-
 
 @end

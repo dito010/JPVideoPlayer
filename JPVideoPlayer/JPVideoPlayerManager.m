@@ -307,6 +307,13 @@
 
 #pragma mark - JPVideoPlayerInternalDelegate
 
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
+    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
+    [self.videoDownloader downloadVideoWithRequestTask:requestTask
+                                       downloadOptions:downloaderOptions];
+}
+
 - (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer
 shouldAutoReplayVideoForURL:(NSURL *)videoURL {
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
@@ -320,12 +327,6 @@ playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playerStatusDidChanged:)]) {
         [self.delegate videoPlayerManager:self playerStatusDidChanged:playerStatus];
     }
-}
-
-- (void)videoPlayer:(JPVideoPlayer *)videoPlayer playerRequestRangeDidChange:(NSString *)requestRangeString {
-    [self.videoDownloader cancel];
-    [self.videoDownloader setValue:requestRangeString forHTTPHeaderField:@"Range"];
-    [self startDownloadVideo];
 }
 
 - (void)videoPlayerPlayProgressDidChange:(nonnull JPVideoPlayer *)videoPlayer
@@ -378,6 +379,7 @@ didReceiveResponse:(NSURLResponse *)response {
 
 - (void)downloader:(JPVideoPlayerDownloader *)downloader
 didCompleteWithError:(NSError *)error {
+    // TODO: 取消 JPVideoPlayer 里的播放器.
     if (error){
         [self callDownloadDelegateMethodWithReceivedSize:0
                                             expectedSize:1
@@ -417,12 +419,6 @@ didCompleteWithError:(NSError *)error {
     self.playerOptions = 0;
     self.showView = nil;
     pthread_mutex_unlock(&_lock);
-}
-
-- (void)startDownloadVideo {
-    JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
-    // download video from web.
-    [self.videoDownloader downloadVideoWithURL:self.url downloadOptions:downloaderOptions];
 }
 
 - (JPVideoPlayerDownloaderOptions)fetchDownloadOptionsWithOptions:(JPVideoPlayerOptions)options {

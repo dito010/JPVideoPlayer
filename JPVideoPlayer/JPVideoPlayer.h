@@ -35,17 +35,30 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 
 @end
 
-@class JPVideoPlayer;
+@class JPVideoPlayer, JPResourceLoadingRequestTask;
 
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
 @optional
 
+#pragma mark - Request Task
+
+/**
+ * This method will be called when the current instance receive new loading request.
+ *
+ * @param videoPlayer The current `JPVideoPlayer`.
+ * @prama requestTask A abstract instance packageing the loading request.
+ */
+- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
+
+#pragma mark - Player
+
 /**
  * Controls which video should automatic replay when the video is playing completed.
  *
- * @param videoPlayer   the current `JPVideoPlayer`.
- * @param videoURL      the url of the video to be play.
+ * @param videoPlayer   The current `JPVideoPlayer`.
+ * @param videoURL      The url of the video to be play.
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
@@ -55,20 +68,11 @@ shouldAutoReplayVideoForURL:(nonnull NSURL *)videoURL;
 /**
  * Notify the player status.
  *
- * @param videoPlayer   the current `JPVideoPlayer`.
- * @param playerStatus the current player status.
+ * @param videoPlayer   The current `JPVideoPlayer`.
+ * @param playerStatus  The current player status.
  */
 - (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
 playerStatusDidChange:(JPVideoPlayerStatus)playerStatus;
-
-/**
- * Called on the request range of player did change.
- *
- * @param videoPlayer        the current `JPVideoPlayer`.
- * @param requestRangeString the current request range of player.
- */
-- (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
-playerRequestRangeDidChange:(NSString *)requestRangeString;
 
 /**
  * Notify the playing progress value. this method will be called on main thread.
@@ -101,8 +105,7 @@ playFailedWithError:(NSError *)error;
  */
 @property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentVideoPlayerModel;
 
-
-# pragma mark - Play video existed in disk.
+# pragma mark - Play Video.
 
 /**
  * Play the existed video file in disk.
@@ -118,9 +121,6 @@ playFailedWithError:(NSError *)error;
                                                  options:(JPVideoPlayerOptions)options
                                               showOnView:(UIView * _Nullable)showView;
 
-
-# pragma mark - Play video from Web.
-
 /**
  * Play the not existed video from web.
  *
@@ -133,24 +133,6 @@ playFailedWithError:(NSError *)error;
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                        showOnView:(UIView *)showView;
-
-/**
- * Call this method to make this instance to handle video data for player.
- *
- * @param tempCacheVideoPath The cache video data temporary cache path in disk.
- * @param expectedSize       The video data total length.
- * @param receivedSize       The video data cached in disk.
- */
-- (void)didReceivedDataCacheInDiskByTempPath:(NSString * _Nonnull)tempCacheVideoPath
-                         videoFileExceptSize:(NSUInteger)expectedSize
-                       videoFileReceivedSize:(NSUInteger)receivedSize;
-
-/**
- * Call this method to change the video path from temporary path to full path.
- *
- * @param fullVideoCachePath the full video file path in disk.
- */
-- (void)didCachedVideoDataFinishedFromWebFullVideoCachePath:(NSString * _Nullable)fullVideoCachePath;
 
 
 # pragma mark - Player Control Events

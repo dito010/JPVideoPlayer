@@ -11,7 +11,8 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
-@class JPVideoPlayerResourceLoader;
+@class JPVideoPlayerResourceLoader,
+       JPResourceLoadingRequestTask;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,13 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- * Request range did change.
+ * This method will be called when the current instance receive new loading request.
  *
- * @prama resourceLoader     the current resource loader for videoURLAsset.
- * @prama requestRangeString the request range string.
+ * @prama resourceLoader     The current resource loader for videoURLAsset.
+ * @prama requestTask        A abstract instance packageing the loading request.
  */
 - (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
- requestRangeDidChange:(NSString *)requestRangeString;
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
 
 @end
 
@@ -49,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return A instance of this class.
  */
-+ (instancetype)resourceLoaderWithCustomURL:(NSURL *)customURL NS_DESIGNATED_INITIALIZER;
++ (instancetype)resourceLoaderWithCustomURL:(NSURL *)customURL;
 
 /**
  * Designated initializer method.

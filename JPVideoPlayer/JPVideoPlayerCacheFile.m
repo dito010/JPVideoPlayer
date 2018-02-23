@@ -237,7 +237,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (BOOL)storeResponse:(NSHTTPURLResponse *)response {
     BOOL success = YES;
     if (![self isFileLengthValid]) {
-        success = [self truncateFileWithFileLength:[self internalFetchReponseFileLength:response]];
+        success = [self truncateFileWithFileLength:response.jp_fileLength];
     }
     self.responseHeaders = [[response allHeaderFields] copy];
     success = success && [self synchronize];
@@ -358,25 +358,5 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     NSString *indexStr = [self unserializeIndex];
     return [indexStr writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
-
-
-#pragma mark - Private
-
-- (long long)internalFetchReponseFileLength:(NSHTTPURLResponse *)response {
-    NSString *range = [response allHeaderFields][@"Content-Range"];
-    if (range) {
-        NSArray *ranges = [range componentsSeparatedByString:@"/"];
-        if (ranges.count > 0) {
-            NSString *lengthString = [[ranges lastObject] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            return [lengthString longLongValue];
-        }
-    }
-    else {
-        return [response expectedContentLength];
-    }
-
-    return 0;
-}
-
 
 @end
