@@ -114,6 +114,7 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
     self.contentInformationRequest.byteRangeAccessSupported = [response jp_supportRange];
     self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
     self.contentInformationRequest.contentLength = [response jp_fileLength];
+    JPLogDebug(@"Did fill content information to loading request");
 }
 
 @end

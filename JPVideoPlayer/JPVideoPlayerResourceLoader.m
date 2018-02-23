@@ -72,6 +72,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (resourceLoader && loadingRequest){
+        JPLogDebug(@"Add a new loadingRequest");
         [self cancelCurrentRequest:YES];
         [self.pendingRequests addObject:loadingRequest];
         [self findAndStartNextRequestIfNeed];
@@ -81,6 +82,7 @@ shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loading
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
+    JPLogDebug(@"Cancel a loadingRequest");
     if (self.currentRequest == loadingRequest) {
         [self cancelCurrentRequest:NO];
     }
@@ -128,10 +130,12 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
                                                   headerFields:responseHeaders];
         [self.currentRequest jp_fillContentInformationWithResponse:self.response];
     }
+    JPLogDebug(@"Find next loading request");
     [self startCurrentRequest];
 }
 
 - (void)startCurrentRequest {
+    JPLogDebug(@"Start current loading request");
     if (self.currentDataRange.length == NSUIntegerMax) {
         [self addTaskWithRange:NSMakeRange(self.currentDataRange.location, NSUIntegerMax) cached:NO];
     }
@@ -202,8 +206,13 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (!cached) {
         task.response = self.response;
     }
-
-
+    
+    JPLogDebug(@"Creat a new request task");
+    JPDispatchSyncOnMainQueue(^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didReceiveLoadingRequestTask:)]) {
+            [self.delegate resourceLoader:self didReceiveLoadingRequestTask:task];
+        }
+    });
 }
 
 

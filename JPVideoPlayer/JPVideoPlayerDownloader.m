@@ -88,6 +88,7 @@
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
+    JPLogDebug(@"Downloader received a request task");
     NSParameterAssert(requestTask);
     if (self.runningTask) {
         [self cancel];
@@ -170,6 +171,7 @@
 willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         newRequest:(NSURLRequest *)request
         completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
+    JPLogDebug(@"URLSession will perform HTTP redirection");
     if (response) {
         self.requestTask.loadingRequest.redirect = request;
     }
@@ -182,7 +184,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-
+    JPLogDebug(@"URLSession did receive response");
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
 
@@ -209,8 +211,8 @@ didReceiveResponse:(NSURLResponse *)response
             if (!self.requestTask.response && response) {
                 if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                     self.requestTask.response = (NSHTTPURLResponse *)response;
-                    [self.requestTask.cacheFile storeResponse:response];
-                    [self.requestTask.loadingRequest jp_fillContentInformationWithResponse:response];
+                    [self.requestTask.cacheFile storeResponse:self.requestTask.response];
+                    [self.requestTask.loadingRequest jp_fillContentInformationWithResponse:self.requestTask.response];
                 }
                 if (![(NSHTTPURLResponse *)response jp_supportRange]) {
                     self.offset = 0;
@@ -246,11 +248,13 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
+    JPLogDebug(@"Downloader did receive data:%u", data.length);
     self.receiveredSize += data.length;
     if (data.bytes && [self.requestTask.cacheFile storeVideoData:data atOffset:self.offset synchronize:NO]) {
         self.haveDataSaved = YES;
         self.offset += [data length];
         [self.requestTask.loadingRequest.dataRequest respondWithData:data];
+        JPLogDebug(@"Did respond loadingRequest dataRequest with data, data length is: %u", data.length);
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
@@ -265,8 +269,8 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
+    JPLogDebug(@"URLSession did complete with error: %@", error);
     [self synchronizeCacheFileIfNeeded];
-
     JPDispatchSyncOnMainQueue(^{
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];

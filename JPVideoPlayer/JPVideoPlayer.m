@@ -372,6 +372,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
                 break;
                 
             case AVPlayerItemStatusReadyToPlay:{
+                JPLogDebug(@"AVPlayerItemStatusReadyToPlay");
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 if (!self.currentVideoPlayerModel) return;
                 
@@ -521,6 +522,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
 }
 
 - (void)callDelegateMethodWithError:(NSError *)error {
+    JPLogDebug(@"Player abort because of error: %@", error);
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playFailedWithError:)]) {
             [self.delegate videoPlayer:self playFailedWithError:error];

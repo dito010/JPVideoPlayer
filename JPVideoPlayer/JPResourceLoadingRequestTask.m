@@ -82,7 +82,7 @@
     }
 
     pthread_mutex_lock(&_lock);
-    JPLogDebug(@"Start a new request");
+    JPLogDebug(@"Downloader start a new request");
     if (self.isCancelled) {
         return;
     }

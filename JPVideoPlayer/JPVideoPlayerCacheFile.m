@@ -209,6 +209,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 #pragma mark - File
 
 - (BOOL)truncateFileWithFileLength:(NSUInteger)fileLength {
+    JPLogDebug(@"Truncate file to length: %u", fileLength);
     if (!self.writeFileHandle) {
         return NO;
     }
@@ -254,6 +255,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     @try {
         [self.writeFileHandle seekToFileOffset:offset];
         [self.writeFileHandle jp_safeWriteData:data];
+        JPLogDebug(@"Did write file to disk, data length: %u", data.length);
     }
     @catch (NSException * e) {
         JPLogError(@"Write file raise a exception: %@", e);
@@ -356,6 +358,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (BOOL)synchronize {
     NSString *indexStr = [self unserializeIndex];
+    JPLogDebug(@"Did synchronize index file");
     return [indexStr writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
 

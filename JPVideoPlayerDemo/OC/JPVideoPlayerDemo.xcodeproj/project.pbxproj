@@ -249,8 +249,8 @@
 				258181A39BB5958976ECC258 /* JPVideoPlayerSupportUtils.m */,
 				CFD87BDF203C791A004206E8 /* JPVideoPlayerControlViews.h */,
 				CFD87BE0203C791A004206E8 /* JPVideoPlayerControlViews.m */,
-				2581801C6AAE79C4B51BD5C0 /* JPResourceLoadingRequestTask.m */,
 				2581847EA55B90B1D8BE2229 /* JPResourceLoadingRequestTask.h */,
+				2581801C6AAE79C4B51BD5C0 /* JPResourceLoadingRequestTask.m */,
 			);
 			name = JPVideoPlayer;
 			path = ../../../JPVideoPlayer;
