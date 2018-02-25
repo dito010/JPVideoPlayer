@@ -254,23 +254,23 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length);
 /**
  * Log debug log.
  */
-#define JPLogDebug(frmt, ...) JP_LOG_MAYBE(JPLogLevelDebug, frmt, ##__VA_ARGS__)
+#define JPDebugLog(frmt, ...) JP_LOG_MAYBE(JPLogLevelDebug, frmt, ##__VA_ARGS__)
 
 /**
  * Log debug and warning log.
  */
-#define JPLogWarning(frmt, ...) JP_LOG_MAYBE(JPLogLevelWarning, frmt, ##__VA_ARGS__)
+#define JPWarningLog(frmt, ...) JP_LOG_MAYBE(JPLogLevelWarning, frmt, ##__VA_ARGS__)
 
 /**
  * Log debug, warning and error log.
  */
-#define JPLogError(frmt, ...) JP_LOG_MAYBE(JPLogLevelError, frmt, ##__VA_ARGS__)
+#define JPErrorLog(frmt, ...) JP_LOG_MAYBE(JPLogLevelError, frmt, ##__VA_ARGS__)
 
 #else
 
-#define JPLogDebug(frmt, ...)
-#define JPLogWarning(frmt, ...)
-#define JPLogError(frmt, ...)
+#define JPDebugLog(frmt, ...)
+#define JPWarningLog(frmt, ...)
+#define JPErrorLog(frmt, ...)
 #endif
 
 #endif

@@ -88,15 +88,8 @@
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
-    JPLogDebug(@"Downloader received a request task");
+    JPDebugLog(@"Downloader received a request task");
     NSParameterAssert(requestTask);
-    if (self.runningTask) {
-        [self cancel];
-    }
-
-    _requestTask = requestTask;
-    _downloaderOptions = downloadOptions;
-
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil.
     // If it is nil immediately call the completed block with no video or data.
     if (requestTask.customURL == nil) {
@@ -107,6 +100,12 @@
         return;
     }
 
+    if (self.runningTask) {
+        [self cancel];
+    }
+
+    _requestTask = requestTask;
+    _downloaderOptions = downloadOptions;
     [self startDownloadOpeartionWithRequestTask:requestTask
                                         options:downloadOptions];
 }
@@ -115,11 +114,8 @@
     pthread_mutex_lock(&_lock);
     if (self.runningTask) {
         [self.runningTask cancel];
-        self.runningTask = nil;
-        self.expectedSize = 0;
-        self.receiveredSize = 0;
+        [self resetRunningTask];
     }
-    JPLogDebug(@"Cancel current request");
     pthread_mutex_unlock(&_lock);
 }
 
@@ -171,8 +167,8 @@
 willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         newRequest:(NSURLRequest *)request
         completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
-    JPLogDebug(@"URLSession will perform HTTP redirection");
     if (response) {
+        JPDebugLog(@"URLSession will perform HTTP redirection");
         self.requestTask.loadingRequest.redirect = request;
     }
     if(completionHandler){
@@ -184,7 +180,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-    JPLogDebug(@"URLSession did receive response");
+    JPDebugLog(@"URLSession did receive response");
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
 
@@ -248,13 +244,20 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    JPLogDebug(@"Downloader did receive data:%u", data.length);
     self.receiveredSize += data.length;
     if (data.bytes && [self.requestTask.cacheFile storeVideoData:data atOffset:self.offset synchronize:NO]) {
         self.haveDataSaved = YES;
         self.offset += [data length];
         [self.requestTask.loadingRequest.dataRequest respondWithData:data];
-        JPLogDebug(@"Did respond loadingRequest dataRequest with data, data length is: %u", data.length);
+
+        static BOOL _needLog = YES;
+        if(_needLog) {
+            _needLog = NO;
+            JPDebugLog(@"Did respond loadingRequest dataRequest with data, data length is: %u", data.length);
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                _needLog = YES;
+            });
+        }
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
@@ -269,9 +272,11 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
-    JPLogDebug(@"URLSession did complete with error: %@", error);
+    JPDebugLog(@"URLSession did complete with error: %@", error);
     [self synchronizeCacheFileIfNeeded];
     JPDispatchSyncOnMainQueue(^{
+        [self.requestTask requestDidCompleteWithError:error];
+        [self resetRunningTask];
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
         }
@@ -348,6 +353,15 @@ downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloa
     if (self.haveDataSaved) {
         [self.requestTask.cacheFile synchronize];
     }
+}
+
+- (void)resetRunningTask {
+    if(!self.runningTask){
+        return;
+    }
+    self.runningTask = nil;
+    self.expectedSize = 0;
+    self.receiveredSize = 0;
 }
 
 @end

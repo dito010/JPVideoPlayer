@@ -18,6 +18,16 @@
  */
 @property (strong, nonatomic) NSURLSessionDataTask *dataTask;
 
+/**
+ * A flag represent the task is cancelled or not.
+ */
+@property (nonatomic, assign, getter=isCancelled) BOOL cancelled;
+
+/**
+ * A flag represent the task is finished or not.
+ */
+@property(nonatomic, assign, getter=isFinished) BOOL finished;
+
 @end
 
 @implementation JPResourceLoadingRequestTask
@@ -53,6 +63,7 @@
         _cacheFile = cacheFile;
         _customURL = customURL;
         _cancelled = NO;
+        _finished = NO;
         pthread_mutex_init(&(_lock), NULL);
     }
     return self;
@@ -69,6 +80,11 @@
 }
 
 - (void)requestDidCompleteWithError:(NSError *)error {
+    self.finished = YES;
+    if(error){
+        self.cancelled = YES;
+    }
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(requestTask:didCompleteWithError:)]) {
         [self.delegate requestTask:self didCompleteWithError:error];
     }
@@ -82,7 +98,7 @@
     }
 
     pthread_mutex_lock(&_lock);
-    JPLogDebug(@"Downloader start a new request");
+    JPDebugLog(@"Downloader start a new request");
     if (self.isCancelled) {
         return;
     }
@@ -122,8 +138,9 @@
 
 - (void)cancel {
     pthread_mutex_lock(&_lock);
-    JPLogDebug(@"Cancel current request");
+    JPDebugLog(@"Cancel current request");
     self.cancelled = YES;
+    self.finished = YES;
     [self cancelInternal];
     pthread_mutex_unlock(&_lock);
 }

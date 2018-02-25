@@ -181,7 +181,7 @@
                              url:(NSURL *)url
                          options:(JPVideoPlayerOptions)options
                        cacheType:(JPVideoPlayerCacheType)cacheType {
-    JPLogDebug(@"Start play a web video: %@", url);
+    JPDebugLog(@"Start play a web video: %@", url);
     // show progress view if need.
     [self tryToShowProgressViewForView:showView options:options];
     // show activity view if need.
@@ -194,7 +194,7 @@
                            videoPath:(NSString *)videoPath
                              options:(JPVideoPlayerOptions)options
                            cacheType:(JPVideoPlayerCacheType)cacheType {
-    JPLogDebug(@"Start play a existed video: %@", url);
+    JPDebugLog(@"Start play a existed video: %@", url);
     // show progress view if need.
     [self tryToShowProgressViewForView:showView options:options];
     [self callDownloadDelegateMethodWithReceivedSize:1
@@ -218,7 +218,7 @@
 - (void)playLocalVideoWithShowView:(UIView *)showView
                                url:(NSURL *)url
                            options:(JPVideoPlayerOptions)options {
-    JPLogDebug(@"Start play a local video: %@", url);
+    JPDebugLog(@"Start play a local video: %@", url);
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -314,6 +314,11 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
     JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
     [self.videoDownloader downloadVideoWithRequestTask:requestTask
                                        downloadOptions:downloaderOptions];
+}
+
+- (void)videoPlayer:(JPVideoPlayer *)videoPlayer
+didCancelLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
+    [self.videoDownloader cancel];
 }
 
 - (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer

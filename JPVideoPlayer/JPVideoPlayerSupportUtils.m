@@ -328,14 +328,14 @@ static char backgroundLayerKey;
         ssize_t amountSent = write(fileDescriptor, bytes + data.length - bytesLeft, bytesLeft);
         if (amountSent < 0) {
             // write failed.
-            JPLogError(@"Write file failed");
+            JPErrorLog(@"Write file failed");
             break;
         }
         else {
             bytesLeft = bytesLeft - amountSent;
             if (bytesLeft > 0) {
                 // not finished continue write after sleep 1 second.
-                JPLogWarning(@"Write file retry");
+                JPWarningLog(@"Write file retry");
                 sleep(1);  //probably too long, but this is quite rare.
                 retry--;
             }

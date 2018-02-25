@@ -114,7 +114,7 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
     self.contentInformationRequest.byteRangeAccessSupported = [response jp_supportRange];
     self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
     self.contentInformationRequest.contentLength = [response jp_fileLength];
-    JPLogDebug(@"Did fill content information to loading request");
+    JPDebugLog(@"Did fill content information to loading request");
 }
 
 @end
@@ -133,10 +133,10 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
     if (logLevel > _logLevel) {
         return;
     }
-    
     if (!format) {
         return;
     }
+
     
     va_list args;
     va_start(args, format);
@@ -145,12 +145,8 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
     va_end(args);
     
     if (message.length) {
-        NSString *tempString = @"";
-        NSString *functionName = [NSString stringWithCString:function encoding:NSUTF8StringEncoding];
-        if (functionName.length && ([functionName containsString:@"-"] || [functionName containsString:@"+"])) {
-            tempString = [tempString stringByAppendingString:[functionName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"- :+"]]];
-        }
-
+        NSString *tempString = [[NSString stringWithCString:file encoding:NSUTF8StringEncoding].lastPathComponent
+                componentsSeparatedByString:@"."].firstObject;
         NSString *flag;
         switch (logLevel) {
             case JPLogLevelDebug:
@@ -168,7 +164,7 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
             default:
                 break;
         }
-        message = [NSString stringWithFormat:@"[%@] %@ [Line %ld] => %@", flag, tempString, line, message];
+        message = [NSString stringWithFormat:@"[%@] %@ => [%@ + %ld]", flag, message, tempString, line];
         printf("%s\n", message.UTF8String);
     }
 }

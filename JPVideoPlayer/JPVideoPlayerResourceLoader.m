@@ -26,15 +26,12 @@
 
 @property (nonatomic, strong) JPVideoPlayerCacheFile *cacheFile;
 
-@property (nonatomic, strong) AVAssetResourceLoadingRequest *currentRequest;
-
-@property(nonatomic, assign) NSRange currentDataRange;
-
 @property (nonatomic, strong) NSHTTPURLResponse *response;
+
+@property (nonatomic, strong) JPResourceLoadingRequestTask *requestTask;
 
 @end
 
-static const NSString *const kJPVideoPlayerMimeType = @"video/mp4";
 static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 @implementation JPVideoPlayerResourceLoader
 
@@ -72,21 +69,32 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (resourceLoader && loadingRequest){
-        JPLogDebug(@"Add a new loadingRequest");
-        [self cancelCurrentRequest:YES];
         [self.pendingRequests addObject:loadingRequest];
-        [self findAndStartNextRequestIfNeed];
+        JPDebugLog(@"ResourceLoader received a new loadingRequest, current loadingRequest number is: %ld", self.pendingRequests.count);
+        if (self.requestTask.loadingRequest && !self.requestTask.loadingRequest.isFinished) {
+            JPDebugLog(@"Call delegate until downloder cancel the current task");
+            // Cancel current request task, and then receive message on `requestTask:didCompleteWithError:`
+            // to start next request.
+            if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didCancelLoadingRequestTask:)]) {
+                [self.delegate resourceLoader:self didCancelLoadingRequestTask:self.requestTask];
+            }
+        }
+        else {
+            JPDebugLog(@"Send new task immediately because have no current task");
+            [self findAndStartNextRequestIfNeed];
+        }
     }
     return YES;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
-    JPLogDebug(@"Cancel a loadingRequest");
-    if (self.currentRequest == loadingRequest) {
-        [self cancelCurrentRequest:NO];
+    if (self.requestTask.loadingRequest == loadingRequest) {
+        JPDebugLog(@"Cancel a loading Request that loading");
+        [self removeCurrentRequestTaskAnResetAll];
     }
     else {
+        JPDebugLog(@"Remove a loading Request that not loading");
         [self.pendingRequests removeObject:loadingRequest];
     }
 }
@@ -95,119 +103,114 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
 #pragma mark - Private
 
 - (void)findAndStartNextRequestIfNeed {
-    if (self.currentRequest || self.pendingRequests.count == 0) {
+    if (self.requestTask.loadingRequest || self.pendingRequests.count == 0) {
         return;
     }
 
-    self.currentRequest = [self.pendingRequests firstObject];
+    AVAssetResourceLoadingRequest *loadingRequest = [self.pendingRequests firstObject];
+    NSRange dataRange;
     // data range.
-    if ([self.currentRequest.dataRequest respondsToSelector:@selector(requestsAllDataToEndOfResource)] && self.currentRequest.dataRequest.requestsAllDataToEndOfResource) {
-        self.currentDataRange = NSMakeRange((NSUInteger)self.currentRequest.dataRequest.requestedOffset, NSUIntegerMax);
+    if ([loadingRequest.dataRequest respondsToSelector:@selector(requestsAllDataToEndOfResource)] && loadingRequest.dataRequest.requestsAllDataToEndOfResource) {
+        dataRange = NSMakeRange((NSUInteger)loadingRequest.dataRequest.requestedOffset, NSUIntegerMax);
     }
     else {
-        self.currentDataRange = NSMakeRange((NSUInteger)self.currentRequest.dataRequest.requestedOffset, self.currentRequest.dataRequest.requestedLength);
+        dataRange = NSMakeRange((NSUInteger)loadingRequest.dataRequest.requestedOffset, loadingRequest.dataRequest.requestedLength);
     }
 
     // response.
     if (!self.response && self.cacheFile.responseHeaders.count > 0) {
-        if (self.currentDataRange.length == NSUIntegerMax) {
-            _currentDataRange.length = [self.cacheFile fileLength] - self.currentDataRange.location;
+        if (dataRange.length == NSUIntegerMax) {
+            dataRange.length = [self.cacheFile fileLength] - dataRange.location;
         }
 
         NSMutableDictionary *responseHeaders = [self.cacheFile.responseHeaders mutableCopy];
         BOOL supportRange = responseHeaders[kJPVideoPlayerContentRangeKey] != nil;
-        if (supportRange && JPValidByteRange(self.currentDataRange)) {
-            responseHeaders[kJPVideoPlayerContentRangeKey] = JPRangeToHTTPRangeReponseHeader(self.currentDataRange, [self.cacheFile fileLength]);
+        if (supportRange && JPValidByteRange(dataRange)) {
+            responseHeaders[kJPVideoPlayerContentRangeKey] = JPRangeToHTTPRangeReponseHeader(dataRange, [self.cacheFile fileLength]);
         }
         else {
             [responseHeaders removeObjectForKey:kJPVideoPlayerContentRangeKey];
         }
-        responseHeaders[@"Content-Length"] = [NSString stringWithFormat:@"%tu",self.currentDataRange.length];
+        responseHeaders[@"Content-Length"] = [NSString stringWithFormat:@"%tu", dataRange.length];
         NSInteger statusCode = supportRange ? 206 : 200;
-        self.response = [[NSHTTPURLResponse alloc] initWithURL:self.currentRequest.request.URL
+        self.response = [[NSHTTPURLResponse alloc] initWithURL:loadingRequest.request.URL
                                                     statusCode:statusCode
                                                    HTTPVersion:@"HTTP/1.1"
                                                   headerFields:responseHeaders];
-        [self.currentRequest jp_fillContentInformationWithResponse:self.response];
+        [loadingRequest jp_fillContentInformationWithResponse:self.response];
     }
-    JPLogDebug(@"Find next loading request");
-    [self startCurrentRequest];
+
+    if(loadingRequest){
+        [self startCurrentRequestWithLoadingRequest:loadingRequest
+                                              range:dataRange];
+    }
 }
 
-- (void)startCurrentRequest {
-    JPLogDebug(@"Start current loading request");
-    if (self.currentDataRange.length == NSUIntegerMax) {
-        [self addTaskWithRange:NSMakeRange(self.currentDataRange.location, NSUIntegerMax) cached:NO];
+- (void)startCurrentRequestWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                                        range:(NSRange)dataRange {
+    if (dataRange.length == NSUIntegerMax) {
+        [self addTaskWithLoadingRequest:loadingRequest
+                                  range:NSMakeRange(dataRange.location, NSUIntegerMax)
+                                 cached:NO];
     }
     else {
-        NSUInteger start = self.currentDataRange.location;
-        NSUInteger end = NSMaxRange(self.currentDataRange);
+        NSUInteger start = dataRange.location;
+        NSUInteger end = NSMaxRange(dataRange);
         while (start < end) {
             NSRange firstNotCachedRange = [self.cacheFile firstNotCachedRangeFromPosition:start];
             if (!JPValidFileRange(firstNotCachedRange)) {
-                [self addTaskWithRange:NSMakeRange(start, end - start) cached:self.cacheFile.cachedDataBound > 0];
+                JPDebugLog(@"Never cached for dataRange, request data from web, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
+                [self addTaskWithLoadingRequest:loadingRequest
+                                          range:dataRange
+                                         cached:self.cacheFile.cachedDataBound > 0];
                 start = end;
             }
             else if (firstNotCachedRange.location >= end) {
-                [self addTaskWithRange:NSMakeRange(start, end - start) cached:YES];
+                JPDebugLog(@"All data did cache for dataRange, fetch data from disk, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
+                [self addTaskWithLoadingRequest:loadingRequest
+                                          range:dataRange
+                                         cached:YES];
                 start = end;
             }
             else if (firstNotCachedRange.location >= start) {
                 if (firstNotCachedRange.location > start) {
-                    [self addTaskWithRange:NSMakeRange(start, firstNotCachedRange.location - start) cached:YES];
+                    JPDebugLog(@"Part of the data did cache for dataRange, fetch data from disk, dataRange is: %@", NSStringFromRange(NSMakeRange(start, firstNotCachedRange.location - start)));
+                    [self addTaskWithLoadingRequest:loadingRequest
+                                              range:NSMakeRange(start, firstNotCachedRange.location - start)
+                                             cached:YES];
                 }
                 NSUInteger notCachedEnd = MIN(NSMaxRange(firstNotCachedRange), end);
-                [self addTaskWithRange:NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location) cached:NO];
+                JPDebugLog(@"Part of the data did not cache for dataRange, request data from web, while circle over, dataRange is: %@", NSStringFromRange(NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location)));
+                [self addTaskWithLoadingRequest:loadingRequest
+                                          range:NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location)
+                                         cached:NO];
                 start = notCachedEnd;
             }
             else {
-                [self addTaskWithRange:NSMakeRange(start, end - start) cached:YES];
+                JPDebugLog(@"Other situation for creating task, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
+                [self addTaskWithLoadingRequest:loadingRequest
+                                          range:dataRange
+                                         cached:YES];
                 start = end;
             }
         }
     }
 }
 
-- (void)cancelCurrentRequest:(BOOL)finishCurrentRequest {
-    if (finishCurrentRequest) {
-        if (!self.currentRequest.isFinished) {
-            [self finishCurrentRequestWithError:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil]];
-        }
-    }
-    else {
-        [self cleanUpCurrentRequest];
-    }
-}
-
-- (void)finishCurrentRequestWithError:(NSError *)error {
-    if (error) {
-        [self.currentRequest finishLoadingWithError:error];
-    }
-    else {
-        [self.currentRequest finishLoading];
-    }
-    [self cleanUpCurrentRequest];
-    [self findAndStartNextRequestIfNeed];
-}
-
-- (void)cleanUpCurrentRequest {
-    [self.pendingRequests removeObject:self.currentRequest];
-    self.currentRequest = nil;
-    self.response = nil;
-    self.currentDataRange = JPInvalidRange;
-}
-
-- (void)addTaskWithRange:(NSRange)range cached:(BOOL)cached {
-    JPResourceLoadingRequestTask *task = [JPResourceLoadingRequestTask requestTaskWithLoadingRequest:self.currentRequest
+- (void)addTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                            range:(NSRange)range
+                           cached:(BOOL)cached {
+    JPResourceLoadingRequestTask *task = [JPResourceLoadingRequestTask requestTaskWithLoadingRequest:loadingRequest
                                                                                         requestRange:range
                                                                                            cacheFile:self.cacheFile
                                                                                            customURL:self.customURL];
     task.delegate = self;
+    self.requestTask = task;
     if (!cached) {
         task.response = self.response;
     }
     
-    JPLogDebug(@"Creat a new request task");
+    JPDebugLog(@"Creat a new request task");
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didReceiveLoadingRequestTask:)]) {
             [self.delegate resourceLoader:self didReceiveLoadingRequestTask:task];
@@ -215,11 +218,26 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     });
 }
 
+- (void)removeCurrentRequestTaskAnResetAll {
+    [self.pendingRequests removeObject:self.requestTask.loadingRequest];
+    self.response = nil;
+    self.requestTask = nil;
+    JPDebugLog(@"Remove current request task, current loadingRequest number is: %ld", self.pendingRequests.count);
+}
+
 
 #pragma mark - JPResourceLoadingRequestTaskDelegate
 
-- (void)requestTask:(JPResourceLoadingRequestTask *)requestTask didCompleteWithError:(NSError *)error {
+- (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
+didCompleteWithError:(NSError *)error {
     if (requestTask.isCancelled || error.code == NSURLErrorCancelled) {
+        // Cancel current request task, and then receive message on `requestTask:didCompleteWithError:`
+        // to start next request.
+        NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                             code:NSURLErrorCancelled
+                                         userInfo:nil];
+        JPDebugLog(@"Downloader cancel the current task, then resource loader send new task");
+        [self finishCurrentRequestWithError:error];
         return;
     }
 
@@ -229,6 +247,22 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     else {
         [self finishCurrentRequestWithError:nil];
     }
+}
+
+
+#pragma mark - Finish Request
+
+- (void)finishCurrentRequestWithError:(NSError *)error {
+    if (error) {
+        JPDebugLog(@"Finish loading request with error: %@", error);
+        [self.requestTask.loadingRequest finishLoadingWithError:error];
+    }
+    else {
+        JPDebugLog(@"Finish loading request with no error");
+        [self.requestTask.loadingRequest finishLoading];
+    }
+    [self removeCurrentRequestTaskAnResetAll];
+    [self findAndStartNextRequestIfNeed];
 }
 
 @end

@@ -79,7 +79,15 @@ didCompleteWithError:(NSError *)error;
  */
 @property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 
-@property (nonatomic, assign, getter=isCancelled) BOOL cancelled;
+/**
+ * A flag represent the task is cancelled or not.
+ */
+@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
+
+/**
+ * A flag represent the task is finished or not.
+ */
+@property(nonatomic, assign, readonly, getter=isFinished) BOOL finished;
 
 /**
  * Convenience method to fetch instance of this class.
