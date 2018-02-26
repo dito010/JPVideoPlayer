@@ -253,11 +253,6 @@
     }
 }
 
-
-- (void)cancelAllDownloads {
-    [self.videoDownloader cancel];
-}
-
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url {
     if (!url) {
         return @"";
@@ -314,11 +309,6 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
     JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
     [self.videoDownloader downloadVideoWithRequestTask:requestTask
                                        downloadOptions:downloaderOptions];
-}
-
-- (void)videoPlayer:(JPVideoPlayer *)videoPlayer
-didCancelLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
-    [self.videoDownloader cancel];
 }
 
 - (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer
@@ -386,7 +376,6 @@ didReceiveResponse:(NSURLResponse *)response {
 
 - (void)downloader:(JPVideoPlayerDownloader *)downloader
 didCompleteWithError:(NSError *)error {
-    // TODO: 取消 JPVideoPlayer 里的播放器.
     if (error){
         [self callDownloadDelegateMethodWithReceivedSize:0
                                             expectedSize:1

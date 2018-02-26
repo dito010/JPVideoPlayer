@@ -83,7 +83,6 @@
 #pragma mark - Play Control
 
 - (void)jp_stopPlay{
-    [[JPVideoPlayerDownloader sharedDownloader] cancel];
     [[JPVideoPlayerManager sharedManager]stopPlay];
 }
 

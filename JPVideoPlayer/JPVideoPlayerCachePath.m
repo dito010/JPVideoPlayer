@@ -18,6 +18,8 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 static NSString * const kJPVideoPlayerCacheVideoPathDomain = @"/com.jpvideoplayer.www";
 static NSString * const kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion = @"/temporaryFile";
 static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile";
+static NSString * const kJPVideoPlayerCacheVideoFileExtension = @".mp4";
+static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
 @implementation JPVideoPlayerCachePath
 
 #pragma mark - Public
@@ -38,7 +40,7 @@ static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/f
 
     NSString *path = [self newVideoCachePathForAllTemporaryFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    path = [path stringByAppendingString:@".index"];
+    path = [path stringByAppendingString:kJPVideoPlayerCacheVideoIndexFileExtension];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:path]) {
         [fileManager createFileAtPath:path contents:nil attributes:nil];
@@ -54,7 +56,7 @@ static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/f
     
     NSString *path = [self newVideoCachePathForAllTemporaryFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    path = [path stringByAppendingString:@".temp"];
+    path = [path stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:path]) {
         [fileManager createFileAtPath:path contents:nil attributes:nil];
@@ -69,7 +71,8 @@ static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/f
     }
     
     NSString *path = [self newVideoCachePathForAllFullFile];
-    NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key] stringByAppendingString:@".mp4"];
+    NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]
+            stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     path = [path stringByAppendingPathComponent:fileName];
     return path;
 }
@@ -79,7 +82,8 @@ static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/f
 
 +(nonnull NSString *)newGetFilePathWithAppendingString:(nonnull NSString *)apdStr {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPathDomain];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
+            stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPathDomain];
     if (![fileManager fileExistsAtPath:path]){
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     }
@@ -106,7 +110,8 @@ static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/f
 
 +(nonnull NSString *)getFilePathWithAppendingString:(nonnull NSString *)apdStr{
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:apdStr];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
+            stringByAppendingPathComponent:apdStr];
 
     if (![fileManager fileExistsAtPath:path]){
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];

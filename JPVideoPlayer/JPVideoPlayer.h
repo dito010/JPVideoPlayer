@@ -52,16 +52,6 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 - (void)videoPlayer:(JPVideoPlayer *)videoPlayer
 didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
 
-/**
- * This method will be called when the current instance receive new loading request,
- * and cancel the current request task.
- *
- * @param videoPlayer The current `JPVideoPlayer`.
- * @prama requestTask A abstract instance packageing the loading request.
- */
-- (void)videoPlayer:(JPVideoPlayer *)videoPlayer
-didCancelLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
-
 #pragma mark - Player
 
 /**

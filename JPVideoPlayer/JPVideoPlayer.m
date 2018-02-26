@@ -290,13 +290,6 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
     }
 }
 
-- (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
-didCancelLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:didCancelLoadingRequestTask:)]) {
-        [self.delegate videoPlayer:self didCancelLoadingRequestTask:requestTask];
-    }
-}
-
 
 #pragma mark - App Observer
 

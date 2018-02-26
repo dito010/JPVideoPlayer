@@ -29,16 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
 didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
 
-/**
- * This method will be called when the current instance receive new loading request,
- * and cancel the current request task.
- *
- * @prama resourceLoader     The current resource loader for videoURLAsset.
- * @prama requestTask        A abstract instance packaging the loading request.
- */
-- (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
-didCancelLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
-
 @end
 
 @interface JPVideoPlayerResourceLoader : NSObject<AVAssetResourceLoaderDelegate>

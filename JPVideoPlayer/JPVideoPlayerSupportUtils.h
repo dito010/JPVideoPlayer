@@ -4,6 +4,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JPResourceLoadingRequestTask.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -72,9 +73,44 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSFileHandle (MCCacheSupport)
+@interface NSHTTPURLResponse (JPVideoPlayer)
+
+/**
+ * Fetch the file length of response.
+ *
+ * @return The file length of response.
+ */
+- (long long)jp_fileLength;
+
+/**
+ * Check the response support streaming or not.
+ *
+ * @return The response support streaming or not.
+ */
+- (BOOL)jp_supportRange;
+
+@end
+
+@interface AVAssetResourceLoadingRequest (JPVideoPlayer)
+
+/**
+ * Fill content information for current request use response conent.
+ *
+ * @param response A response.
+ */
+- (void)jp_fillContentInformationWithResponse:(NSHTTPURLResponse *)response;
+
+@end
+
+@interface NSFileHandle (JPVideoPlayer)
 
 - (BOOL)jp_safeWriteData:(NSData *)data;
+
+@end
+
+@interface NSURLSessionTask(JPVideoPlayer)
+
+@property(nonatomic) JPResourceLoadingRequestWebTask * webTask;
 
 @end
 

@@ -26,7 +26,7 @@ didCompleteWithError:(NSError *)error;
 
 @end
 
-@interface JPResourceLoadingRequestTask : NSObject
+@interface JPResourceLoadingRequestTask : NSOperation
 
 @property (nonatomic, weak) id<JPResourceLoadingRequestTaskDelegate> delegate;
 
@@ -53,19 +53,19 @@ didCompleteWithError:(NSError *)error;
 @property (nonatomic, strong, readonly) NSURL *customURL;
 
 /**
+ * A flag represent the video file of requestRange is cached on disk or not.
+ */
+@property(nonatomic, assign, readonly, getter=isCached) BOOL cached;
+
+/**
  * The operation's task.
  */
 @property (strong, nonatomic, readonly) NSURLSessionDataTask *dataTask;
 
 /**
- * Response for request.
- */
-@property (nonatomic, strong) NSHTTPURLResponse *response;
-
-/**
  * The request used by the operation's task.
  */
-@property (strong, nonatomic) NSURLRequest *request;
+@property (strong, nonatomic, nullable) NSURLRequest *request;
 
 /**
  * The JPVideoPlayerDownloaderOptions for the receiver.
@@ -80,29 +80,21 @@ didCompleteWithError:(NSError *)error;
 @property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 
 /**
- * A flag represent the task is cancelled or not.
- */
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
-
-/**
- * A flag represent the task is finished or not.
- */
-@property(nonatomic, assign, readonly, getter=isFinished) BOOL finished;
-
-/**
  * Convenience method to fetch instance of this class.
  *
  * @param loadingRequest The loadingRequest from `AVPlayer`.
  * @param requestRange   The range need request from web.
  * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
- * @param customURL The url custom passed in.
+ * @param customURL      The url custom passed in.
+ * @param cached         A flag represent the video file of requestRange is cached on disk or not.
  *
  * @return A instance of this class.
  */
 + (instancetype)requestTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                                  requestRange:(NSRange)requestRange
                                     cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                                    customURL:(NSURL *)customURL;
+                                    customURL:(NSURL *)customURL
+                                       cached:(BOOL)cached;
 
 /**
  * Designated initializer method.
@@ -110,31 +102,36 @@ didCompleteWithError:(NSError *)error;
  * @param loadingRequest The loadingRequest from `AVPlayer`.
  * @param requestRange   The range need request from web.
  * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
- * @param customURL The url custom passed in.
+ * @param customURL      The url custom passed in.
+ * @param cached         A flag represent the video file of requestRange is cached on disk or not.
  *
  * @return A instance of this class.
  */
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                             customURL:(NSURL *)customURL NS_DESIGNATED_INITIALIZER;
-
-/**
- * Start the owned request task.
- */
-- (void)start;
-
-/**
- * Cancel the owned request task.
- */
-- (void)cancel;
+                             customURL:(NSURL *)customURL
+                                cached:(BOOL)cached NS_DESIGNATED_INITIALIZER;
 
 /**
  * The request did finished.
  *
  * @param error The request error, if nil mean success.
  */
-- (void)requestDidCompleteWithError:(NSError *)error;
+- (void)requestDidCompleteWithError:(NSError *_Nullable)error;
+
+@end
+
+@interface JPResourceLoadingRequestLocalTask: JPResourceLoadingRequestTask
+
+@end
+
+@interface JPResourceLoadingRequestWebTask: JPResourceLoadingRequestTask
+
+/**
+ * Response for request.
+ */
+@property (nonatomic, strong) NSHTTPURLResponse *response;
 
 @end
 

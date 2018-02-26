@@ -9,6 +9,7 @@
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerControlViews.h"
 #import "JPVideoPlayerCompat.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation NSURL (StripQuery)
 
@@ -317,7 +318,7 @@ static char backgroundLayerKey;
 
 @end
 
-@implementation NSFileHandle (MCCacheSupport)
+@implementation NSFileHandle (JPVideoPlayer)
 
 - (BOOL)jp_safeWriteData:(NSData *)data {
     NSInteger retry = 3;
@@ -342,6 +343,71 @@ static char backgroundLayerKey;
         }
     }
     return bytesLeft == 0;
+}
+
+@end
+
+@implementation NSHTTPURLResponse (JPVideoPlayer)
+
+- (long long)jp_fileLength {
+    NSString *range = [self allHeaderFields][@"Content-Range"];
+    if (range) {
+        NSArray *ranges = [range componentsSeparatedByString:@"/"];
+        if (ranges.count > 0) {
+            NSString *lengthString = [[ranges lastObject] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            return [lengthString longLongValue];
+        }
+    }
+    else {
+        return [self expectedContentLength];
+    }
+    return 0;
+}
+
+- (BOOL)jp_supportRange {
+    return [self allHeaderFields][@"Content-Range"] != nil;
+}
+
+@end
+
+@implementation AVAssetResourceLoadingRequest (JPVideoPlayer)
+
+- (void)jp_fillContentInformationWithResponse:(NSHTTPURLResponse *)response {
+    if (!response) {
+        return;
+    }
+
+    self.response = response;
+    if (!self.contentInformationRequest) {
+        return;
+    }
+
+    NSString *mimeType = [response MIMEType];
+    CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
+    self.contentInformationRequest.byteRangeAccessSupported = [response jp_supportRange];
+    self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
+    self.contentInformationRequest.contentLength = [response jp_fileLength];
+    JPDebugLog(@"Did fill content information to loading request");
+}
+
+@end
+
+@implementation NSURLSessionTask(JPVideoPlayer)
+
+- (void)setWebTask:(JPResourceLoadingRequestWebTask *)webTask {
+    id __weak __weak_object = webTask;
+    id (^__weak_block)(void) = ^{
+        return __weak_object;
+    };
+    objc_setAssociatedObject(self, @selector(webTask),   __weak_block, OBJC_ASSOCIATION_COPY);
+}
+
+- (JPResourceLoadingRequestWebTask *)webTask {
+    id (^__weak_block)(void) = objc_getAssociatedObject(self, _cmd);
+    if (!__weak_block) {
+        return nil;
+    }
+    return __weak_block();
 }
 
 @end

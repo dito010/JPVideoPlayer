@@ -15,6 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class JPVideoPlayerDownloader, JPResourceLoadingRequestTask;
+@class JPResourceLoadingRequestWebTask;
 
 @protocol JPVideoPlayerDownloaderDelegate<NSObject>
 
@@ -81,7 +82,7 @@ didCompleteWithError:(NSError *)error;
 /**
  * The current url, may nil if no download operation.
  */
-@property (nonatomic, strong, readonly, nullable) JPResourceLoadingRequestTask *requestTask;
+@property (nonatomic, strong, readonly, nullable) JPResourceLoadingRequestWebTask *requestTask;
 
 /**
  * The current downloaderOptions, may nil if no download operation.
@@ -109,13 +110,8 @@ didCompleteWithError:(NSError *)error;
  * @param requestTask     A abstract instance packageing the loading request.
  * @param downloadOptions The options to be used for this download.
  */
-- (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestTask *)requestTask
+- (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions;
-
-/**
- * Cancels a download that was previously queued using `downloadVideoWithURL:downloadOptions:`.
- */
-- (void)cancel;
 
 @end
 

@@ -14,26 +14,27 @@
 #import "JPVideoPlayerManager.h"
 #import "JPResourceLoadingRequestTask.h"
 #import "JPVideoPlayerCacheFile.h"
+#import "JPVideoPlayerSupportUtils.h"
 
 @interface JPVideoPlayerDownloader()<NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 // The session in which data tasks will run
 @property (strong, nonatomic) NSURLSession *session;
 
-// The size of receivered data now.
-@property(nonatomic, assign)NSUInteger receiveredSize;
+// The size of received data now.
+@property(nonatomic, assign)NSUInteger receivedSize;
 
 /*
- * expectedSize.
+ * The expected size.
  */
 @property(nonatomic, assign) NSUInteger expectedSize;
 
 @property (nonatomic) pthread_mutex_t lock;
 
 /*
- * the running operation.
+ * The running operation.
  */
-@property(nonatomic, strong, nullable) JPResourceLoadingRequestTask *runningTask;
+@property(nonatomic, weak, nullable) JPResourceLoadingRequestWebTask *runningTask;
 
 @property(nonatomic, assign) NSUInteger offset;
 
@@ -62,7 +63,7 @@
     if ((self = [super init])) {
         pthread_mutex_init(&(_lock), NULL);
         _expectedSize = 0;
-        _receiveredSize = 0;
+        _receivedSize = 0;
         _runningTask = nil;
         _haveDataSaved = NO;
         _offset = 0;
@@ -86,7 +87,7 @@
 
 #pragma mark - Public
 
-- (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestTask *)requestTask
+- (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
     JPDebugLog(@"Downloader received a request task");
     NSParameterAssert(requestTask);
@@ -100,10 +101,7 @@
         return;
     }
 
-    if (self.runningTask) {
-        [self cancel];
-    }
-
+    [self reset];
     _requestTask = requestTask;
     _downloaderOptions = downloadOptions;
     [self startDownloadOpeartionWithRequestTask:requestTask
@@ -114,7 +112,7 @@
     pthread_mutex_lock(&_lock);
     if (self.runningTask) {
         [self.runningTask cancel];
-        [self resetRunningTask];
+        [self reset];
     }
     pthread_mutex_unlock(&_lock);
 }
@@ -122,7 +120,7 @@
 
 #pragma mark - Download Operation
 
-- (void)startDownloadOpeartionWithRequestTask:(JPResourceLoadingRequestTask *)requestTask
+- (void)startDownloadOpeartionWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                                       options:(JPVideoPlayerDownloaderOptions)options {
     if (!self.downloadTimeout) {
         self.downloadTimeout = 15.f;
@@ -157,7 +155,6 @@
         requestTask.request = request;
         requestTask.unownedSession = self.session;
     }
-    [self.runningTask start];
 }
 
 
@@ -244,7 +241,7 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    self.receiveredSize += data.length;
+    self.receivedSize += data.length;
     if (data.bytes && [self.requestTask.cacheFile storeVideoData:data atOffset:self.offset synchronize:NO]) {
         self.haveDataSaved = YES;
         self.offset += [data length];
@@ -259,24 +256,31 @@ didReceiveResponse:(NSURLResponse *)response
             });
         }
     }
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
-        [self.delegate downloader:self
-                   didReceiveData:data
-                     receivedSize:self.receiveredSize
-                     expectedSize:self.expectedSize];
-    }
 
+    JPDispatchSyncOnMainQueue(^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
+            [self.delegate downloader:self
+                       didReceiveData:data
+                         receivedSize:self.receivedSize
+                         expectedSize:self.expectedSize];
+        }
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
-    JPDebugLog(@"URLSession did complete with error: %@", error);
     [self synchronizeCacheFileIfNeeded];
+    if(task.taskIdentifier != self.requestTask.dataTask.taskIdentifier){
+        JPDebugLog(@"URLSession did complete a dataTask, but not flying dataTask, id is: %d", task.taskIdentifier);
+        [task.webTask requestDidCompleteWithError:error];
+        return;
+    }
+
+    JPDebugLog(@"URLSession did complete a dataTask, id is %ld, with error: %@", task.taskIdentifier, error);
     JPDispatchSyncOnMainQueue(^{
         [self.requestTask requestDidCompleteWithError:error];
-        [self resetRunningTask];
+        [self reset];
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
         }
@@ -355,13 +359,10 @@ downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloa
     }
 }
 
-- (void)resetRunningTask {
-    if(!self.runningTask){
-        return;
-    }
+- (void)reset {
     self.runningTask = nil;
     self.expectedSize = 0;
-    self.receiveredSize = 0;
+    self.receivedSize = 0;
 }
 
 @end

@@ -5,49 +5,42 @@
 
 #import "JPResourceLoadingRequestTask.h"
 #import "JPVideoPlayerCacheFile.h"
-#import <pthread.h>
+#import "JPVideoPlayerSupportUtils.h"
 
 @interface JPResourceLoadingRequestTask()
 
 @property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTaskId;
-
-@property (nonatomic) pthread_mutex_t lock;
 
 /**
  * The operation's task.
  */
 @property (strong, nonatomic) NSURLSessionDataTask *dataTask;
 
-/**
- * A flag represent the task is cancelled or not.
- */
-@property (nonatomic, assign, getter=isCancelled) BOOL cancelled;
+@property (assign, nonatomic, getter = isExecuting) BOOL executing;
 
-/**
- * A flag represent the task is finished or not.
- */
-@property(nonatomic, assign, getter=isFinished) BOOL finished;
+@property (assign, nonatomic, getter = isFinished) BOOL finished;
 
 @end
 
+static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
 @implementation JPResourceLoadingRequestTask
-
-- (void)dealloc {
-    pthread_mutex_destroy(&_lock);
-}
+@synthesize executing = _executing;
+@synthesize finished = _finished;
 
 - (instancetype)init {
     NSAssert(NO, @"Please use given initialize method.");
     return [self initWithLoadingRequest:(AVAssetResourceLoadingRequest *)[NSURLRequest new]
                            requestRange:JPInvalidRange
                               cacheFile:[JPVideoPlayerCacheFile new]
-                              customURL:[NSURL new]];
+                              customURL:[NSURL new]
+                                 cached:NO];
 }
 
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                             customURL:(NSURL *)customURL {
+                             customURL:(NSURL *)customURL
+                                cached:(BOOL)cached {
     NSParameterAssert(loadingRequest);
     NSParameterAssert(JPValidByteRange(requestRange));
     NSParameterAssert(cacheFile);
@@ -62,9 +55,7 @@
         _requestRange = requestRange;
         _cacheFile = cacheFile;
         _customURL = customURL;
-        _cancelled = NO;
-        _finished = NO;
-        pthread_mutex_init(&(_lock), NULL);
+        _cached = cached;
     }
     return self;
 }
@@ -72,37 +63,116 @@
 + (instancetype)requestTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                                  requestRange:(NSRange)requestRange
                                     cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                                    customURL:(NSURL *)customURL {
-    return [[JPResourceLoadingRequestTask alloc] initWithLoadingRequest:loadingRequest
-                                                           requestRange:requestRange
-                                                              cacheFile:cacheFile
-                                                              customURL:customURL];
+                                    customURL:(NSURL *)customURL
+                                       cached:(BOOL)cached {
+    return [[[self class] alloc] initWithLoadingRequest:loadingRequest
+                                           requestRange:requestRange
+                                              cacheFile:cacheFile
+                                              customURL:customURL
+                                                 cached:cached];
 }
 
-- (void)requestDidCompleteWithError:(NSError *)error {
-    self.finished = YES;
-    if(error){
-        self.cancelled = YES;
-    }
+- (void)requestDidCompleteWithError:(NSError *_Nullable)error {
+    JPDispatchSyncOnMainQueue(^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(requestTask:didCompleteWithError:)]) {
+            [self.delegate requestTask:self didCompleteWithError:error];
+        }
+        [self setExecuting:NO];
+        [self setFinished:YES];
+    });
+}
 
-    if (self.delegate && [self.delegate respondsToSelector:@selector(requestTask:didCompleteWithError:)]) {
-        [self.delegate requestTask:self didCompleteWithError:error];
+- (void)cancel {
+    [super cancel];
+    JPDebugLog(@"Cancel current request");
+}
+
+
+#pragma mark - Private
+
+- (NSString *)internalFetchUUID {
+    CFUUIDRef uuidRef = CFUUIDCreate(NULL);
+    CFStringRef uuidStringRef = CFUUIDCreateString(NULL, uuidRef);
+    CFRelease(uuidRef);
+
+    NSString *uuidValue = (__bridge_transfer NSString *)uuidStringRef;
+    uuidValue = [uuidValue lowercaseString];
+    uuidValue = [uuidValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    return uuidValue;
+}
+
+- (void)main {
+    @autoreleasepool {
+        [self setFinished:NO];
+        [self setExecuting:YES];
+        [self requestDidCompleteWithError:nil];
     }
 }
 
-- (void)start {
+- (BOOL)shouldContinueWhenAppEntersBackground {
+    return self.options & JPVideoPlayerDownloaderContinueInBackground;
+}
+
+- (void)setFinished:(BOOL)finished {
+    [self willChangeValueForKey:@"isFinished"];
+    _finished = finished;
+    [self didChangeValueForKey:@"isFinished"];
+}
+
+- (void)setExecuting:(BOOL)executing {
+    [self willChangeValueForKey:@"isExecuting"];
+    _executing = executing;
+    [self didChangeValueForKey:@"isExecuting"];
+}
+
+@end
+
+@implementation JPResourceLoadingRequestLocalTask
+
+- (void)main {
+    if ([self isCancelled]) {
+        [self requestDidCompleteWithError:nil];
+        return;
+    }
+
+    JPDebugLog(@"Start a local task");
+    [self setFinished:NO];
+    [self setExecuting:YES];
+    // task fetch data from disk.
+    NSUInteger offset = self.requestRange.location;
+    while (offset < NSMaxRange(self.requestRange)) {
+        if ([self isCancelled]) {
+            break;
+        }
+        @autoreleasepool {
+            NSRange range = NSMakeRange(offset, MIN(NSMaxRange(self.requestRange) - offset, kJPVideoPlayerFileReadBufferSize));
+            NSData *data = [self.cacheFile dataWithRange:range];
+            [self.loadingRequest.dataRequest respondWithData:data];
+            offset = NSMaxRange(range);
+        }
+    }
+    JPDebugLog(@"Complete a local task");
+    [self requestDidCompleteWithError:nil];
+}
+
+@end
+
+@implementation JPResourceLoadingRequestWebTask
+
+- (void)main {
+    // task request data from web.
     NSParameterAssert(self.unownedSession);
     NSParameterAssert(self.request);
     if(!self.unownedSession || !self.request){
         return;
     }
 
-    pthread_mutex_lock(&_lock);
-    JPDebugLog(@"Downloader start a new request");
-    if (self.isCancelled) {
+    if ([self isCancelled]) {
+        [self requestDidCompleteWithError:nil];
         return;
     }
 
+    JPDebugLog(@"Start a web request");
     __weak __typeof__ (self) wself = self;
     Class UIApplicationClass = NSClassFromString(@"UIApplication");
     BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
@@ -118,8 +188,12 @@
         }];
     }
 
+    [self setFinished:NO];
+    [self setExecuting:YES];
     NSURLSession *session = self.unownedSession;
     self.dataTask = [session dataTaskWithRequest:self.request];
+    self.dataTask.webTask = self;
+    JPDebugLog(@"Web requestTask create dataTask, id is: %d", self.dataTask.taskIdentifier);
     [self.dataTask resume];
 
     if (self.dataTask) {
@@ -133,32 +207,22 @@
         [app endBackgroundTask:self.backgroundTaskId];
         self.backgroundTaskId = UIBackgroundTaskInvalid;
     }
-    pthread_mutex_unlock(&_lock);
 }
 
 - (void)cancel {
-    pthread_mutex_lock(&_lock);
-    JPDebugLog(@"Cancel current request");
-    self.cancelled = YES;
-    self.finished = YES;
-    [self cancelInternal];
-    pthread_mutex_unlock(&_lock);
-}
-
-
-#pragma mark - Private
-
-- (void)cancelInternal {
+    if (self.isCancelled || self.isFinished) {
+        return;
+    }
+    
+    [super cancel];
     if (self.dataTask) {
+        // cancel web request.
+        JPDebugLog(@"Operation cancel dataTask, id is: %d", self.dataTask.taskIdentifier);
         [self.dataTask cancel];
         JPDispatchSyncOnMainQueue(^{
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
     }
-}
-
-- (BOOL)shouldContinueWhenAppEntersBackground {
-    return self.options & JPVideoPlayerDownloaderContinueInBackground;
 }
 
 @end
