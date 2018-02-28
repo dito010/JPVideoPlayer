@@ -89,7 +89,7 @@
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
-    JPDebugLog(@"Downloader received a request task");
+    // JPDebugLog(@"Downloader received a request task");
     NSParameterAssert(requestTask);
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil.
     // If it is nil immediately call the completed block with no video or data.
@@ -250,7 +250,7 @@ didReceiveResponse:(NSURLResponse *)response
         static BOOL _needLog = YES;
         if(_needLog) {
             _needLog = NO;
-            JPDebugLog(@"Did respond loadingRequest dataRequest with data, data length is: %u", data.length);
+            JPDebugLog(@"URLSession 收到数据响应, 数据长度为: %u", data.length);
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 _needLog = YES;
             });
@@ -272,12 +272,12 @@ didReceiveResponse:(NSURLResponse *)response
 didCompleteWithError:(NSError *)error {
     [self synchronizeCacheFileIfNeeded];
     if(task.taskIdentifier != self.requestTask.dataTask.taskIdentifier){
-        JPDebugLog(@"URLSession did complete a dataTask, but not flying dataTask, id is: %d", task.taskIdentifier);
+        JPDebugLog(@"URLSession 完成了一个请求, 但是不是正在请求的请求, id 是: %d", task.taskIdentifier);
         [task.webTask requestDidCompleteWithError:error];
         return;
     }
 
-    JPDebugLog(@"URLSession did complete a dataTask, id is %ld, with error: %@", task.taskIdentifier, error);
+    JPDebugLog(@"URLSession 完成了一个请求, id 是 %ld, error 是: %@", task.taskIdentifier, error);
     JPDispatchSyncOnMainQueue(^{
         [self.requestTask requestDidCompleteWithError:error];
         [self reset];

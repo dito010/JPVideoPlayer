@@ -66,8 +66,24 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
         _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath videoCacheTemporaryPathForKey:key]
                                                      indexFilePath:[JPVideoPlayerCachePath videoCacheIndexSavePathForKey:key]];
+        [_operationQueue addObserver:self 
+                          forKeyPath:@"operationCount" 
+                             options:NSKeyValueObservingOptionNew 
+                             context:nil];
     }
     return self;
+}
+
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath 
+                      ofObject:(nullable id)object
+                        change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change 
+                       context:(nullable void *)context {
+    if([keyPath isEqualToString:@"operationCount"]){
+        JPDebugLog(@"operationCount 发生变化: %d", self.operationQueue.operationCount);
+    }
 }
 
 
@@ -77,7 +93,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (resourceLoader && loadingRequest){
         [self.pendingRequests addObject:loadingRequest];
-        JPDebugLog(@"ResourceLoader received a new loadingRequest, current loadingRequest number is: %ld", self.pendingRequests.count);
+        JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<", self.pendingRequests.count);
         if (self.requestTask.loadingRequest && !self.requestTask.loadingRequest.isFinished) {
             [self cancelCurrentRequest:YES];
         }
@@ -89,11 +105,11 @@ shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loading
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     if (self.requestTask.loadingRequest == loadingRequest) {
-        JPDebugLog(@"ResourceLoader cancel a loading Request that loading");
+        JPDebugLog(@"ResourceLoader 取消了一个正在请求的请求");
         [self cancelCurrentRequest:NO];
     }
     else {
-        JPDebugLog(@"ResourceLoader remove a loading Request that not loading");
+        JPDebugLog(@"ResourceLoader 取消了一个不在请求的请求");
         [self.pendingRequests removeObject:loadingRequest];
     }
 }
@@ -144,9 +160,8 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
 
 - (void)startCurrentRequestWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                                         range:(NSRange)dataRange {
-    JPDebugLog(@"Resource loader handle loadingRequest, dataRange is: %@", NSStringFromRange(dataRange));
+    JPDebugLog(@"ResourceLoader 处理新的请求, 数据范围是: %@", NSStringFromRange(dataRange));
     self.operationQueue.suspended = YES;
-    JPDebugLog(@"Resource loader operation queue is suspended, the operation count is: %d", self.operationQueue.operationCount);
     if (dataRange.length == NSUIntegerMax) {
         [self addTaskWithLoadingRequest:loadingRequest
                                   range:NSMakeRange(dataRange.location, NSUIntegerMax)
@@ -158,14 +173,12 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
         while (start < end) {
             NSRange firstNotCachedRange = [self.cacheFile firstNotCachedRangeFromPosition:start];
             if (!JPValidFileRange(firstNotCachedRange)) {
-                JPDebugLog(@"Never cached for dataRange, request data from web, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
                 [self addTaskWithLoadingRequest:loadingRequest
                                           range:dataRange
                                          cached:self.cacheFile.cachedDataBound > 0];
                 start = end;
             }
             else if (firstNotCachedRange.location >= end) {
-                JPDebugLog(@"All data did cache for dataRange, fetch data from disk, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
                 [self addTaskWithLoadingRequest:loadingRequest
                                           range:dataRange
                                          cached:YES];
@@ -173,20 +186,17 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
             }
             else if (firstNotCachedRange.location >= start) {
                 if (firstNotCachedRange.location > start) {
-                    JPDebugLog(@"Part of the data did cache for dataRange, fetch data from disk, dataRange is: %@", NSStringFromRange(NSMakeRange(start, firstNotCachedRange.location - start)));
                     [self addTaskWithLoadingRequest:loadingRequest
                                               range:NSMakeRange(start, firstNotCachedRange.location - start)
                                              cached:YES];
                 }
                 NSUInteger notCachedEnd = MIN(NSMaxRange(firstNotCachedRange), end);
-                JPDebugLog(@"Part of the data did not cache for dataRange, request data from web, while circle over, dataRange is: %@", NSStringFromRange(NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location)));
                 [self addTaskWithLoadingRequest:loadingRequest
                                           range:NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location)
                                          cached:NO];
                 start = notCachedEnd;
             }
             else {
-                JPDebugLog(@"Other situation for creating task, while circle over, dataRange is: %@", NSStringFromRange(dataRange));
                 [self addTaskWithLoadingRequest:loadingRequest
                                           range:dataRange
                                          cached:YES];
@@ -195,7 +205,6 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
         }
     }
     self.operationQueue.suspended = NO;
-    JPDebugLog(@"Resource loader operation queue is played, the operation count is: %d", self.operationQueue.operationCount);
 }
 
 - (void)addTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
@@ -203,7 +212,7 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
                            cached:(BOOL)cached {
     JPResourceLoadingRequestTask *task;
     if(cached){
-        JPDebugLog(@"Creat a local request task");
+        JPDebugLog(@"ResourceLoader 创建了一个本地请求");
         task = [JPResourceLoadingRequestLocalTask requestTaskWithLoadingRequest:loadingRequest
                                                                    requestRange:range
                                                                       cacheFile:self.cacheFile
@@ -211,7 +220,7 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
                                                                          cached:cached];
     }
     else {
-        JPDebugLog(@"Creat a web request task");
+        JPDebugLog(@"ResourceLoader 创建一个网络请求");
         task = [JPResourceLoadingRequestWebTask requestTaskWithLoadingRequest:loadingRequest
                                                                  requestRange:range
                                                                     cacheFile:self.cacheFile
@@ -225,14 +234,12 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     task.delegate = self;
     self.requestTask = task;
     [self.operationQueue addOperation:task];
-    JPDebugLog(@"Resource loader add a operations, the operation count is: %d", self.operationQueue.operationCount);
 }
 
 - (void)removeCurrentRequestTaskAnResetAll {
     [self.pendingRequests removeObject:self.requestTask.loadingRequest];
     self.response = nil;
     self.requestTask = nil;
-    JPDebugLog(@"Remove current request task, current loadingRequest number is: %ld", self.pendingRequests.count);
 }
 
 
@@ -259,11 +266,11 @@ didCompleteWithError:(NSError *)error {
 
 - (void)finishCurrentRequestWithError:(NSError *)error {
     if (error) {
-        JPDebugLog(@"Finish loading request with error: %@", error);
+        JPDebugLog(@"ResourceLoader 完成一个请求 error: %@", error);
         [self.requestTask.loadingRequest finishLoadingWithError:error];
     }
     else {
-        JPDebugLog(@"Finish loading request with no error");
+        JPDebugLog(@"ResourceLoader 完成一个请求, 没有错误");
         [self.requestTask.loadingRequest finishLoading];
     }
     [self removeCurrentRequestTaskAnResetAll];
@@ -276,7 +283,7 @@ didCompleteWithError:(NSError *)error {
     }
 
     [self.operationQueue cancelAllOperations];
-    JPDebugLog(@"Resource loader call cancel all operations, the operation count is: %d", self.operationQueue.operationCount);
+    JPDebugLog(@"ResourceLoader 取消了所有请求");
     if (finishCurrentRequest) {
         if (!self.requestTask.isFinished) {
             // Cancel current request task, and then receive message on `requestTask:didCompleteWithError:`
@@ -284,7 +291,6 @@ didCompleteWithError:(NSError *)error {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain
                                                  code:NSURLErrorCancelled
                                              userInfo:nil];
-            JPDebugLog(@"Downloader cancel the current task, then resource loader send new task");
             [self finishCurrentRequestWithError:error];
         }
     } else {

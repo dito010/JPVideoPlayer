@@ -200,6 +200,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+//            @"http://p11s9kqxf.bkt.clouddn.com/designedByAppleInCalifornia.mp4",
             @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
             // location video path.
             url.absoluteString,
@@ -220,14 +221,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
             // This video saved in amazon, maybe load sowly.
             // "http://vshow.s3.amazonaws.com/file147801253818487d5f00e2ae6e0194ab085fe4a43066c.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_01.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_02.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_03.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_04.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_05.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_06.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_07.mp4",
-            @"http://120.25.226.186:32812/resources/videos/minion_08.mp4",
 
             // To simulate the cell have no video to play.
             // "",

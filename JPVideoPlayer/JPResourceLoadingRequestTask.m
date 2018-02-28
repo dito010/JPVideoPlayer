@@ -84,7 +84,8 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
 
 - (void)cancel {
     [super cancel];
-    JPDebugLog(@"Cancel current request");
+    [self requestDidCompleteWithError:nil];
+    JPDebugLog(@"调用了 JPResourceLoadingRequestTask 的取消方法");
 }
 
 
@@ -135,7 +136,7 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
         return;
     }
 
-    JPDebugLog(@"Start a local task");
+    JPDebugLog(@"开始发送本地请求");
     [self setFinished:NO];
     [self setExecuting:YES];
     // task fetch data from disk.
@@ -151,7 +152,7 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
             offset = NSMaxRange(range);
         }
     }
-    JPDebugLog(@"Complete a local task");
+    JPDebugLog(@"完成本地请求");
     [self requestDidCompleteWithError:nil];
 }
 
@@ -160,19 +161,20 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
 @implementation JPResourceLoadingRequestWebTask
 
 - (void)main {
-    // task request data from web.
-    NSParameterAssert(self.unownedSession);
-    NSParameterAssert(self.request);
-    if(!self.unownedSession || !self.request){
-        return;
-    }
-
     if ([self isCancelled]) {
         [self requestDidCompleteWithError:nil];
         return;
     }
 
-    JPDebugLog(@"Start a web request");
+    // task request data from web.
+    NSParameterAssert(self.unownedSession);
+    NSParameterAssert(self.request);
+    if(!self.unownedSession || !self.request){
+        [self requestDidCompleteWithError:nil];
+        return;
+    }
+
+    JPDebugLog(@"开始网络请求");
     __weak __typeof__ (self) wself = self;
     Class UIApplicationClass = NSClassFromString(@"UIApplication");
     BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
@@ -193,7 +195,7 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
     NSURLSession *session = self.unownedSession;
     self.dataTask = [session dataTaskWithRequest:self.request];
     self.dataTask.webTask = self;
-    JPDebugLog(@"Web requestTask create dataTask, id is: %d", self.dataTask.taskIdentifier);
+    JPDebugLog(@"网络请求创建一个 dataTask, id 是: %d", self.dataTask.taskIdentifier);
     [self.dataTask resume];
 
     if (self.dataTask) {
@@ -217,7 +219,7 @@ static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
     [super cancel];
     if (self.dataTask) {
         // cancel web request.
-        JPDebugLog(@"Operation cancel dataTask, id is: %d", self.dataTask.taskIdentifier);
+        JPDebugLog(@"取消了一个网络请求, id 是: %d", self.dataTask.taskIdentifier);
         [self.dataTask cancel];
         JPDispatchSyncOnMainQueue(^{
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
