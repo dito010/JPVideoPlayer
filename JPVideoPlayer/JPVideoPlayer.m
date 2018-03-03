@@ -36,7 +36,7 @@ CGFloat const JPVideoPlayerLayerFrameY = 1;
 /**
  * The Player to play video.
  */
-@property(nonatomic, strong, nullable)AVQueuePlayer *player;
+@property(nonatomic, strong, nullable)AVPlayer *player;
 
 /**
  * The current player's layer.
@@ -441,8 +441,10 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
     
-    model.player = [AVQueuePlayer new];
-    [model.player insertItem:playerItem afterItem:nil];
+    model.player = [AVPlayer playerWithPlayerItem:playerItem];
+    if ([model.player respondsToSelector:@selector(automaticallyWaitsToMinimizeStalling)]) {
+        model.player.automaticallyWaitsToMinimizeStalling = NO;
+    }
     model.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
     
     NSString *videoGravity = nil;

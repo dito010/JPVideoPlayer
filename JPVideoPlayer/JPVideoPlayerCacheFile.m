@@ -10,6 +10,7 @@
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerCompat.h"
+#import <pthread.h>
 
 @interface JPVideoPlayerCacheFile()
 
@@ -26,6 +27,8 @@
 @property (nonatomic, assign) NSUInteger readOffset;
 
 @property (nonatomic, copy) NSDictionary *responseHeaders;
+
+@property (nonatomic) pthread_mutex_t lock;
 
 @end
 
@@ -59,6 +62,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         _ranges = [[NSMutableArray alloc] init];
         _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
         _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
+        pthread_mutex_init(&_lock, NULL);
 
         NSString *indexStr = [NSString stringWithContentsOfFile:self.indexFilePath encoding:NSUTF8StringEncoding error:nil];
         NSData *data = [indexStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -77,6 +81,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (void)dealloc {
     [self.readFileHandle closeFile];
     [self.writeFileHandle closeFile];
+    pthread_mutex_destroy(&_lock);
 }
 
 
@@ -109,6 +114,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 #pragma mark - Range
 
 - (void)mergeRangesIfNeed {
+    pthread_mutex_lock(&_lock);
     for (int i = 0; i < self.ranges.count; ++i) {
         if ((i + 1) < self.ranges.count) {
             NSRange currentRange = [self.ranges[i] rangeValue];
@@ -120,6 +126,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             }
         }
     }
+    pthread_mutex_unlock(&_lock);
 }
 
 - (void)addRange:(NSRange)range {
@@ -127,6 +134,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         return;
     }
 
+    pthread_mutex_lock(&_lock);
     BOOL inserted = NO;
     for (int i = 0; i < self.ranges.count; ++i) {
         NSRange currentRange = [self.ranges[i] rangeValue];
@@ -139,6 +147,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     if (!inserted) {
         [self.ranges addObject:[NSValue valueWithRange:range]];
     }
+    pthread_mutex_unlock(&_lock);
     [self mergeRangesIfNeed];
     [self checkCompelete];
 }
@@ -173,6 +182,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         return JPInvalidRange;
     }
 
+    pthread_mutex_lock(&_lock);
+    NSRange targerRange = JPInvalidRange;
     NSUInteger start = position;
     for (int i = 0; i < self.ranges.count; ++i) {
         NSRange range = [self.ranges[i] rangeValue];
@@ -184,18 +195,20 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                 continue;
             }
             else {
-                return NSMakeRange(start, range.location - start);
+                targerRange = NSMakeRange(start, range.location - start);
             }
         }
     }
 
     if (start < self.fileLength) {
-        return NSMakeRange(start, self.fileLength - start);
+        targerRange = NSMakeRange(start, self.fileLength - start);
     }
-    return JPInvalidRange;
+    pthread_mutex_unlock(&_lock);
+    return targerRange;
 }
 
 - (void)checkCompelete {
+    pthread_mutex_lock(&_lock);
     self.compelete = NO;
     if (self.ranges && self.ranges.count == 1) {
         NSRange range = [self.ranges[0] rangeValue];
@@ -203,6 +216,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             self.compelete = YES;
         }
     }
+    pthread_mutex_unlock(&_lock);
 }
 
 
@@ -358,6 +372,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (BOOL)synchronize {
     NSString *indexStr = [self unserializeIndex];
     JPDebugLog(@"Did synchronize index file");
+//    [self.writeFileHandle synchronizeFile];
     return [indexStr writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
 

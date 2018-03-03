@@ -123,14 +123,20 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest{
     }
 
     AVAssetResourceLoadingRequest *loadingRequest = [self.pendingRequests firstObject];
-    NSRange dataRange;
+    NSUInteger location, length;
     // data range.
     if ([loadingRequest.dataRequest respondsToSelector:@selector(requestsAllDataToEndOfResource)] && loadingRequest.dataRequest.requestsAllDataToEndOfResource) {
-        dataRange = NSMakeRange((NSUInteger)loadingRequest.dataRequest.requestedOffset, NSUIntegerMax);
+        location = (NSUInteger)loadingRequest.dataRequest.requestedOffset;
+        length = NSUIntegerMax;
     }
     else {
-        dataRange = NSMakeRange((NSUInteger)loadingRequest.dataRequest.requestedOffset, loadingRequest.dataRequest.requestedLength);
+        location = (NSUInteger)loadingRequest.dataRequest.requestedOffset;
+        length = loadingRequest.dataRequest.requestedLength;
     }
+    if(loadingRequest.dataRequest.currentOffset > 0){
+       location = loadingRequest.dataRequest.currentOffset;
+    }
+    NSRange dataRange = NSMakeRange(location, length);
 
     // response.
     if (!self.response && self.cacheFile.responseHeaders.count > 0) {
@@ -285,7 +291,7 @@ didCompleteWithError:(NSError *)error {
     [self.operationQueue cancelAllOperations];
     JPDebugLog(@"ResourceLoader 取消了所有请求");
     if (finishCurrentRequest) {
-        if (!self.requestTask.isFinished) {
+        if (!self.requestTask.loadingRequest.isFinished) {
             // Cancel current request task, and then receive message on `requestTask:didCompleteWithError:`
             // to start next request.
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain
@@ -293,7 +299,9 @@ didCompleteWithError:(NSError *)error {
                                              userInfo:nil];
             [self finishCurrentRequestWithError:error];
         }
-    } else {
+    }
+    else {
+        [self.requestTask.loadingRequest finishLoading];
         [self removeCurrentRequestTaskAnResetAll];
     }
 }

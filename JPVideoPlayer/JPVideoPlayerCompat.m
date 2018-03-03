@@ -124,7 +124,7 @@ NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
         threadName = [threadName componentsSeparatedByString:@","].firstObject;
         threadName = [threadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
         // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
-        message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@", flag, threadName, message];
+        message = [NSString stringWithFormat:@"[%@] [Thread: %0ld] %@", flag, (long)[threadName integerValue], message];
         printf("%s\n", message.UTF8String);
     }
 }
