@@ -55,20 +55,6 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range) {
     }
 }
 
-NSString* JPRangeToHTTPRangeResponseHeader(NSRange range, NSUInteger length) {
-    if (JPValidByteRange(range)) {
-        NSUInteger start = range.location;
-        NSUInteger end = NSMaxRange(range) - 1;
-        if (range.length == NSUIntegerMax) {
-            end = start + length;
-        }
-        return [NSString stringWithFormat:@"bytes %tu-%tu/%tu", start, end, end - start];
-    }
-    else {
-        return nil;
-    }
-}
-
 @implementation JPLog
 
 + (void)initialize {

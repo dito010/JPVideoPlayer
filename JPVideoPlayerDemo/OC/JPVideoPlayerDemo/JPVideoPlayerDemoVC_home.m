@@ -51,42 +51,42 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self setup];
     [self insertLineInScreenCenter];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
+
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
     self.tableView.delegate = self;
-    
+
     if (!self.tableView.playingCell) {
-        
+
         // Find the first cell need to play video in visiable cells.
         // 在可见cell中找第一个有视频的进行播放.
         [self.tableView playVideoInVisiableCells];
     }
     else{
-        
+
         NSURL *url = [NSURL URLWithString:self.tableView.playingCell.videoPath];
         [self.tableView.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
     }
-    
+
     self.tableViewRange.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
+
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
     self.tableView.delegate = nil;
-    
+
     if (self.tableView.playingCell) {
         [self.tableView.playingCell.videoImv jp_stopPlay];
     }
-    
+
     self.tableViewRange.hidden = YES;
 }
 
@@ -99,12 +99,12 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+
     JPVideoPlayerDemoCell *cell = [tableView dequeueReusableCellWithIdentifier:JPVideoPlayerDemoReuseID forIndexPath:indexPath];
     cell.videoPath = self.pathStrings[indexPath.row];
     cell.indexPath = indexPath;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+
     if (self.tableView.maxNumCannotPlayVideoCells > 0) {
         if (indexPath.row <= self.tableView.maxNumCannotPlayVideoCells-1) { // 上不可及
             cell.cellStyle = JPPlayUnreachCellStyleUp;
@@ -119,7 +119,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     else{
         cell.cellStyle = JPPlayUnreachCellStyleNone;
     }
-    
+
     return cell;
 }
 
@@ -143,7 +143,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
  * 松手时已经静止, 只会调用scrollViewDidEndDragging
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
+
     if (decelerate == NO)
         // scrollView已经完全静止
         [self.tableView handleScrollStop];
@@ -154,16 +154,16 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
  * 松手时还在运动, 先调用scrollViewDidEndDragging, 再调用scrollViewDidEndDecelerating
  */
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    
+
     // scrollView已经完全静止
     [self.tableView handleScrollStop];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
+
     // 处理滚动方向
     [self handleScrollDerectionWithOffset:scrollView.contentOffset.y];
-    
+
     // Handle cyclic utilization
     // 处理循环利用
     [self.tableView handleQuickScroll];
@@ -188,28 +188,29 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     navBarImageView.image = navImage;
     navBarImageView.frame = CGRectMake(0, -navImage.size.height + 44.f, [UIScreen mainScreen].bounds.size.width, navImage.size.height);
     [self.navigationController.navigationBar addSubview:navBarImageView];
-    
+
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerDemoCell class]) bundle:nil] forCellReuseIdentifier:JPVideoPlayerDemoReuseID];
     self.tableView.tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
-    
+
     // location file in disk.
     // 本地视频播放.
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
-                         @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
-                         @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-                         url.absoluteString,
-                         @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-                         @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
-                         @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
-                         @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-                         @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
-                         @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
-                         ];
+//            @"http://p11s9kqxf.bkt.clouddn.com/Bitcoin.mp4",
+            @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
+            @"http://static.smartisanos.cn/common/video/m1-white.mp4",
+            url.absoluteString,
+            @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
+            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+            @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
+            @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
+            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+            @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
+            @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
+    ];
 }
 
 
@@ -229,7 +230,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
         _tableViewRange.backgroundColor = [UIColor clearColor];
         _tableViewRange.frame = CGRectMake(0, navAndStatusBarHeight, screenSize.width, screenSize.height -  navAndStatusBarHeight - tabBarHeight);
         _tableViewRange.hidden = YES;
-        
+
         UIBezierPath *linePath1 = [UIBezierPath bezierPath];
         {
             [linePath1 moveToPoint:CGPointMake(1, 1)];
@@ -238,7 +239,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
             [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-navAndStatusBarHeight-tabBarHeight-1)];
             [linePath1 addLineToPoint:CGPointMake(1, 1)];
         }
-        
+
         CAShapeLayer *layer1 = [CAShapeLayer layer];
         {
             UIColor *drawColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:1];
@@ -247,18 +248,18 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
             layer1.fillColor = [UIColor clearColor].CGColor;
             layer1.lineWidth = 1;
             [layer1 setLineDashPattern:
-             [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
-              [NSNumber numberWithInt:3],nil]];
+                    [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
+                                              [NSNumber numberWithInt:3],nil]];
             layer1.lineCap = @"round";
             [_tableViewRange.layer addSublayer:layer1];
         }
-        
+
         UIBezierPath *linePath2 = [UIBezierPath bezierPath];
         {
             [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
             [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
         }
-        
+
         CAShapeLayer *layer2 = [CAShapeLayer layer];
         {
             UIColor *drawColor = [UIColor colorWithRed:0 green:0.98 blue:0 alpha:1];
@@ -267,12 +268,12 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
             layer2.fillColor = [UIColor clearColor].CGColor;
             layer2.lineWidth = 1;
             [layer2 setLineDashPattern:
-             [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
-              [NSNumber numberWithInt:3],nil]];
+                    [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
+                                              [NSNumber numberWithInt:3],nil]];
             layer2.lineCap = @"round";
             [_tableViewRange.layer addSublayer:layer2];
         }
-        
+
     }
     return _tableViewRange;
 }

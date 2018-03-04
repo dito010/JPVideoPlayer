@@ -118,7 +118,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 }
 
 - (void)cancel {
-    JPDebugLog(@"Cancel current request");
+    JPDebugLog(@"调用了 RequestTask 的取消方法");
     int lock = pthread_mutex_trylock(&_lock);;
     self.executing = NO;
     self.cancelled = YES;
@@ -242,7 +242,9 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     NSMutableDictionary *responseHeaders = [self.cacheFile.responseHeaders mutableCopy];
     BOOL supportRange = responseHeaders[kJPVideoPlayerContentRangeKey] != nil;
     if (supportRange && JPValidByteRange(self.requestRange)) {
-        responseHeaders[kJPVideoPlayerContentRangeKey] = JPRangeToHTTPRangeResponseHeader(self.requestRange, [self.cacheFile fileLength]);
+        NSUInteger fileLength = [self.cacheFile fileLength];
+        NSString *contentRange = [NSString stringWithFormat:@"bytes %tu-%tu/%tu", self.requestRange.location, fileLength, fileLength];
+        responseHeaders[kJPVideoPlayerContentRangeKey] = contentRange;
     }
     else {
         [responseHeaders removeObjectForKey:kJPVideoPlayerContentRangeKey];
@@ -331,7 +333,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     [self synchronizeCacheFileIfNeeded];
     if (self.dataTask) {
         // cancel web request.
-        JPDebugLog(@"Operation cancel dataTask, id is: %d", self.dataTask.taskIdentifier);
+        JPDebugLog(@"取消了一个网络请求, id 是: %d", self.dataTask.taskIdentifier);
         [self.dataTask cancel];
         JPDispatchSyncOnMainQueue(^{
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
@@ -409,7 +411,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
         static BOOL _needLog = YES;
         if(_needLog) {
             _needLog = NO;
-            JPDebugLog(@"URLSession 收到数据响应, 数据长度为: %u", data.length);
+            JPDebugLog(@"收到数据响应, 数据长度为: %u", data.length);
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 _needLog = YES;
             });

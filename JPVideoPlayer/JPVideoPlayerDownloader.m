@@ -83,7 +83,6 @@
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
-    // JPDebugLog(@"Downloader received a request task");
     NSParameterAssert(requestTask);
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil.
     // If it is nil immediately call the completed block with no video or data.
@@ -143,6 +142,7 @@
     self.runningTask = requestTask;
     requestTask.request = request;
     requestTask.unownedSession = self.session;
+    JPDebugLog(@"Downloader 处理完一个请求");
 }
 
 
@@ -165,7 +165,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-    JPDebugLog(@"URLSession did receive response");
+    JPDebugLog(@"URLSession 收到响应");
     // TODO: 这里做 mime 的检查, 只支持 video / audio.
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
@@ -215,6 +215,7 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     self.receivedSize += data.length;
+    NSParameterAssert(self.runningTask);
     [self.runningTask requestDidReceiveData:data];
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {

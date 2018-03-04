@@ -387,7 +387,7 @@ static char backgroundLayerKey;
     self.contentInformationRequest.byteRangeAccessSupported = [response jp_supportRange];
     self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
     self.contentInformationRequest.contentLength = [response jp_fileLength];
-    JPDebugLog(@"Did fill content information to loading request");
+    JPDebugLog(@"填充了响应信息到 contentInformationRequest");
 }
 
 @end

@@ -177,16 +177,6 @@ BOOL JPRangeCanMerge(NSRange range1, NSRange range2);
  */
 NSString* JPRangeToHTTPRangeHeader(NSRange range);
 
-/**
- * Convert a range and length to HTTP range response string.
- *
- * @param range  A range.
- * @param length A length.
- *
- * @return  HTTP range response string.
- */
-NSString* JPRangeToHTTPRangeResponseHeader(NSRange range, NSUInteger length);
-
 #endif
 
 @interface JPLog : NSObject

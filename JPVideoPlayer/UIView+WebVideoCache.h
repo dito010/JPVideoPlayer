@@ -62,7 +62,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 /**
  * Notify the player status.
  *
- * @param playingStatus      The current playing status.
+ * @param playerStatus      The current playing status.
  */
 - (void)playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
