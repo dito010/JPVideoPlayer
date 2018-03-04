@@ -39,7 +39,7 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
-@optional
+@required
 
 #pragma mark - Request Task
 
@@ -53,6 +53,8 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
 
 #pragma mark - Player
+
+@optional
 
 /**
  * Controls which video should automatic replay when the video is playing completed.

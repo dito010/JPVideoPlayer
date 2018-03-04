@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '87CB90216F5FEAD43D1461394DD492B8'
-               BlueprintName = 'Pods-JPVideoPlayerDemo'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libPods-JPVideoPlayerDemo.a'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5F6705621DADE88F001EBFAF"
+               BlueprintName = "JPVideoPlayerDemo"
+               ReferencedContainer = "container:../JPVideoPlayerDemo.xcodeproj"
+               BuildableName = "JPVideoPlayerDemo.app">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,6 +40,15 @@
       debugServiceExtension = "internal"
       buildConfiguration = "Debug"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5F6705621DADE88F001EBFAF"
+            BuildableName = "JPVideoPlayerDemo.app"
+            BlueprintName = "JPVideoPlayerDemo"
+            ReferencedContainer = "container:../JPVideoPlayerDemo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

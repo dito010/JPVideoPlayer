@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '915E8FEADDA0644106187EA8CE7B2E00'
-               BlueprintName = 'JPNavigationController'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libJPNavigationController.a'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "915E8FEADDA0644106187EA8CE7B2E00"
+               BlueprintName = "JPNavigationController"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "libJPNavigationController.a">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

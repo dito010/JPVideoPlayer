@@ -36,12 +36,6 @@
  */
 @property(nonatomic, weak, nullable) JPResourceLoadingRequestWebTask *runningTask;
 
-@property(nonatomic, assign) NSUInteger offset;
-
-@property(nonatomic, assign) NSUInteger requestLength;
-
-@property(nonatomic, assign) BOOL haveDataSaved;
-
 @end
 
 @implementation JPVideoPlayerDownloader
@@ -61,13 +55,13 @@
 
 - (nonnull instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)sessionConfiguration {
     if ((self = [super init])) {
-        pthread_mutex_init(&(_lock), NULL);
+        pthread_mutexattr_t mutexattr;
+        pthread_mutexattr_init(&mutexattr);
+        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_lock, &mutexattr);
         _expectedSize = 0;
         _receivedSize = 0;
         _runningTask = nil;
-        _haveDataSaved = NO;
-        _offset = 0;
-        _requestLength = NO;
 
         if (!sessionConfiguration) {
             sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -102,19 +96,21 @@
     }
 
     [self reset];
-    _requestTask = requestTask;
+    _runningTask = requestTask;
     _downloaderOptions = downloadOptions;
     [self startDownloadOpeartionWithRequestTask:requestTask
                                         options:downloadOptions];
 }
 
 - (void)cancel {
-    pthread_mutex_lock(&_lock);
+    int lock = pthread_mutex_trylock(&_lock);
     if (self.runningTask) {
         [self.runningTask cancel];
         [self reset];
     }
-    pthread_mutex_unlock(&_lock);
+    if (!lock) {
+        pthread_mutex_unlock(&_lock);
+    }
 }
 
 
@@ -139,22 +135,14 @@
                                                         password:self.password
                                                      persistence:NSURLCredentialPersistenceForSession];
     }
+    NSString *rangeValue = JPRangeToHTTPRangeHeader(requestTask.requestRange);
+    if (rangeValue) {
+        [request setValue:rangeValue forHTTPHeaderField:@"Range"];
+    }
 
-    self.offset = 0;
-    self.requestLength = 0;
-    if (!(requestTask.response && ![requestTask.response jp_supportRange])) {
-        NSString *rangeValue = JPRangeToHTTPRangeHeader(requestTask.requestRange);
-        if (rangeValue) {
-            [request setValue:rangeValue forHTTPHeaderField:@"Range"];
-            self.offset = requestTask.requestRange.location;
-            self.requestLength = requestTask.requestRange.length;
-        }
-    }
-    if (!self.runningTask) {
-        self.runningTask = requestTask;
-        requestTask.request = request;
-        requestTask.unownedSession = self.session;
-    }
+    self.runningTask = requestTask;
+    requestTask.request = request;
+    requestTask.unownedSession = self.session;
 }
 
 
@@ -166,7 +154,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
     if (response) {
         JPDebugLog(@"URLSession will perform HTTP redirection");
-        self.requestTask.loadingRequest.redirect = request;
+        self.runningTask.loadingRequest.redirect = request;
     }
     if(completionHandler){
         completionHandler(request);
@@ -178,63 +166,48 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     JPDebugLog(@"URLSession did receive response");
+    // TODO: 这里做 mime 的检查, 只支持 video / audio.
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
-
         NSInteger expected = MAX((NSInteger)response.expectedContentLength, 0);
         self.expectedSize = expected;
 
         // May the free size of the device less than the expected size of the video data.
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
-            if (completionHandler) {
-                completionHandler(NSURLSessionResponseCancel);
-            }
             JPDispatchSyncOnMainQueue(^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
                 NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
                 [self callCompleteDelegateIfNeedWithError:error];
             });
             [self cancel];
+            if (completionHandler) {
+                completionHandler(NSURLSessionResponseCancel);
+            }
         }
         else{
-            if (completionHandler) {
-                completionHandler(NSURLSessionResponseAllow);
-            }
-
-            if (!self.requestTask.response && response) {
-                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                    self.requestTask.response = (NSHTTPURLResponse *)response;
-                    [self.requestTask.cacheFile storeResponse:self.requestTask.response];
-                    [self.requestTask.loadingRequest jp_fillContentInformationWithResponse:self.requestTask.response];
-                }
-                if (![(NSHTTPURLResponse *)response jp_supportRange]) {
-                    self.offset = 0;
-                }
-                if (self.offset == NSUIntegerMax) {
-                    self.offset = (NSUInteger)self.requestTask.response.jp_fileLength - self.requestLength;
-                }
-            }
             JPDispatchSyncOnMainQueue(^{
+                [self.runningTask requestDidReceiveResponse:response];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveResponse:)]) {
                     [self.delegate downloader:self didReceiveResponse:response];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadReceiveResponseNotification object:self];
             });
+            if (completionHandler) {
+                completionHandler(NSURLSessionResponseAllow);
+            }
         }
-
     }
     else {
-        if (completionHandler) {
-            completionHandler(NSURLSessionResponseCancel);
-        }
-        [self.runningTask cancel];
-        
         JPDispatchSyncOnMainQueue(^{
             NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", ((NSHTTPURLResponse *)response).statusCode];
             NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : errorMsg}];
             [self callCompleteDelegateIfNeedWithError:error];
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
+        [self.runningTask cancel];
+        if (completionHandler) {
+            completionHandler(NSURLSessionResponseCancel);
+        }
     }
 }
 
@@ -242,21 +215,7 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     self.receivedSize += data.length;
-    if (data.bytes && [self.requestTask.cacheFile storeVideoData:data atOffset:self.offset synchronize:NO]) {
-        self.haveDataSaved = YES;
-        self.offset += [data length];
-        [self.requestTask.loadingRequest.dataRequest respondWithData:data];
-
-        static BOOL _needLog = YES;
-        if(_needLog) {
-            _needLog = NO;
-            JPDebugLog(@"URLSession 收到数据响应, 数据长度为: %u", data.length);
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                _needLog = YES;
-            });
-        }
-    }
-
+    [self.runningTask requestDidReceiveData:data];
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
             [self.delegate downloader:self
@@ -270,16 +229,14 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
-    [self synchronizeCacheFileIfNeeded];
-    if(task.taskIdentifier != self.requestTask.dataTask.taskIdentifier){
-        JPDebugLog(@"URLSession 完成了一个请求, 但是不是正在请求的请求, id 是: %d", task.taskIdentifier);
-        [task.webTask requestDidCompleteWithError:error];
+    if(task.taskIdentifier != self.runningTask.dataTask.taskIdentifier){
+        JPDebugLog(@"URLSession 完成了一个不是正在请求的请求, id 是: %d", task.taskIdentifier);
         return;
     }
 
     JPDebugLog(@"URLSession 完成了一个请求, id 是 %ld, error 是: %@", task.taskIdentifier, error);
     JPDispatchSyncOnMainQueue(^{
-        [self.requestTask requestDidCompleteWithError:error];
+        [self.runningTask requestDidCompleteWithError:error];
         [self reset];
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
@@ -294,7 +251,6 @@ didCompleteWithError:(NSError *)error {
               task:(NSURLSessionTask *)task
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         downloadCompletionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))downloadCompletionHandler {
-
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     __block NSURLCredential *credential = nil;
 
@@ -350,12 +306,6 @@ downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloa
 - (void)callCompleteDelegateIfNeedWithError:(NSError *)error {
     if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didCompleteWithError:)]) {
         [self.delegate downloader:self didCompleteWithError:error];
-    }
-}
-
-- (void)synchronizeCacheFileIfNeeded {
-    if (self.haveDataSaved) {
-        [self.requestTask.cacheFile synchronize];
     }
 }
 

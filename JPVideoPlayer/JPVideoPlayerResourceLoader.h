@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol JPVideoPlayerResourceLoaderDelegate<NSObject>
 
-@optional
+@required
 
 /**
  * This method will be called when the current instance receive new loading request.

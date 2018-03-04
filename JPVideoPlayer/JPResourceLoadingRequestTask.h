@@ -15,6 +15,25 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol JPResourceLoadingRequestTaskDelegate<NSObject>
 
 @optional
+
+/**
+ * This method call when the request received response.
+ *
+ * @param requestTask The current instance.
+ * @param response    The response of request.
+ */
+- (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
+ didReceiveResponse:(NSURLResponse *)response;
+
+/**
+ * This method call when the request received data.
+ *
+ * @param requestTask The current instance.
+ * @param data        A fragment video data.
+ */
+- (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
+ didReceiveData:(NSData *)data;
+
 /**
  * This method call when the request task did complete.
  *
@@ -26,7 +45,7 @@ didCompleteWithError:(NSError *)error;
 
 @end
 
-@interface JPResourceLoadingRequestTask : NSOperation
+@interface JPResourceLoadingRequestTask : NSObject
 
 @property (nonatomic, weak) id<JPResourceLoadingRequestTaskDelegate> delegate;
 
@@ -57,27 +76,11 @@ didCompleteWithError:(NSError *)error;
  */
 @property(nonatomic, assign, readonly, getter=isCached) BOOL cached;
 
-/**
- * The operation's task.
- */
-@property (strong, nonatomic, readonly) NSURLSessionDataTask *dataTask;
+@property (nonatomic, assign, readonly, getter = isExecuting) BOOL executing;
 
-/**
- * The request used by the operation's task.
- */
-@property (strong, nonatomic, nullable) NSURLRequest *request;
+@property (nonatomic, assign, readonly, getter = isFinished) BOOL finished;
 
-/**
- * The JPVideoPlayerDownloaderOptions for the receiver.
- */
-@property (assign, nonatomic) JPVideoPlayerDownloaderOptions options;
-
-/**
- * This is weak because it is injected by whoever manages this session.
- * If this gets nil-ed out, we won't be able to run.
- * the task associated with this operation.
- */
-@property (weak, nonatomic, nullable) NSURLSession *unownedSession;
+@property (nonatomic, assign, readonly, getter = isCancelled) BOOL cancelled;
 
 /**
  * Convenience method to fetch instance of this class.
@@ -114,11 +117,42 @@ didCompleteWithError:(NSError *)error;
                                 cached:(BOOL)cached NS_DESIGNATED_INITIALIZER;
 
 /**
- * The request did finished.
+ * The request did receive response.
+ *
+ * @param response The response of request.
+ */
+- (void)requestDidReceiveResponse:(NSURLResponse *)response;
+
+/**
+ * The request did receive data.
+ *
+ * @param data A fragment video data.
+ */
+- (void)requestDidReceiveData:(NSData *)data;
+
+/**
+ * The request did finish.
  *
  * @param error The request error, if nil mean success.
  */
-- (void)requestDidCompleteWithError:(NSError *_Nullable)error;
+- (void)requestDidCompleteWithError:(NSError *_Nullable)error NS_REQUIRES_SUPER;
+
+/**
+ * Begins the execution of the task, execute on main queue.
+ */
+- (void)start NS_REQUIRES_SUPER;
+
+/**
+ * Begins the execution of the task on given queue.
+ *
+ * @param queue A dispatch queue.
+ */
+- (void)startOnQueue:(dispatch_queue_t)queue NS_REQUIRES_SUPER;
+
+/**
+ * Advises the task object that it should stop executing its task.
+ */
+- (void)cancel NS_REQUIRES_SUPER;
 
 @end
 
@@ -129,9 +163,26 @@ didCompleteWithError:(NSError *)error;
 @interface JPResourceLoadingRequestWebTask: JPResourceLoadingRequestTask
 
 /**
- * Response for request.
+ * The operation's task.
  */
-@property (nonatomic, strong) NSHTTPURLResponse *response;
+@property (strong, nonatomic, readonly) NSURLSessionDataTask *dataTask;
+
+/**
+ * The request used by the operation's task.
+ */
+@property (strong, nonatomic, nullable) NSURLRequest *request;
+
+/**
+ * The JPVideoPlayerDownloaderOptions for the receiver.
+ */
+@property (assign, nonatomic) JPVideoPlayerDownloaderOptions options;
+
+/**
+ * This is weak because it is injected by whoever manages this session.
+ * If this gets nil-ed out, we won't be able to run.
+ * the task associated with this operation.
+ */
+@property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 
 @end
 

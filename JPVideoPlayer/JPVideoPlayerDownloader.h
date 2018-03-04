@@ -82,7 +82,7 @@ didCompleteWithError:(NSError *)error;
 /**
  * The current url, may nil if no download operation.
  */
-@property (nonatomic, strong, readonly, nullable) JPResourceLoadingRequestWebTask *requestTask;
+@property (nonatomic, weak, readonly, nullable) JPResourceLoadingRequestWebTask *runningTask;
 
 /**
  * The current downloaderOptions, may nil if no download operation.

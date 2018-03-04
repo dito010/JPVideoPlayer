@@ -76,7 +76,10 @@
         _videoCache = cache;
         _videoDownloader = downloader;
         _failedURLs = [NSMutableSet new];
-        pthread_mutex_init(&(_lock), NULL);
+        pthread_mutexattr_t mutexattr;
+        pthread_mutexattr_init(&mutexattr);
+        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_lock, &mutexattr);
         _videoPlayer = [JPVideoPlayer new];
         _videoPlayer.delegate = self;
     }
@@ -113,9 +116,11 @@
     
     BOOL isFailedUrl = NO;
     if (url) {
-        pthread_mutex_lock(&_lock);
+        int lock = pthread_mutex_trylock(&_lock);
         isFailedUrl = [self.failedURLs containsObject:url];
-        pthread_mutex_unlock(&_lock);
+        if (!lock) {
+            pthread_mutex_unlock(&_lock);
+        }
     }
     
     if (url.absoluteString.length == 0 || (!(options & JPVideoPlayerRetryFailed) && isFailedUrl)) {
@@ -389,19 +394,23 @@ didCompleteWithError:(NSError *)error {
                 && error.code != NSURLErrorDataNotAllowed
                 && error.code != NSURLErrorCannotFindHost
                 && error.code != NSURLErrorCannotConnectToHost) {
-            pthread_mutex_lock(&_lock);
+            int lock = pthread_mutex_trylock(&_lock);
             [self.failedURLs addObject:self.url];
-            pthread_mutex_unlock(&_lock);
+            if (!lock) {
+                pthread_mutex_unlock(&_lock);
+            }
         }
         [self reset];
     }
     else {
         if ((self.playerOptions & JPVideoPlayerRetryFailed)) {
-            pthread_mutex_lock(&_lock);
+            int lock = pthread_mutex_trylock(&_lock);
             if ([self.failedURLs containsObject:self.url]) {
                 [self.failedURLs removeObject:self.url];
             }
-            pthread_mutex_unlock(&_lock);
+            if (!lock) {
+                pthread_mutex_unlock(&_lock);
+            }
         }
     }
 }
@@ -410,11 +419,13 @@ didCompleteWithError:(NSError *)error {
 #pragma mark - Private
 
 - (void)reset {
-    pthread_mutex_lock(&_lock);
+    int lock = pthread_mutex_trylock(&_lock);
     self.url = nil;
     self.playerOptions = 0;
     self.showView = nil;
-    pthread_mutex_unlock(&_lock);
+    if (!lock) {
+        pthread_mutex_unlock(&_lock);
+    }
 }
 
 - (JPVideoPlayerDownloaderOptions)fetchDownloadOptionsWithOptions:(JPVideoPlayerOptions)options {

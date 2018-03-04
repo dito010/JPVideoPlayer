@@ -87,7 +87,10 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
     if (self) {
         // Create IO serial queue
         _ioQueue = dispatch_queue_create("com.NewPan.JPVideoPlayerCache", DISPATCH_QUEUE_SERIAL);
-        pthread_mutex_init(&(_lock), NULL);
+        pthread_mutexattr_t mutexattr;
+        pthread_mutexattr_init(&mutexattr);
+        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_lock, &mutexattr);
         JPVideoPlayerCacheConfig *config = cacheConfig;
         if (!config) {
             config = [[JPVideoPlayerCacheConfig alloc] init];

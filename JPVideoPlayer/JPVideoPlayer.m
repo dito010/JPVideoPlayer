@@ -173,7 +173,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        pthread_mutex_init(&(_lock), NULL);
+        pthread_mutexattr_t mutexattr;
+        pthread_mutexattr_init(&mutexattr);
+        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_lock, &mutexattr);
         [self addObserver];
     }
     return self;

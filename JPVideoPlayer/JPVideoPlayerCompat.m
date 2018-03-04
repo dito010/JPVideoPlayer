@@ -14,7 +14,7 @@ NSString *const JPVideoPlayerDownloadReceiveResponseNotification = @"www.jpvideo
 NSString *const JPVideoPlayerDownloadStopNotification = @"www.jpvideplayer.download.stop.notification";
 NSString *const JPVideoPlayerDownloadFinishNotification = @"www.jpvideplayer.download.finished.notification";
 NSString *const JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";
-const NSRange JPInvalidRange = {NSNotFound,0};
+const NSRange JPInvalidRange = {NSNotFound, 0};
 
 void JPDispatchSyncOnMainQueue(dispatch_block_t block) {
     if (!block) { return; }
@@ -55,18 +55,14 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range) {
     }
 }
 
-NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length) {
+NSString* JPRangeToHTTPRangeResponseHeader(NSRange range, NSUInteger length) {
     if (JPValidByteRange(range)) {
         NSUInteger start = range.location;
         NSUInteger end = NSMaxRange(range) - 1;
-        if (range.location == NSNotFound) {
-            start = range.location;
+        if (range.length == NSUIntegerMax) {
+            end = start + length;
         }
-        else if (range.length == NSUIntegerMax) {
-            start = length - range.length;
-            end = start + range.length - 1;
-        }
-        return [NSString stringWithFormat:@"bytes %tu-%tu/%tu",start,end,length];
+        return [NSString stringWithFormat:@"bytes %tu-%tu/%tu", start, end, end - start];
     }
     else {
         return nil;

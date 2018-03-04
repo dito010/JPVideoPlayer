@@ -185,7 +185,7 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range);
  *
  * @return  HTTP range response string.
  */
-NSString* JPRangeToHTTPRangeReponseHeader(NSRange range, NSUInteger length);
+NSString* JPRangeToHTTPRangeResponseHeader(NSRange range, NSUInteger length);
 
 #endif
 
