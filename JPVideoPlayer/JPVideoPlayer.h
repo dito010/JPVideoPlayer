@@ -35,7 +35,7 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
 
 @end
 
-@class JPVideoPlayer, JPResourceLoadingRequestTask;
+@class JPVideoPlayer, JPResourceLoadingRequestWebTask;
 
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
@@ -50,7 +50,7 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  * @prama requestTask A abstract instance packageing the loading request.
  */
 - (void)videoPlayer:(JPVideoPlayer *)videoPlayer
-didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
 
 #pragma mark - Player
 

@@ -26,9 +26,9 @@
 
 @property (nonatomic, strong) JPVideoPlayerCacheFile *cacheFile;
 
-@property (nonatomic, strong) JPResourceLoadingRequestTask *runningRequestTask;
+@property (nonatomic, strong) NSMutableArray<JPResourceLoadingRequestTask *> *requestTasks;
 
-@property (nonatomic, strong) NSArray<JPResourceLoadingRequestTask *> *requestTasks;
+@property (nonatomic, strong) JPResourceLoadingRequestTask *runningRequestTask;
 
 @property (nonatomic) pthread_mutex_t lock;
 
@@ -126,6 +126,10 @@ didCompleteWithError:(NSError *)error {
     if (error.code == NSURLErrorCancelled) {
         return;
     }
+    if (![self.requestTasks containsObject:requestTask]) {
+        JPDebugLog(@"完成的 task 不是正在进行的 task");
+        return;
+    }
 
     if (error) {
         [self finishCurrentRequestWithError:error];
@@ -149,6 +153,7 @@ didCompleteWithError:(NSError *)error {
     else {
         JPDebugLog(@"ResourceLoader 完成一个请求, 没有错误");
         // 要所有的请求都完成了才行.
+        [self.requestTasks removeObject:self.runningRequestTask];
         if(!self.requestTasks.count){ // 全部完成.
             [self.runningRequestTask.loadingRequest finishLoading];
             [self.loadingRequests removeObject:self.runningLoadingRequest];
@@ -244,24 +249,22 @@ didCompleteWithError:(NSError *)error {
                                                                          cached:cached];
     }
     else {
-        JPDebugLog(@"ResourceLoader 创建一个网络请求");
         task = [JPResourceLoadingRequestWebTask requestTaskWithLoadingRequest:loadingRequest
                                                                  requestRange:range
                                                                     cacheFile:self.cacheFile
                                                                     customURL:self.customURL
                                                                        cached:cached];
+        JPDebugLog(@"ResourceLoader 创建一个网络请求: %@", task);
         if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didReceiveLoadingRequestTask:)]) {
-            [self.delegate resourceLoader:self didReceiveLoadingRequestTask:task];
+            [self.delegate resourceLoader:self didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)task];
         }
     }
+    int lock = pthread_mutex_trylock(&_lock);
     task.delegate = self;
-    int lock = pthread_mutex_trylock(&_lock);;
-    NSMutableArray *requestTasks = [self.requestTasks mutableCopy];
-    if(!requestTasks){
-        requestTasks = [@[] mutableCopy];
+    if (!self.requestTasks) {
+        self.requestTasks = [@[] mutableCopy];
     }
-    [requestTasks addObject:task];
-    self.requestTasks = requestTasks.copy;
+    [self.requestTasks addObject:task];
     if (!lock) {
         pthread_mutex_unlock(&_lock);
     }
@@ -269,17 +272,13 @@ didCompleteWithError:(NSError *)error {
 
 - (void)removeCurrentRequestTaskAndResetAll {
     self.runningLoadingRequest = nil;
-    self.requestTasks = nil;
+    self.requestTasks = [@[] mutableCopy];
     self.runningRequestTask = nil;
 }
 
 - (void)startNextTaskIfNeed {
     int lock = pthread_mutex_trylock(&_lock);;
     self.runningRequestTask = self.requestTasks.firstObject;
-    NSMutableArray *requestTasks = [self.requestTasks mutableCopy];
-    NSParameterAssert(requestTasks.count);
-    [requestTasks removeObject:self.runningRequestTask];
-    self.requestTasks = requestTasks.copy;
     if ([self.runningRequestTask isKindOfClass:[JPResourceLoadingRequestLocalTask class]]) {
         [self.runningRequestTask startOnQueue:self.ioQueue];
     }

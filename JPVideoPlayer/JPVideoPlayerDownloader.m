@@ -175,17 +175,18 @@ didReceiveResponse:(NSURLResponse *)response
         // May the free size of the device less than the expected size of the video data.
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
             JPDispatchSyncOnMainQueue(^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+                [self cancel];
                 NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
                 [self callCompleteDelegateIfNeedWithError:error];
+                [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
             });
-            [self cancel];
             if (completionHandler) {
                 completionHandler(NSURLSessionResponseCancel);
             }
         }
         else{
             JPDispatchSyncOnMainQueue(^{
+                NSParameterAssert(self.runningTask);
                 [self.runningTask requestDidReceiveResponse:response];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveResponse:)]) {
                     [self.delegate downloader:self didReceiveResponse:response];
@@ -199,12 +200,12 @@ didReceiveResponse:(NSURLResponse *)response
     }
     else {
         JPDispatchSyncOnMainQueue(^{
+            [self cancel];
             NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", ((NSHTTPURLResponse *)response).statusCode];
             NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : errorMsg}];
             [self callCompleteDelegateIfNeedWithError:error];
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
-        [self.runningTask cancel];
         if (completionHandler) {
             completionHandler(NSURLSessionResponseCancel);
         }
@@ -230,15 +231,15 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
-    if(task.taskIdentifier != self.runningTask.dataTask.taskIdentifier){
-        JPDebugLog(@"URLSession 完成了一个不是正在请求的请求, id 是: %d", task.taskIdentifier);
-        return;
-    }
-
-    JPDebugLog(@"URLSession 完成了一个请求, id 是 %ld, error 是: %@", task.taskIdentifier, error);
     JPDispatchSyncOnMainQueue(^{
+        JPDebugLog(@"URLSession 完成了一个请求, id 是 %ld, error 是: %@", task.taskIdentifier, error);
+        BOOL completeValid = self.runningTask && task.taskIdentifier == self.runningTask.dataTask.taskIdentifier;
+        if(!completeValid){
+            JPDebugLog(@"URLSession 完成了一个不是正在请求的请求, id 是: %d", task.taskIdentifier);
+            return;
+        }
+
         [self.runningTask requestDidCompleteWithError:error];
-        [self reset];
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
         }
@@ -311,6 +312,7 @@ downloadCompletionHandler:(void (^)(NSCachedURLResponse *cachedResponse))downloa
 }
 
 - (void)reset {
+    JPDebugLog(@"调用了 reset");
     self.runningTask = nil;
     self.expectedSize = 0;
     self.receivedSize = 0;

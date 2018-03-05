@@ -283,7 +283,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 @implementation JPResourceLoadingRequestWebTask
 
 - (void)dealloc {
-    JPDebugLog(@"Web task dealloc");
+    JPDebugLog(@"Web task dealloc: %@", self);
     pthread_mutex_destroy(&_plock);
 }
 

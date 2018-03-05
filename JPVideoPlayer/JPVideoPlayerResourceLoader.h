@@ -12,7 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @class JPVideoPlayerResourceLoader,
-       JPResourceLoadingRequestTask;
+       JPResourceLoadingRequestWebTask;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @prama requestTask        A abstract instance packaging the loading request.
  */
 - (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
-didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask;
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
 
 @end
 

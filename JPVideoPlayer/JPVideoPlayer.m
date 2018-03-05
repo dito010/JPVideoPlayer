@@ -287,7 +287,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 #pragma mark - JPVideoPlayerResourceLoaderDelegate
 
 - (void)resourceLoader:(JPVideoPlayerResourceLoader *)resourceLoader
-didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:didReceiveLoadingRequestTask:)]) {
         [self.delegate videoPlayer:self didReceiveLoadingRequestTask:requestTask];
     }

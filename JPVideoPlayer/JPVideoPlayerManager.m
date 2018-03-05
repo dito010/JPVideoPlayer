@@ -310,7 +310,7 @@
 #pragma mark - JPVideoPlayerInternalDelegate
 
 - (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
-didReceiveLoadingRequestTask:(JPResourceLoadingRequestTask *)requestTask {
+didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     JPVideoPlayerDownloaderOptions downloaderOptions = [self fetchDownloadOptionsWithOptions:self.playerOptions];
     [self.videoDownloader downloadVideoWithRequestTask:requestTask
                                        downloadOptions:downloaderOptions];
