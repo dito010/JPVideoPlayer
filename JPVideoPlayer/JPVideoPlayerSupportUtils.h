@@ -19,60 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface UIView (WebVideoCacheOperation)
-
-/**
- * The url of current playing video data.
- */
-@property(nonatomic, nullable)NSURL *currentPlayingURL;
-
-@end
-
-@class JPVideoPlayerProgressView;
-
-@interface UIView (PlayerStatusAndDownloadIndicator)
-
-/**
- * The view of video layer display on.
- */
-@property(nonatomic, readonly, nullable)UIView *jp_videoLayerView;
-
-/**
- * The background layer for video layer.
- */
-@property(nonatomic, readonly, nullable)CALayer *jp_backgroundLayer;
-
-/**
- *  The indicator view to add progress view and activity view.
- */
-@property(nonatomic, readonly, nullable)UIView *jp_indicatorView;
-
-/**
- * The download progress value.
- */
-@property(nonatomic, readonly)CGFloat jp_downloadProgressValue;
-
-/**
- * The playing progress value.
- */
-@property(nonatomic, readonly)CGFloat jp_playingProgressValue;
-
-/**
- * Call this method to custom the dowload indicator color of progress view(@optional).
- *
- * @param color a `UIColor` instance to custom the dowload indicator progress view color.
- */
-- (void)jp_perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
-
-/**
- * Call this method to custom the playing indicator color of progress view(@optional).
- *
- * @param color a `UIColor` instance to custom the playing indicator progress view color.
- */
-- (void)jp_perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
-
-@end
-
 @interface NSHTTPURLResponse (JPVideoPlayer)
 
 /**

@@ -13,6 +13,34 @@
 #import <objc/runtime.h>
 #import "JPVideoPlayer.h"
 #import "JPVideoPlayerSupportUtils.h"
+#import "JPVideoPlayerControlViews.h"
+
+@interface JPVideoPlayerCategoryHelper : NSObject
+
+@property(nonatomic, strong) JPVideoPlayerView *videoPlayerView;
+
+@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *progressView;
+
+@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlView;
+
+@property(nonatomic, weak)id<JPVideoPlayerDelegate> videoPlayerDelegate;
+
+@property(nonatomic, assign)JPVideoPlayerVideoViewStatus viewStatus;
+
+@property(nonatomic, assign)JPVideoPlayerStatus playerStatus;
+
+@end
+
+@implementation JPVideoPlayerCategoryHelper
+
+- (JPVideoPlayerView *)videoPlayerView {
+    if(!_videoPlayerView){
+       _videoPlayerView = [JPVideoPlayerView new];
+    }
+    return _videoPlayerView;
+}
+
+@end
 
 @interface UIView()
 
@@ -26,48 +54,99 @@
  */
 @property(nonatomic)NSValue *frame_beforeFullScreen;
 
+@property(nonatomic, readonly)JPVideoPlayerCategoryHelper *helper;
+
 @end
 
 @implementation UIView (WebVideoCache)
 
+#pragma mark - Properties
+
+- (JPVideoPlayerVideoViewStatus)jp_viewStatus {
+    return self.helper.viewStatus;
+}
+
+- (JPVideoPlayerStatus)jp_playerStatus {
+    return self.helper.playerStatus;
+}
+
+- (void)setJp_progressView:(UIView <JPVideoPlayerProtocol> *)jp_progressView {
+    self.helper.progressView = jp_progressView;
+}
+
+- (UIView <JPVideoPlayerProtocol> *)jp_progressView {
+    return self.helper.progressView;
+}
+
+- (void)setJp_controlView:(UIView <JPVideoPlayerProtocol> *)jp_controlView {
+    self.helper.controlView = jp_controlView;
+}
+
+- (UIView <JPVideoPlayerProtocol> *)jp_controlView {
+    return self.helper.controlView;
+}
+
+- (void)setJp_videoPlayerDelegate:(id <JPVideoPlayerDelegate>)jp_videoPlayerDelegate {
+    self.helper.videoPlayerDelegate = jp_videoPlayerDelegate;
+}
+
+- (id <JPVideoPlayerDelegate>)jp_videoPlayerDelegate {
+    return self.helper.videoPlayerDelegate;
+}
+
+
 #pragma mark - Play Video Methods
 
-- (void)jp_playVideoWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerShowProgressView];
+- (void)jp_playVideoWithURL:(NSURL *)url {
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
+            JPVideoPlayerLayerVideoGravityResizeAspect];
 }
 
-- (void)jp_playVideoHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect];
+- (void)jp_playVideoMuteWithURL:(NSURL *)url
+                   progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
+    NSParameterAssert(progressView);
+    // TODO: 没有 progressView 使用自定义的.
+    self.jp_progressView = progressView;
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
+            JPVideoPlayerLayerVideoGravityResizeAspect |
+            JPVideoPlayerMutedPlay];
 }
 
-- (void)jp_playVideoMutedDisplayStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerShowProgressView | JPVideoPlayerShowActivityIndicatorView | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerMutedPlay];
-}
-
-- (void)jp_playVideoMutedHiddenStatusViewWithURL:(NSURL *)url{
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground | JPVideoPlayerMutedPlay | JPVideoPlayerLayerVideoGravityResizeAspect | JPVideoPlayerShowActivityIndicatorView];
+- (void)jp_playVideoWithURL:(NSURL *)url
+                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView {
+    if(!controlView){
+        controlView = [JPVideoPlayerControlView new];
+    }
+    self.jp_controlView = controlView;
+    // TODO: 没有 controlView 使用自定义的.
+    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
+            JPVideoPlayerLayerVideoGravityResizeAspect];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options {
-    NSString *validOperationKey = NSStringFromClass([self class]);
     [self jp_stopPlay];
-    self.currentPlayingURL = url;
-    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
-    
-    if (url) {
-        __weak typeof(self) wself = self;
-        
-        // set self as the delegate of `JPVideoPlayerManager`.
-        [JPVideoPlayerManager sharedManager].delegate = self;
-        
-        // set up the video layer view and indicator view.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [self performSelector:NSSelectorFromString(@"jp_setupVideoLayerViewAndIndicatorView")];
-#pragma clang diagnostic pop
-        
-        [[JPVideoPlayerManager sharedManager] playVideoWithURL:url showOnView:self options:options];
+    self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
 
+    if (url) {
+        [JPVideoPlayerManager sharedManager].delegate = self;
+
+        // Add progress view and control view if need.
+        if(!self.helper.videoPlayerView.superview){
+            [self addSubview:self.helper.videoPlayerView];
+            self.helper.videoPlayerView.frame = self.bounds;
+        }
+        if(self.jp_controlView && !self.jp_controlView.superview){
+            [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
+            self.jp_controlView.frame = self.bounds;
+        }
+        if(self.jp_progressView && !self.jp_progressView.superview){
+            [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_progressView];
+            self.jp_progressView.frame = self.bounds;
+        }
+
+        [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
+                                                   showOnLayer:self.helper.videoPlayerView.videoContainerLayer
+                                                       options:options];
     }
     else {
         JPDispatchSyncOnMainQueue(^{
@@ -113,56 +192,56 @@
     if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
         return;
     }
-    
-    self.jp_videoLayerView.backgroundColor = [UIColor blackColor];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // hide status bar.
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-#pragma clang diagnostic pop
-    
-    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-    
-    self.parentView_beforeFullScreen = self.superview;
-    self.frame_beforeFullScreen = [NSValue valueWithCGRect:self.frame];
-    
-    CGRect rectInWindow = [self.superview convertRect:self.frame toView:nil];
-    [self removeFromSuperview];
-    [[UIApplication sharedApplication].keyWindow addSubview:self];
-    self.frame = rectInWindow;
-    self.jp_indicatorView.alpha = 0;
-    
-    if (animated) {
-        [UIView animateWithDuration:0.35 animations:^{
-            
-            [self executeLandscape];
-            
-        } completion:^(BOOL finished) {
-            
-            self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
-            if (completion) {
-                completion();
-            }
-            [UIView animateWithDuration:0.5 animations:^{
-                
-                self.jp_indicatorView.alpha = 1;
-            }];
-            
-        }];
-    }
-    else{
-        [self executeLandscape];
-        self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
-        if (completion) {
-            completion();
-        }
-        [UIView animateWithDuration:0.5 animations:^{
-            
-            self.jp_indicatorView.alpha = 1;
-        }];
-    }
-    
-    [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+
+//    self.jp_videoLayerView.backgroundColor = [UIColor blackColor];
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//    // hide status bar.
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+//#pragma clang diagnostic pop
+//
+//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+//
+//    self.parentView_beforeFullScreen = self.superview;
+//    self.frame_beforeFullScreen = [NSValue valueWithCGRect:self.frame];
+//
+//    CGRect rectInWindow = [self.superview convertRect:self.frame toView:nil];
+//    [self removeFromSuperview];
+//    [[UIApplication sharedApplication].keyWindow addSubview:self];
+//    self.frame = rectInWindow;
+//    self.jp_indicatorView.alpha = 0;
+//
+//    if (animated) {
+//        [UIView animateWithDuration:0.35 animations:^{
+//
+//            [self executeLandscape];
+//
+//        } completion:^(BOOL finished) {
+//
+//            self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+//            if (completion) {
+//                completion();
+//            }
+//            [UIView animateWithDuration:0.5 animations:^{
+//
+//                self.jp_indicatorView.alpha = 1;
+//            }];
+//
+//        }];
+//    }
+//    else{
+//        [self executeLandscape];
+//        self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+//        if (completion) {
+//            completion();
+//        }
+//        [UIView animateWithDuration:0.5 animations:^{
+//
+//            self.jp_indicatorView.alpha = 1;
+//        }];
+//    }
+//
+//    [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
 }
 
 - (void)jp_gotoPortrait {
@@ -171,98 +250,98 @@
 
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
                      completion:(JPVideoPlayerScreenAnimationCompletion)completion{
-    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
-        return;
-    }
-    
-    self.jp_videoLayerView.backgroundColor = [UIColor clearColor];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // display status bar.
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-#pragma clang diagnostic pop
-    
-    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-    
-    self.jp_indicatorView.alpha = 0;
-    
-    if (animated) {
-        [UIView animateWithDuration:0.35 animations:^{
-            
-            [self executePortrait];
-            
-        } completion:^(BOOL finished) {
-           
-            [self finishPortrait];
-            if (completion) {
-                completion();
-            }
-            
-        }];
-    }
-    else{
-        [self executePortrait];
-        [self finishPortrait];
-        if (completion) {
-            completion();
-        }
-    }
-    
-    [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
+//    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
+//        return;
+//    }
+//
+//    self.jp_videoLayerView.backgroundColor = [UIColor clearColor];
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//    // display status bar.
+//    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+//#pragma clang diagnostic pop
+//
+//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+//
+//    self.jp_indicatorView.alpha = 0;
+//
+//    if (animated) {
+//        [UIView animateWithDuration:0.35 animations:^{
+//
+//            [self executePortrait];
+//
+//        } completion:^(BOOL finished) {
+//
+//            [self finishPortrait];
+//            if (completion) {
+//                completion();
+//            }
+//
+//        }];
+//    }
+//    else{
+//        [self executePortrait];
+//        [self finishPortrait];
+//        if (completion) {
+//            completion();
+//        }
+//    }
+//
+//    [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
 }
 
 
 #pragma mark - Private
 
 - (void)finishPortrait{
-    [self removeFromSuperview];
-    [self.parentView_beforeFullScreen addSubview:self];
-    self.frame = [self.frame_beforeFullScreen CGRectValue];
-    
-    self.jp_backgroundLayer.frame = self.bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
-    self.jp_videoLayerView.frame = self.bounds;
-    self.jp_indicatorView.frame = self.bounds;
-    
-    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
-    
-    [UIView animateWithDuration:0.5 animations:^{
-        
-        self.jp_indicatorView.alpha = 1;
-    }];
+//    [self removeFromSuperview];
+//    [self.parentView_beforeFullScreen addSubview:self];
+//    self.frame = [self.frame_beforeFullScreen CGRectValue];
+//
+//    self.jp_backgroundLayer.frame = self.bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+//    self.jp_videoLayerView.frame = self.bounds;
+//    self.jp_indicatorView.frame = self.bounds;
+//
+//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+//
+//    [UIView animateWithDuration:0.5 animations:^{
+//
+//        self.jp_indicatorView.alpha = 1;
+//    }];
 }
 
 - (void)executePortrait{
-    CGRect frame = [self.parentView_beforeFullScreen convertRect:[self.frame_beforeFullScreen CGRectValue] toView:nil];
-    self.transform = CGAffineTransformIdentity;
-    self.frame = frame;
-    
-    self.jp_backgroundLayer.frame = self.bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
-    self.jp_videoLayerView.frame = self.bounds;
-    self.jp_indicatorView.frame = self.bounds;
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForPortrait")];
-#pragma clang diagnostic pop
+//    CGRect frame = [self.parentView_beforeFullScreen convertRect:[self.frame_beforeFullScreen CGRectValue] toView:nil];
+//    self.transform = CGAffineTransformIdentity;
+//    self.frame = frame;
+//
+//    self.jp_backgroundLayer.frame = self.bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+//    self.jp_videoLayerView.frame = self.bounds;
+//    self.jp_indicatorView.frame = self.bounds;
+//
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+//    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForPortrait")];
+//#pragma clang diagnostic pop
 }
 
 - (void)executeLandscape{
-    self.transform = CGAffineTransformMakeRotation(M_PI_2);
-    CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(self.superview.bounds), CGRectGetWidth(self.superview.bounds));
-    CGPoint center = CGPointMake(CGRectGetMidX(self.superview.bounds), CGRectGetMidY(self.superview.bounds));
-    self.bounds = bounds;
-    self.center = center;
-    
-    self.jp_backgroundLayer.frame = bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
-    self.jp_videoLayerView.frame = bounds;
-    self.jp_indicatorView.frame = bounds;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForLandscape")];
-#pragma clang diagnostic pop
+//    self.transform = CGAffineTransformMakeRotation(M_PI_2);
+//    CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(self.superview.bounds), CGRectGetWidth(self.superview.bounds));
+//    CGPoint center = CGPointMake(CGRectGetMidX(self.superview.bounds), CGRectGetMidY(self.superview.bounds));
+//    self.bounds = bounds;
+//    self.center = center;
+//
+//    self.jp_backgroundLayer.frame = bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
+//    self.jp_videoLayerView.frame = bounds;
+//    self.jp_indicatorView.frame = bounds;
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+//    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForLandscape")];
+//#pragma clang diagnostic pop
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -270,6 +349,15 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:YES];
 #pragma clang diagnostic pop
+}
+
+- (JPVideoPlayerCategoryHelper *)helper {
+    JPVideoPlayerCategoryHelper *helper = objc_getAssociatedObject(self, _cmd);
+    if(!helper){
+        helper = [JPVideoPlayerCategoryHelper new];
+        objc_setAssociatedObject(self, _cmd, helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return helper;
 }
 
 - (void)setParentView_beforeFullScreen:(UIView *)parentView_beforeFullScreen{
@@ -286,38 +374,6 @@
 
 - (NSValue *)frame_beforeFullScreen{
     return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setJp_viewStatus:(JPVideoPlayerVideoViewStatus)jp_viewStatus {
-    objc_setAssociatedObject(self, @selector(jp_viewStatus), @(jp_viewStatus), OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (JPVideoPlayerVideoViewStatus)jp_viewStatus {
-    return [objc_getAssociatedObject(self, _cmd) integerValue];
-}
-
-- (id<JPVideoPlayerDelegate>)jp_videoPlayerDelegate{
-    id (^__weak_block)(void) = objc_getAssociatedObject(self, _cmd);
-    if (!__weak_block) {
-        return nil;
-    }
-    return __weak_block();
-}
-
-- (void)setJp_videoPlayerDelegate:(id<JPVideoPlayerDelegate>)jp_videoPlayerDelegate{
-    id __weak __weak_object = jp_videoPlayerDelegate;
-    id (^__weak_block)(void) = ^{
-        return __weak_object;
-    };
-    objc_setAssociatedObject(self, @selector(jp_videoPlayerDelegate),   __weak_block, OBJC_ASSOCIATION_COPY);
-}
-
-- (void)setJp_playerStatus:(JPVideoPlayerStatus)jp_playerStatus {
-    objc_setAssociatedObject(self, @selector(jp_playerStatus), @(jp_playerStatus), OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (JPVideoPlayerStatus)jp_playerStatus {
-    return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
 

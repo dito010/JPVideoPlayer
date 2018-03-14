@@ -194,7 +194,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     }
 
     int lock = pthread_mutex_trylock(&_lock);
-    NSRange targerRange = JPInvalidRange;
+    NSRange targetRange = JPInvalidRange;
     NSUInteger start = position;
     for (int i = 0; i < self.ranges.count; ++i) {
         NSRange range = [self.ranges[i] rangeValue];
@@ -206,18 +206,18 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                 continue;
             }
             else {
-                targerRange = NSMakeRange(start, range.location - start);
+                targetRange = NSMakeRange(start, range.location - start);
             }
         }
     }
 
     if (start < self.fileLength) {
-        targerRange = NSMakeRange(start, self.fileLength - start);
+        targetRange = NSMakeRange(start, self.fileLength - start);
     }
     if (!lock) {
         pthread_mutex_unlock(&_lock);
     }
-    return targerRange;
+    return targetRange;
 }
 
 - (void)checkCompelete {

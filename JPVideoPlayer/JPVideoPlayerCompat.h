@@ -28,73 +28,65 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
 
 typedef NS_ENUM(NSUInteger, JPLogLevel) {
     // no log output.
-            JPLogLevelNone = 0,
+    JPLogLevelNone = 0,
 
     // output debug, warning and error log.
-            JPLogLevelError = 1,
+    JPLogLevelError = 1,
 
     // output debug and warning log.
-            JPLogLevelWarning = 2,
+    JPLogLevelWarning = 2,
 
     // output debug log.
-            JPLogLevelDebug = 3,
+    JPLogLevelDebug = 3,
 };
 
 typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
     /**
-     * By default, when a URL fail to be downloaded, the URL is JPacklisted so the library won't keep trying.
-     * This flag disaJPe this JPacklisting.
+     * By default, when a URL fail to be downloaded, the URL is blacklisted so the library won't keep trying.
+     * This flag disable this blacklisting.
      */
-            JPVideoPlayerRetryFailed = 1 << 0,
+    JPVideoPlayerRetryFailed = 1 << 0,
 
     /**
      * In iOS 4+, continue the download of the video if the app goes to background. This is achieved by asking the system for
      * extra time in background to let the request finish. If the background task expires the operation will be cancelled.
      */
-            JPVideoPlayerContinueInBackground = 1 << 1,
+    JPVideoPlayerContinueInBackground = 1 << 1,
 
     /**
      * Handles cookies stored in NSHTTPCookieStore by setting
-     * NSMutaJPeURLRequest.HTTPShouldHandleCookies = YES;
+     * NSMutableURLRequest.HTTPShouldHandleCookies = YES;
      */
-            JPVideoPlayerHandleCookies = 1 << 2,
+    JPVideoPlayerHandleCookies = 1 << 2,
 
     /**
-     * EnaJPe to allow untrusted SSL certificates.
+     * Enable to allow untrusted SSL certificates.
      * Useful for testing purposes. Use with caution in production.
      */
-            JPVideoPlayerAllowInvalidSSLCertificates = 1 << 3,
-
-    /**
-     * Use this flag to display progress view when play video from web.
-     */
-            JPVideoPlayerShowProgressView = 1 << 4,
-
-    /**
-     * Use this flag to display activity indicator view when video player is buffering.
-     */
-            JPVideoPlayerShowActivityIndicatorView = 1 << 5,
+    JPVideoPlayerAllowInvalidSSLCertificates = 1 << 3,
 
     /**
      * Playing video muted.
      */
-            JPVideoPlayerMutedPlay = 1 << 6,
+    JPVideoPlayerMutedPlay = 1 << 4,
 
     /**
      * Stretch to fill layer bounds.
      */
-            JPVideoPlayerLayerVideoGravityResize = 1 << 7,
+    JPVideoPlayerLayerVideoGravityResize = 1 << 5,
 
     /**
      * Preserve aspect ratio; fit within layer bounds.
      * Default value.
      */
-            JPVideoPlayerLayerVideoGravityResizeAspect = 1 << 8,
+    JPVideoPlayerLayerVideoGravityResizeAspect = 1 << 6,
 
     /**
      * Preserve aspect ratio; fill layer bounds.
      */
-            JPVideoPlayerLayerVideoGravityResizeAspectFill = 1 << 9,
+    JPVideoPlayerLayerVideoGravityResizeAspectFill = 1 << 7,
+
+    // TODO: Disable cache.
 };
 
 typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
@@ -102,25 +94,25 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
      * Call completion block with nil video/videoData if the image was read from NSURLCache
      * (to be combined with `JPVideoPlayerDownloaderUseNSURLCache`).
      */
-     JPVideoPlayerDownloaderIgnoreCachedResponse = 1 << 0,
+            JPVideoPlayerDownloaderIgnoreCachedResponse = 1 << 0,
 
     /**
      * In iOS 4+, continue the download of the video if the app goes to background. This is achieved by asking the system for
      * extra time in background to let the request finish. If the background task expires the operation will be cancelled.
      */
-     JPVideoPlayerDownloaderContinueInBackground = 1 << 1,
+            JPVideoPlayerDownloaderContinueInBackground = 1 << 1,
 
     /**
      * Handles cookies stored in NSHTTPCookieStore by setting
      * NSMutableURLRequest.HTTPShouldHandleCookies = YES;
      */
-     JPVideoPlayerDownloaderHandleCookies = 1 << 2,
+            JPVideoPlayerDownloaderHandleCookies = 1 << 2,
 
     /**
      * Enable to allow untrusted SSL certificates.
      * Useful for testing purposes. Use with caution in production.
      */
-     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
+            JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
@@ -191,10 +183,10 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range);
  *  @param format       The log format.
  */
 + (void)logWithFlag:(JPLogLevel)logLevel
-        file:(const char *)file
-        function:(const char *)function
-        line:(NSUInteger)line
-        format:(NSString *)format, ...;
+               file:(const char *)file
+           function:(const char *)function
+               line:(NSUInteger)line
+             format:(NSString *)format, ...;
 
 @end
 

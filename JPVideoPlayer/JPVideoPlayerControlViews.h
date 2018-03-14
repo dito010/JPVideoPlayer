@@ -6,54 +6,54 @@
 //  Copyright © 2018年 NewPan. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "JPVideoPlayerProtocol.h"
+
+@class JPVideoPlayerProgressView, JPVideoPlayerControlView;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JPVideoPlayerProgressView : UIView
+@interface JPVideoPlayerControlBar : UIView
 
-/**
- * The download progress value.
- */
-@property(nonatomic, assign, readonly)CGFloat downloadProgressValue;
+@property (nonatomic, strong, readonly) UIButton *playButton;
 
-/**
- * The playing progress value.
- */
-@property(nonatomic, assign, readonly)CGFloat playingProgressValue;
+@property (nonatomic, strong, readonly) JPVideoPlayerProgressView *progressView;
 
-/**
- * Refresh download progress by pass the progress value.
- *
- * @param downloadProgress the progress value, this value must between 0 and 1.
- */
-- (void)setDownloadProgress:(CGFloat)downloadProgress;
+@property (nonatomic, strong, readonly) UILabel *timeLabel;
 
-/**
- * Refresh playing progress by pass the progress value.
- *
- * @param playingProgress the progress value, this value must between 0 and 1.
- */
-- (void)setPlayingProgress:(CGFloat)playingProgress;
+@property (nonatomic, strong, readonly) UIButton *landscapeButton;
 
-/**
- * Call this method to custom the dowload indicator color of progress view(@optional).
- *
- * @param color a `UIColor` instance to custom the dowload indicator progress view color.
- */
-- (void)perfersDownloadProgressViewColor:(UIColor * _Nonnull)color;
+@end
 
-/**
- * Call this method to custom the playing indicator color of progress view(@optional).
- *
- * @param color a `UIColor` instance to custom the playing indicator progress view color.
- */
-- (void)perfersPlayingProgressViewColor:(UIColor * _Nonnull)color;
+@protocol JPVideoPlayerControlViewDelegate<NSObject>
 
-/**
- * Call this method to refresh the progress view frame.
- */
-- (void)refreshProgressViewForScreenEvents;
+@optional
+
+- (void)controlViewDidClickPlay:(JPVideoPlayerControlView *)controlView;
+
+- (void)controlViewDidClickLandscape:(JPVideoPlayerControlView *)controlView;
+
+- (void)controlView:(JPVideoPlayerControlView *)controlView
+      didSeekToTime:(NSTimeInterval)seekTimeInterval;
+
+@end
+// TODO: 做到 progressView, 接下来封装一个 progressView, 然后到播放分类中实现
+@interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
+
+@property (nonatomic, strong) UIColor *elapsedProgressColor;
+
+@property (nonatomic, strong) UIColor *progressBackgroundColor;
+
+@property (nonatomic, strong) UIColor *cachedProgressColor;
+
+@property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
+
+@end
+
+@interface JPVideoPlayerView : UIView
+
+@property (nonatomic, strong, readonly) UIView *videoContainerLayer;
+
+@property (nonatomic, strong, readonly) UIView *controlContainerView;
 
 @end
 

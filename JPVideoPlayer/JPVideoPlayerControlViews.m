@@ -7,114 +7,428 @@
 //
 
 #import "JPVideoPlayerControlViews.h"
+#import "JPVideoPlayerCompat.h"
 
-@interface JPVideoPlayerProgressView()
+@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
 
-/**
- * Download progress indicator layer.
- */
-@property(nonatomic, strong)CALayer *downloadLayer;
+@property (nonatomic, strong) UIImageView *controlHandlerView;
 
-/**
- * Playing progress indicator layer.
- */
-@property(nonatomic, strong)CALayer *playingLayer;
+@property (nonatomic, strong) UIView *backgroundView;
 
-/**
- * The download progress value.
- */
-@property(nonatomic, assign, readwrite)CGFloat downloadProgressValue;
+@property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
 
-/**
- * The playing progress value.
- */
-@property(nonatomic, assign, readwrite)CGFloat playingProgressValue;
+@property(nonatomic, assign) NSUInteger fileLength;
+
+@property(nonatomic, assign) NSTimeInterval totalSeconds;
+
+@property (nonatomic, strong) UIView *elapsedProgressView;
+
+@property (nonatomic, strong) UIView *cachedProgressView;
+
+@property(nonatomic, assign) BOOL userDragging;
 
 @end
 
+static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 @implementation JPVideoPlayerProgressView
 
-- (instancetype)init{
+- (instancetype)init {
     self = [super init];
     if (self) {
-        self.backgroundColor = [UIColor colorWithRed:22.0/255.0 green:30.0/255.0 blue:37.0/255.0 alpha:0.8];
+        [self setup];
     }
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
 
-#pragma mark - Public
-
-- (void)setDownloadProgress:(CGFloat)downloadProgress{
-    if (downloadProgress<0 || downloadProgress > 1) {
-        return;
-    }
-    _downloadProgressValue = downloadProgress;
-    [self addIndicatorLayerOnce];
-    [self refreshProgressWithProgressVaule:downloadProgress forLayer:self.downloadLayer];
-}
-
-- (void)setPlayingProgress:(CGFloat)playingProgress{
-    if (playingProgress<0 || playingProgress > 1) {
-        return;
-    }
-    _playingProgressValue = playingProgress;
-    [self addIndicatorLayerOnce];
-    [self refreshProgressWithProgressVaule:playingProgress forLayer:self.playingLayer];
-}
-
-- (void)perfersPlayingProgressViewColor:(UIColor *)color{
-    if (color != nil) {
-        self.playingLayer.backgroundColor = color.CGColor;
+    if(!self.backgroundView.frame.size.height && self.bounds.size.width) {
+        CGSize referSize = self.bounds.size;
+        self.controlHandlerView.frame = CGRectMake(-kJPVideoPlayerProgressViewEaseTouchEdgeWidth, 0, 20, 20);
+        self.backgroundView.frame = CGRectMake(0, (referSize.height - 2) * 0.5, referSize.width, 2);
+        self.elapsedProgressView.frame = CGRectMake(0, (referSize.height - 2) * 0.5, 0, 2);
     }
 }
 
-- (void)perfersDownloadProgressViewColor:(UIColor *)color{
-    if (color != nil) {
-        self.downloadLayer.backgroundColor = color.CGColor;
-    }
+
+#pragma mark - JPVideoPlayerControlProtocol
+
+- (CALayer *)videoContainerLayer {
+    return [CALayer new];
 }
 
-- (void)refreshProgressViewForScreenEvents{
-    [self refreshProgressWithProgressVaule:_downloadProgressValue forLayer:_downloadLayer];
-    [self refreshProgressWithProgressVaule:_playingProgressValue forLayer:_playingLayer];
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+    _rangesValue = cacheRanges;
+    [self updateCacheProgressViewIfNeed];
+}
+
+- (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
+                               totalSeconds:(NSTimeInterval)totalSeconds {
+    self.totalSeconds = elapsedSeconds;
+}
+
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+    self.fileLength = videoLength;
 }
 
 
 #pragma mark - Private
 
-- (void)refreshProgressWithProgressVaule:(CGFloat)progressValue forLayer:(CALayer *)layer{
-    CGRect frame = layer.frame;
-    frame.size.width = self.bounds.size.width  * progressValue;
-    layer.frame = frame;
+- (void)setup {
+    self.backgroundView = ({
+        UIView *view = [UIView new];
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.cachedProgressView = ({
+        UIView *view = [UIView new];
+        [self.backgroundView addSubview:view];
+
+        view;
+    });
+
+    self.elapsedProgressView = ({
+        UIView *view = [UIView new];
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.controlHandlerView = ({
+        UIImageView *view = [UIImageView new];
+        view.userInteractionEnabled = YES;
+        view.image = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_progress_handler"];
+        [self addSubview:view];
+
+        view;
+    });
+
+    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDidChange:)];
+    [self.controlHandlerView addGestureRecognizer:recognizer];
 }
 
-- (void)addIndicatorLayerOnce{
-    if (!self.downloadLayer.superlayer) {
-        self.downloadLayer.frame = CGRectMake(0, 0, 0, self.bounds.size.height);
-        [self.layer addSublayer:self.downloadLayer];
-    }
-    
-    if (!self.playingLayer.superlayer) {
-        self.playingLayer.frame = CGRectMake(0, 0,  0, self.bounds.size.height);
-        [self.layer addSublayer:self.playingLayer];
+- (void)panGestureDidChange:(UIPanGestureRecognizer *)panGestureRecognizer {
+    CGPoint transPoint = [panGestureRecognizer translationInView:panGestureRecognizer.view];
+    CGFloat offsetX = transPoint.x;
+    CGRect frame = panGestureRecognizer.view.frame;
+    CGFloat handlerWidth = panGestureRecognizer.view.frame.size.width;
+    frame.origin.x += offsetX;
+    frame.origin.x = MAX(-kJPVideoPlayerProgressViewEaseTouchEdgeWidth, frame.origin.x);
+    frame.origin.x = MIN((self.bounds.size.width - handlerWidth + kJPVideoPlayerProgressViewEaseTouchEdgeWidth), frame.origin.x);
+    panGestureRecognizer.view.frame = frame;
+    [panGestureRecognizer setTranslation:CGPointZero inView:panGestureRecognizer.view];
+    CGRect elapsedFrame = self.elapsedProgressView.frame;
+    elapsedFrame.size.width = frame.origin.x + kJPVideoPlayerProgressViewEaseTouchEdgeWidth;
+    self.elapsedProgressView.frame = elapsedFrame;
+
+    switch(panGestureRecognizer.state){
+        case UIGestureRecognizerStateBegan:
+            self.userDragging = YES;
+            [self removeCacheProgressViewIfNeed];
+            break;
+
+        case UIGestureRecognizerStateEnded:
+            self.userDragging = NO;
+            [self displayCacheProgressViewIfNeed];
+            break;
+
+        default:
+            break;
     }
 }
 
-- (CALayer *)downloadLayer{
-    if (!_downloadLayer) {
-        _downloadLayer = [CALayer new];
-        _downloadLayer.backgroundColor = [UIColor colorWithRed:196.0/255.0 green:193.0/255.0 blue:195.0/255.0 alpha:0.8].CGColor;
-    }
-    return _downloadLayer;
+- (void)updateCacheProgressViewIfNeed {
+    [self removeCacheProgressViewIfNeed];
+    [self displayCacheProgressViewIfNeed];
 }
 
-- (CALayer *)playingLayer{
-    if (!_playingLayer) {
-        _playingLayer = [CALayer new];
-        _playingLayer.backgroundColor = self.tintColor.CGColor;
+- (void)removeCacheProgressViewIfNeed {
+    if(self.cachedProgressView.superview){
+        [self.cachedProgressView removeFromSuperview];
     }
-    return _playingLayer;
+}
+
+- (void)displayCacheProgressViewIfNeed {
+    if(self.userDragging || !self.rangesValue.count){
+        return;
+    }
+
+    NSRange targetRange = JPInvalidRange;
+    NSUInteger dragStartLocation = [self fetchDragStartLocation];
+    for(NSValue *value in self.rangesValue){
+        NSRange range = [value rangeValue];
+        if(JPValidFileRange(range)){
+            if(NSLocationInRange(dragStartLocation, range)){
+                targetRange = range;
+                break;
+            }
+        }
+    }
+
+    if(!JPValidFileRange(targetRange)){
+        return;
+    }
+    CGFloat cacheProgressViewOriginX = targetRange.location * self.backgroundView.bounds.size.width / self.fileLength;
+    CGFloat cacheProgressViewWidth = targetRange.length * self.backgroundView.bounds.size.width / self.fileLength;
+    self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.backgroundView.bounds.size.height);
+    [self.backgroundView addSubview:self.cachedProgressView];
+}
+
+- (NSUInteger)fetchDragStartLocation {
+    return self.fileLength * [self fetchElapsedProgressRatio];
+}
+
+- (NSTimeInterval)fetchElapsedTimeInterval {
+    return [self fetchElapsedProgressRatio] * self.totalSeconds;
+}
+
+- (CGFloat)fetchElapsedProgressRatio {
+    CGFloat totalDragWidth = self.bounds.size.width - self.controlHandlerView.bounds.size.width;
+    // the view do not finish layout yet.
+    if(totalDragWidth == 0){
+       totalDragWidth = 1;
+    }
+    CGFloat delta = self.elapsedProgressView.frame.size.width / totalDragWidth;
+    NSParameterAssert(delta >= 0 && delta <= 1);
+    return delta;
+}
+
+@end
+
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol>
+
+@property (nonatomic, strong) UIButton *playButton;
+
+@property (nonatomic, strong) JPVideoPlayerProgressView *progressView;
+
+@property (nonatomic, strong) UILabel *timeLabel;
+
+@property (nonatomic, strong) UIButton *landscapeButton;
+
+@end
+
+@implementation JPVideoPlayerControlBar
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGSize screenSize = [UIScreen.mainScreen bounds].size;
+    self.playButton.frame = CGRectMake(16, 10, 18, 18);
+    self.landscapeButton.frame = CGRectMake(screenSize.width - 34, 10, 18, 18);
+    self.timeLabel.frame = CGRectMake(self.landscapeButton.frame.origin.x - 86, 10, 72, 16);
+    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 32;
+    self.progressView.frame = CGRectMake(45, 9, progressViewWidth, 20);
+}
+
+
+#pragma mark - JPVideoPlayerControlProtocol
+
+- (CALayer *)videoContainerLayer {
+    return [CALayer new];
+}
+
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+    [self.progressView cacheRangeDidChange:cacheRanges];
+}
+
+- (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
+                               totalSeconds:(NSTimeInterval)totalSeconds {
+    [self.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
+                                              totalSeconds:totalSeconds];
+}
+
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+    [self.progressView didFetchVideoFileLength:videoLength];
+}
+
+
+#pragma mark - Private
+
+- (void)playButtonDidClick:(UIButton *)button {
+}
+
+- (void)landscapeButtonDidClick:(UIButton *)button {
+}
+
+- (void)setup {
+    self.backgroundColor = [UIColor clearColor];
+
+    self.playButton = ({
+        UIButton *button = [UIButton new];
+        [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_pause"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_play"] forState:UIControlStateSelected];
+        [button addTarget:self action:@selector(playButtonDidClick:) forControlEvents:UIControlEventTouchDragInside];
+        [self addSubview:button];
+
+        button;
+    });
+
+    self.progressView = ({
+        JPVideoPlayerProgressView *view = [JPVideoPlayerProgressView new];
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.timeLabel = ({
+        UILabel *label = [UILabel new];
+        label.attributedText = [[NSAttributedString alloc] initWithString:@"100:02/199:03"
+                                                               attributes:@{
+                                                                       NSFontAttributeName : [UIFont fontWithName:@"PingFangSC-Light" size:10],
+                                                                       NSForegroundColorAttributeName : [UIColor whiteColor]
+                                                               }];
+        [self addSubview:label];
+
+        label;
+    });
+
+    self.landscapeButton = ({
+        UIButton *button = [UIButton new];
+        [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_landscape"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchDragInside];
+        [self addSubview:button];
+
+        button;
+    });
+}
+
+@end
+
+@interface JPVideoPlayerControlView()
+
+@property (nonatomic, strong) JPVideoPlayerControlBar *controlBar;
+
+@end
+
+@implementation JPVideoPlayerControlView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
+
+#pragma mark - JPVideoPlayerControlProtocol
+
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+    [self.controlBar cacheRangeDidChange:cacheRanges];
+}
+
+- (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
+                               totalSeconds:(NSTimeInterval)totalSeconds {
+    [self.controlBar playProgressDidChangeElapsedSeconds:elapsedSeconds
+                                            totalSeconds:totalSeconds];
+}
+
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+    [self.controlBar didFetchVideoFileLength:videoLength];
+}
+
+
+#pragma mark - Setter
+
+- (void)setElapsedProgressColor:(UIColor *)elapsedProgressColor {
+    _elapsedProgressColor = elapsedProgressColor;
+    self.controlBar.progressView.elapsedProgressView.backgroundColor = elapsedProgressColor;
+}
+
+- (void)setProgressBackgroundColor:(UIColor *)progressBackgroundColor {
+    _progressBackgroundColor = progressBackgroundColor;
+    self.controlBar.progressView.backgroundView.backgroundColor = progressBackgroundColor;
+}
+
+- (void)setCachedProgressColor:(UIColor *)cachedProgressColor {
+    _cachedProgressColor = cachedProgressColor;
+    self.controlBar.progressView.cachedProgressView.backgroundColor = cachedProgressColor;
+}
+
+
+#pragma mark - Private
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - 38, self.bounds.size.width, 38);
+}
+
+- (void)setup {
+    self.controlBar = ({
+        JPVideoPlayerControlBar *bar = [JPVideoPlayerControlBar new];
+        [self addSubview:bar];
+        bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:58.0/255 alpha:1];
+        bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithWhite:125.0/255 alpha:1];
+        bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:78.0/255 alpha:1];
+
+        bar;
+    });
+}
+
+@end
+
+@interface JPVideoPlayerView()
+
+@property (nonatomic, strong) UIView *videoContainerView;
+
+@property (nonatomic, strong) UIView *controlContainerView;
+
+@end
+
+@implementation JPVideoPlayerView
+
+- (instancetype)init {
+    self = [super init];
+    if(self){
+       [self setup];
+    }
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    self.videoContainerView.frame = self.bounds;
+    self.controlContainerView.frame = self.bounds;
+}
+
+- (CALayer *)videoContainerLayer {
+    return self.videoContainerView.layer;
+}
+
+
+#pragma mark - Setup
+
+- (void)setup {
+    self.backgroundColor = [UIColor blackColor];
+
+    self.videoContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.controlContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
 }
 
 @end

@@ -56,10 +56,10 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:_videoPath]];
+    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:self.videoPath] controlView:nil];
     
-    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
-    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
+//    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
+//    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
     self.muteSwitch.on = ![self.videoContainer jp_playerIsMute];
     self.playOrPauseSwitch.on = self.videoContainer.jp_playerStatus == JPVideoPlayerStatusPlaying ? NO : YES;
 }

@@ -137,11 +137,11 @@ NS_ASSUME_NONNULL_BEGIN
  * Play the video for the given URL if not present in cache or return the cached version otherwise.
  
  * @param url             The URL of video.
- * @param showView        The view of video layer display on.
+ * @param showLayer       The view of video layer display on.
  * @param options         A flag to specify options to use for this request.
  */
-- (void)playVideoWithURL:(nonnull NSURL *)url
-              showOnView:(nonnull UIView *)showView
+- (void)playVideoWithURL:(NSURL *)url
+             showOnLayer:(UIView *)showLayer
                  options:(JPVideoPlayerOptions)options;
 
 /**
@@ -152,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Return the cache key for a given URL.
  */
-- (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url;
+- (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url;
 
 
 # pragma mark - Play Control

@@ -71,7 +71,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     else{
 
         NSURL *url = [NSURL URLWithString:self.tableView.playingCell.videoPath];
-        [self.tableView.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
+        [self.tableView.playingCell.videoImv jp_playVideoWithURL:url controlView:nil];
+//        [self.tableView.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
     }
 
     self.tableViewRange.hidden = NO;
@@ -199,6 +200,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+                         @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
 //            @"http://p11s9kqxf.bkt.clouddn.com/Bitcoin.mp4",
             @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
             @"http://static.smartisanos.cn/common/video/m1-white.mp4",

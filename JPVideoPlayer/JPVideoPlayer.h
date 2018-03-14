@@ -112,29 +112,29 @@ playFailedWithError:(NSError *)error;
 /**
  * Play the existed video file in disk.
  *
- * @param url                the video url to play.
- * @param fullVideoCachePath the full video file path in disk.
- * @param showView           the view to show the video display layer.
+ * @param url                The video url to play.
+ * @param fullVideoCachePath The full video file path in disk.
+ * @param showLayer          The layer to show the video display layer.
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL * _Nullable)url
-                                      fullVideoCachePath:(NSString * _Nullable)fullVideoCachePath
+- (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL *)url
+                                      fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
-                                              showOnView:(UIView * _Nullable)showView;
+                                              showOnLayer:(CALayer *)showLayer;
 
 /**
  * Play the not existed video from web.
  *
- * @param url                the video url to play.
- * @param options            the options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param showView           the view to show the video display layer.
+ * @param url                The video url to play.
+ * @param options            The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
+ * @param showLayer          The view to show the video display layer.
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
-                                       showOnView:(UIView *)showView;
+                                        showLayer:(UIView *)showLayer;
 
 
 # pragma mark - Player Control Events

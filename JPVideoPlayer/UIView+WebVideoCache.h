@@ -12,9 +12,10 @@
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerSupportUtils.h"
+#import "JPVideoPlayerProtocol.h"
 
 typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
-    JPVideoPlayerVideoViewStatusPortrait,
+    JPVideoPlayerVideoViewStatusPortrait = 0,
     JPVideoPlayerVideoViewStatusLandscape,
     JPVideoPlayerVideoViewStatusAnimating
 };
@@ -95,17 +96,15 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 
 #pragma mark - Property
 
-@property(nonatomic, nullable)id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
+@property(nonatomic, readonly) JPVideoPlayerVideoViewStatus jp_viewStatus;
 
-/**
- * View status.
- */
-@property(nonatomic, readonly)JPVideoPlayerVideoViewStatus jp_viewStatus;
+@property(nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
-/**
- * Playing status of video player.
- */
-@property(nonatomic, readonly)JPVideoPlayerStatus jp_playerStatus;
+@property(nonatomic) UIView<JPVideoPlayerProtocol> *jp_progressView;
+
+@property(nonatomic) UIView<JPVideoPlayerProtocol> *jp_controlView;
+
+@property(nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
 
 #pragma mark - Play Video Methods
 
@@ -114,48 +113,33 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * The download is asynchronous and cached.
  *
- * The progress view will display when downloading, and will display indicator view when buffer empty.
- *
  * @param url The url for the video.
  */
-- (void)jp_playVideoWithURL:(nullable NSURL *)url;
+- (void)jp_playVideoWithURL:(NSURL *)url;
 
 /**
- * Play `video` with an `url` on the view.
+ * Play `video` mute with an `url` on the view.
  *
  * The download is asynchronous and cached.
  *
- * The progress view will hidden when downloading, and will display indicator view when buffer empty.
- *
- * @param url The url for the video.
+ * @param url          The url for the video.
+ * @param progressView The view to display the download and play progress, @see `JPVideoPlayerProtocol`.
  */
-- (void)jp_playVideoHiddenStatusViewWithURL:(nullable NSURL *)url;
+- (void)jp_playVideoMuteWithURL:(NSURL *)url
+                   progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
 
 /**
- * Play `video` with an `url` on the view.
+ * Play `video` with an `url` on the view, and play audio at the same time.
  *
  * The download is asynchronous and cached.
  *
- * Not audio output of the player is muted. Only affects audio muting for the player instance and not for the device.
+ * The control view will display, and display indicator view when buffer empty.
  *
- * The progress view will hidden when downloading, and will display indicator view when buffer empty.
- *
- * @param url The url for the video.
+ * @param url         The url for the video.
+ * @param controlView The view to display the download and play progress, @see `JPVideoPlayerProtocol`.
  */
-- (void)jp_playVideoMutedHiddenStatusViewWithURL:(nullable NSURL *)url;
-
-/**
- * Play `video` with an `url` on the view.
- *
- * The download is asynchronous and cached.
- *
- * The progress view will display when downloading, and will display indicator view when buffer empty.
- *
- * Not audio output of the player is muted. Only affects audio muting for the player instance and not for the device.
- *
- * @param url The url for the video.
- */
-- (void)jp_playVideoMutedDisplayStatusViewWithURL:(nullable NSURL *)url;
+- (void)jp_playVideoWithURL:(NSURL *)url
+                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView;
 
 /**
  * Play `video` with an `url` on the view.
@@ -165,7 +149,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param url            The url for the video.
  * @param options        The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
  */
-- (void)jp_playVideoWithURL:(nullable NSURL *)url
+- (void)jp_playVideoWithURL:(NSURL *)url
                     options:(JPVideoPlayerOptions)options;
 
 #pragma mark - Play Control
@@ -193,9 +177,9 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 - (void)jp_setPlayerMute:(BOOL)mute;
 
 /**
- * Call this method to get the audio statu for current player.
+ * Call this method to get the audio state for current player.
  *
- * @return the audio status for current player.
+ * @return The audio state for current player.
  */
 - (BOOL)jp_playerIsMute;
 
