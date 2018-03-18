@@ -299,7 +299,7 @@
 //    self.frame = [self.frame_beforeFullScreen CGRectValue];
 //
 //    self.jp_backgroundLayer.frame = self.bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
 //    self.jp_videoLayerView.frame = self.bounds;
 //    self.jp_indicatorView.frame = self.bounds;
 //
@@ -317,7 +317,7 @@
 //    self.frame = frame;
 //
 //    self.jp_backgroundLayer.frame = self.bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = self.bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
 //    self.jp_videoLayerView.frame = self.bounds;
 //    self.jp_indicatorView.frame = self.bounds;
 //
@@ -335,7 +335,7 @@
 //    self.center = center;
 //
 //    self.jp_backgroundLayer.frame = bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentVideoPlayerModel.currentPlayerLayer.frame = bounds;
+//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = bounds;
 //    self.jp_videoLayerView.frame = bounds;
 //    self.jp_indicatorView.frame = bounds;
 //#pragma clang diagnostic push

@@ -235,7 +235,7 @@
 }
 
 - (void)setPlayerMute:(BOOL)mute {
-    if (self.videoPlayer.currentVideoPlayerModel) {
+    if (self.videoPlayer.currentPlayerModel) {
         [self.videoPlayer setMute:mute];
     }
     self.mute = mute;
@@ -396,7 +396,7 @@ didCompleteWithError:(NSError *)error {
 //                                     }
 //
 //                                     // play video from web.
-//                                     if (!self.videoPlayer.currentVideoPlayerModel) {
+//                                     if (!self.videoPlayer.currentPlayerModel) {
 //#pragma clang diagnostic push
 //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 //                                         // display backLayer.
@@ -404,7 +404,7 @@ didCompleteWithError:(NSError *)error {
 //#pragma clang diagnostic pop
 //                                     }
 //                                     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
-//                                     if (self.videoPlayer.currentVideoPlayerModel && [key isEqualToString:self.videoPlayer.currentVideoPlayerModel.playingKey]) {
+//                                     if (self.videoPlayer.currentPlayerModel && [key isEqualToString:self.videoPlayer.currentPlayerModel.playingKey]) {
 //                                         [self.videoPlayer didReceivedDataCacheInDiskByTempPath:tempVideoCachePath
 //                                                                            videoFileExceptSize:expectedSize
 //                                                                          videoFileReceivedSize:storedSize];

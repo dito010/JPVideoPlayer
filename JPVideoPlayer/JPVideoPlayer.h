@@ -14,34 +14,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
-
-@interface JPVideoPlayerModel : NSObject
-
-/** 
- * The current playing url key.
- */
-@property(nonatomic, strong, readonly, nonnull)NSString *playingKey;
-
-/**
- * The current player's layer.
- */
-@property(nonatomic, strong, readonly, nullable)AVPlayerLayer *currentPlayerLayer;
-
-/**
- * The player to play video.
- */
-@property(nonatomic, strong, readonly, nullable)AVPlayer *player;
-
-@end
-
 @class JPVideoPlayer, JPResourceLoadingRequestWebTask;
 
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
 @required
-
-#pragma mark - Request Task
 
 /**
  * This method will be called when the current instance receive new loading request.
@@ -51,8 +28,6 @@ UIKIT_EXTERN CGFloat const JPVideoPlayerLayerFrameY;
  */
 - (void)videoPlayer:(JPVideoPlayer *)videoPlayer
 didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
-
-#pragma mark - Player
 
 @optional
 
@@ -98,6 +73,25 @@ playFailedWithError:(NSError *)error;
 
 @end
 
+@interface JPVideoPlayerModel : NSObject
+
+/** 
+ * The current playing url key.
+ */
+@property(nonatomic, strong, readonly, nonnull)NSString *playingKey;
+
+/**
+ * The current player's layer.
+ */
+@property(nonatomic, strong, readonly, nullable)AVPlayerLayer *currentPlayerLayer;
+
+/**
+ * The player to play video.
+ */
+@property(nonatomic, strong, readonly, nullable)AVPlayer *player;
+
+@end
+
 @interface JPVideoPlayer : NSObject
 
 @property(nullable, nonatomic, weak)id<JPVideoPlayerInternalDelegate> delegate;
@@ -105,7 +99,7 @@ playFailedWithError:(NSError *)error;
 /**
  * The current play video item.
  */
-@property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentVideoPlayerModel;
+@property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentPlayerModel;
 
 # pragma mark - Play Video.
 
@@ -134,7 +128,7 @@ playFailedWithError:(NSError *)error;
  */
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
-                                        showLayer:(UIView *)showLayer;
+                                        showLayer:(CALayer *)showLayer;
 
 
 # pragma mark - Player Control Events
