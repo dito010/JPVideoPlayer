@@ -115,10 +115,10 @@
 - (void)jp_playVideoWithURL:(NSURL *)url
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView {
     if(!controlView){
+        // Use default `JPVideoPlayerControlView` if no controlView.
         controlView = [JPVideoPlayerControlView new];
     }
     self.jp_controlView = controlView;
-    // TODO: 没有 controlView 使用自定义的.
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -379,37 +379,42 @@
 
 #pragma mark - JPVideoPlayerManager
 
-//- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldDownloadVideoForURL:(NSURL *)videoURL{
-//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldDownloadVideoForURL:)]) {
-//        return [self.jp_videoPlayerDelegate shouldDownloadVideoForURL:videoURL];
-//    }
-//    return YES;
-//}
-//
-//- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager shouldAutoReplayForURL:(NSURL *)videoURL{
-//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayAfterPlayCompleteForURL:)]) {
-//        return [self.jp_videoPlayerDelegate shouldAutoReplayAfterPlayCompleteForURL:videoURL];
-//    }
-//    return YES;
-//}
-//
-//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
-//    self.playingStatus = playingStatus;
-//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingStatusDidChanged:)]) {
-//        [self.jp_videoPlayerDelegate playingStatusDidChanged:playingStatus];
-//    }
-//}
-//
-//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager downloadingProgressDidChanged:(CGFloat)downloadingProgress{
-//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadingProgressDidChanged:)]) {
-//        [self.jp_videoPlayerDelegate downloadingProgressDidChanged:downloadingProgress];
-//    }
-//}
-//
-//- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager playingProgressDidChanged:(CGFloat)playingProgress{
-//    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playingProgressDidChanged:)]) {
-//        [self.jp_videoPlayerDelegate playingProgressDidChanged:playingProgress];
-//    }
-//}
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
+ shouldDownloadVideoForURL:(nullable NSURL *)videoURL {
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
+    shouldAutoReplayForURL:(nullable NSURL *)videoURL {
+    return YES;
+}
+
+- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
+    playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
+
+}
+
+- (void)videoPlayerManagerDownloadProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+                                          cacheType:(JPVideoPlayerCacheType)cacheType
+                                       receivedSize:(NSUInteger)receivedSize
+                                       expectedSize:(NSUInteger)expectedSize
+                                              error:(NSError *)error {
+
+}
+
+- (void)videoPlayerManagerPlayProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+                                 elapsedSeconds:(double)elapsedSeconds
+                                   totalSeconds:(double)totalSeconds
+                                          error:(NSError *)error {
+    if(error){
+        //TODO handle error.
+        return;
+    }
+
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
+       [self.helper.controlView playProgressDidChangeElapsedSeconds:elapsedSeconds
+                                                       totalSeconds:totalSeconds];
+    }
+}
 
 @end
