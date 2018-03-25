@@ -201,7 +201,7 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     CGFloat totalDragWidth = self.bounds.size.width - self.controlHandlerView.bounds.size.width;
     // the view do not finish layout yet.
     if(totalDragWidth == 0){
-       totalDragWidth = 1;
+        totalDragWidth = 1;
     }
     CGFloat delta = self.elapsedProgressView.frame.size.width / totalDragWidth;
     NSParameterAssert(delta >= 0 && delta <= 1);
@@ -329,6 +329,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 @property (nonatomic, strong) JPVideoPlayerControlBar *controlBar;
 
+@property (nonatomic, strong) UIImageView *blurImageView;
+
 @end
 
 @implementation JPVideoPlayerControlView
@@ -382,16 +384,26 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 - (void)layoutSubviews {
     [super layoutSubviews];
 
+    self.blurImageView.frame = self.bounds;
+
     self.controlBar.frame = CGRectMake(0, self.bounds.size.height - 38, self.bounds.size.width, 38);
 }
 
 - (void)setup {
+    self.blurImageView = ({
+        UIImageView *view = [UIImageView new];
+        view.image = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_blur"];
+        [self addSubview:view];
+
+        view;
+    });
+
     self.controlBar = ({
         JPVideoPlayerControlBar *bar = [JPVideoPlayerControlBar new];
         [self addSubview:bar];
-        bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:58.0/255 alpha:1];
-        bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithWhite:125.0/255 alpha:1];
-        bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:78.0/255 alpha:1];
+        bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
+        bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithRed:37.0/255 green:131.0/255 blue:232.0/255 alpha:1];
+        bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
 
         bar;
     });
@@ -412,7 +424,7 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 - (instancetype)init {
     self = [super init];
     if(self){
-       [self setup];
+        [self setup];
     }
     return self;
 }
@@ -477,7 +489,7 @@ CGFloat const JPVideoPlayerActivityIndicatorWH = 46;
 
 - (void)layoutSubviews{
     [super layoutSubviews];
-    
+
     self.blurView.frame = self.bounds;
     self.activityIndicator.frame = self.bounds;
 }
@@ -508,17 +520,17 @@ CGFloat const JPVideoPlayerActivityIndicatorWH = 46;
     self.backgroundColor = [UIColor clearColor];
     self.layer.cornerRadius = 8;
     self.clipsToBounds = YES;
-    
+
     UIVisualEffectView *blurView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
     [self addSubview:blurView];
     self.blurView = blurView;
-    
+
     UIActivityIndicatorView *indicator = [UIActivityIndicatorView new];
     indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     indicator.color = [UIColor colorWithRed:35.0/255 green:35.0/255 blue:35.0/255 alpha:1];
     [self addSubview:indicator];
     self.activityIndicator = indicator;
-    
+
     self.animating = NO;
 }
 
