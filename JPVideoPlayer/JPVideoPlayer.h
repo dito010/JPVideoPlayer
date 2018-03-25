@@ -14,7 +14,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class JPVideoPlayer, JPResourceLoadingRequestWebTask;
+@class JPVideoPlayer,
+       JPResourceLoadingRequestWebTask,
+       JPVideoPlayerResourceLoader;
 
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
@@ -78,7 +80,7 @@ playFailedWithError:(NSError *)error;
 /** 
  * The current playing url key.
  */
-@property(nonatomic, strong, readonly, nonnull)NSString *playingKey;
+@property(nonatomic, strong, readonly)NSString *playingKey;
 
 /**
  * The current player's layer.
@@ -89,6 +91,11 @@ playFailedWithError:(NSError *)error;
  * The player to play video.
  */
 @property(nonatomic, strong, readonly, nullable)AVPlayer *player;
+
+/**
+ * The resourceLoader for the videoPlayer.
+ */
+@property(nonatomic, strong, readonly, nullable)JPVideoPlayerResourceLoader *resourceLoader;
 
 @end
 

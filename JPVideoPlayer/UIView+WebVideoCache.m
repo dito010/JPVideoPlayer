@@ -394,6 +394,13 @@
 
 }
 
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+   didFetchVideoFileLength:(NSUInteger)videoLength {
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:)]){
+        [self.helper.controlView didFetchVideoFileLength:videoLength];
+    }
+}
+
 - (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                           cacheType:(JPVideoPlayerCacheType)cacheType
                                        receivedSize:(NSUInteger)receivedSize
@@ -405,15 +412,14 @@
     }
     switch(cacheType){
         case JPVideoPlayerCacheTypeLocation:
+        case JPVideoPlayerCacheTypeFull:
             NSParameterAssert(receivedSize == expectedSize);
-            if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:)]){
-                [self.helper.controlView didFetchVideoFileLength:expectedSize];
-            }
             if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
                 NSRange range = NSMakeRange(0, receivedSize);
                 [self.helper.controlView cacheRangeDidChange:@[[NSValue valueWithRange:range]]];
             }
             break;
+
 
         default:
             break;

@@ -76,7 +76,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             [self truncateFileWithFileLength:0];
         }
 
-        [self checkCompelete];
+        [self checkIsCompleted];
     }
     return self;
 }
@@ -156,7 +156,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         pthread_mutex_unlock(&_lock);
     }
     [self mergeRangesIfNeed];
-    [self checkCompelete];
+    [self checkIsCompleted];
 }
 
 - (NSRange)cachedRangeForRange:(NSRange)range {
@@ -220,7 +220,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     return targetRange;
 }
 
-- (void)checkCompelete {
+- (void)checkIsCompleted {
     int lock = pthread_mutex_trylock(&_lock);
     self.compelete = NO;
     if (self.ranges && self.ranges.count == 1) {

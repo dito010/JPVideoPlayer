@@ -54,6 +54,15 @@ NS_ASSUME_NONNULL_BEGIN
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
 /**
+ * Notify the video file length.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoLength        The file length of video data.
+ */
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+   didFetchVideoFileLength:(NSUInteger)videoLength;
+
+/**
  * Notify the download progress value. this method will be called on main thread.
  * If the video is local or cached file, this method will be called once and the receive size equal to expected size,
  * if video is existed on web, this method will be called when the download progress value changed, else if some error happened,

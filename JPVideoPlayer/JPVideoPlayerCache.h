@@ -106,8 +106,6 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
  *
  * @param key        The unique key used to store the wanted video.
  * @param completion The completion block. Will not get called if the operation is cancelled.
- *
- * @return a NSOperation instance containing the cache options.
  */
 - (void)queryCacheOperationForKey:(NSString *)key
                        completion:(JPVideoPlayerCacheQueryCompletion _Nullable)completion;

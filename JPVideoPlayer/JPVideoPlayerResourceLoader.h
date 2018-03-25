@@ -12,7 +12,8 @@
 #import <AVFoundation/AVFoundation.h>
 
 @class JPVideoPlayerResourceLoader,
-       JPResourceLoadingRequestWebTask;
+       JPResourceLoadingRequestWebTask,
+       JPVideoPlayerCacheFile;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,6 +43,11 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
  * The url custom passed in.
  */
 @property (nonatomic, strong, readonly) NSURL *customURL;
+
+/**
+ * The cache file take responsibility for save video data to disk and read cached video from disk.
+ */
+@property (nonatomic, strong, readonly) JPVideoPlayerCacheFile *cacheFile;
 
 /**
  * Convenience method to fetch instance of this class.

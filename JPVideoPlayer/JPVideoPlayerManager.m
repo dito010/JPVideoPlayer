@@ -136,6 +136,7 @@
 
             if (!videoPath && (![self.delegate respondsToSelector:@selector(videoPlayerManager:shouldDownloadVideoForURL:)] || [self.delegate videoPlayerManager:self shouldDownloadVideoForURL:url])) {
                 // play web video.
+                // TODO: 03.26 开始接 web 视频的下载进度回调.
                 JPDebugLog(@"Start play a web video: %@", url);
                 [self.videoPlayer playVideoWithURL:url
                                            options:options
@@ -178,8 +179,10 @@
                               options:(JPVideoPlayerOptions)options
                             cacheType:(JPVideoPlayerCacheType)cacheType {
     JPDebugLog(@"Start play a existed video: %@", url);
-    [self callDownloadDelegateMethodWithReceivedSize:1
-                                        expectedSize:1
+    NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
+    [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
+    [self callDownloadDelegateMethodWithReceivedSize:videoLength
+                                        expectedSize:videoLength
                                            cacheType:JPVideoPlayerCacheTypeFull
                                                error:nil];
     [self.videoPlayer playExistedVideoWithURL:url
@@ -195,8 +198,10 @@
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        [self callDownloadDelegateMethodWithReceivedSize:1
-                                            expectedSize:1
+        NSUInteger videoLength = [self fetchFileSizeAtPath:path];
+        [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
+        [self callDownloadDelegateMethodWithReceivedSize:videoLength
+                                            expectedSize:videoLength
                                                cacheType:JPVideoPlayerCacheTypeLocation
                                                    error:nil];
         [self.videoPlayer playExistedVideoWithURL:url
@@ -301,19 +306,14 @@ playFailedWithError:(NSError *)error {
 
 - (void)downloader:(JPVideoPlayerDownloader *)downloader
 didReceiveResponse:(NSURLResponse *)response {
+
 }
 
 - (void)downloader:(JPVideoPlayerDownloader *)downloader
     didReceiveData:(NSData *)data
       receivedSize:(NSUInteger)receivedSize
       expectedSize:(NSUInteger)expectedSize {
-//    [self storeVideoData:data
-//            expectedSize:expectedSize
-//                     url:self.runningOperation.url
-//                showView:self.showView
-//               operation:self.runningOperation
-//                 options:options
-//                response:response];
+
 }
 
 - (void)downloader:(JPVideoPlayerDownloader *)downloader
@@ -354,6 +354,14 @@ didCompleteWithError:(NSError *)error {
 
 
 #pragma mark - Private
+
+- (long long)fetchFileSizeAtPath:(NSString *)filePath{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:filePath]){
+        return [[manager attributesOfItemAtPath:filePath error:nil] fileSize];
+    }
+    return 0;
+}
 
 - (void)reset {
     int lock = pthread_mutex_trylock(&_lock);
@@ -441,6 +449,15 @@ didCompleteWithError:(NSError *)error {
 
 - (void)hideProgressViewWithURL:(nullable NSURL *)url options:(JPVideoPlayerOptions)options{
 
+}
+
+- (void)callVideoLengthDelegateMethodWithVideoLength:(NSUInteger)videoLength {
+    JPDispatchSyncOnMainQueue(^{
+       if([self.delegate respondsToSelector:@selector(videoPlayerManager:didFetchVideoFileLength:)]){
+          [self.delegate videoPlayerManager:self
+                    didFetchVideoFileLength:videoLength];
+       }
+    });
 }
 
 - (void)callDownloadDelegateMethodWithReceivedSize:(NSUInteger)receivedSize
