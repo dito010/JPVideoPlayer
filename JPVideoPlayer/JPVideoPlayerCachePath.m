@@ -37,12 +37,20 @@ static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
     if (!key) {
         return nil;
     }
-    NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *videoCachePath = [self videoCachePath];
     NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSParameterAssert(filePath);
+    return filePath;
+}
+
++ (NSString *)createVideoFileIfNeedThenFetchItForKey:(NSString *)key {
+    NSString *filePath = [self videoCachePathForKey:key];
+    if(!filePath){
+        return nil;
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:filePath]) {
         [fileManager createFileAtPath:filePath contents:nil attributes:nil];
     }
@@ -54,12 +62,20 @@ static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
     if (!key) {
         return nil;
     }
-    NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *videoCachePath = [self videoCachePath];
     NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoIndexFileExtension];
     NSParameterAssert(filePath);
+    return filePath;
+}
+
++ (NSString *)createVideoIndexFileIfNeedThenFetchItForKey:(NSString *)key {
+    NSString *filePath = [self videoCacheIndexFilePathForKey:key];
+    if(!filePath){
+        return nil;
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:filePath]) {
         [fileManager createFileAtPath:filePath contents:nil attributes:nil];
     }

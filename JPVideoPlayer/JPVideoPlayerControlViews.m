@@ -40,8 +40,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
 
     if(!self.backgroundView.frame.size.height && self.bounds.size.width) {
         CGSize referSize = self.bounds.size;
@@ -232,8 +232,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
 
     CGSize screenSize = [UIScreen.mainScreen bounds].size;
     self.playButton.frame = CGRectMake(16, 10, 18, 18);
@@ -343,6 +343,13 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     return self;
 }
 
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    self.blurImageView.frame = self.bounds;
+    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - 38, self.bounds.size.width, 38);
+}
+
 
 #pragma mark - JPVideoPlayerControlProtocol
 
@@ -380,14 +387,6 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 
 #pragma mark - Private
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    self.blurImageView.frame = self.bounds;
-
-    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - 38, self.bounds.size.width, 38);
-}
 
 - (void)setup {
     self.blurImageView = ({
@@ -431,13 +430,6 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
-    self.videoContainerView.frame = self.bounds;
-    self.controlContainerView.frame = self.bounds;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
 
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;

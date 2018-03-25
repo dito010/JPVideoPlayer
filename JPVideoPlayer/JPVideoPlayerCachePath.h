@@ -33,7 +33,16 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return The file path.
  */
-+ (NSString *)videoCachePathForKey:(NSString *)key ;
++ (NSString *)videoCachePathForKey:(NSString *)key;
+
+/**
+ * Fetch the video cache path and create video file for given key on version 3.x.
+ *
+ * @param key A given key.
+ *
+ * @return The file path.
+ */
++ (NSString *)createVideoFileIfNeedThenFetchItForKey:(NSString *)key;
 
 /**
  * Fetch the index file path for given key on version 3.x.
@@ -43,6 +52,15 @@ NS_ASSUME_NONNULL_BEGIN
  * @return The path of index file.
  */
 + (NSString *)videoCacheIndexFilePathForKey:(NSString *)key;
+
+/**
+ * Fetch the index file path and create video index file for given key on version 3.x.
+ *
+ * @param key A given key.
+ *
+ * @return The path of index file.
+ */
++ (NSString *)createVideoIndexFileIfNeedThenFetchItForKey:(NSString *)key;
 
 @end
 

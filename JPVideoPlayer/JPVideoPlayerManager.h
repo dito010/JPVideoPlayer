@@ -30,8 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return Return NO to prevent the downloading of the video on cache misses. If not implemented, YES is implied.
  */
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
- shouldDownloadVideoForURL:(nullable NSURL *)videoURL;
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+ shouldDownloadVideoForURL:(NSURL *)videoURL;
 
 /**
  * Controls which video should automatic replay when the video is play completed.
@@ -41,8 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return Return NO to prevent replay for the video. If not implemented, YES is implied.
  */
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
-    shouldAutoReplayForURL:(nullable NSURL *)videoURL;
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+    shouldAutoReplayForURL:(NSURL *)videoURL;
 
 /**
  * Notify the playing status.
@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param videoPlayerManager The current `JPVideoPlayerManager`.
  * @param playerStatus       The current playing status.
  */
-- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
 /**
@@ -65,11 +65,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param expectedSize        The expected data size.
  * @param error               The error when download video data.
  */
-- (void)videoPlayerManagerDownloadProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                           cacheType:(JPVideoPlayerCacheType)cacheType
                                        receivedSize:(NSUInteger)receivedSize
                                        expectedSize:(NSUInteger)expectedSize
-                                              error:(NSError *)error;
+                                              error:(NSError *_Nullable)error;
 
 /**
  * Notify the playing progress value. this method will be called on main thread.
@@ -79,10 +79,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param totalSeconds       The total seconds of this video for given url.
  * @param error              The error when playing video.
  */
-- (void)videoPlayerManagerPlayProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManagerPlayProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                  elapsedSeconds:(double)elapsedSeconds
                                    totalSeconds:(double)totalSeconds
-                                          error:(NSError *)error;
+                                          error:(NSError *_Nullable)error;
 
 @end
 

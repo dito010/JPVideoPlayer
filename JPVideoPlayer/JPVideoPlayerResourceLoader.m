@@ -72,8 +72,8 @@
         _customURL = customURL;
         _loadingRequests = [@[] mutableCopy];
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
-        _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath videoCachePathForKey:key]
-                                                     indexFilePath:[JPVideoPlayerCachePath videoCacheIndexFilePathForKey:key]];
+        _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath createVideoFileIfNeedThenFetchItForKey:key]
+                                                     indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]];
         _ioQueue = dispatch_queue_create("com.NewPan.jpvideoplayer.resource.loader.www", DISPATCH_QUEUE_SERIAL);
     }
     return self;

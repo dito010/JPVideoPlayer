@@ -379,33 +379,52 @@
 
 #pragma mark - JPVideoPlayerManager
 
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
- shouldDownloadVideoForURL:(nullable NSURL *)videoURL {
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+ shouldDownloadVideoForURL:(NSURL *)videoURL {
     return YES;
 }
 
-- (BOOL)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
-    shouldAutoReplayForURL:(nullable NSURL *)videoURL {
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+    shouldAutoReplayForURL:(NSURL *)videoURL {
     return YES;
 }
 
-- (void)videoPlayerManager:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
 
 }
 
-- (void)videoPlayerManagerDownloadProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                           cacheType:(JPVideoPlayerCacheType)cacheType
                                        receivedSize:(NSUInteger)receivedSize
                                        expectedSize:(NSUInteger)expectedSize
-                                              error:(NSError *)error {
+                                              error:(NSError *_Nullable)error {
+    if(error){
+        // TODO handle error.
+        return;
+    }
+    switch(cacheType){
+        case JPVideoPlayerCacheTypeLocation:
+            NSParameterAssert(receivedSize == expectedSize);
+            if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:)]){
+                [self.helper.controlView didFetchVideoFileLength:expectedSize];
+            }
+            if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
+                NSRange range = NSMakeRange(0, receivedSize);
+                [self.helper.controlView cacheRangeDidChange:@[[NSValue valueWithRange:range]]];
+            }
+            break;
+
+        default:
+            break;
+    }
 
 }
 
-- (void)videoPlayerManagerPlayProgressDidChange:(nonnull JPVideoPlayerManager *)videoPlayerManager
+- (void)videoPlayerManagerPlayProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                  elapsedSeconds:(double)elapsedSeconds
                                    totalSeconds:(double)totalSeconds
-                                          error:(NSError *)error {
+                                          error:(NSError *_Nullable)error {
     if(error){
         //TODO handle error.
         return;
