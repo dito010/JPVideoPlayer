@@ -16,45 +16,67 @@ NSString * const JPVideoPlayerCacheVideoPathForTemporaryFile = @"/TemporaryFile"
 NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 
 static NSString * const kJPVideoPlayerCacheVideoPathDomain = @"/com.jpvideoplayer.www";
-static NSString * const kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion = @"/temporaryFile";
-static NSString * const kJPVideoPlayerCacheVideoPathForFullFileNewVersion = @"/fullFile";
 static NSString * const kJPVideoPlayerCacheVideoFileExtension = @".mp4";
 static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
 @implementation JPVideoPlayerCachePath
 
 #pragma mark - Public
 
-+ (NSString *)newVideoCachePathForAllFullFile {
-    return [self newGetFilePathWithAppendingString:kJPVideoPlayerCacheVideoPathForFullFileNewVersion];
-}
-
-+ (NSString *)newVideoCachePathForAllTemporaryFile {
-    return [self newGetFilePathWithAppendingString:kJPVideoPlayerCacheVideoPathForTemporaryFileNewVersion];
-}
-
-+ (NSString *)videoCacheIndexSavePathForKey:(NSString *_Nonnull)key {
-    NSParameterAssert(key);
-    if (!key) {
-        return nil;
-    }
-
-    NSString *path = [self newVideoCachePathForAllTemporaryFile];
-    path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    path = [path stringByAppendingString:kJPVideoPlayerCacheVideoIndexFileExtension];
++ (NSString *)videoCachePath {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createFileAtPath:path contents:nil attributes:nil];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
+            stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPathDomain];
+    if (![fileManager fileExistsAtPath:path]){
+        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     }
     return path;
 }
 
-+(nullable NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key{
++ (NSString *)videoCachePathForKey:(NSString *)key {
     NSParameterAssert(key);
     if (!key) {
         return nil;
     }
-    
-    NSString *path = [self newVideoCachePathForAllTemporaryFile];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *videoCachePath = [self videoCachePath];
+    NSParameterAssert(videoCachePath);
+    NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
+    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
+    NSParameterAssert(filePath);
+    if (![fileManager fileExistsAtPath:filePath]) {
+        [fileManager createFileAtPath:filePath contents:nil attributes:nil];
+    }
+    return filePath;
+}
+
++ (NSString *)videoCacheIndexFilePathForKey:(NSString *)key {
+    NSParameterAssert(key);
+    if (!key) {
+        return nil;
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *videoCachePath = [self videoCachePath];
+    NSParameterAssert(videoCachePath);
+    NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
+    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoIndexFileExtension];
+    NSParameterAssert(filePath);
+    if (![fileManager fileExistsAtPath:filePath]) {
+        [fileManager createFileAtPath:filePath contents:nil attributes:nil];
+    }
+    return filePath;
+}
+
+@end
+
+@implementation JPVideoPlayerCachePath(Deprecated)
+
++ (NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key{
+    NSParameterAssert(key);
+    if (!key) {
+        return nil;
+    }
+
+    NSString *path = [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForTemporaryFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     path = [path stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -64,59 +86,34 @@ static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
     return path;
 }
 
-+(nullable NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
++ (NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
     NSParameterAssert(key);
     if (!key) {
         return nil;
     }
-    
-    NSString *path = [self newVideoCachePathForAllFullFile];
+
+    NSString *path = [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForFullFile];
     NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]
             stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     path = [path stringByAppendingPathComponent:fileName];
     return path;
 }
 
-
-#pragma mark - Private
-
-+(nonnull NSString *)newGetFilePathWithAppendingString:(nonnull NSString *)apdStr {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
-            stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPathDomain];
-    if (![fileManager fileExistsAtPath:path]){
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    path = [path stringByAppendingString:apdStr];
-    if (![fileManager fileExistsAtPath:path]){
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    return path;
-}
-
-@end
-
-@implementation JPVideoPlayerCachePath(Deprecated)
-
-+(nonnull NSString *)videoCachePathForAllTemporaryFile{
++ (NSString *)videoCachePathForAllTemporaryFile{
     return [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForTemporaryFile];
 }
 
-+(nonnull NSString *)videoCachePathForAllFullFile{
++ (NSString *)videoCachePathForAllFullFile{
     return [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForFullFile];
 }
 
-+(nonnull NSString *)getFilePathWithAppendingString:(nonnull NSString *)apdStr{
++ (NSString *)getFilePathWithAppendingString:(nonnull NSString *)apdStr{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
             stringByAppendingPathComponent:apdStr];
-
     if (![fileManager fileExistsAtPath:path]){
         [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     }
-
     return path;
 }
 

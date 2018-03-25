@@ -15,30 +15,39 @@
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForTemporaryFile;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForFullFile;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JPVideoPlayerCachePath : NSObject
 
 /**
- *  Get the local video cache path for all temporary video file on version 3.x.
+ *  Get the video cache path on version 3.x.
  *
- *  @return the temporary file path.
+ *  @return The file path.
  */
-+(nonnull NSString *)newVideoCachePathForAllTemporaryFile;
++ (NSString *)videoCachePath;
 
 /**
- *  Get the local video cache path for all full video file on version 3.x.
+ * Fetch the video cache path for given key on version 3.x.
  *
- *  @return the full file path.
+ * @param key A given key.
+ *
+ * @return The file path.
  */
-+(nonnull NSString *)newVideoCachePathForAllFullFile;
++ (NSString *)videoCachePathForKey:(NSString *)key ;
 
 /**
- *  Get the local video cache models store path on version 3.x.
+ * Fetch the index file path for given key on version 3.x.
  *
- *  @param key  The unique flag for the given url in this framework.
+ * @param key A given key.
  *
- *  @return the models store path.
+ * @return The path of index file.
  */
-+ (nullable NSString *)videoCacheIndexSavePathForKey:(NSString * _Nonnull)key;
++ (NSString *)videoCacheIndexFilePathForKey:(NSString *)key;
+
+@end
+
+
+@interface JPVideoPlayerCachePath(Deprecated)
 
 /**
  *  Get the local video cache path for temporary video file.
@@ -47,7 +56,7 @@ UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForFullFile;
  *
  *  @return the temporary file path.
  */
-+(nullable NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key;
++ (NSString *)videoCacheTemporaryPathForKey:(NSString *)key JPDEPRECATED_ATTRIBUTE("`videoCacheTemporaryPathForKey:` is deprecated on 3.0.")
 
 /**
  *  Get the local video cache path for all full video file.
@@ -56,25 +65,22 @@ UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerCacheVideoPathForFullFile;
  *
  *  @return the full file path.
  */
-+(nullable NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key;
-
-@end
-
-
-@interface JPVideoPlayerCachePath(Deprecated)
++ (NSString *)videoCacheFullPathForKey:(NSString *)key JPDEPRECATED_ATTRIBUTE("`videoCacheFullPathForKey:` is deprecated on 3.0.")
 
 /**
  *  Get the local video cache path for all temporary video file on version 2.x.
  *
  *  @return the temporary file path.
  */
-+(nonnull NSString *)videoCachePathForAllTemporaryFile JPDEPRECATED_ATTRIBUTE("`videoCachePathForAllTemporaryFile` is deprecated on 3.0, please use `newVideoCachePathForAllTemporaryFile`")
++ (NSString *)videoCachePathForAllTemporaryFile JPDEPRECATED_ATTRIBUTE("`videoCachePathForAllTemporaryFile` is deprecated on 3.0.")
 
 /**
  *  Get the local video cache path for all full video file on version 2.x.
  *
  *  @return the full file path.
  */
-+(nonnull NSString *)videoCachePathForAllFullFile JPDEPRECATED_ATTRIBUTE("`videoCachePathForAllFullFile` is deprecated on 3.0, please use `newVideoCachePathForAllFullFile`")
++ (NSString *)videoCachePathForAllFullFile JPDEPRECATED_ATTRIBUTE("`videoCachePathForAllFullFile` is deprecated on 3.0.")
 
 @end
+
+NS_ASSUME_NONNULL_END

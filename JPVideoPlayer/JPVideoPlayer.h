@@ -112,10 +112,10 @@ playFailedWithError:(NSError *)error;
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL *)url
+- (JPVideoPlayerModel *_Nullable)playExistedVideoWithURL:(NSURL *)url
                                       fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
-                                              showOnLayer:(CALayer *)showLayer;
+                                             showOnLayer:(CALayer *)showLayer;
 
 /**
  * Play the not existed video from web.
@@ -126,7 +126,7 @@ playFailedWithError:(NSError *)error;
  *
  * @return  token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
-- (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
+- (JPVideoPlayerModel *_Nullable)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer;
 

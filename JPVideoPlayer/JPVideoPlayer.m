@@ -176,10 +176,10 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 #pragma mark - Public
 
-- (nullable JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL *)url
-                                      fullVideoCachePath:(NSString *)fullVideoCachePath
-                                                 options:(JPVideoPlayerOptions)options
-                                             showOnLayer:(CALayer *)showLayer {
+- (JPVideoPlayerModel *)playExistedVideoWithURL:(NSURL *)url
+                             fullVideoCachePath:(NSString *)fullVideoCachePath
+                                        options:(JPVideoPlayerOptions)options
+                                    showOnLayer:(CALayer *)showLayer {
     if (!url.absoluteString.length) {
         NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The url is disable"}];
         [self callDelegateMethodWithError:e];

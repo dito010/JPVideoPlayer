@@ -17,6 +17,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define JPMainThreadASSert NSParameterAssert([[NSThread currentThread] isMainThread])
+
 typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
     JPVideoPlayerStatusUnkown,
     JPVideoPlayerStatusBuffering,
@@ -94,25 +96,25 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
      * Call completion block with nil video/videoData if the image was read from NSURLCache
      * (to be combined with `JPVideoPlayerDownloaderUseNSURLCache`).
      */
-            JPVideoPlayerDownloaderIgnoreCachedResponse = 1 << 0,
+    JPVideoPlayerDownloaderIgnoreCachedResponse = 1 << 0,
 
     /**
      * In iOS 4+, continue the download of the video if the app goes to background. This is achieved by asking the system for
      * extra time in background to let the request finish. If the background task expires the operation will be cancelled.
      */
-            JPVideoPlayerDownloaderContinueInBackground = 1 << 1,
+    JPVideoPlayerDownloaderContinueInBackground = 1 << 1,
 
     /**
      * Handles cookies stored in NSHTTPCookieStore by setting
      * NSMutableURLRequest.HTTPShouldHandleCookies = YES;
      */
-            JPVideoPlayerDownloaderHandleCookies = 1 << 2,
+    JPVideoPlayerDownloaderHandleCookies = 1 << 2,
 
     /**
      * Enable to allow untrusted SSL certificates.
      * Useful for testing purposes. Use with caution in production.
      */
-            JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
+    JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;

@@ -429,6 +429,13 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     return self;
 }
 
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    self.videoContainerView.frame = self.bounds;
+    self.controlContainerView.frame = self.bounds;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
 

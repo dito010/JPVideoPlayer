@@ -81,7 +81,7 @@
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(UIView *)showLayer
                  options:(JPVideoPlayerOptions)options {
-    NSParameterAssert([[NSThread currentThread] isMainThread]);
+    JPMainThreadASSert;
     NSParameterAssert(showLayer);
 
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
@@ -117,7 +117,6 @@
         return;
     }
     
-    NSString *key = [self cacheKeyForURL:url];
     BOOL isFileURL = [url isFileURL];
     if (isFileURL) {
         // play file URL.
@@ -127,34 +126,42 @@
         return;
     }
     else {
-        [self.videoCache queryCacheOperationForKey:key done:^(NSString * _Nullable videoPath, JPVideoPlayerCacheType cacheType) {
+        NSString *key = [self cacheKeyForURL:url];
+        [self.videoCache queryCacheOperationForKey:key completion:^(NSString *_Nullable videoPath, JPVideoPlayerCacheType cacheType) {
 
             if (!showLayer) {
                 [self reset];
                 return;
             }
-            
+
             if (!videoPath && (![self.delegate respondsToSelector:@selector(videoPlayerManager:shouldDownloadVideoForURL:)] || [self.delegate videoPlayerManager:self shouldDownloadVideoForURL:url])) {
                 // play web video.
                 JPDebugLog(@"Start play a web video: %@", url);
                 [self.videoPlayer playVideoWithURL:url
                                            options:options
                                          showLayer:showLayer];
-            }
-            else if(videoPath){
+            } else if (videoPath) {
                 // full video cache file in disk.
-                [self playExistedVideoWithShowLayer:showLayer
-                                                url:url
-                                          videoPath:videoPath
-                                            options:options
-                                          cacheType:cacheType];
-                
+                if(cacheType == JPVideoPlayerCacheTypeFull){
+                    JPDebugLog(@"Start play a cached video: %@", url);
+                    [self playExistedVideoWithShowLayer:showLayer
+                                                    url:url
+                                              videoPath:videoPath
+                                                options:options
+                                              cacheType:cacheType];
+                }
+                else if(cacheType == JPVideoPlayerCacheTypeFragment) {
+                    JPDebugLog(@"Start play a fragment video: %@", url);
+                    [self.videoPlayer playVideoWithURL:url
+                                               options:options
+                                             showLayer:showLayer];
+                }
             }
             else {
                 // video not in cache and download disallowed by delegate.
                 NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
                                                      code:NSURLErrorFileDoesNotExist
-                                                 userInfo:@{NSLocalizedDescriptionKey : @"Video not in cache and download disallowed by delegate"}];
+                                                 userInfo:@{NSLocalizedDescriptionKey: @"Video not in cache and download disallowed by delegate"}];
                 [self callDownloadDelegateMethodWithReceivedSize:0
                                                     expectedSize:1
                                                        cacheType:JPVideoPlayerCacheTypeNone
@@ -173,7 +180,7 @@
     JPDebugLog(@"Start play a existed video: %@", url);
     [self callDownloadDelegateMethodWithReceivedSize:1
                                         expectedSize:1
-                                           cacheType:JPVideoPlayerCacheTypeDisk
+                                           cacheType:JPVideoPlayerCacheTypeFull
                                                error:nil];
     [self.videoPlayer playExistedVideoWithURL:url
                            fullVideoCachePath:videoPath

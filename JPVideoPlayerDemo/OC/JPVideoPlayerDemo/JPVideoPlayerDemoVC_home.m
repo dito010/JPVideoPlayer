@@ -197,9 +197,10 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
     // location file in disk.
     // 本地视频播放.
-    NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"hello" ofType:@"mp4"];
+    NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"designedByAppleInCalifornia" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
+            url.absoluteString,
             @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/lavameface.mp4",
@@ -222,7 +223,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
             @"http://p11s9kqxf.bkt.clouddn.com/fukua.mp4",
             @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
             @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-            url.absoluteString,
             @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
             @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
             @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
