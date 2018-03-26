@@ -33,6 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSUInteger fileLength;
 
 /**
+ * The fragment of video data that cached in disk.
+ */
+@property (nonatomic, strong, readonly, nullable) NSArray<NSValue *> *fragmentRanges;
+
+/**
  * The offset of read postion.
  */
 @property (nonatomic, assign, readonly) NSUInteger readOffset;

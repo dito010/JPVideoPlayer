@@ -14,7 +14,7 @@
 
 @interface JPVideoPlayerCacheFile()
 
-@property (nonatomic, strong) NSMutableArray<NSValue *> *ranges;
+@property (nonatomic, strong) NSMutableArray<NSValue *> *internalFragmentRanges;
 
 @property (nonatomic, strong) NSFileHandle *writeFileHandle;
 
@@ -59,7 +59,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     if (self) {
         _cacheFilePath = filePath;
         _indexFilePath = indexFilePath;
-        _ranges = [[NSMutableArray alloc] init];
+        _internalFragmentRanges = [[NSMutableArray alloc] init];
         _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
         _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
         pthread_mutexattr_t mutexattr;
@@ -91,8 +91,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 #pragma mark - Properties
 
 - (NSUInteger)cachedDataBound {
-    if (self.ranges.count > 0) {
-        NSRange range = [[self.ranges lastObject] rangeValue];
+    if (self.internalFragmentRanges.count > 0) {
+        NSRange range = [[self.internalFragmentRanges lastObject] rangeValue];
         return NSMaxRange(range);
     }
     return 0;
@@ -116,15 +116,19 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 #pragma mark - Range
 
+- (NSArray<NSValue *> *)fragmentRanges {
+    return self.internalFragmentRanges;
+}
+
 - (void)mergeRangesIfNeed {
     int lock = pthread_mutex_trylock(&_lock);
-    for (int i = 0; i < self.ranges.count; ++i) {
-        if ((i + 1) < self.ranges.count) {
-            NSRange currentRange = [self.ranges[i] rangeValue];
-            NSRange nextRange = [self.ranges[i + 1] rangeValue];
+    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+        if ((i + 1) < self.internalFragmentRanges.count) {
+            NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
+            NSRange nextRange = [self.internalFragmentRanges[i + 1] rangeValue];
             if (JPRangeCanMerge(currentRange, nextRange)) {
-                [self.ranges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
-                [self.ranges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
+                [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
+                [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
                 i -= 1;
             }
         }
@@ -141,16 +145,16 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
     int lock = pthread_mutex_trylock(&_lock);
     BOOL inserted = NO;
-    for (int i = 0; i < self.ranges.count; ++i) {
-        NSRange currentRange = [self.ranges[i] rangeValue];
+    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+        NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
         if (currentRange.location >= range.location) {
-            [self.ranges insertObject:[NSValue valueWithRange:range] atIndex:i];
+            [self.internalFragmentRanges insertObject:[NSValue valueWithRange:range] atIndex:i];
             inserted = YES;
             break;
         }
     }
     if (!inserted) {
-        [self.ranges addObject:[NSValue valueWithRange:range]];
+        [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
     }
     if (!lock) {
         pthread_mutex_unlock(&_lock);
@@ -176,8 +180,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     }
 
     int lock = pthread_mutex_trylock(&_lock);
-    for (int i = 0; i < self.ranges.count; ++i) {
-        NSRange range = [self.ranges[i] rangeValue];
+    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+        NSRange range = [self.internalFragmentRanges[i] rangeValue];
         if (NSLocationInRange(position, range)) {
             return range;
         }
@@ -196,8 +200,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     int lock = pthread_mutex_trylock(&_lock);
     NSRange targetRange = JPInvalidRange;
     NSUInteger start = position;
-    for (int i = 0; i < self.ranges.count; ++i) {
-        NSRange range = [self.ranges[i] rangeValue];
+    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+        NSRange range = [self.internalFragmentRanges[i] rangeValue];
         if (NSLocationInRange(start, range)) {
             start = NSMaxRange(range);
         }
@@ -223,8 +227,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (void)checkIsCompleted {
     int lock = pthread_mutex_trylock(&_lock);
     self.compelete = NO;
-    if (self.ranges && self.ranges.count == 1) {
-        NSRange range = [self.ranges[0] rangeValue];
+    if (self.internalFragmentRanges && self.internalFragmentRanges.count == 1) {
+        NSRange range = [self.internalFragmentRanges[0] rangeValue];
         if (range.location == 0 && (range.length == self.fileLength)) {
             self.compelete = YES;
         }
@@ -378,11 +382,11 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         return NO;
     }
 
-    [self.ranges removeAllObjects];
+    [self.internalFragmentRanges removeAllObjects];
     NSMutableArray *rangeArray = indexDictionary[kJPVideoPlayerCacheFileZoneKey];
     for (NSString *rangeStr in rangeArray) {
         NSRange range = NSRangeFromString(rangeStr);
-        [self.ranges addObject:[NSValue valueWithRange:range]];
+        [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
     }
     self.responseHeaders = indexDictionary[kJPVideoPlayerCacheFileResponseHeadersKey];
     if (!lock) {
@@ -394,7 +398,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (NSString *)unserializeIndex {
     int lock = pthread_mutex_trylock(&_lock);
     NSMutableArray *rangeArray = [[NSMutableArray alloc] init];
-    for (NSValue *range in self.ranges) {
+    for (NSValue *range in self.internalFragmentRanges) {
         [rangeArray addObject:NSStringFromRange([range rangeValue])];
     }
     NSMutableDictionary *dict = [@{

@@ -403,7 +403,7 @@
 
 - (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                           cacheType:(JPVideoPlayerCacheType)cacheType
-                                       receivedSize:(NSUInteger)receivedSize
+                                     fragmentRanges:(NSArray<NSValue *> *_Nullable)fragmentRanges
                                        expectedSize:(NSUInteger)expectedSize
                                               error:(NSError *_Nullable)error {
     if(error){
@@ -413,18 +413,17 @@
     switch(cacheType){
         case JPVideoPlayerCacheTypeLocation:
         case JPVideoPlayerCacheTypeFull:
-            NSParameterAssert(receivedSize == expectedSize);
-            if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
-                NSRange range = NSMakeRange(0, receivedSize);
-                [self.helper.controlView cacheRangeDidChange:@[[NSValue valueWithRange:range]]];
-            }
+            NSParameterAssert(fragmentRanges);
+            NSRange range = [fragmentRanges.firstObject rangeValue];
+            NSParameterAssert(range.length == expectedSize);
             break;
-
 
         default:
             break;
     }
-
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
+        [self.helper.controlView cacheRangeDidChange:fragmentRanges];
+    }
 }
 
 - (void)videoPlayerManagerPlayProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager

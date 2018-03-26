@@ -65,18 +65,18 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Notify the download progress value. this method will be called on main thread.
  * If the video is local or cached file, this method will be called once and the receive size equal to expected size,
- * if video is existed on web, this method will be called when the download progress value changed, else if some error happened,
- * this method will never be called.
+ * If video is existed on web, this method will be called when the download progress value changed,
+ * If some error happened, the error is no nil.
  *
  * @param videoPlayerManager  The current `JPVideoPlayerManager`.
  * @param cacheType           The video data cache type.
- * @param receivedSize        The current received data size.
+ * @param fragmentRanges      The fragment of video data that cached in disk.
  * @param expectedSize        The expected data size.
  * @param error               The error when download video data.
  */
 - (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
                                           cacheType:(JPVideoPlayerCacheType)cacheType
-                                       receivedSize:(NSUInteger)receivedSize
+                                     fragmentRanges:(NSArray<NSValue *> * _Nullable)fragmentRanges
                                        expectedSize:(NSUInteger)expectedSize
                                               error:(NSError *_Nullable)error;
 

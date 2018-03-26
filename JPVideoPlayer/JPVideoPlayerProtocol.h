@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * This method will be called when the downloader fetched the file length or read from disk.
  *
+ * @warning This method may be call repeatedly when download a video.
+ *
  * @param videoLength The video file length.
  */
 - (void)didFetchVideoFileLength:(NSUInteger)videoLength;

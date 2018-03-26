@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType) {
+typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType)   {
     
     /**
      * The video wasn't available the JPVideoPlayer caches, but was downloaded from the web.

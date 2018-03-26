@@ -65,6 +65,10 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds {
+    if(self.userDragging){
+        return;
+    }
+
     CGRect frame = self.controlHandlerView.frame;
     CGFloat handlerWidth = frame.size.width;
     CGFloat controlHandleViewOriginX = (self.bounds.size.width - handlerWidth + kJPVideoPlayerProgressViewEaseTouchEdgeWidth * 2) * (elapsedSeconds / totalSeconds) - kJPVideoPlayerProgressViewEaseTouchEdgeWidth;
@@ -139,12 +143,10 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     switch(panGestureRecognizer.state){
         case UIGestureRecognizerStateBegan:
             self.userDragging = YES;
-            [self removeCacheProgressViewIfNeed];
             break;
 
         case UIGestureRecognizerStateEnded:
             self.userDragging = NO;
-            [self displayCacheProgressViewIfNeed];
             break;
 
         default:
@@ -153,7 +155,6 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 }
 
 - (void)updateCacheProgressViewIfNeed {
-    [self removeCacheProgressViewIfNeed];
     [self displayCacheProgressViewIfNeed];
 }
 
@@ -168,14 +169,22 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
         return;
     }
 
+    [self removeCacheProgressViewIfNeed];
     NSRange targetRange = JPInvalidRange;
     NSUInteger dragStartLocation = [self fetchDragStartLocation];
-    for(NSValue *value in self.rangesValue){
-        NSRange range = [value rangeValue];
-        if(JPValidFileRange(range)){
-            if(NSLocationInRange(dragStartLocation, range)){
-                targetRange = range;
-                break;
+    if(self.rangesValue.count == 1){
+        if(JPValidFileRange([self.rangesValue.firstObject rangeValue])){
+            targetRange = [self.rangesValue.firstObject rangeValue];
+        }
+    }
+    else {
+        for(NSValue *value in self.rangesValue){
+            NSRange range = [value rangeValue];
+            if(JPValidFileRange(range)){
+                if(NSLocationInRange(dragStartLocation, range)){
+                    targetRange = range;
+                    break;
+                }
             }
         }
     }
