@@ -10,6 +10,17 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol JPVideoPlayerProtocol <NSObject>
 
 @optional
+
+/**
+ * This method will be called when the view as a subview be add to a view.
+ *
+ * @note User can hold this view to control player, but remember that do not retain this view, suggest to
+ * weak hold this view.
+ *
+ * @param view The view to control player.
+ */
+- (void)viewWillAddToSuperView:(UIView *)view;
+
 /**
  * This method will be called when the downloader fetched the file length or read from disk.
  *

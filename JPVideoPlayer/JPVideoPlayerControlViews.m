@@ -8,6 +8,7 @@
 
 #import "JPVideoPlayerControlViews.h"
 #import "JPVideoPlayerCompat.h"
+#import "UIView+WebVideoCache.h"
 
 @interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
 
@@ -26,6 +27,8 @@
 @property (nonatomic, strong) UIView *cachedProgressView;
 
 @property(nonatomic, assign) BOOL userDragging;
+
+@property (nonatomic, weak) UIView *playerView;
 
 @end
 
@@ -54,8 +57,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 #pragma mark - JPVideoPlayerControlProtocol
 
-- (CALayer *)videoContainerLayer {
-    return [CALayer new];
+- (void)viewWillAddToSuperView:(UIView *)view {
+    self.playerView = view;
 }
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
@@ -147,11 +150,20 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
         case UIGestureRecognizerStateEnded:
             self.userDragging = NO;
+            [self userDidFinishDrag];
             break;
 
         default:
             break;
     }
+}
+
+- (void)userDidFinishDrag {
+    NSParameterAssert(!self.userDragging);
+    if(!self.totalSeconds){
+        return;
+    }
+    [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1)];
 }
 
 - (void)updateCacheProgressViewIfNeed {
@@ -255,8 +267,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 #pragma mark - JPVideoPlayerControlProtocol
 
-- (CALayer *)videoContainerLayer {
-    return [CALayer new];
+- (void)viewWillAddToSuperView:(UIView *)view {
+    [self.progressView viewWillAddToSuperView:view];
 }
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
@@ -344,12 +356,20 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 @implementation JPVideoPlayerControlView
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
+- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
+                         blurImage:(UIImage *)blurImage {
+    self = [super initWithFrame:CGRectZero];
+    if(self){
+        _controlBar = controlBar;
+        _blurImage = blurImage;
         [self setup];
     }
     return self;
+}
+
+- (instancetype)init {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithControlBar:nil blurImage:nil];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -361,6 +381,10 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 
 #pragma mark - JPVideoPlayerControlProtocol
+
+- (void)viewWillAddToSuperView:(UIView *)view {
+    [self.controlBar viewWillAddToSuperView:view];
+}
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
     [self.controlBar cacheRangeDidChange:cacheRanges];
@@ -400,21 +424,27 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 - (void)setup {
     self.blurImageView = ({
         UIImageView *view = [UIImageView new];
-        view.image = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_blur"];
+        UIImage *blurImage = self.blurImage;
+        if(!blurImage){
+           blurImage = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_blur"];
+        }
+        view.image = blurImage;
         [self addSubview:view];
 
         view;
     });
 
-    self.controlBar = ({
-        JPVideoPlayerControlBar *bar = [JPVideoPlayerControlBar new];
-        [self addSubview:bar];
-        bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
-        bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithRed:37.0/255 green:131.0/255 blue:232.0/255 alpha:1];
-        bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+    if(!self.controlBar){
+        self.controlBar = ({
+            JPVideoPlayerControlBar *bar = [JPVideoPlayerControlBar new];
+            [self addSubview:bar];
+            bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
+            bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithRed:37.0/255 green:131.0/255 blue:232.0/255 alpha:1];
+            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
 
-        bar;
-    });
+            bar;
+        });
+    }
 }
 
 @end

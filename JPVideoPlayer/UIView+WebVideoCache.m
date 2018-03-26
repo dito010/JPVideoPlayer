@@ -137,10 +137,16 @@
         }
         if(self.jp_controlView && !self.jp_controlView.superview){
             self.jp_controlView.frame = self.bounds;
+            if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+               [self.jp_controlView viewWillAddToSuperView:self];
+            }
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
         }
         if(self.jp_progressView && !self.jp_progressView.superview){
             self.jp_progressView.frame = self.bounds;
+            if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+                [self.jp_progressView viewWillAddToSuperView:self];
+            }
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_progressView];
         }
 
@@ -160,6 +166,10 @@
 
 
 #pragma mark - Play Control
+
+- (void)jp_seekToTime:(CMTime)time {
+    [[JPVideoPlayerManager sharedManager] seekToTime:time];
+}
 
 - (void)jp_stopPlay{
     [[JPVideoPlayerManager sharedManager]stopPlay];

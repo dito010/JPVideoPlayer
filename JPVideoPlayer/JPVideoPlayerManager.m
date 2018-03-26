@@ -173,53 +173,6 @@
     }
 }
 
-- (void)playExistedVideoWithShowLayer:(UIView *)showLayer
-                                  url:(NSURL *)url
-                            videoPath:(NSString *)videoPath
-                              options:(JPVideoPlayerOptions)options
-                            cacheType:(JPVideoPlayerCacheType)cacheType {
-    JPDebugLog(@"Start play a existed video: %@", url);
-    NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
-    [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
-    [self callDownloadDelegateMethodWithFragmentRanges:@[[NSValue valueWithRange:NSMakeRange(0, videoLength)]]
-                                          expectedSize:videoLength
-                                             cacheType:JPVideoPlayerCacheTypeFull
-                                                 error:nil];
-    [self.videoPlayer playExistedVideoWithURL:url
-                           fullVideoCachePath:videoPath
-                                      options:options
-                                   showOnLayer:showLayer];
-}
-
-- (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
-                               url:(NSURL *)url
-                           options:(JPVideoPlayerOptions)options {
-    JPDebugLog(@"Start play a local video: %@", url);
-    // local file.
-    NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        NSUInteger videoLength = [self fetchFileSizeAtPath:path];
-        [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
-        [self callDownloadDelegateMethodWithFragmentRanges:@[[NSValue valueWithRange:NSMakeRange(0, videoLength)]]
-                                              expectedSize:videoLength
-                                                 cacheType:JPVideoPlayerCacheTypeLocation
-                                                     error:nil];
-        [self.videoPlayer playExistedVideoWithURL:url
-                               fullVideoCachePath:path
-                                          options:options
-                                       showOnLayer:showLayer];
-    }
-    else{
-        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
-                                             code:NSURLErrorFileDoesNotExist
-                                         userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
-        [self callDownloadDelegateMethodWithFragmentRanges:nil
-                                              expectedSize:1
-                                                 cacheType:JPVideoPlayerCacheTypeNone
-                                                     error:error];
-    }
-}
-
 - (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url {
     if (!url) {
         return nil;
@@ -229,6 +182,10 @@
     //    url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
     //#pragma clang diagnostic pop
     return [url absoluteString];
+}
+
+- (void)seekToTime:(CMTime)time {
+    [self.videoPlayer seekToTime:time];
 }
 
 - (void)stopPlay {
@@ -501,6 +458,56 @@ didCompleteWithError:(NSError *)error {
             completionBlock(isInDiskCache);
         }
     }];
+}
+
+
+#pragma mark - Play Video
+
+- (void)playExistedVideoWithShowLayer:(UIView *)showLayer
+                                  url:(NSURL *)url
+                            videoPath:(NSString *)videoPath
+                              options:(JPVideoPlayerOptions)options
+                            cacheType:(JPVideoPlayerCacheType)cacheType {
+    JPDebugLog(@"Start play a existed video: %@", url);
+    NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
+    [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
+    [self callDownloadDelegateMethodWithFragmentRanges:@[[NSValue valueWithRange:NSMakeRange(0, videoLength)]]
+                                          expectedSize:videoLength
+                                             cacheType:JPVideoPlayerCacheTypeFull
+                                                 error:nil];
+    [self.videoPlayer playExistedVideoWithURL:url
+                           fullVideoCachePath:videoPath
+                                      options:options
+                                  showOnLayer:showLayer];
+}
+
+- (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
+                                url:(NSURL *)url
+                            options:(JPVideoPlayerOptions)options {
+    JPDebugLog(@"Start play a local video: %@", url);
+    // local file.
+    NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        NSUInteger videoLength = [self fetchFileSizeAtPath:path];
+        [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
+        [self callDownloadDelegateMethodWithFragmentRanges:@[[NSValue valueWithRange:NSMakeRange(0, videoLength)]]
+                                              expectedSize:videoLength
+                                                 cacheType:JPVideoPlayerCacheTypeLocation
+                                                     error:nil];
+        [self.videoPlayer playExistedVideoWithURL:url
+                               fullVideoCachePath:path
+                                          options:options
+                                      showOnLayer:showLayer];
+    }
+    else{
+        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                                             code:NSURLErrorFileDoesNotExist
+                                         userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
+        [self callDownloadDelegateMethodWithFragmentRanges:nil
+                                              expectedSize:1
+                                                 cacheType:JPVideoPlayerCacheTypeNone
+                                                     error:error];
+    }
 }
 
 @end

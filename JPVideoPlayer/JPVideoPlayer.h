@@ -140,6 +140,13 @@ playFailedWithError:(NSError *)error;
 
 # pragma mark - Player Control Events
 
+/**
+ * Moves the playback cursor.
+ *
+ * @param time The time where seek to.
+ */
+- (void)seekToTime:(CMTime)time;
+
 /** 
  * Call this method to control audio is play or not.
  *

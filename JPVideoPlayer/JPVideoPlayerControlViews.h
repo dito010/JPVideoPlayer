@@ -11,8 +11,8 @@
 @class JPVideoPlayerProgressView, JPVideoPlayerControlView;
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface JPVideoPlayerControlBar : UIView
+// TODO: 3.26 接下来处理拖动宽度越界 bug, 以及把 JPVideoPlayerControlBar 更加方便外界使用.
+@interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
 
@@ -24,18 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol JPVideoPlayerControlViewDelegate<NSObject>
-
-@optional
-
-- (void)controlViewDidClickPlay:(JPVideoPlayerControlView *)controlView;
-
-- (void)controlViewDidClickLandscape:(JPVideoPlayerControlView *)controlView;
-
-- (void)controlView:(JPVideoPlayerControlView *)controlView
-      didSeekToTime:(NSTimeInterval)seekTimeInterval;
-
-@end
 // TODO: 做到 progressView, 接下来封装一个 progressView, 然后到播放分类中实现
 @interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
 
@@ -46,6 +34,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *cachedProgressColor;
 
 @property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
+
+@property (nonatomic, strong, readonly) UIImage *blurImage;
+
+/**
+ * A designated initializer.
+ *
+ * @param controlBar The view abide by the `JPVideoPlayerProtocol`.
+ * @param blurImage  A image on back of controlBar.
+ *
+ * @return The current instance.
+ */
+- (instancetype)initWithControlBar:(UIView<JPVideoPlayerProtocol> *_Nullable)controlBar
+                         blurImage:(UIImage *_Nullable)blurImage NS_DESIGNATED_INITIALIZER;
 
 @end
 

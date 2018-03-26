@@ -151,7 +151,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 @end
 
-// TODO: 已经能播放视频,接下来接入播放和缓存进度回调,接入拖拽进度.
 @implementation JPVideoPlayer
 
 - (void)dealloc {
@@ -253,6 +252,20 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         model.player.muted = YES;
     }
     return model;
+}
+
+- (void)seekToTime:(CMTime)time {
+    if(!CMTIME_IS_VALID(time)){
+        return;
+    }
+    [self.currentPlayerModel pausePlayVideo];
+    [self.currentPlayerModel.player seekToTime:time completionHandler:^(BOOL finished) {
+
+        if(finished){
+            [self.currentPlayerModel resumePlayVideo];
+        }
+
+    }];
 }
 
 - (void)setMute:(BOOL)mute{

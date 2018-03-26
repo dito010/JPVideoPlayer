@@ -153,6 +153,12 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
                     options:(JPVideoPlayerOptions)options;
 
 #pragma mark - Play Control
+/**
+ * Moves the playback cursor.
+ *
+ * @param time The time where seek to.
+ */
+- (void)jp_seekToTime:(CMTime)time;
 
 /**
  * Call this method to stop play video.

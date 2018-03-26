@@ -167,6 +167,13 @@ NS_ASSUME_NONNULL_BEGIN
 # pragma mark - Play Control
 
 /**
+ * Moves the playback cursor.
+ *
+ * @param time The time where seek to.
+ */
+- (void)seekToTime:(CMTime)time;
+
+/**
  * Call this method to stop play video.
  */
 - (void)stopPlay;
