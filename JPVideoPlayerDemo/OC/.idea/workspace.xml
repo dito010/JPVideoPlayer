@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerCacheFile.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerCacheFile.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerCacheFile.m" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerCacheFile.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerControlViews.m" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerControlViews.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerManager.m" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerManager.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerProtocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerProtocol.h" afterDir="false" />
@@ -31,15 +32,6 @@
               <folding>
                 <element signature="e#345#377#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JPVideoPlayerDownloader.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-177">
-              <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -98,11 +90,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JPVideoPlayerControlViews.m" pinned="false" current-in-tab="true">
+      <file leaf-file-name="JPVideoPlayerControlViews.m" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerControlViews.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="170" column="41" selection-start-line="170" selection-start-column="41" selection-end-line="170" selection-end-column="41" />
+            <state relative-caret-position="237">
+              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JPVideoPlayerDownloader.m" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="259">
+              <caret line="190" column="36" selection-start-line="190" selection-start-column="36" selection-end-line="190" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -152,6 +153,7 @@
         <option value="$PROJECT_DIR$/../../JPVideoPlayer/UIView+WebVideoCache.m" />
         <option value="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerCache.h" />
         <option value="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerControlViews.m" />
+        <option value="$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m" />
       </list>
     </option>
   </component>
@@ -267,12 +269,12 @@
       <workItem from="1521818127617" duration="1751000" />
       <workItem from="1521952287259" duration="19280000" />
       <workItem from="1521990167990" duration="4579000" />
-      <workItem from="1522071130594" duration="2787000" />
+      <workItem from="1522071130594" duration="3320000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31098000" />
+    <option name="totallyTimeSpent" value="31631000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -336,7 +338,7 @@
           <properties />
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="36" />
+      <option name="time" value="38" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -592,13 +594,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="189" column="42" selection-start-line="189" selection-start-column="42" selection-end-line="189" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPResourceLoadingRequestTask.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="258">
@@ -695,8 +690,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerControlViews.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="170" column="41" selection-start-line="170" selection-start-column="41" selection-end-line="170" selection-end-column="41" />
+        <state relative-caret-position="237">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../JPVideoPlayer/JPVideoPlayerDownloader.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="190" column="36" selection-start-line="190" selection-start-column="36" selection-end-line="190" selection-end-column="36" />
         </state>
       </provider>
     </entry>

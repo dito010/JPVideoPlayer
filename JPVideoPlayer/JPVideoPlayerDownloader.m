@@ -186,7 +186,12 @@ didReceiveResponse:(NSURLResponse *)response
         }
         else{
             JPDispatchSyncOnMainQueue(^{
-                NSParameterAssert(self.runningTask);
+                if(!self.runningTask){
+                    if (completionHandler) {
+                        completionHandler(NSURLSessionResponseCancel);
+                    }
+                    return;
+                }
                 [self.runningTask requestDidReceiveResponse:response];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveResponse:)]) {
                     [self.delegate downloader:self didReceiveResponse:response];
