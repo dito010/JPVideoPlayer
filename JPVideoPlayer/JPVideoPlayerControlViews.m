@@ -173,6 +173,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     if(!self.totalSeconds){
         return;
     }
+    [self updateCacheProgressViewIfNeed];
     [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1000)];
 }
 
@@ -200,12 +201,22 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
         }
     }
     else {
+        // find the range that the closest to dragStartLocation.
         for(NSValue *value in self.rangesValue){
             NSRange range = [value rangeValue];
+            NSUInteger distance = NSUIntegerMax;
             if(JPValidFileRange(range)){
                 if(NSLocationInRange(dragStartLocation, range)){
                     targetRange = range;
                     break;
+                }
+                else {
+                    NSUInteger deltaDistance = abs(range.location - dragStartLocation);
+                    deltaDistance = abs(NSMaxRange(range) - dragStartLocation) < deltaDistance ?: deltaDistance;
+                    if(deltaDistance < distance){
+                       distance = deltaDistance;
+                       targetRange = range;
+                    }
                 }
             }
         }

@@ -153,9 +153,9 @@
                 }
                 else if(cacheType == JPVideoPlayerCacheTypeFragment) {
                     JPDebugLog(@"Start play a fragment video: %@", url);
-                    [self.videoPlayer playVideoWithURL:url
-                                               options:options
-                                             showLayer:showLayer];
+                    [self playFragmentVideoWithURL:url
+                                           options:options
+                                         showLayer:showLayer];
                 }
             }
             else {
@@ -462,6 +462,19 @@ didCompleteWithError:(NSError *)error {
 
 
 #pragma mark - Play Video
+
+- (void)playFragmentVideoWithURL:(NSURL *)url
+                         options:(JPVideoPlayerOptions)options
+                       showLayer:(CALayer *)showLayer {
+    JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
+                               options:options
+                             showLayer:showLayer];
+    [self callVideoLengthDelegateMethodWithVideoLength:model.resourceLoader.cacheFile.fileLength];
+    [self callDownloadDelegateMethodWithFragmentRanges:model.resourceLoader.cacheFile.fragmentRanges
+                                          expectedSize:model.resourceLoader.cacheFile.fileLength
+                                             cacheType:JPVideoPlayerCacheTypeFragment
+                                                 error:nil];
+}
 
 - (void)playExistedVideoWithShowLayer:(CALayer *)showLayer
                                   url:(NSURL *)url
