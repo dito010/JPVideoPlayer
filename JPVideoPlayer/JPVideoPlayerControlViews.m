@@ -10,23 +10,9 @@
 #import "JPVideoPlayerCompat.h"
 #import "UIView+WebVideoCache.h"
 
-@class JPVideoPlayerProgressView;
+@interface JPVideoPlayerProgressView()
 
-@protocol JPVideoPlayerProgressViewDelegate<NSObject>
-
-@optional
-
-- (void)progressView:(JPVideoPlayerProgressView *)progressView
-   userDidDragToTime:(NSTimeInterval)timeInterval
-        totalSeconds:(NSTimeInterval)totalSeconds;
-
-@end
-
-@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
-
-@property (nonatomic, weak) id<JPVideoPlayerProgressViewDelegate> delegate;
-
-@property (nonatomic, strong) UIImageView *controlHandlerView;
+@property (nonatomic, strong) UIImageView *controlHandlerImageView;
 
 @property (nonatomic, strong) UIView *backgroundView;
 
@@ -63,7 +49,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
     if(!self.backgroundView.frame.size.height && self.bounds.size.width) {
         CGSize referenceSize = self.bounds.size;
-        self.controlHandlerView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
+        self.controlHandlerImageView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
         self.backgroundView.frame = CGRectMake(kJPVideoPlayerProgressViewWidth * 0.5,
                 (referenceSize.height - kJPVideoPlayerProgressBackgroundViewHeight) * 0.5,
                 referenceSize.width - kJPVideoPlayerProgressViewWidth,
@@ -125,7 +111,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
         view;
     });
 
-    self.controlHandlerView = ({
+    self.controlHandlerImageView = ({
         UIImageView *view = [UIImageView new];
         view.userInteractionEnabled = YES;
         view.image = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_progress_handler"];
@@ -135,7 +121,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     });
 
     UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDidChange:)];
-    [self.controlHandlerView addGestureRecognizer:recognizer];
+    [self.controlHandlerImageView addGestureRecognizer:recognizer];
 }
 
 - (void)panGestureDidChange:(UIPanGestureRecognizer *)panGestureRecognizer {
@@ -171,12 +157,12 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 }
 
 - (void)updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:(CGFloat)controlHandleViewOriginX {
-    CGRect frame = self.controlHandlerView.frame;
+    CGRect frame = self.controlHandlerImageView.frame;
     CGFloat handlerWidth = frame.size.width;
     frame.origin.x = controlHandleViewOriginX;
     frame.origin.x = MAX(0, frame.origin.x);
     frame.origin.x = MIN((self.bounds.size.width - handlerWidth), frame.origin.x);
-    self.controlHandlerView.frame = frame;
+    self.controlHandlerImageView.frame = frame;
     CGRect elapsedFrame = self.elapsedProgressView.frame;
     elapsedFrame.size.width = frame.origin.x;
     self.elapsedProgressView.frame = elapsedFrame;
@@ -270,12 +256,19 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 @implementation JPVideoPlayerControlBar
 
-- (instancetype)init {
+
+- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     self = [super init];
     if (self) {
+        _progressView = progressView;
         [self setup];
     }
     return self;
+}
+
+- (instancetype)init {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithProgressView:nil];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -358,13 +351,15 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
         button;
     });
 
-    self.progressView = ({
-        JPVideoPlayerProgressView *view = [JPVideoPlayerProgressView new];
-        view.delegate = self;
-        [self addSubview:view];
+    if(!self.progressView){
+        self.progressView = ({
+            JPVideoPlayerProgressView *view = [JPVideoPlayerProgressView new];
+            view.delegate = self;
+            [self addSubview:view];
 
-        view;
-    });
+            view;
+        });
+    }
 
     self.timeLabel = ({
         UILabel *label = [UILabel new];
@@ -475,7 +470,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
     if(!self.controlBar){
         self.controlBar = ({
-            JPVideoPlayerControlBar *bar = [JPVideoPlayerControlBar new];
+            JPVideoPlayerControlBar *bar = [[JPVideoPlayerControlBar alloc] initWithProgressView:nil];
             [self addSubview:bar];
             bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
             bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithRed:37.0/255 green:131.0/255 blue:232.0/255 alpha:1];

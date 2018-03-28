@@ -8,10 +8,47 @@
 
 #import "JPVideoPlayerProtocol.h"
 
-@class JPVideoPlayerProgressView, JPVideoPlayerControlView;
+@class JPVideoPlayerProgressView,
+       JPVideoPlayerControlView,
+       JPVideoPlayerProgressView;
 
 NS_ASSUME_NONNULL_BEGIN
-// TODO: 3.26 接下来处理拖动宽度越界 bug, 以及把 JPVideoPlayerControlBar 更加方便外界使用, 还有拖动缓存进度更新错误, .
+
+@protocol JPVideoPlayerProgressViewDelegate<NSObject>
+
+@optional
+
+- (void)progressView:(JPVideoPlayerProgressView *)progressView
+   userDidDragToTime:(NSTimeInterval)timeInterval
+        totalSeconds:(NSTimeInterval)totalSeconds;
+
+@end
+
+@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
+
+@property (nonatomic, weak, nullable) id<JPVideoPlayerProgressViewDelegate> delegate;
+
+@property (nonatomic, strong, readonly) UIImageView *controlHandlerImageView;
+
+@property (nonatomic, strong, readonly) UIView *backgroundView;
+
+@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
+
+@property(nonatomic, assign, readonly) NSUInteger fileLength;
+
+@property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
+
+@property (nonatomic, strong, readonly) UIView *elapsedProgressView;
+
+@property (nonatomic, strong, readonly) UIView *cachedProgressView;
+
+@property(nonatomic, assign, readonly) BOOL userDragging;
+
+@property (nonatomic, weak, readonly, nullable) UIView *playerView;
+
+@end
+
+// TODO:以及把 JPVideoPlayerControlBar 更加方便外界使用, 还有拖动缓存进度更新错误, .
 @interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
@@ -21,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UILabel *timeLabel;
 
 @property (nonatomic, strong, readonly) UIButton *landscapeButton;
+
+- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
 
 @end
 
