@@ -10,7 +10,21 @@
 #import "JPVideoPlayerCompat.h"
 #import "UIView+WebVideoCache.h"
 
+@class JPVideoPlayerProgressView;
+
+@protocol JPVideoPlayerProgressViewDelegate<NSObject>
+
+@optional
+
+- (void)progressView:(JPVideoPlayerProgressView *)progressView
+   userDidDragToTime:(NSTimeInterval)timeInterval
+        totalSeconds:(NSTimeInterval)totalSeconds;
+
+@end
+
 @interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
+
+@property (nonatomic, weak) id<JPVideoPlayerProgressViewDelegate> delegate;
 
 @property (nonatomic, strong) UIImageView *controlHandlerView;
 
@@ -32,7 +46,8 @@
 
 @end
 
-static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
+static const CGFloat kJPVideoPlayerProgressViewWidth = 20;
+static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 @implementation JPVideoPlayerProgressView
 
 - (instancetype)init {
@@ -47,10 +62,13 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     [super setFrame:frame];
 
     if(!self.backgroundView.frame.size.height && self.bounds.size.width) {
-        CGSize referSize = self.bounds.size;
-        self.controlHandlerView.frame = CGRectMake(-kJPVideoPlayerProgressViewEaseTouchEdgeWidth, 0, 20, 20);
-        self.backgroundView.frame = CGRectMake(0, (referSize.height - 2) * 0.5, referSize.width, 2);
-        self.elapsedProgressView.frame = CGRectMake(0, (referSize.height - 2) * 0.5, 0, 2);
+        CGSize referenceSize = self.bounds.size;
+        self.controlHandlerView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
+        self.backgroundView.frame = CGRectMake(kJPVideoPlayerProgressViewWidth * 0.5,
+                (referenceSize.height - kJPVideoPlayerProgressBackgroundViewHeight) * 0.5,
+                referenceSize.width - kJPVideoPlayerProgressViewWidth,
+                kJPVideoPlayerProgressBackgroundViewHeight);
+        self.elapsedProgressView.frame = CGRectMake(0, 0, 0, kJPVideoPlayerProgressBackgroundViewHeight);
     }
 }
 
@@ -72,10 +90,8 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
         return;
     }
 
-    CGRect frame = self.controlHandlerView.frame;
-    CGFloat handlerWidth = frame.size.width;
-    CGFloat controlHandleViewOriginX = (self.bounds.size.width - handlerWidth + kJPVideoPlayerProgressViewEaseTouchEdgeWidth * 2) * (elapsedSeconds / totalSeconds) - kJPVideoPlayerProgressViewEaseTouchEdgeWidth;
-    [self updateElapsedProgressWithControlHandleViewOriginX:controlHandleViewOriginX];
+    CGFloat controlHandleViewOriginX = (self.bounds.size.width - kJPVideoPlayerProgressViewWidth) * (elapsedSeconds / totalSeconds);
+    [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:controlHandleViewOriginX];
     self.totalSeconds = totalSeconds;
     //TODO: 进度条更新完成, 接下来做用户点击事件.
 }
@@ -104,7 +120,7 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
     self.elapsedProgressView = ({
         UIView *view = [UIView new];
-        [self addSubview:view];
+        [self.backgroundView addSubview:view];
 
         view;
     });
@@ -122,25 +138,13 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     [self.controlHandlerView addGestureRecognizer:recognizer];
 }
 
-- (void)updateElapsedProgressWithControlHandleViewOriginX:(CGFloat)controlHandleViewOriginX {
-    CGRect frame = self.controlHandlerView.frame;
-    CGFloat handlerWidth = frame.size.width;
-    frame.origin.x = controlHandleViewOriginX;
-    frame.origin.x = MAX(-kJPVideoPlayerProgressViewEaseTouchEdgeWidth, frame.origin.x);
-    frame.origin.x = MIN((self.bounds.size.width - handlerWidth + kJPVideoPlayerProgressViewEaseTouchEdgeWidth), frame.origin.x);
-    self.controlHandlerView.frame = frame;
-    CGRect elapsedFrame = self.elapsedProgressView.frame;
-    elapsedFrame.size.width = frame.origin.x + kJPVideoPlayerProgressViewEaseTouchEdgeWidth;
-    self.elapsedProgressView.frame = elapsedFrame;
-}
-
 - (void)panGestureDidChange:(UIPanGestureRecognizer *)panGestureRecognizer {
     CGPoint transPoint = [panGestureRecognizer translationInView:panGestureRecognizer.view];
     CGFloat offsetX = transPoint.x;
     CGRect frame = panGestureRecognizer.view.frame;
     frame.origin.x += offsetX;
-    [self updateElapsedProgressWithControlHandleViewOriginX:frame.origin.x];
-
+    [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:frame.origin.x];
+    [self callTimeChangeDelegateMethod];
     [panGestureRecognizer setTranslation:CGPointZero inView:panGestureRecognizer.view];
 
     switch(panGestureRecognizer.state){
@@ -158,12 +162,32 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     }
 }
 
+- (void)callTimeChangeDelegateMethod {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(progressView:userDidDragToTime:totalSeconds:)]) {
+        [self.delegate progressView:self
+                  userDidDragToTime:[self fetchElapsedProgressRatio] * self.totalSeconds
+                       totalSeconds:self.totalSeconds];
+    }
+}
+
+- (void)updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:(CGFloat)controlHandleViewOriginX {
+    CGRect frame = self.controlHandlerView.frame;
+    CGFloat handlerWidth = frame.size.width;
+    frame.origin.x = controlHandleViewOriginX;
+    frame.origin.x = MAX(0, frame.origin.x);
+    frame.origin.x = MIN((self.bounds.size.width - handlerWidth), frame.origin.x);
+    self.controlHandlerView.frame = frame;
+    CGRect elapsedFrame = self.elapsedProgressView.frame;
+    elapsedFrame.size.width = frame.origin.x;
+    self.elapsedProgressView.frame = elapsedFrame;
+}
+
 - (void)userDidFinishDrag {
     NSParameterAssert(!self.userDragging);
     if(!self.totalSeconds){
         return;
     }
-    [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1)];
+    [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1000)];
 }
 
 - (void)updateCacheProgressViewIfNeed {
@@ -207,7 +231,7 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     CGFloat cacheProgressViewOriginX = targetRange.location * self.backgroundView.bounds.size.width / self.fileLength;
     CGFloat cacheProgressViewWidth = targetRange.length * self.backgroundView.bounds.size.width / self.fileLength;
     self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.backgroundView.bounds.size.height);
-    [self.backgroundView addSubview:self.cachedProgressView];
+    [self.backgroundView insertSubview:self.cachedProgressView belowSubview:self.elapsedProgressView];
 }
 
 - (NSUInteger)fetchDragStartLocation {
@@ -219,19 +243,20 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 }
 
 - (CGFloat)fetchElapsedProgressRatio {
-    CGFloat totalDragWidth = self.bounds.size.width - self.controlHandlerView.bounds.size.width;
+    CGFloat totalDragWidth = self.bounds.size.width - kJPVideoPlayerProgressViewWidth;
     // the view do not finish layout yet.
     if(totalDragWidth == 0){
         totalDragWidth = 1;
     }
     CGFloat delta = self.elapsedProgressView.frame.size.width / totalDragWidth;
-    NSParameterAssert(delta >= 0 && delta <= 1);
+    delta = MIN(delta, 1);
+    delta = MAX(0, delta);
     return delta;
 }
 
 @end
 
-@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol>
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerProgressViewDelegate>
 
 @property (nonatomic, strong) UIButton *playButton;
 
@@ -260,8 +285,14 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
     self.playButton.frame = CGRectMake(16, 10, 18, 18);
     self.landscapeButton.frame = CGRectMake(screenSize.width - 34, 10, 18, 18);
     self.timeLabel.frame = CGRectMake(self.landscapeButton.frame.origin.x - 86, 10, 72, 16);
-    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 32;
-    self.progressView.frame = CGRectMake(45, 9, progressViewWidth, 20);
+    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 12;
+    self.progressView.frame = CGRectMake(40, 9, progressViewWidth, 20);
+}
+
+- (void)progressView:(JPVideoPlayerProgressView *)progressView
+   userDidDragToTime:(NSTimeInterval)timeInterval
+        totalSeconds:(NSTimeInterval)totalSeconds {
+    [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:totalSeconds];
 }
 
 
@@ -277,13 +308,9 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds {
-    NSString *elapsedString = [self convertSecondsToTimeString:elapsedSeconds];
-    NSString *totalString = [self convertSecondsToTimeString:totalSeconds];
-    self.timeLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@/%@", elapsedString, totalString]
-                                                                    attributes:@{
-                                                                            NSFontAttributeName : [UIFont systemFontOfSize:10],
-                                                                            NSForegroundColorAttributeName : [UIColor whiteColor]
-                                                                    }];
+    if(!self.progressView.userDragging){
+        [self updateTimeLabelWithElapsedSeconds:elapsedSeconds totalSeconds:totalSeconds];
+    }
     [self.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
                                               totalSeconds:totalSeconds];
 }
@@ -294,6 +321,17 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
 
 #pragma mark - Private
+
+- (void)updateTimeLabelWithElapsedSeconds:(NSTimeInterval)elapsedSeconds
+                             totalSeconds:(NSTimeInterval)totalSeconds {
+    NSString *elapsedString = [self convertSecondsToTimeString:elapsedSeconds];
+    NSString *totalString = [self convertSecondsToTimeString:totalSeconds];
+    self.timeLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@/%@", elapsedString, totalString]
+                                                                    attributes:@{
+                                                                            NSFontAttributeName : [UIFont systemFontOfSize:10],
+                                                                            NSForegroundColorAttributeName : [UIColor whiteColor]
+                                                                    }];
+}
 
 - (NSString *)convertSecondsToTimeString:(NSTimeInterval)seconds {
     NSUInteger minute = (NSUInteger)(seconds / 60);
@@ -322,6 +360,7 @@ static const CGFloat kJPVideoPlayerProgressViewEaseTouchEdgeWidth = 2;
 
     self.progressView = ({
         JPVideoPlayerProgressView *view = [JPVideoPlayerProgressView new];
+        view.delegate = self;
         [self addSubview:view];
 
         view;

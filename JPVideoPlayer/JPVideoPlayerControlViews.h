@@ -11,7 +11,7 @@
 @class JPVideoPlayerProgressView, JPVideoPlayerControlView;
 
 NS_ASSUME_NONNULL_BEGIN
-// TODO: 3.26 接下来处理拖动宽度越界 bug, 以及把 JPVideoPlayerControlBar 更加方便外界使用.
+// TODO: 3.26 接下来处理拖动宽度越界 bug, 以及把 JPVideoPlayerControlBar 更加方便外界使用, 还有拖动缓存进度更新错误, .
 @interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
