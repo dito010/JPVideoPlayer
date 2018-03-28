@@ -165,7 +165,7 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
             }
 
             // we will remove index file when cache video finished, so we can judge video is cached finished or not by index file existed or not.
-            BOOL isCacheFull = [self.fileManager fileExistsAtPath:[JPVideoPlayerCachePath videoCacheIndexFilePathForKey:key]];
+            BOOL isCacheFull = ![self.fileManager fileExistsAtPath:[JPVideoPlayerCachePath videoCacheIndexFilePathForKey:key]];
             if(isCacheFull){
                 if (completion) {
                     JPDispatchSyncOnMainQueue(^{

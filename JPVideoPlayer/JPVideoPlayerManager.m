@@ -80,7 +80,7 @@
 }
 
 - (void)playVideoWithURL:(NSURL *)url
-             showOnLayer:(UIView *)showLayer
+             showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options {
     JPMainThreadASSert;
     NSParameterAssert(showLayer);
@@ -463,7 +463,7 @@ didCompleteWithError:(NSError *)error {
 
 #pragma mark - Play Video
 
-- (void)playExistedVideoWithShowLayer:(UIView *)showLayer
+- (void)playExistedVideoWithShowLayer:(CALayer *)showLayer
                                   url:(NSURL *)url
                             videoPath:(NSString *)videoPath
                               options:(JPVideoPlayerOptions)options

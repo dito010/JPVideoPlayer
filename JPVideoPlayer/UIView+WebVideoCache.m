@@ -116,7 +116,7 @@
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView {
     if(!controlView){
         // Use default `JPVideoPlayerControlView` if no controlView.
-        controlView = [JPVideoPlayerControlView new];
+        controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
     }
     self.jp_controlView = controlView;
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
