@@ -16,7 +16,7 @@
 #import "UITableView+VideoPlay.h"
 #import "UITableViewCell+VideoPlay.h"
 
-@interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
+@interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource, JPTableViewPlayVideoDelegate>
 
 /**
  * Arrary of video paths.
@@ -135,6 +135,13 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 
+#pragma mark - JPTableViewPlayVideoDelegate
+
+- (void)tableView:(UITableView *)tableView readyPlayVideoOnCell:(UITableViewCell *)cell {
+    [cell.jp_videoPlayView jp_playVideoWithURL:cell.jp_videoURL controlView:nil];
+}
+
+
 #pragma mark - Setup
 
 - (void)setup{
@@ -148,6 +155,8 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerDemoCell class]) bundle:nil] forCellReuseIdentifier:JPVideoPlayerDemoReuseID];
+
+    self.tableView.jp_delegate = self;
 
     // location file in disk.
     // 本地视频播放.

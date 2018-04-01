@@ -5,16 +5,24 @@
 
 #import "UITableView+VideoPlay.h"
 #import "JPVideoPlayerCompat.h"
-#import "JPVideoPlayerScrollViewHelper.h"
+#import "JPVideoPlayerTableViewHelper.h"
 
 @interface UITableView()
 
-@property (nonatomic) JPVideoPlayerScrollViewHelper *helper;
+@property (nonatomic) JPVideoPlayerTableViewHelper *helper;
 
 @end
 
 static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.scrollview.helper.www";
 @implementation UITableView (VideoPlay)
+
+- (void)setJp_delegate:(id <JPTableViewPlayVideoDelegate>)jp_delegate {
+    self.helper.delegate = jp_delegate;
+}
+
+- (id <JPTableViewPlayVideoDelegate>)jp_delegate {
+    return self.helper.delegate;
+}
 
 - (UITableViewCell *)jp_playingVideoCell {
     return [self.helper playingVideoCell];
@@ -26,6 +34,14 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
 
 - (CGRect)jp_tableViewVisibleFrame {
     return self.helper.tableViewVisibleFrame;
+}
+
+- (void)setJp_unreachableCellDictionary:(NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {
+    self.helper.unreachableCellDictionary = jp_unreachableCellDictionary;
+}
+
+- (NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {
+    return self.helper.unreachableCellDictionary;
 }
 
 - (void)jp_handleCellUnreachableTypeForCell:(UITableViewCell *)cell
@@ -59,10 +75,10 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
 
 #pragma mark - Private
 
-- (JPVideoPlayerScrollViewHelper *)helper {
-    JPVideoPlayerScrollViewHelper *_helper = objc_getAssociatedObject(self, &kJPVideoPlayerScrollViewHelperKey);
+- (JPVideoPlayerTableViewHelper *)helper {
+    JPVideoPlayerTableViewHelper *_helper = objc_getAssociatedObject(self, &kJPVideoPlayerScrollViewHelperKey);
     if(!_helper){
-        _helper = [[JPVideoPlayerScrollViewHelper alloc] initWithScrollView:self];
+        _helper = [[JPVideoPlayerTableViewHelper alloc] initWithScrollView:self];
         objc_setAssociatedObject(self, &kJPVideoPlayerScrollViewHelperKey, _helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return _helper;

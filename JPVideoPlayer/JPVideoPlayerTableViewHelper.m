@@ -3,9 +3,10 @@
 // Copyright (c) 2018 NewPan. All rights reserved.
 //
 
-#import "JPVideoPlayerScrollViewHelper.h"
+#import "JPVideoPlayerTableViewHelper.h"
 #import "UITableViewCell+VideoPlay.h"
 #import "UIView+WebVideoCache.h"
+#import "UITableView+VideoPlay.h"
 
 /**
  * The style of cell cannot stop in screen center.
@@ -34,15 +35,18 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 @end
 
-@interface JPVideoPlayerScrollViewHelper()
+@interface JPVideoPlayerTableViewHelper()
 
 @property (nonatomic, weak) UITableViewCell *playingVideoCell;
 
-@property (nonatomic, strong) NSDictionary<NSNumber *, NSNumber *> *unreachableCellDict;
-
 @end
 
-@implementation JPVideoPlayerScrollViewHelper
+@implementation JPVideoPlayerTableViewHelper
+
+- (instancetype)init {
+    NSAssert(NO, @"Please use given initialize method.");
+    return [self initWithScrollView:[UIScrollView new]];
+};
 
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView {
     NSParameterAssert(scrollView);
@@ -60,7 +64,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 - (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
                              atIndexPath:(NSIndexPath *)indexPath {
-    if(![self scrollViewIsTableViewOrCollectionView:self.scrollView]){
+    if(![self scrollViewIsTableView:self.scrollView]){
         return;
     }
     UITableView *tableView = (UITableView *)self.scrollView;
@@ -94,7 +98,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
         return;
     }
 
-    if(![self scrollViewIsTableViewOrCollectionView:self.scrollView]){
+    if(![self scrollViewIsTableView:self.scrollView]){
         return;
     }
 
@@ -116,7 +120,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (void)stopPlayIfNeed {
-    if(![self scrollViewIsTableViewOrCollectionView:self.scrollView]){
+    if(![self scrollViewIsTableView:self.scrollView]){
         return;
     }
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
@@ -124,7 +128,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(![self scrollViewIsTableViewOrCollectionView:self.scrollView]){
+    if(![self scrollViewIsTableView:self.scrollView]){
         return;
     }
 
@@ -133,7 +137,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate {
-    if(![self scrollViewIsTableViewOrCollectionView:scrollView]){
+    if(![self scrollViewIsTableView:scrollView]){
         return;
     }
 
@@ -143,7 +147,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if(![self scrollViewIsTableViewOrCollectionView:scrollView]){
+    if(![self scrollViewIsTableView:scrollView]){
         return;
     }
     [self handleScrollStopIfNeed];
@@ -232,37 +236,35 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (NSUInteger)fetchUnreachableCellCountWithVisibleCellsCount:(NSUInteger)visibleCellsCount {
-    if(![self.unreachableCellDict.allKeys containsObject:[NSString stringWithFormat:@"%ld", visibleCellsCount]]){
+    if(![self.unreachableCellDictionary.allKeys containsObject:[NSString stringWithFormat:@"%ld", visibleCellsCount]]){
         return 0;
     }
-    return [[self.unreachableCellDict valueForKey:[NSString stringWithFormat:@"%ld", visibleCellsCount]] intValue];
+    return [[self.unreachableCellDictionary valueForKey:[NSString stringWithFormat:@"%ld", visibleCellsCount]] intValue];
 }
 
-/**
- * Because we start to play video on cell only when the tableview was stoped scrolling and the cell stoped on screen center, so always some cells cannot stop in screen center maybe, the cells always is those on top or bottom in tableview.
- * So we need handle this especially. But first we need do is that to check the situation of this type cell appear.
- * Here is the result of my measure on iPhone 6s(CH).
- * The number of visible cells in screen:              4  3  2
- * The number of cells cannot stop in screen center:    1  1  0
- * Tip : you need to know that the mean of result, For example, when we got 4 cells in screen, this time mean that we find 1 cell of cannot stop in screen center on top, and we got the cell of cannot stop in screen center on bottom at the same time.
- * Watch out : the cell of cannot stop in screen center only appear when the number of visiable cell is greater than 3.
- */
-- (NSDictionary<NSNumber *, NSNumber *> *)unreachableCellDict {
-    if(!_unreachableCellDict){
+- (NSDictionary<NSString *, NSString *> *)unreachableCellDictionary {
+    if(!_unreachableCellDictionary){
         // The key is the number of visible cells in screen,
         // the value is the number of cells cannot stop in screen center.
-        _unreachableCellDict = @{
+        _unreachableCellDictionary = @{
                 @"4" : @"1",
                 @"3" : @"1",
                 @"2" : @"0"
         };
     }
-    return _unreachableCellDict;
+    return _unreachableCellDictionary;
 }
 
 - (void)playVideoWithCell:(UITableViewCell *)cell {
+    NSParameterAssert(cell);
+    if(!cell){
+        return;
+    }
+
     self.playingVideoCell = cell;
-    [cell.jp_videoPlayView jp_playVideoWithURL:cell.jp_videoURL controlView:nil];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:readyPlayVideoOnCell:)]) {
+        [self.delegate tableView:self.scrollView readyPlayVideoOnCell:cell];
+    }
 }
 
 - (void)handleQuickScrollIfNeed {
@@ -292,31 +294,8 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     self.playingVideoCell = bestCell;
 }
 
-- (BOOL)scrollViewIsCollectionView:(UIScrollView *)scrollView {
-    if(![self scrollViewIsTableViewOrCollectionView:scrollView]){
-        return NO;
-    }
-    if([scrollView isKindOfClass:[UICollectionView class]]){
-        return YES;
-    }
-    return NO;
-}
-
 - (BOOL)scrollViewIsTableView:(UIScrollView *)scrollView {
-    if(![self scrollViewIsTableViewOrCollectionView:scrollView]){
-        return NO;
-    }
     if([scrollView isKindOfClass:[UITableView class]]){
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)scrollViewIsTableViewOrCollectionView:(UIScrollView *)scrollView {
-    if([scrollView isKindOfClass:[UITableView class]]){
-        return YES;
-    }
-    if([scrollView isKindOfClass:[UICollectionView class]]){
         return YES;
     }
     return NO;

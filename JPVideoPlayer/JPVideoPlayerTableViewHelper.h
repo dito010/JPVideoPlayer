@@ -5,15 +5,21 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol JPTableViewPlayVideoDelegate;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JPVideoPlayerScrollViewHelper : NSObject
+@interface JPVideoPlayerTableViewHelper : NSObject
 
 @property (nonatomic, weak, readonly, nullable) UIScrollView *scrollView;
 
 @property (nonatomic, weak, readonly) UITableViewCell *playingVideoCell;
 
 @property(nonatomic, assign) CGRect tableViewVisibleFrame;
+
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
+
+@property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;
 
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView NS_DESIGNATED_INITIALIZER;
 
