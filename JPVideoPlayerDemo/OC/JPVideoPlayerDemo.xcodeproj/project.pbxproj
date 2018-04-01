@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		258183E6274D79D6E72F4F8B /* UITableViewCell+VideoPlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581893DF86BB283AC40399F /* UITableViewCell+VideoPlay.m */; };
+		25818B50669444407D0A4E9B /* UITableView+VideoPlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581855A00489E540790B797 /* UITableView+VideoPlay.m */; };
 		25818DB3B140DE7EDCFC3A66 /* JPVideoPlayerSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 258181A39BB5958976ECC258 /* JPVideoPlayerSupportUtils.m */; };
+		25818E4B414C1C6490262690 /* JPVideoPlayerScrollViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 25818CD19BDD22E4637CA452 /* JPVideoPlayerScrollViewHelper.m */; };
 		25818E851233F2B0623E1B0B /* JPResourceLoadingRequestTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581801C6AAE79C4B51BD5C0 /* JPResourceLoadingRequestTask.m */; };
 		481650661ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m in Sources */ = {isa = PBXBuildFile; fileRef = 481650641ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m */; };
 		481650671ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481650651ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib */; };
@@ -20,7 +23,6 @@
 		5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67056A1DADE88F001EBFAF /* AppDelegate.m */; };
 		5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F6705721DADE88F001EBFAF /* Assets.xcassets */; };
 		5FF7BAF11E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.m */; };
-		5FF7BAF21E7F8EC400912ACD /* UITableView+VideoPlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7BAF01E7F8EC400912ACD /* UITableView+VideoPlay.m */; };
 		C3D50D2EF7B7EB2F36B72E2D /* libPods-JPVideoPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */; };
 		CF156E692052DBF9007FE819 /* JPVideoPlayer.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CF156E682052DBF9007FE819 /* JPVideoPlayer.bundle */; };
 		CF5438712067AE3300AC4391 /* designedByAppleInCalifornia.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CF5438702067AE3300AC4391 /* designedByAppleInCalifornia.mp4 */; };
@@ -56,7 +58,13 @@
 		258181A39BB5958976ECC258 /* JPVideoPlayerSupportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerSupportUtils.m; sourceTree = "<group>"; };
 		2581827953DF09B54FF44E9D /* JPVideoPlayerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerProtocol.h; sourceTree = "<group>"; };
 		2581847EA55B90B1D8BE2229 /* JPResourceLoadingRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPResourceLoadingRequestTask.h; sourceTree = "<group>"; };
+		2581855A00489E540790B797 /* UITableView+VideoPlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+VideoPlay.m"; sourceTree = "<group>"; };
 		25818654A411C12B0B0C1EDA /* JPVideoPlayerSupportUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerSupportUtils.h; sourceTree = "<group>"; };
+		25818741585718D3332D2C82 /* UITableViewCell+VideoPlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+VideoPlay.h"; sourceTree = "<group>"; };
+		258188812C523F144972A264 /* UITableView+VideoPlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+VideoPlay.h"; sourceTree = "<group>"; };
+		2581893DF86BB283AC40399F /* UITableViewCell+VideoPlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+VideoPlay.m"; sourceTree = "<group>"; };
+		25818CD19BDD22E4637CA452 /* JPVideoPlayerScrollViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerScrollViewHelper.m; sourceTree = "<group>"; };
+		25818E6FB2BFB9DEBBFEFEE6 /* JPVideoPlayerScrollViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerScrollViewHelper.h; sourceTree = "<group>"; };
 		481650631ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDemoVC_push.h; sourceTree = "<group>"; };
 		481650641ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDemoVC_push.m; sourceTree = "<group>"; };
 		481650651ED1AA7B00A18412 /* JPVideoPlayerDemoVC_push.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerDemoVC_push.xib; sourceTree = "<group>"; };
@@ -76,8 +84,6 @@
 		5F6705771DADE88F001EBFAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDemoVC_home.h; sourceTree = "<group>"; };
 		5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDemoVC_home.m; sourceTree = "<group>"; };
-		5FF7BAEF1E7F8EC400912ACD /* UITableView+VideoPlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+VideoPlay.h"; sourceTree = "<group>"; };
-		5FF7BAF01E7F8EC400912ACD /* UITableView+VideoPlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+VideoPlay.m"; sourceTree = "<group>"; };
 		8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF156E682052DBF9007FE819 /* JPVideoPlayer.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JPVideoPlayer.bundle; sourceTree = "<group>"; };
 		CF5438702067AE3300AC4391 /* designedByAppleInCalifornia.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = designedByAppleInCalifornia.mp4; sourceTree = "<group>"; };
@@ -148,8 +154,6 @@
 		48FD326B1EB6FF5E00ACCB05 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				5FF7BAEF1E7F8EC400912ACD /* UITableView+VideoPlay.h */,
-				5FF7BAF01E7F8EC400912ACD /* UITableView+VideoPlay.m */,
 				5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.h */,
 				5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerDemoVC_home.m */,
 				48EE51CD1E6C069900BA602D /* JPVideoPlayerDemoCell.h */,
@@ -256,6 +260,12 @@
 				2581847EA55B90B1D8BE2229 /* JPResourceLoadingRequestTask.h */,
 				2581801C6AAE79C4B51BD5C0 /* JPResourceLoadingRequestTask.m */,
 				2581827953DF09B54FF44E9D /* JPVideoPlayerProtocol.h */,
+				2581893DF86BB283AC40399F /* UITableViewCell+VideoPlay.m */,
+				25818741585718D3332D2C82 /* UITableViewCell+VideoPlay.h */,
+				2581855A00489E540790B797 /* UITableView+VideoPlay.m */,
+				258188812C523F144972A264 /* UITableView+VideoPlay.h */,
+				25818CD19BDD22E4637CA452 /* JPVideoPlayerScrollViewHelper.m */,
+				25818E6FB2BFB9DEBBFEFEE6 /* JPVideoPlayerScrollViewHelper.h */,
 			);
 			name = JPVideoPlayer;
 			path = ../../../JPVideoPlayer;
@@ -399,7 +409,6 @@
 				CFD87BD8203C0C5B004206E8 /* JPVideoPlayerCachePath.m in Sources */,
 				48EE51D01E6C069900BA602D /* JPVideoPlayerDemoCell.m in Sources */,
 				CFD87BD9203C0C5B004206E8 /* JPVideoPlayerCacheFile.m in Sources */,
-				5FF7BAF21E7F8EC400912ACD /* UITableView+VideoPlay.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
 				48FD32711EB701D400ACCB05 /* JPQRCodeTool.m in Sources */,
 				CFD87BCE203C0C5B004206E8 /* JPVideoPlayerCache.m in Sources */,
@@ -414,6 +423,9 @@
 				CFD87BCC203C0C5B004206E8 /* JPVideoPlayerDownloader.m in Sources */,
 				25818DB3B140DE7EDCFC3A66 /* JPVideoPlayerSupportUtils.m in Sources */,
 				25818E851233F2B0623E1B0B /* JPResourceLoadingRequestTask.m in Sources */,
+				258183E6274D79D6E72F4F8B /* UITableViewCell+VideoPlay.m in Sources */,
+				25818B50669444407D0A4E9B /* UITableView+VideoPlay.m in Sources */,
+				25818E4B414C1C6490262690 /* JPVideoPlayerScrollViewHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

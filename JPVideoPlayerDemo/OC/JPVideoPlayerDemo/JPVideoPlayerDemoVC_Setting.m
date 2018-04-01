@@ -7,7 +7,6 @@
 //
 
 #import "JPVideoPlayerDemoVC_Setting.h"
-#import "UITableView+VideoPlay.h"
 #import "JPVideoPlayerCache.h"
 #import "JPQRCodeTool.h"
 

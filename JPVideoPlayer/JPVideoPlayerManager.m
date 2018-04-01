@@ -82,7 +82,7 @@
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options {
-    JPMainThreadASSert;
+    JPMainThreadAssert;
     NSParameterAssert(showLayer);
 
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't

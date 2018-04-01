@@ -12,10 +12,9 @@
 #import "JPVideoPlayerDemoVC_home.h"
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerDemoCell.h"
-#import "UITableView+VideoPlay.h"
 #import "JPVideoPlayerDemoVC_push.h"
-#import "JPVideoPlayerDownloader.h"
-#import "JPVideoPlayerCache.h"
+#import "UITableView+VideoPlay.h"
+#import "UITableViewCell+VideoPlay.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -24,12 +23,6 @@
  * 播放路径数组集合.
  */
 @property(nonatomic, strong, nonnull)NSArray *pathStrings;
-
-/**
- * For calculate the scroll derection of tableview, we need record the offset-Y of tableview when begain drag.
- * 刚开始拖拽时scrollView的偏移量Y值, 用来判断滚动方向.
- */
-@property(nonatomic, assign)CGFloat offsetY_last;
 
 /**
  * Center indicator line.
@@ -46,6 +39,7 @@
 
 #warning 注意: 播放视频的工具类是单例, 单例生命周期为整个应用生命周期, 故而须在 `-viewWillDisappear:`(推荐)或其他方法里 调用 `stopPlay` 方法来停止视频播放, 否则当前控制器销毁了, 视频仍然在后台播放, 虽然看不到图像, 但是能听到声音(如果有).
 
+#define JPVideoPlayerDemoRowHei ([UIScreen mainScreen].bounds.size.width*9.0/16.0)
 static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 @implementation JPVideoPlayerDemoVC_home
 
@@ -56,36 +50,31 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [self insertLineInScreenCenter];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CGRect tableViewFrame = self.tableView.frame;
+    tableViewFrame.size.height -= self.tabBarController.tabBar.bounds.size.height;
+    self.tableView.jp_tableViewVisibleFrame = tableViewFrame;
+}
+
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 
-    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
+    [self.tableView jp_playVideoInVisibleCellsIfNeed];
+
+    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = self;
-
-    if (!self.tableView.playingCell) {
-
-        // Find the first cell need to play video in visiable cells.
-        // 在可见cell中找第一个有视频的进行播放.
-        [self.tableView playVideoInVisiableCells];
-    }
-    else{
-
-        NSURL *url = [NSURL URLWithString:self.tableView.playingCell.videoPath];
-        [self.tableView.playingCell.videoImv jp_playVideoWithURL:url controlView:nil];
-//        [self.tableView.playingCell.videoImv jp_playVideoMutedDisplayStatusViewWithURL:url];
-    }
-
     self.tableViewRange.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
 
-    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingCell 被置空.
+    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = nil;
-
-    if (self.tableView.playingCell) {
-        [self.tableView.playingCell.videoImv jp_stopPlay];
+    if (self.tableView.jp_playingVideoCell) {
+        [self.tableView.jp_playingVideoCell.jp_videoPlayView jp_stopPlay];
     }
 
     self.tableViewRange.hidden = YES;
@@ -100,27 +89,13 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
     JPVideoPlayerDemoCell *cell = [tableView dequeueReusableCellWithIdentifier:JPVideoPlayerDemoReuseID forIndexPath:indexPath];
-    cell.videoPath = self.pathStrings[indexPath.row];
     cell.indexPath = indexPath;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-    if (self.tableView.maxNumCannotPlayVideoCells > 0) {
-        if (indexPath.row <= self.tableView.maxNumCannotPlayVideoCells-1) { // 上不可及
-            cell.cellStyle = JPPlayUnreachCellStyleUp;
-        }
-        else if (indexPath.row >= self.pathStrings.count-self.tableView.maxNumCannotPlayVideoCells){ // 下不可及
-            cell.cellStyle = JPPlayUnreachCellStyleDown;
-        }
-        else{
-            cell.cellStyle = JPPlayUnreachCellStyleNone;
-        }
-    }
-    else{
-        cell.cellStyle = JPPlayUnreachCellStyleNone;
-    }
-
+    cell.jp_videoURL = [NSURL URLWithString:self.pathStrings[indexPath.row]];
+    cell.jp_videoPlayView = cell.videoImv;
+    [tableView jp_handleCellUnreachableTypeForCell:cell
+                                       atIndexPath:indexPath];
     return cell;
 }
 
@@ -132,22 +107,19 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     single.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:single animated:YES];
     JPVideoPlayerDemoCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    single.videoPath = cell.videoPath;
+    single.videoPath = cell.jp_videoURL.absoluteString;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return JPVideoPlayerDemoRowHei;
+    return indexPath.row % 2 == 0 ? JPVideoPlayerDemoRowHei : (JPVideoPlayerDemoRowHei + 40);
 }
 
 /**
  * Called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
  * 松手时已经静止, 只会调用scrollViewDidEndDragging
  */
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-
-    if (decelerate == NO)
-        // scrollView已经完全静止
-        [self.tableView handleScrollStop];
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.tableView jp_scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 }
 
 /**
@@ -155,28 +127,11 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
  * 松手时还在运动, 先调用scrollViewDidEndDragging, 再调用scrollViewDidEndDecelerating
  */
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-
-    // scrollView已经完全静止
-    [self.tableView handleScrollStop];
+    [self.tableView jp_scrollViewDidEndDecelerating:scrollView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
-    // 处理滚动方向
-    [self handleScrollDerectionWithOffset:scrollView.contentOffset.y];
-
-    // Handle cyclic utilization
-    // 处理循环利用
-    [self.tableView handleQuickScroll];
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    self.offsetY_last = scrollView.contentOffset.y;
-}
-
-- (void)handleScrollDerectionWithOffset:(CGFloat)offsetY{
-    self.tableView.currentDerection = (offsetY-self.offsetY_last>0) ? JPVideoPlayerDemoScrollDerectionUp : JPVideoPlayerDemoScrollDerectionDown;
-    self.offsetY_last = offsetY;
+    [self.tableView jp_scrollViewDidScroll:scrollView];
 }
 
 
@@ -193,7 +148,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerDemoCell class]) bundle:nil] forCellReuseIdentifier:JPVideoPlayerDemoReuseID];
-    self.tableView.tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
 
     // location file in disk.
     // 本地视频播放.
@@ -201,35 +155,49 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
             url.absoluteString,
-            @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/lavameface.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/screen.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/lavame.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/iPhoneX.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/kingOfGlory.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/worldStart.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/wechat.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/threeminutes.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/designedByAppleInCalifornia.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/steveInStanford.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/Bitcoin.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/chunjie.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/liangliang.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/nanianhuakai.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/wanghanxu.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/xiaochou.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/fukua.mp4",
-            @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
-            @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-            @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-            @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
-            @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
-            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-            @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
-            @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/lavameface.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/screen.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/lavame.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/iPhoneX.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/kingOfGlory.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/worldStart.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/wechat.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/threeminutes.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/designedByAppleInCalifornia.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/steveInStanford.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/Bitcoin.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/chunjie.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/liangliang.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/nanianhuakai.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/wanghanxu.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/xiaochou.mp4",
+//            @"http://p11s9kqxf.bkt.clouddn.com/fukua.mp4",
+//            @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
+//            @"http://static.smartisanos.cn/common/video/m1-white.mp4",
+//            @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
+//            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+//            @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
+//            @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
+//            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
+//            @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
+//            @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
     ];
 }
 

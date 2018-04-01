@@ -114,11 +114,13 @@
 
 - (void)jp_playVideoWithURL:(NSURL *)url
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView {
-    if(!controlView){
+    if(!controlView && !self.jp_controlView){
         // Use default `JPVideoPlayerControlView` if no controlView.
         controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
     }
-    self.jp_controlView = controlView;
+    if(controlView){
+        self.jp_controlView = controlView;
+    }
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -135,6 +137,8 @@
             [self addSubview:self.helper.videoPlayerView];
             self.helper.videoPlayerView.frame = self.bounds;
         }
+        self.helper.videoPlayerView.hidden = NO;
+
         if(self.jp_controlView && !self.jp_controlView.superview){
             self.jp_controlView.frame = self.bounds;
             if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
@@ -172,7 +176,8 @@
 }
 
 - (void)jp_stopPlay{
-    [[JPVideoPlayerManager sharedManager]stopPlay];
+    [[JPVideoPlayerManager sharedManager] stopPlay];
+    self.helper.videoPlayerView.hidden = YES;
 }
 
 - (void)jp_pause{

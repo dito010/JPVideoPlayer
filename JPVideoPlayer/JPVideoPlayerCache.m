@@ -13,7 +13,6 @@
 #import "JPVideoPlayerCachePath.h"
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerManager.h"
-#import "JPVideoPlayerDebrisJointManager.h"
 #import "JPVideoPlayerSupportUtils.h"
 
 #include <sys/param.h>
@@ -48,11 +47,6 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
  * Received video size.
  */
 @property(nonatomic, assign)NSUInteger receivedVideoSize;
-
-/*
- * Joint Manager.
- */
-@property(nonatomic, strong, nonnull) JPVideoPlayerDebrisJointManager *joinManager;
 
 @end
 

@@ -36,7 +36,7 @@ static const NSString *kJPVideoPlayerCacheFileZoneKey = @"com.newpan.zone.key.ww
 static const NSString *kJPVideoPlayerCacheFileSizeKey = @"com.newpan.size.key.www";
 static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.response.header.key.www";
 @implementation JPVideoPlayerCacheFile
-
+//TODO: 这里要持有自己的线程,防止线程抢夺资源.
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
                         indexFilePath:(NSString *)indexFilePath {
     return [[self alloc] initWithFilePath:filePath

@@ -26,7 +26,7 @@
 - (void)setIndexPath:(NSIndexPath *)indexPath{
     _indexPath = indexPath;
     
-    if (indexPath.row%2) {
+    if (indexPath.row % 2) {
         self.videoImv.image = [UIImage imageNamed:@"placeholder1"];
     }
     else{

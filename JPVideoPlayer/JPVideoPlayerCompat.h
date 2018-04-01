@@ -11,13 +11,14 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVAssetResourceLoader.h>
+#import <objc/runtime.h>
 
 #ifndef JPVideoPlayerCompat
 #define JPVideoPlayerCompat
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define JPMainThreadASSert NSParameterAssert([[NSThread currentThread] isMainThread])
+#define JPMainThreadAssert NSParameterAssert([[NSThread currentThread] isMainThread])
 
 typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
     JPVideoPlayerStatusUnkown,
@@ -230,5 +231,10 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range);
 
 #endif
 
+@interface NSObject (JPSwizzle)
+
++ (BOOL)jp_swizzleMethod:(SEL)origSel withMethod:(SEL)altSel error:(NSError**)error;
+
+@end
 
 NS_ASSUME_NONNULL_END

@@ -112,3 +112,38 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range) {
 }
 
 @end
+
+static const NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
+@implementation NSObject (JPSwizzle)
+
++ (BOOL)jp_swizzleMethod:(SEL)origSel withMethod:(SEL)altSel error:(NSError**)error {
+    Method origMethod = class_getInstanceMethod(self, origSel);
+    if (!origMethod) {
+        *error = [NSError errorWithDomain:kJPSwizzleErrorDomain code:0 userInfo:@{
+                NSLocalizedDescriptionKey : [NSString stringWithFormat:@"original method %@ not found for class %@", NSStringFromSelector(origSel), [self class]]
+        }];
+        return NO;
+    }
+
+    Method altMethod = class_getInstanceMethod(self, altSel);
+    if (!altMethod) {
+        *error = [NSError errorWithDomain:kJPSwizzleErrorDomain code:0 userInfo:@{
+                NSLocalizedDescriptionKey : [NSString stringWithFormat:@"alternate method %@ not found for class %@", NSStringFromSelector(altSel), [self class]]
+        }];
+        return NO;
+    }
+
+    class_addMethod(self,
+            origSel,
+            class_getMethodImplementation(self, origSel),
+            method_getTypeEncoding(origMethod));
+    class_addMethod(self,
+            altSel,
+            class_getMethodImplementation(self, altSel),
+            method_getTypeEncoding(altMethod));
+
+    method_exchangeImplementations(class_getInstanceMethod(self, origSel), class_getInstanceMethod(self, altSel));
+    return YES;
+}
+
+@end
