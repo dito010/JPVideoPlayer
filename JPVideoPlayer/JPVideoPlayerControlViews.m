@@ -263,10 +263,11 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 @property (nonatomic, strong) UIButton *landscapeButton;
 
+@property (nonatomic, weak) UIView *playerView;
+
 @end
 
 @implementation JPVideoPlayerControlBar
-
 
 - (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     self = [super init];
@@ -303,6 +304,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 #pragma mark - JPVideoPlayerControlProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
+    self.playerView = view;
     [self.progressView viewWillAddToSuperView:view];
 }
 
@@ -344,6 +346,10 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 }
 
 - (void)playButtonDidClick:(UIButton *)button {
+    button.selected = !button.selected;
+    BOOL isPlay = self.playerView.jp_playerStatus == JPVideoPlayerStatusBuffering ||
+            self.playerView.jp_playerStatus == JPVideoPlayerStatusPlaying;
+    isPlay ? [self.playerView jp_pause] : [self.playerView jp_resume];
 }
 
 - (void)landscapeButtonDidClick:(UIButton *)button {
@@ -356,7 +362,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
         UIButton *button = [UIButton new];
         [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_pause"] forState:UIControlStateNormal];
         [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_play"] forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(playButtonDidClick:) forControlEvents:UIControlEventTouchDragInside];
+        [button addTarget:self action:@selector(playButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
 
         button;
@@ -382,7 +388,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     self.landscapeButton = ({
         UIButton *button = [UIButton new];
         [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_landscape"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchDragInside];
+        [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
 
         button;

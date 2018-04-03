@@ -160,10 +160,11 @@
     }
     else {
         JPDispatchSyncOnMainQueue(^{
-            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadProgressDidChangeReceivedSize:expectedSize:error:)]) {
-                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Try to load a nil url"}];
-                [self.jp_videoPlayerDelegate downloadProgressDidChangeReceivedSize:0 expectedSize:0 error:error];
-            }
+            // TODO: handle error.
+//            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadProgressDidChangeReceivedSize:expectedSize:error:)]) {
+//                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Try to load a nil url"}];
+//                [self.jp_videoPlayerDelegate downloadProgressDidChangeReceivedSize:0 expectedSize:0 error:error];
+//            }
         });
     }
 }
@@ -396,17 +397,26 @@
 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
  shouldDownloadVideoForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldDownloadVideoForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldDownloadVideoForURL:videoURL];
+    }
     return YES;
 }
 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     shouldAutoReplayForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldAutoReplayForURL:videoURL];
+    }
     return YES;
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
-
+    self.helper.playerStatus = playerStatus;
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
+        [self.jp_videoPlayerDelegate playerStatusDidChanged:playerStatus];
+    }
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager

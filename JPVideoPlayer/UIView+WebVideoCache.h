@@ -67,29 +67,6 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  */
 - (void)playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
-/**
- * Notify the download progress value. this method will be called on main thread.
- * If the video is local or cached file, this method will be called once and the receive size equal to expected size,
- * if video is existed on web, this method will be called when the download progress value changed, else if some error happened,
- * this method will never be called.
- *
- * @param receivedSize        The current received data size.
- * @param expectedSize        The expected data size.
- * @param error               The error when download video data.
- */
-- (void)downloadProgressDidChangeReceivedSize:(NSUInteger)receivedSize
-                                 expectedSize:(NSUInteger)expectedSize
-                                        error:(NSError *)error;
-
-/**
- * Notify the playing progress value. this method will be called on main thread.
- *
- * @param elapsedSeconds     The current played seconds.
- * @param totalSeconds       The total seconds of this video for given url.
- */
-- (void)playProgressDidChangeElapsedSeconds:(double)elapsedSeconds
-                               totalSeconds:(double)totalSeconds;
-
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>

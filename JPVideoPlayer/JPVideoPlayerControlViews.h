@@ -48,7 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-// TODO:, .
 @interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
