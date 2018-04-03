@@ -296,20 +296,6 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     self.progressView.frame = CGRectMake(40, 9, progressViewWidth, 20);
 }
 
-//- (void)setBounds:(CGRect)bounds {
-//    [super setBounds:bounds];
-//}
-//
-//- (void)setCenter:(CGPoint)center {
-//    [super setCenter:center];
-//    self.playButton.center = CGPointMake(16 + self.playButton.frame.size.width * 0.5, self.center.y);
-//    self.landscapeButton.center = CGPointMake(self.bounds.size.width - 34 + self.landscapeButton.bounds.size.width * 0.5, self.center.y);
-//    self.timeLabel.center = CGPointMake(self.landscapeButton.center.x - 86 + 0.5 * self.timeLabel.bounds.size.width, self.center.y);
-//    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 12;
-//    self.progressView.bounds = CGRectMake(40, 9, progressViewWidth, 20);
-//    self.progressView.center = CGPointMake(40 + self.progressView.bounds.size.width * 0.5, self.center.y);
-//}
-
 - (void)progressView:(JPVideoPlayerProgressView *)progressView
    userDidDragToTime:(NSTimeInterval)timeInterval
         totalSeconds:(NSTimeInterval)totalSeconds {
@@ -448,18 +434,6 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
     self.controlBar.frame = CGRectMake(0, self.bounds.size.height - kJPVideoPlayerControlBarHeight, self.bounds.size.width, kJPVideoPlayerControlBarHeight);
 }
 
-//- (void)setBounds:(CGRect)bounds {
-//    [super setBounds:bounds];
-//    self.blurImageView.bounds = bounds;
-//    self.controlBar.bounds = CGRectMake(0, self.bounds.size.height - kJPVideoPlayerControlBarHeight, self.bounds.size.width, kJPVideoPlayerControlBarHeight);;
-//}
-//
-//- (void)setCenter:(CGPoint)center {
-//    [super setCenter:center];
-//    self.blurImageView.center = center;
-//    self.controlBar.center = CGPointMake(center.x, 2 * center.y - 0.5 * kJPVideoPlayerControlBarHeight);
-//}
-
 
 #pragma mark - JPVideoPlayerControlProtocol
 
@@ -559,20 +533,37 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 
 - (void)setBounds:(CGRect)bounds {
     [super setBounds:bounds];
-    self.videoContainerView.bounds = bounds;
-    self.controlContainerView.bounds = bounds;
+    self.videoContainerView.frame = CGRectMake(self.videoContainerView.center.x - bounds.size.width * 0.5,
+            self.videoContainerView.center.y - bounds.size.height * 0.5,
+            bounds.size.width,
+            bounds.size.height);
+    self.controlContainerView.frame = CGRectMake(self.controlContainerView.center.x - bounds.size.width * 0.5,
+            self.controlContainerView.center.y - bounds.size.height * 0.5,
+            bounds.size.width,
+            bounds.size.height);
     for(UIView *view in self.controlContainerView.subviews){
-        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5, view.center.y - bounds.size.height * 0.5, bounds.size.width, bounds.size.height);
+        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
+                view.center.y - bounds.size.height * 0.5,
+                bounds.size.width,
+                bounds.size.height);
     }
 }
 
 - (void)setCenter:(CGPoint)center {
     [super setCenter:center];
-    CGPoint internalCenter = CGPointMake(center.y, center.x);
-    self.videoContainerView.center = internalCenter;
-    self.controlContainerView.center = internalCenter;
+    self.videoContainerView.frame = CGRectMake(center.y - self.videoContainerView.bounds.size.width * 0.5,
+            center.x - self.videoContainerView.bounds.size.height * 0.5,
+            self.videoContainerView.bounds.size.width,
+            self.videoContainerView.bounds.size.height);
+    self.controlContainerView.frame = CGRectMake(center.y -  self.controlContainerView.bounds.size.width * 0.5,
+            center.x -  self.controlContainerView.bounds.size.height * 0.5,
+            self.controlContainerView.bounds.size.width,
+            self.controlContainerView.bounds.size.height);
     for(UIView *view in self.controlContainerView.subviews){
-        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5, center.x - view.bounds.size.height * 0.5, view.bounds.size.width, view.bounds.size.height);
+        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
+                center.x - view.bounds.size.height * 0.5,
+                view.bounds.size.width,
+                view.bounds.size.height);
     }
 }
 

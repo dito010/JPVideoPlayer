@@ -202,7 +202,7 @@
     }
 
     self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-    UIView *videoPlayerView = self.helper.videoPlayerView;
+    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -214,24 +214,23 @@
     [videoPlayerView removeFromSuperview];
     [[UIApplication sharedApplication].keyWindow addSubview:videoPlayerView];
     videoPlayerView.frame = videoPlayerViewFrameInWindow;
-//    self.jp_indicatorView.alpha = 0;
+    videoPlayerView.controlContainerView.alpha = 0;
 
     if (animated) {
-        [UIView animateWithDuration:0.35 animations:^{
-
+        [UIView animateWithDuration:0.35
+                              delay:0
+                            options:UIViewAnimationCurveEaseOut
+                         animations:^{
             [self executeLandscape];
-
-        } completion:^(BOOL finished) {
-
+        }
+        completion:^(BOOL finished) {
             self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
             if (completion) {
                 completion();
             }
             [UIView animateWithDuration:0.5 animations:^{
-
-//                self.jp_indicatorView.alpha = 1;
+                videoPlayerView.controlContainerView.alpha = 1;
             }];
-
         }];
     }
     else{
@@ -241,11 +240,9 @@
             completion();
         }
         [UIView animateWithDuration:0.5 animations:^{
-
-//            self.jp_indicatorView.alpha = 1;
+            videoPlayerView.controlContainerView.alpha = 0;
         }];
     }
-
     [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
 }
 
@@ -260,29 +257,27 @@
         return;
     }
 
-    UIView *videoPlayerView = self.helper.videoPlayerView;
+    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor clearColor];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // display status bar.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 #pragma clang diagnostic pop
-
     self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-
-//    self.jp_indicatorView.alpha = 0;
+    videoPlayerView.controlContainerView.alpha = 0;
     if (animated) {
-        [UIView animateWithDuration:0.35 animations:^{
-
+        [UIView animateWithDuration:0.35
+                              delay:0
+                            options:UIViewAnimationCurveEaseOut
+                         animations:^{
             [self executePortrait];
-
-        } completion:^(BOOL finished) {
-
+        }
+        completion:^(BOOL finished) {
             [self finishPortrait];
             if (completion) {
                 completion();
             }
-
         }];
     }
     else{
@@ -292,7 +287,6 @@
             completion();
         }
     }
-
     [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
 }
 
@@ -300,18 +294,14 @@
 #pragma mark - Private
 
 - (void)finishPortrait{
-    UIView *videoPlayerView = self.helper.videoPlayerView;
+    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
-
     [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
-//    self.jp_indicatorView.frame = self.bounds;
     self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
-
     [UIView animateWithDuration:0.5 animations:^{
-
-//        self.jp_indicatorView.alpha = 1;
+        videoPlayerView.controlContainerView.alpha = 1;
     }];
 }
 
@@ -321,7 +311,6 @@
     videoPlayerView.transform = CGAffineTransformIdentity;
     videoPlayerView.frame = frame;
     [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
-//    self.jp_indicatorView.frame = self.bounds;
 }
 
 - (void)executeLandscape{
@@ -333,7 +322,6 @@
     videoPlayerView.center = center;
     videoPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
     [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = bounds;
-//    self.jp_indicatorView.frame = bounds;
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
