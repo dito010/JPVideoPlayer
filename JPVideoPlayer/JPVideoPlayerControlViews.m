@@ -22,6 +22,8 @@
 
 @property(nonatomic, assign) NSTimeInterval totalSeconds;
 
+@property(nonatomic, assign) NSTimeInterval elapsedSeconds;
+
 @property (nonatomic, strong) UIView *elapsedProgressView;
 
 @property (nonatomic, strong) UIView *cachedProgressView;
@@ -47,15 +49,16 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
 
-    if(!self.backgroundView.frame.size.height && self.bounds.size.width) {
-        CGSize referenceSize = self.bounds.size;
-        self.controlHandlerImageView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
-        self.backgroundView.frame = CGRectMake(kJPVideoPlayerProgressViewWidth * 0.5,
-                (referenceSize.height - kJPVideoPlayerProgressBackgroundViewHeight) * 0.5,
-                referenceSize.width - kJPVideoPlayerProgressViewWidth,
-                kJPVideoPlayerProgressBackgroundViewHeight);
-        self.elapsedProgressView.frame = CGRectMake(0, 0, 0, kJPVideoPlayerProgressBackgroundViewHeight);
-    }
+    CGSize referenceSize = self.bounds.size;
+    self.controlHandlerImageView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
+    self.backgroundView.frame = CGRectMake(kJPVideoPlayerProgressViewWidth * 0.5,
+            (referenceSize.height - kJPVideoPlayerProgressBackgroundViewHeight) * 0.5,
+            referenceSize.width - kJPVideoPlayerProgressViewWidth,
+            kJPVideoPlayerProgressBackgroundViewHeight);
+    self.elapsedProgressView.frame = CGRectMake(0, 0, 0, kJPVideoPlayerProgressBackgroundViewHeight);
+    [self updateCacheProgressViewIfNeed];
+    [self playProgressDidChangeElapsedSeconds:self.elapsedSeconds
+                                 totalSeconds:self.totalSeconds];
 }
 
 
@@ -79,6 +82,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     CGFloat controlHandleViewOriginX = (self.bounds.size.width - kJPVideoPlayerProgressViewWidth) * (elapsedSeconds / totalSeconds);
     [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:controlHandleViewOriginX];
     self.totalSeconds = totalSeconds;
+    self.elapsedSeconds = elapsedSeconds;
     //TODO: 进度条更新完成, 接下来做用户点击事件.
 }
 
@@ -285,14 +289,26 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
-    CGSize screenSize = [UIScreen.mainScreen bounds].size;
     self.playButton.frame = CGRectMake(16, 10, 18, 18);
-    self.landscapeButton.frame = CGRectMake(screenSize.width - 34, 10, 18, 18);
+    self.landscapeButton.frame = CGRectMake(frame.size.width - 34, 10, 18, 18);
     self.timeLabel.frame = CGRectMake(self.landscapeButton.frame.origin.x - 86, 10, 72, 16);
     CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 12;
     self.progressView.frame = CGRectMake(40, 9, progressViewWidth, 20);
 }
+
+//- (void)setBounds:(CGRect)bounds {
+//    [super setBounds:bounds];
+//}
+//
+//- (void)setCenter:(CGPoint)center {
+//    [super setCenter:center];
+//    self.playButton.center = CGPointMake(16 + self.playButton.frame.size.width * 0.5, self.center.y);
+//    self.landscapeButton.center = CGPointMake(self.bounds.size.width - 34 + self.landscapeButton.bounds.size.width * 0.5, self.center.y);
+//    self.timeLabel.center = CGPointMake(self.landscapeButton.center.x - 86 + 0.5 * self.timeLabel.bounds.size.width, self.center.y);
+//    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 12;
+//    self.progressView.bounds = CGRectMake(40, 9, progressViewWidth, 20);
+//    self.progressView.center = CGPointMake(40 + self.progressView.bounds.size.width * 0.5, self.center.y);
+//}
 
 - (void)progressView:(JPVideoPlayerProgressView *)progressView
    userDidDragToTime:(NSTimeInterval)timeInterval
@@ -305,6 +321,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 - (void)viewWillAddToSuperView:(UIView *)view {
     self.playerView = view;
+    [self updateTimeLabelWithElapsedSeconds:0 totalSeconds:0];
     [self.progressView viewWillAddToSuperView:view];
 }
 
@@ -353,6 +370,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 }
 
 - (void)landscapeButtonDidClick:(UIButton *)button {
+    self.playerView.jp_viewStatus == JPVideoPlayerVideoViewStatusPortrait ? [self.playerView jp_gotoLandscape] : [self.playerView jp_gotoPortrait];
 }
 
 - (void)setup {
@@ -405,6 +423,7 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 @end
 
+static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 @implementation JPVideoPlayerControlView
 
 - (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
@@ -425,10 +444,21 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
     self.blurImageView.frame = self.bounds;
-    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - 38, self.bounds.size.width, 38);
+    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - kJPVideoPlayerControlBarHeight, self.bounds.size.width, kJPVideoPlayerControlBarHeight);
 }
+
+//- (void)setBounds:(CGRect)bounds {
+//    [super setBounds:bounds];
+//    self.blurImageView.bounds = bounds;
+//    self.controlBar.bounds = CGRectMake(0, self.bounds.size.height - kJPVideoPlayerControlBarHeight, self.bounds.size.width, kJPVideoPlayerControlBarHeight);;
+//}
+//
+//- (void)setCenter:(CGPoint)center {
+//    [super setCenter:center];
+//    self.blurImageView.center = center;
+//    self.controlBar.center = CGPointMake(center.x, 2 * center.y - 0.5 * kJPVideoPlayerControlBarHeight);
+//}
 
 
 #pragma mark - JPVideoPlayerControlProtocol
@@ -520,9 +550,30 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
+    for(UIView *view in self.controlContainerView.subviews){
+        view.frame = self.bounds;
+    }
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    self.videoContainerView.bounds = bounds;
+    self.controlContainerView.bounds = bounds;
+    for(UIView *view in self.controlContainerView.subviews){
+        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5, view.center.y - bounds.size.height * 0.5, bounds.size.width, bounds.size.height);
+    }
+}
+
+- (void)setCenter:(CGPoint)center {
+    [super setCenter:center];
+    CGPoint internalCenter = CGPointMake(center.y, center.x);
+    self.videoContainerView.center = internalCenter;
+    self.controlContainerView.center = internalCenter;
+    for(UIView *view in self.controlContainerView.subviews){
+        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5, center.x - view.bounds.size.height * 0.5, view.bounds.size.width, view.bounds.size.height);
+    }
 }
 
 - (CALayer *)videoContainerLayer {

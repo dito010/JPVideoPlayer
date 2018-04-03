@@ -44,16 +44,6 @@
 
 @interface UIView()
 
-/**
- * Parent view of self before enter full screen.
- */
-@property(nonatomic)UIView *parentView_beforeFullScreen;
-
-/**
- * Frame of self before enter full screen.
- */
-@property(nonatomic)NSValue *frame_beforeFullScreen;
-
 @property(nonatomic, readonly)JPVideoPlayerCategoryHelper *helper;
 
 @end
@@ -198,166 +188,152 @@
 }
 
 
-#pragma mark - Landscape Or Portrait Control
+#pragma mark - Landscape & Portrait Control
 
 - (void)jp_gotoLandscape {
-    [self jp_gotoLandscapeAnimated:YES completion:nil];
+    [self jp_gotoLandscapeAnimated:YES
+                        completion:nil];
 }
 
-- (void)jp_gotoLandscapeAnimated:(BOOL)animated completion:(JPVideoPlayerScreenAnimationCompletion)completion {
+- (void)jp_gotoLandscapeAnimated:(BOOL)animated
+                      completion:(JPVideoPlayerScreenAnimationCompletion)completion {
     if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
         return;
     }
 
-//    self.jp_videoLayerView.backgroundColor = [UIColor blackColor];
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-//    // hide status bar.
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-//#pragma clang diagnostic pop
-//
-//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-//
-//    self.parentView_beforeFullScreen = self.superview;
-//    self.frame_beforeFullScreen = [NSValue valueWithCGRect:self.frame];
-//
-//    CGRect rectInWindow = [self.superview convertRect:self.frame toView:nil];
-//    [self removeFromSuperview];
-//    [[UIApplication sharedApplication].keyWindow addSubview:self];
-//    self.frame = rectInWindow;
+    self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+    UIView *videoPlayerView = self.helper.videoPlayerView;
+    videoPlayerView.backgroundColor = [UIColor blackColor];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // hide status bar.
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic pop
+
+    CGRect videoPlayerViewFrameInWindow = [self convertRect:videoPlayerView.frame toView:nil];
+    [videoPlayerView removeFromSuperview];
+    [[UIApplication sharedApplication].keyWindow addSubview:videoPlayerView];
+    videoPlayerView.frame = videoPlayerViewFrameInWindow;
 //    self.jp_indicatorView.alpha = 0;
-//
-//    if (animated) {
-//        [UIView animateWithDuration:0.35 animations:^{
-//
-//            [self executeLandscape];
-//
-//        } completion:^(BOOL finished) {
-//
-//            self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
-//            if (completion) {
-//                completion();
-//            }
-//            [UIView animateWithDuration:0.5 animations:^{
-//
+
+    if (animated) {
+        [UIView animateWithDuration:0.35 animations:^{
+
+            [self executeLandscape];
+
+        } completion:^(BOOL finished) {
+
+            self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+            if (completion) {
+                completion();
+            }
+            [UIView animateWithDuration:0.5 animations:^{
+
 //                self.jp_indicatorView.alpha = 1;
-//            }];
-//
-//        }];
-//    }
-//    else{
-//        [self executeLandscape];
-//        self.jp_viewStatus = JPVideoPlayerVideoViewStatusLandscape;
-//        if (completion) {
-//            completion();
-//        }
-//        [UIView animateWithDuration:0.5 animations:^{
-//
+            }];
+
+        }];
+    }
+    else{
+        [self executeLandscape];
+        self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+        if (completion) {
+            completion();
+        }
+        [UIView animateWithDuration:0.5 animations:^{
+
 //            self.jp_indicatorView.alpha = 1;
-//        }];
-//    }
-//
-//    [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+        }];
+    }
+
+    [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
 }
 
 - (void)jp_gotoPortrait {
-    [self jp_gotoPortraitAnimated:YES completion:nil];
+    [self jp_gotoPortraitAnimated:YES
+                       completion:nil];
 }
 
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
                      completion:(JPVideoPlayerScreenAnimationCompletion)completion{
-//    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
-//        return;
-//    }
-//
-//    self.jp_videoLayerView.backgroundColor = [UIColor clearColor];
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-//    // display status bar.
-//    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-//#pragma clang diagnostic pop
-//
-//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusAnimating;
-//
+    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
+        return;
+    }
+
+    UIView *videoPlayerView = self.helper.videoPlayerView;
+    videoPlayerView.backgroundColor = [UIColor clearColor];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // display status bar.
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic pop
+
+    self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+
 //    self.jp_indicatorView.alpha = 0;
-//
-//    if (animated) {
-//        [UIView animateWithDuration:0.35 animations:^{
-//
-//            [self executePortrait];
-//
-//        } completion:^(BOOL finished) {
-//
-//            [self finishPortrait];
-//            if (completion) {
-//                completion();
-//            }
-//
-//        }];
-//    }
-//    else{
-//        [self executePortrait];
-//        [self finishPortrait];
-//        if (completion) {
-//            completion();
-//        }
-//    }
-//
-//    [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
+    if (animated) {
+        [UIView animateWithDuration:0.35 animations:^{
+
+            [self executePortrait];
+
+        } completion:^(BOOL finished) {
+
+            [self finishPortrait];
+            if (completion) {
+                completion();
+            }
+
+        }];
+    }
+    else{
+        [self executePortrait];
+        [self finishPortrait];
+        if (completion) {
+            completion();
+        }
+    }
+
+    [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
 }
 
 
 #pragma mark - Private
 
 - (void)finishPortrait{
-//    [self removeFromSuperview];
-//    [self.parentView_beforeFullScreen addSubview:self];
-//    self.frame = [self.frame_beforeFullScreen CGRectValue];
-//
-//    self.jp_backgroundLayer.frame = self.bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
-//    self.jp_videoLayerView.frame = self.bounds;
+    UIView *videoPlayerView = self.helper.videoPlayerView;
+    [videoPlayerView removeFromSuperview];
+    [self addSubview:videoPlayerView];
+    videoPlayerView.frame = self.bounds;
+
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
 //    self.jp_indicatorView.frame = self.bounds;
-//
-//    self.jp_viewStatus = JPVideoPlayerVideoViewStatusPortrait;
-//
-//    [UIView animateWithDuration:0.5 animations:^{
-//
+    self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+
+    [UIView animateWithDuration:0.5 animations:^{
+
 //        self.jp_indicatorView.alpha = 1;
-//    }];
+    }];
 }
 
 - (void)executePortrait{
-//    CGRect frame = [self.parentView_beforeFullScreen convertRect:[self.frame_beforeFullScreen CGRectValue] toView:nil];
-//    self.transform = CGAffineTransformIdentity;
-//    self.frame = frame;
-//
-//    self.jp_backgroundLayer.frame = self.bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
-//    self.jp_videoLayerView.frame = self.bounds;
+    UIView *videoPlayerView = self.helper.videoPlayerView;
+    CGRect frame = [self.superview convertRect:self.frame toView:nil];
+    videoPlayerView.transform = CGAffineTransformIdentity;
+    videoPlayerView.frame = frame;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
 //    self.jp_indicatorView.frame = self.bounds;
-//
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-//    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForPortrait")];
-//#pragma clang diagnostic pop
 }
 
 - (void)executeLandscape{
-//    self.transform = CGAffineTransformMakeRotation(M_PI_2);
-//    CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(self.superview.bounds), CGRectGetWidth(self.superview.bounds));
-//    CGPoint center = CGPointMake(CGRectGetMidX(self.superview.bounds), CGRectGetMidY(self.superview.bounds));
-//    self.bounds = bounds;
-//    self.center = center;
-//
-//    self.jp_backgroundLayer.frame = bounds;
-//    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = bounds;
-//    self.jp_videoLayerView.frame = bounds;
+    UIView *videoPlayerView = self.helper.videoPlayerView;
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(screenBounds), CGRectGetWidth(screenBounds));
+    CGPoint center = CGPointMake(CGRectGetMidX(screenBounds), CGRectGetMidY(screenBounds));
+    videoPlayerView.bounds = bounds;
+    videoPlayerView.center = center;
+    videoPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = bounds;
 //    self.jp_indicatorView.frame = bounds;
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-//    [self performSelector:NSSelectorFromString(@"refreshIndicatorViewForLandscape")];
-//#pragma clang diagnostic pop
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -374,22 +350,6 @@
         objc_setAssociatedObject(self, _cmd, helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return helper;
-}
-
-- (void)setParentView_beforeFullScreen:(UIView *)parentView_beforeFullScreen{
-    objc_setAssociatedObject(self, @selector(parentView_beforeFullScreen), parentView_beforeFullScreen, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (UIView *)parentView_beforeFullScreen{
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setFrame_beforeFullScreen:(NSValue *)frame_beforeFullScreen{
-    objc_setAssociatedObject(self, @selector(frame_beforeFullScreen), frame_beforeFullScreen, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSValue *)frame_beforeFullScreen{
-    return objc_getAssociatedObject(self, _cmd);
 }
 
 
