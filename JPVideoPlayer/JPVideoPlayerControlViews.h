@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidStartDragNotification;
+UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 @interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, weak, nullable) id<JPVideoPlayerProgressViewDelegate> delegate;
@@ -93,6 +95,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIView *videoContainerLayer;
 
 @property (nonatomic, strong, readonly) UIView *controlContainerView;
+
+@property (nonatomic, strong, readonly) UIView *cacheIndicatorContainerView;
+
+@property (nonatomic, strong, readonly) UIView *userInteractionContainerView;
 
 @end
 

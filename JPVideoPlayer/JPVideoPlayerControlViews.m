@@ -36,6 +36,8 @@
 
 static const CGFloat kJPVideoPlayerProgressViewWidth = 20;
 static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
+NSString *JPVideoPlayerProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
+NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideoplayer.progressview.user.drag.end.www";;
 @implementation JPVideoPlayerProgressView
 
 - (instancetype)init {
@@ -83,7 +85,6 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:controlHandleViewOriginX];
     self.totalSeconds = totalSeconds;
     self.elapsedSeconds = elapsedSeconds;
-    //TODO: 进度条更新完成, 接下来做用户点击事件.
 }
 
 - (void)didFetchVideoFileLength:(NSUInteger)videoLength {
@@ -140,11 +141,13 @@ static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
     switch(panGestureRecognizer.state){
         case UIGestureRecognizerStateBegan:
             self.userDragging = YES;
+            [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidStartDragNotification object:self];
             break;
 
         case UIGestureRecognizerStateEnded:
             self.userDragging = NO;
             [self userDidFinishDrag];
+            [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidEndDragNotification object:self];
             break;
 
         default:
@@ -510,8 +513,17 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 
 @property (nonatomic, strong) UIView *controlContainerView;
 
+@property (nonatomic, strong) UIView *cacheIndicatorContainerView;
+
+@property (nonatomic, strong) UIView *userInteractionContainerView;
+
+@property (nonatomic, strong) NSTimer *timer;
+
+@property(nonatomic, assign) BOOL isInterruptTimer;
+
 @end
 
+static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 3;
 @implementation JPVideoPlayerView
 
 - (instancetype)init {
@@ -526,6 +538,8 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
     [super setFrame:frame];
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
+    self.cacheIndicatorContainerView.frame = self.bounds;
+    self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = self.bounds;
     }
@@ -541,6 +555,14 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
             self.controlContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
             bounds.size.height);
+    self.cacheIndicatorContainerView.frame = CGRectMake(self.cacheIndicatorContainerView.center.x - bounds.size.width * 0.5,
+            self.cacheIndicatorContainerView.center.y - bounds.size.height * 0.5,
+            bounds.size.width,
+            bounds.size.height);
+    self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5,
+            self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
+            bounds.size.width,
+            bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
                 view.center.y - bounds.size.height * 0.5,
@@ -559,6 +581,14 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
             center.x -  self.controlContainerView.bounds.size.height * 0.5,
             self.controlContainerView.bounds.size.width,
             self.controlContainerView.bounds.size.height);
+    self.cacheIndicatorContainerView.frame = CGRectMake(center.y -  self.cacheIndicatorContainerView.bounds.size.width * 0.5,
+            center.x -  self.cacheIndicatorContainerView.bounds.size.height * 0.5,
+            self.cacheIndicatorContainerView.bounds.size.width,
+            self.cacheIndicatorContainerView.bounds.size.height);
+    self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5,
+            center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
+            self.userInteractionContainerView.bounds.size.width,
+            self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
                 center.x - view.bounds.size.height * 0.5,
@@ -571,6 +601,26 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
     return self.videoContainerView.layer;
 }
 
+- (void)tapGestureDidTap {
+    [UIView animateWithDuration:0.35
+                          delay:0
+                        options:UIViewAnimationCurveEaseOut
+                     animations:^{
+                         if(self.controlContainerView.alpha == 0){
+                             self.controlContainerView.alpha = 1;
+                             [self startTimer];
+                         }
+                         else {
+                             self.controlContainerView.alpha = 0;
+                             [self endTimer];
+                         }
+
+                     }
+                     completion:^(BOOL finished) {
+
+                     }];
+}
+
 
 #pragma mark - Setup
 
@@ -581,6 +631,7 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
+        view.userInteractionEnabled = NO;
 
         view;
     });
@@ -592,6 +643,73 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 
         view;
     });
+
+    self.cacheIndicatorContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+        view.userInteractionEnabled = NO;
+
+        view;
+    });
+
+    self.userInteractionContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
+
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidTap)];
+    [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
+    [self startTimer];
+
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiveUserStartDragNotification)
+                                               name:JPVideoPlayerProgressViewUserDidStartDragNotification
+                                             object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiveUserEndDragNotification)
+                                               name:JPVideoPlayerProgressViewUserDidEndDragNotification
+                                             object:nil];
+}
+
+- (void)didReceiveUserStartDragNotification {
+    if(self.timer){
+        self.isInterruptTimer = YES;
+        [self endTimer];
+    }
+}
+
+- (void)didReceiveUserEndDragNotification {
+    if(self.isInterruptTimer){
+       [self startTimer];
+    }
+}
+
+- (void)startTimer {
+    if(!self.timer){
+       self.timer = [NSTimer timerWithTimeInterval:kJPControlViewAutoHiddenTimeInterval
+                                            target:self
+                                          selector:@selector(timeDidChange:)
+                                          userInfo:nil
+                                           repeats:NO];
+       [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    }
+
+}
+
+- (void)endTimer {
+    if(self.timer){
+       [self.timer invalidate];
+       self.timer = nil;
+    }
+}
+
+- (void)timeDidChange:(NSTimer *)timer {
+    [self tapGestureDidTap];
+    [self endTimer];
 }
 
 @end

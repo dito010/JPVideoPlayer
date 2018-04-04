@@ -47,9 +47,6 @@
         videoView;
     });
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-    [self.videoContainer addGestureRecognizer:tapGestureRecognizer];
-    
     self.videoContainer.jp_videoPlayerDelegate = self;
 }
 
@@ -72,19 +69,6 @@
 
 - (void)dealloc{
     NSLog(@"JPVideoPlayerDemoVC_push 释放了");
-}
-
-#pragma mark - Tap Event
-
-- (void)handleTapGesture:(UITapGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        if (self.videoContainer.jp_viewStatus == JPVideoPlayerVideoViewStatusPortrait) {
-            [self.videoContainer jp_gotoLandscapeAnimated:YES completion:nil];
-        }
-        else if (self.videoContainer.jp_viewStatus == JPVideoPlayerVideoViewStatusLandscape) {
-            [self.videoContainer jp_gotoPortraitAnimated:YES completion:nil];
-        }
-    }
 }
 
 
