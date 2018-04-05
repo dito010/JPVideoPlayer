@@ -113,6 +113,11 @@ didCompleteWithError:(NSError *)error;
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions;
 
+/**
+ * Cancel current download task.
+ */
+- (void)cancel;
+
 @end
 
 NS_ASSUME_NONNULL_END

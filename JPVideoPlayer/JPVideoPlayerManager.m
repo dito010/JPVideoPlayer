@@ -190,6 +190,7 @@
 
 - (void)stopPlay {
     JPDispatchSyncOnMainQueue(^{
+        [self.videoDownloader cancel];
         [self.videoPlayer stopPlay];
         [self reset];
     });
