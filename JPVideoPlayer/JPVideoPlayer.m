@@ -281,6 +281,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (void)stopPlay{
     [self.currentPlayerModel stopPlayVideo];
     [self stopCheckBufferingTimerIfNeed];
+    [self resetAwakeWaitingTimeInterval];
     self.currentPlayerModel = nil;
     self.playerStatus = JPVideoPlayerStatusStop;
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
@@ -450,6 +451,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     NSTimeInterval currentTime = CMTimeGetSeconds(self.currentPlayerModel.player.currentTime);
     if (currentTime != 0 && currentTime > (self.currentPlayerModel.lastTime + 0.2)) {
         self.currentPlayerModel.lastTime = currentTime;
+        [self endAwakeFromBuffering];
         if(self.playerStatus == JPVideoPlayerStatusPlaying){
             return;
         }
@@ -460,12 +462,59 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     }
     else{
         if(self.playerStatus == JPVideoPlayerStatusBuffering){
+            [self startAwakeWhenBuffering];
             return;
         }
         self.playerStatus = JPVideoPlayerStatusBuffering;
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
             [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusBuffering];
         }
+    }
+}
+
+
+#pragma mark - Awake When Buffering
+
+static NSTimeInterval _awakeWaitingTimeInterval = 3;
+- (void)resetAwakeWaitingTimeInterval {
+    _awakeWaitingTimeInterval = 3;
+    JPDebugLog(@"重置了播放唤醒等待时间");
+}
+
+- (void)updateAwakeWaitingTimerInterval {
+    _awakeWaitingTimeInterval += 2;
+    if(_awakeWaitingTimeInterval > 12){
+       _awakeWaitingTimeInterval = 12;
+    }
+}
+
+static BOOL _isOpenAwakeWhenBuffering = NO;
+- (void)startAwakeWhenBuffering {
+    if(!_isOpenAwakeWhenBuffering){
+        _isOpenAwakeWhenBuffering = YES;
+        JPDebugLog(@"Start awake when buffering.");
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_awakeWaitingTimeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+            if(!_isOpenAwakeWhenBuffering){
+                [self endAwakeFromBuffering];
+                JPDebugLog(@"Player is playing when call awake buffering block.");
+                return;
+            }
+            JPDebugLog(@"Call resume in awake buffering block.");
+            _isOpenAwakeWhenBuffering = NO;
+            [self.currentPlayerModel pausePlayVideo];
+            [self updateAwakeWaitingTimerInterval];
+            [self.currentPlayerModel resumePlayVideo];
+
+        });
+    }
+}
+
+- (void)endAwakeFromBuffering {
+    if(_isOpenAwakeWhenBuffering){
+        JPDebugLog(@"End awake buffering.");
+        _isOpenAwakeWhenBuffering = NO;
+        [self resetAwakeWaitingTimeInterval];
     }
 }
 
@@ -477,6 +526,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     [self.currentPlayerModel pausePlayVideo];
     [self stopCheckBufferingTimerIfNeed];
     self.playerStatus = JPVideoPlayerStatusPause;
+    [self endAwakeFromBuffering];
     if(needCallDelegate){
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
             [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPause];
@@ -499,6 +549,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                                 playerItem:(AVPlayerItem *)playerItem
                                    options:(JPVideoPlayerOptions)options
                                 showOnLayer:(CALayer *)showLayer {
+    [self resetAwakeWaitingTimeInterval];
     JPVideoPlayerModel *model = [JPVideoPlayerModel new];
     model.unownedShowLayer = showLayer;
     model.url = url;

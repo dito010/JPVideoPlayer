@@ -149,6 +149,7 @@
     if(controlView){
        self.jp_controlView = controlView;
     }
+    // TODO: 处理进度条循环利用.
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }

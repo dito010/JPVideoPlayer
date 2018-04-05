@@ -296,7 +296,9 @@ didCompleteWithError:(NSError *)error {
                 && error.code != NSURLErrorCannotFindHost
                 && error.code != NSURLErrorCannotConnectToHost) {
             int lock = pthread_mutex_trylock(&_lock);
-            [self.failedURLs addObject:self.url];
+            if(self.url){
+                [self.failedURLs addObject:self.url];
+            }
             if (!lock) {
                 pthread_mutex_unlock(&_lock);
             }
