@@ -74,6 +74,10 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
+    if(!visibleCells.count){
+        return;
+    }
+
     NSUInteger unreachableCellCount = [self fetchUnreachableCellCountWithVisibleCellsCount:visibleCells.count];
     NSUInteger rows = [tableView numberOfRowsInSection:0];
     if (unreachableCellCount > 0) {
@@ -103,6 +107,9 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     UITableView *tableView = (UITableView *)self.scrollView;
+    for(UITableViewCell *cell in tableView.visibleCells){
+        [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
+    }
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     // Find first cell need play video in visible cells.
     UITableViewCell *targetCell = nil;
