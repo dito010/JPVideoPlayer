@@ -106,6 +106,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
         return;
     }
 
+    // handle the first cell cannot play video when initialized.
     UITableView *tableView = (UITableView *)self.scrollView;
     for(UITableViewCell *cell in tableView.visibleCells){
         [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
@@ -297,7 +298,9 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
-    [bestCell.jp_videoPlayView jp_playVideoWithURL:bestCell.jp_videoURL controlView:nil];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:readyPlayVideoOnCell:)]) {
+        [self.delegate tableView:self.scrollView readyPlayVideoOnCell:bestCell];
+    }
     self.playingVideoCell = bestCell;
 }
 

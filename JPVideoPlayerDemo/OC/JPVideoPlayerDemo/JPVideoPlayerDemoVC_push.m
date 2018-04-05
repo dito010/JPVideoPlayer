@@ -52,8 +52,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:self.videoPath] controlView:nil];
+    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:self.videoPath] controlView:nil progressView:nil];
     
 //    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
 //    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];

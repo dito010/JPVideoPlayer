@@ -94,8 +94,10 @@
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
                    progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
-    NSParameterAssert(progressView);
-    // TODO: 没有 progressView 使用自定义的.
+    if(!progressView && !self.jp_progressView){
+        // Use default `JPVideoPlayerProgressView` if no controlView.
+        progressView = [JPVideoPlayerProgressView new];
+    }
     self.jp_progressView = progressView;
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect |
@@ -103,14 +105,18 @@
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
-                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView {
+                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     if(!controlView && !self.jp_controlView){
         // Use default `JPVideoPlayerControlView` if no controlView.
         controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
     }
-    if(controlView){
-        self.jp_controlView = controlView;
+    if(!progressView && !self.jp_progressView){
+        // Use default `JPVideoPlayerProgressView` if no controlView.
+        progressView = [JPVideoPlayerProgressView new];
     }
+    self.jp_controlView = controlView;
+    self.jp_progressView = progressView;
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -129,19 +135,20 @@
         }
         self.helper.videoPlayerView.hidden = NO;
 
+        if(self.jp_progressView && !self.jp_progressView.superview){
+            self.jp_progressView.frame = self.bounds;
+            if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+                [self.jp_progressView viewWillAddToSuperView:self];
+            }
+            [self.helper.videoPlayerView.progressContainerView addSubview:self.jp_progressView];
+        }
         if(self.jp_controlView && !self.jp_controlView.superview){
             self.jp_controlView.frame = self.bounds;
             if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
                [self.jp_controlView viewWillAddToSuperView:self];
             }
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
-        }
-        if(self.jp_progressView && !self.jp_progressView.superview){
-            self.jp_progressView.frame = self.bounds;
-            if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillAddToSuperView:)]){
-                [self.jp_progressView viewWillAddToSuperView:self];
-            }
-            [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_progressView];
+            self.helper.videoPlayerView.progressContainerView.alpha = 0;
         }
 
         [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
@@ -373,6 +380,9 @@
     if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:)]){
         [self.helper.controlView didFetchVideoFileLength:videoLength];
     }
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(didFetchVideoFileLength:)]){
+        [self.helper.progressView didFetchVideoFileLength:videoLength];
+    }
 }
 
 - (void)videoPlayerManagerDownloadProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
@@ -398,6 +408,9 @@
     if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
         [self.helper.controlView cacheRangeDidChange:fragmentRanges];
     }
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(cacheRangeDidChange:)]){
+        [self.helper.progressView cacheRangeDidChange:fragmentRanges];
+    }
 }
 
 - (void)videoPlayerManagerPlayProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
@@ -410,8 +423,12 @@
     }
 
     if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
-       [self.helper.controlView playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                                       totalSeconds:totalSeconds];
+        [self.helper.controlView playProgressDidChangeElapsedSeconds:elapsedSeconds
+                                                        totalSeconds:totalSeconds];
+    }
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
+        [self.helper.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
+                                                        totalSeconds:totalSeconds];
     }
 }
 

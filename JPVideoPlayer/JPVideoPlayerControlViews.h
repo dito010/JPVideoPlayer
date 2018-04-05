@@ -8,33 +8,35 @@
 
 #import "JPVideoPlayerProtocol.h"
 
-@class JPVideoPlayerProgressView,
+@class JPVideoPlayerControlProgressView,
        JPVideoPlayerControlView,
-       JPVideoPlayerProgressView;
+       JPVideoPlayerControlProgressView;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol JPVideoPlayerProgressViewDelegate<NSObject>
+@protocol JPVideoPlayerControlProgressViewDelegate<NSObject>
 
 @optional
 
-- (void)progressView:(JPVideoPlayerProgressView *)progressView
+- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
    userDidDragToTime:(NSTimeInterval)timeInterval
         totalSeconds:(NSTimeInterval)totalSeconds;
 
 @end
 
-UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidStartDragNotification;
-UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
-@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
+UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification;
+UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification;
+@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProtocol>
 
-@property (nonatomic, weak, nullable) id<JPVideoPlayerProgressViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id<JPVideoPlayerControlProgressViewDelegate> delegate;
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 
 @property(nonatomic, assign, readonly) NSUInteger fileLength;
 
 @property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
+
+@property(nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
 
 @property(nonatomic, assign, readonly) BOOL userDragging;
 
@@ -52,7 +54,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
 
-@property (nonatomic, strong, readonly) JPVideoPlayerProgressView *progressView;
+@property (nonatomic, strong, readonly) JPVideoPlayerControlProgressView *progressView;
 
 @property (nonatomic, strong, readonly) UILabel *timeLabel;
 
@@ -62,7 +64,6 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 
 @end
 
-// TODO: 做到 progressView, 接下来封装一个 progressView, 然后到播放分类中实现
 @interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
@@ -80,6 +81,25 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 - (instancetype)initWithControlBar:(UIView<JPVideoPlayerProtocol> *_Nullable)controlBar
                          blurImage:(UIImage *_Nullable)blurImage NS_DESIGNATED_INITIALIZER;
 
+// TODO: 给外界布局专门一个方法, 抽取协议.
+@end
+
+@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
+
+@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
+
+@property(nonatomic, assign, readonly) NSUInteger fileLength;
+
+@property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
+
+@property(nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
+
+@property (nonatomic, strong, readonly) UIProgressView *trackProgressView;
+
+@property (nonatomic, strong, readonly) UIView *cachedProgressView;
+
+@property (nonatomic, strong, readonly) UIProgressView *elapsedProgressView;
+
 @end
 
 @interface JPVideoPlayerView : UIView
@@ -87,6 +107,8 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 @property (nonatomic, strong, readonly) UIView *videoContainerLayer;
 
 @property (nonatomic, strong, readonly) UIView *controlContainerView;
+
+@property (nonatomic, strong, readonly) UIView *progressContainerView;
 
 @property (nonatomic, strong, readonly) UIView *cacheIndicatorContainerView;
 

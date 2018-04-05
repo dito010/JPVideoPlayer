@@ -100,7 +100,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * The download is asynchronous and cached.
  *
  * @param url          The url for the video.
- * @param progressView The view to display the download and play progress, @see `JPVideoPlayerProtocol`.
+ * @param progressView The view to display the download and play progress, it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
  */
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
                    progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
@@ -112,11 +112,13 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * The control view will display, and display indicator view when buffer empty.
  *
- * @param url         The url for the video.
- * @param controlView The view to display the download and play progress, @see `JPVideoPlayerProtocol`.
+ * @param url          The url for the video.
+ * @param controlView  The view to display the download and play progress, it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
+ * @param progressView The view to display the download and play progress, it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
-                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView;
+                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
 
 /**
  * Play `video` with an `url` on the view.

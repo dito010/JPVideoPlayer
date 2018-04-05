@@ -10,7 +10,7 @@
 #import "JPVideoPlayerCompat.h"
 #import "UIView+WebVideoCache.h"
 
-@interface JPVideoPlayerProgressView()
+@interface JPVideoPlayerControlProgressView()
 
 @property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
 
@@ -35,9 +35,9 @@
 static const CGFloat kJPVideoPlayerProgressViewWidth = 20;
 static const CGFloat kJPVideoPlayerDragSliderLeftEdge = 2;
 static const CGFloat kJPVideoPlayerCachedProgressViewHeight = 2;
-NSString *JPVideoPlayerProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
-NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideoplayer.progressview.user.drag.end.www";;
-@implementation JPVideoPlayerProgressView
+NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
+NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpvideoplayer.progressview.user.drag.end.www";;
+@implementation JPVideoPlayerControlProgressView
 
 - (instancetype)init {
     self = [super init];
@@ -132,7 +132,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
 - (void)dragSliderDidStart:(UISlider *)slider {
     self.userDragging = YES;
-    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidStartDragNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerControlProgressViewUserDidStartDragNotification object:self];
 }
 
 - (void)dragSliderDidDrag:(UISlider *)slider {
@@ -142,7 +142,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 - (void)dragSliderDidEnd:(UISlider *)slider {
     self.userDragging = NO;
     [self userDidFinishDrag];
-    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidEndDragNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerControlProgressViewUserDidEndDragNotification object:self];
 }
 
 - (void)callTimeChangeDelegateMethod {
@@ -226,11 +226,11 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
 @end
 
-@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerProgressViewDelegate>
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerControlProgressViewDelegate>
 
 @property (nonatomic, strong) UIButton *playButton;
 
-@property (nonatomic, strong) JPVideoPlayerProgressView *progressView;
+@property (nonatomic, strong) JPVideoPlayerControlProgressView *progressView;
 
 @property (nonatomic, strong) UILabel *timeLabel;
 
@@ -283,7 +283,7 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
             kJPVideoPlayerControlBarButtonWidthHeight);
 }
 
-- (void)progressView:(JPVideoPlayerProgressView *)progressView
+- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
    userDidDragToTime:(NSTimeInterval)timeInterval
         totalSeconds:(NSTimeInterval)totalSeconds {
     [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:totalSeconds];
@@ -362,7 +362,7 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 
     if(!self.progressView){
         self.progressView = ({
-            JPVideoPlayerProgressView *view = [JPVideoPlayerProgressView new];
+            JPVideoPlayerControlProgressView *view = [JPVideoPlayerControlProgressView new];
             view.delegate = self;
             [self addSubview:view];
 
@@ -486,11 +486,169 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 
 @end
 
+@interface JPVideoPlayerProgressView()
+
+@property (nonatomic, strong) UIProgressView *trackProgressView;
+
+@property (nonatomic, strong) UIView *cachedProgressView;
+
+@property (nonatomic, strong) UIProgressView *elapsedProgressView;
+
+@property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
+
+@property(nonatomic, assign) NSUInteger fileLength;
+
+@property(nonatomic, assign) NSTimeInterval totalSeconds;
+
+@property(nonatomic, assign) NSTimeInterval elapsedSeconds;
+
+@end
+
+static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
+@implementation JPVideoPlayerProgressView
+
+- (instancetype)init {
+    self = [super init];
+    if(self){
+       [self setup];
+    }
+    return self;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    self.trackProgressView.frame = CGRectMake(0,
+            frame.size.height - kJPVideoPlayerProgressViewEelementHeight,
+            frame.size.width,
+            kJPVideoPlayerProgressViewEelementHeight);
+    self.cachedProgressView.frame = self.trackProgressView.bounds;
+    self.elapsedProgressView.frame = self.trackProgressView.frame;
+}
+
+#pragma mark - Setup
+
+- (void)setup {
+    self.trackProgressView = ({
+        UIProgressView *view = [UIProgressView new];
+        view.trackTintColor = [UIColor colorWithWhite:1 alpha:0.15];
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.cachedProgressView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+        [self.trackProgressView addSubview:view];
+
+        view;
+    });
+
+    self.elapsedProgressView = ({
+        UIProgressView *view = [UIProgressView new];
+        view.trackTintColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
+}
+
+
+
+#pragma mark - JPVideoPlayerControlProtocol
+
+- (void)viewWillAddToSuperView:(UIView *)view {
+}
+
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+    _rangesValue = cacheRanges;
+    [self displayCacheProgressViewIfNeed];
+}
+
+- (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
+                               totalSeconds:(NSTimeInterval)totalSeconds {
+    if(totalSeconds == 0){
+        totalSeconds = 1;
+    }
+
+    float delta = elapsedSeconds / totalSeconds;
+    NSParameterAssert(delta >= 0);
+    NSParameterAssert(delta <= 1);
+    delta = MIN(1, delta);
+    delta = MAX(0, delta);
+    [self.elapsedProgressView setProgress:delta animated:YES];
+    self.totalSeconds = totalSeconds;
+    self.elapsedSeconds = elapsedSeconds;
+}
+
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+    self.fileLength = videoLength;
+}
+
+- (void)displayCacheProgressViewIfNeed {
+    if(!self.rangesValue.count){
+        return;
+    }
+
+    [self removeCacheProgressViewIfNeed];
+    NSRange targetRange = JPInvalidRange;
+    NSUInteger dragStartLocation = [self fetchDragStartLocation];
+    if(self.rangesValue.count == 1){
+        if(JPValidFileRange([self.rangesValue.firstObject rangeValue])){
+            targetRange = [self.rangesValue.firstObject rangeValue];
+        }
+    }
+    else {
+        // find the range that the closest to dragStartLocation.
+        for(NSValue *value in self.rangesValue){
+            NSRange range = [value rangeValue];
+            NSUInteger distance = NSUIntegerMax;
+            if(JPValidFileRange(range)){
+                if(NSLocationInRange(dragStartLocation, range)){
+                    targetRange = range;
+                    break;
+                }
+                else {
+                    NSUInteger deltaDistance = abs(range.location - dragStartLocation);
+                    deltaDistance = abs(NSMaxRange(range) - dragStartLocation) < deltaDistance ?: deltaDistance;
+                    if(deltaDistance < distance){
+                        distance = deltaDistance;
+                        targetRange = range;
+                    }
+                }
+            }
+        }
+    }
+
+    if(!JPValidFileRange(targetRange)){
+        return;
+    }
+    CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
+    CGFloat cacheProgressViewWidth = targetRange.length * self.trackProgressView.bounds.size.width / self.fileLength;
+    self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.trackProgressView.bounds.size.height);
+    [self.trackProgressView addSubview:self.cachedProgressView];
+}
+
+- (void)removeCacheProgressViewIfNeed {
+    if(self.cachedProgressView.superview){
+        [self.cachedProgressView removeFromSuperview];
+    }
+}
+
+- (NSUInteger)fetchDragStartLocation {
+    return self.fileLength * self.elapsedProgressView.progress;
+}
+
+@end
+
 @interface JPVideoPlayerView()
 
 @property (nonatomic, strong) UIView *videoContainerView;
 
 @property (nonatomic, strong) UIView *controlContainerView;
+
+@property (nonatomic, strong) UIView *progressContainerView;
 
 @property (nonatomic, strong) UIView *cacheIndicatorContainerView;
 
@@ -503,8 +661,11 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 @end
 
 static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
-static const CGFloat kJPControlViewBarHeight = 38;
 @implementation JPVideoPlayerView
+
+- (void)dealloc {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
 
 - (instancetype)init {
     self = [super init];
@@ -518,9 +679,16 @@ static const CGFloat kJPControlViewBarHeight = 38;
     [super setFrame:frame];
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
+    self.progressContainerView.frame = self.bounds;
     self.cacheIndicatorContainerView.frame = self.bounds;
-    self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPControlViewBarHeight);
+    self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
+        view.frame = self.bounds;
+    }
+    for(UIView *view in self.progressContainerView.subviews){
+        view.frame = self.bounds;
+    }
+    for(UIView *view in self.cacheIndicatorContainerView.subviews){
         view.frame = self.bounds;
     }
 }
@@ -531,19 +699,26 @@ static const CGFloat kJPControlViewBarHeight = 38;
             self.videoContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
             bounds.size.height);
-    self.controlContainerView.frame = CGRectMake(self.controlContainerView.center.x - bounds.size.width * 0.5,
-            self.controlContainerView.center.y - bounds.size.height * 0.5,
-            bounds.size.width,
-            bounds.size.height);
-    self.cacheIndicatorContainerView.frame = CGRectMake(self.cacheIndicatorContainerView.center.x - bounds.size.width * 0.5,
-            self.cacheIndicatorContainerView.center.y - bounds.size.height * 0.5,
-            bounds.size.width,
-            bounds.size.height);
+    self.controlContainerView.frame = self.videoContainerView.frame;
+    self.progressContainerView.frame = self.videoContainerView.frame;
+    self.cacheIndicatorContainerView.frame = self.videoContainerView.frame;
     self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5,
             self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
-            bounds.size.height - kJPControlViewBarHeight);
+            bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
+        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
+                view.center.y - bounds.size.height * 0.5,
+                bounds.size.width,
+                bounds.size.height);
+    }
+    for(UIView *view in self.progressContainerView.subviews){
+        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
+                view.center.y - bounds.size.height * 0.5,
+                bounds.size.width,
+                bounds.size.height);
+    }
+    for(UIView *view in self.cacheIndicatorContainerView.subviews){
         view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
                 view.center.y - bounds.size.height * 0.5,
                 bounds.size.width,
@@ -557,19 +732,26 @@ static const CGFloat kJPControlViewBarHeight = 38;
             center.x - self.videoContainerView.bounds.size.height * 0.5,
             self.videoContainerView.bounds.size.width,
             self.videoContainerView.bounds.size.height);
-    self.controlContainerView.frame = CGRectMake(center.y -  self.controlContainerView.bounds.size.width * 0.5,
-            center.x -  self.controlContainerView.bounds.size.height * 0.5,
-            self.controlContainerView.bounds.size.width,
-            self.controlContainerView.bounds.size.height);
-    self.cacheIndicatorContainerView.frame = CGRectMake(center.y -  self.cacheIndicatorContainerView.bounds.size.width * 0.5,
-            center.x -  self.cacheIndicatorContainerView.bounds.size.height * 0.5,
-            self.cacheIndicatorContainerView.bounds.size.width,
-            self.cacheIndicatorContainerView.bounds.size.height);
+    self.controlContainerView.frame = self.videoContainerView.frame;
+    self.progressContainerView.frame = self.videoContainerView.frame;
+    self.cacheIndicatorContainerView.frame = self.videoContainerView.frame;
     self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5,
             center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
             self.userInteractionContainerView.bounds.size.width,
-            self.userInteractionContainerView.bounds.size.height - kJPControlViewBarHeight);
+            self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
+        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
+                center.x - view.bounds.size.height * 0.5,
+                view.bounds.size.width,
+                view.bounds.size.height);
+    }
+    for(UIView *view in self.progressContainerView.subviews){
+        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
+                center.x - view.bounds.size.height * 0.5,
+                view.bounds.size.width,
+                view.bounds.size.height);
+    }
+    for(UIView *view in self.cacheIndicatorContainerView.subviews){
         view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
                 center.x - view.bounds.size.height * 0.5,
                 view.bounds.size.width,
@@ -588,10 +770,12 @@ static const CGFloat kJPControlViewBarHeight = 38;
                      animations:^{
                          if(self.controlContainerView.alpha == 0){
                              self.controlContainerView.alpha = 1;
+                             self.progressContainerView.alpha = 0;
                              [self startTimer];
                          }
                          else {
                              self.controlContainerView.alpha = 0;
+                             self.progressContainerView.alpha = 1;
                              [self endTimer];
                          }
 
@@ -625,6 +809,14 @@ static const CGFloat kJPControlViewBarHeight = 38;
         view;
     });
 
+    self.progressContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
+
     self.controlContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
@@ -647,11 +839,11 @@ static const CGFloat kJPControlViewBarHeight = 38;
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserStartDragNotification)
-                                               name:JPVideoPlayerProgressViewUserDidStartDragNotification
+                                               name:JPVideoPlayerControlProgressViewUserDidStartDragNotification
                                              object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserEndDragNotification)
-                                               name:JPVideoPlayerProgressViewUserDidEndDragNotification
+                                               name:JPVideoPlayerControlProgressViewUserDidEndDragNotification
                                              object:nil];
 }
 
