@@ -240,6 +240,9 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
 @end
 
+static const CGFloat kJPVideoPlayerControlBarButtonWidthHeight = 22;
+static const CGFloat kJPVideoPlayerControlBarElementGap = 16;
+static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 @implementation JPVideoPlayerControlBar
 
 - (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
@@ -258,11 +261,26 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    self.playButton.frame = CGRectMake(16, 10, 18, 18);
-    self.landscapeButton.frame = CGRectMake(frame.size.width - 34, 10, 18, 18);
-    self.timeLabel.frame = CGRectMake(self.landscapeButton.frame.origin.x - 86, 10, 72, 16);
-    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - self.playButton.frame.origin.x - self.playButton.frame.size.width - 12;
-    self.progressView.frame = CGRectMake(40, 9, progressViewWidth, 20);
+    CGSize referenceSize = self.bounds.size;
+    CGFloat elementOriginY = (referenceSize.height - kJPVideoPlayerControlBarButtonWidthHeight) * 0.5;
+    self.playButton.frame = CGRectMake(kJPVideoPlayerControlBarElementGap,
+            elementOriginY,
+            kJPVideoPlayerControlBarButtonWidthHeight,
+            kJPVideoPlayerControlBarButtonWidthHeight);
+    self.landscapeButton.frame = CGRectMake(referenceSize.width - kJPVideoPlayerControlBarElementGap - kJPVideoPlayerControlBarButtonWidthHeight,
+            elementOriginY,
+            kJPVideoPlayerControlBarButtonWidthHeight,
+            kJPVideoPlayerControlBarButtonWidthHeight);
+    self.timeLabel.frame = CGRectMake(self.landscapeButton.frame.origin.x - kJPVideoPlayerControlBarTimeLabelWidth - kJPVideoPlayerControlBarElementGap,
+            elementOriginY,
+            kJPVideoPlayerControlBarTimeLabelWidth,
+            kJPVideoPlayerControlBarButtonWidthHeight);
+    CGFloat progressViewOriginX = self.playButton.frame.origin.x + self.playButton.frame.size.width + kJPVideoPlayerControlBarElementGap;
+    CGFloat progressViewWidth = self.timeLabel.frame.origin.x - progressViewOriginX - kJPVideoPlayerControlBarElementGap;
+    self.progressView.frame = CGRectMake(progressViewOriginX,
+            elementOriginY,
+            progressViewWidth,
+            kJPVideoPlayerControlBarButtonWidthHeight);
 }
 
 - (void)progressView:(JPVideoPlayerProgressView *)progressView
@@ -325,6 +343,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 }
 
 - (void)landscapeButtonDidClick:(UIButton *)button {
+    button.selected = !button.selected;
     self.playerView.jp_viewStatus == JPVideoPlayerVideoViewStatusPortrait ? [self.playerView jp_gotoLandscape] : [self.playerView jp_gotoPortrait];
 }
 
@@ -353,6 +372,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
     self.timeLabel = ({
         UILabel *label = [UILabel new];
+        label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
 
         label;
@@ -361,6 +381,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
     self.landscapeButton = ({
         UIButton *button = [UIButton new];
         [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_landscape"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_portrait"] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
 
@@ -379,7 +400,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 @end
 
 static const CGFloat kJPVideoPlayerControlBarHeight = 38;
-static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 20;
+static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 @implementation JPVideoPlayerControlView
 
 - (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
@@ -455,8 +476,8 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 20;
         self.controlBar = ({
             JPVideoPlayerControlBar *bar = [[JPVideoPlayerControlBar alloc] initWithProgressView:nil];
             [self addSubview:bar];
-            bar.progressView.trackProgressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.2];
-            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.7];
+            bar.progressView.trackProgressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.15];
+            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
 
             bar;
         });
@@ -482,7 +503,7 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 20;
 @end
 
 static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
-static const CGFloat kJPControlViewBarHeight = 50;
+static const CGFloat kJPControlViewBarHeight = 38;
 @implementation JPVideoPlayerView
 
 - (instancetype)init {
@@ -595,19 +616,19 @@ static const CGFloat kJPControlViewBarHeight = 50;
         view;
     });
 
-    self.controlContainerView = ({
-        UIView *view = [UIView new];
-        view.backgroundColor = [UIColor clearColor];
-        [self addSubview:view];
-
-        view;
-    });
-
     self.cacheIndicatorContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
         view.userInteractionEnabled = NO;
+
+        view;
+    });
+
+    self.controlContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
 
         view;
     });

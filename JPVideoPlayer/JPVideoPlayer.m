@@ -258,10 +258,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if(!CMTIME_IS_VALID(time)){
         return;
     }
+    BOOL needResume = self.currentPlayerModel.player.rate != 0;
     [self.currentPlayerModel pausePlayVideo];
     [self.currentPlayerModel.player seekToTime:time completionHandler:^(BOOL finished) {
 
-        if(finished){
+        if(finished && needResume){
             [self.currentPlayerModel resumePlayVideo];
         }
 
