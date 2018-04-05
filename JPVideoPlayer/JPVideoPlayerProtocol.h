@@ -7,10 +7,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol JPVideoPlayerProtocol <NSObject>
+@protocol JPVideoPlayerProgressProtocol <NSObject>
 
 @optional
-
 /**
  * This method will be called when the view as a subview be add to a view.
  *
@@ -45,6 +44,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds;
+
+@end
+
+@protocol JPVideoPlayerBufferingProtocol<NSObject>
+
+@optional
+/**
+ * This method will be called when player buffering.
+ */
+- (void)didStartBuffering;
+
+/**
+ * This method will be called when player finish buffering and start play.
+ */
+- (void)didFinishBuffering;
 
 @end
 

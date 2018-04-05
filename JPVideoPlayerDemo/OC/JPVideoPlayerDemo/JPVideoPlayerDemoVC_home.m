@@ -138,7 +138,9 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 #pragma mark - JPTableViewPlayVideoDelegate
 
 - (void)tableView:(UITableView *)tableView readyPlayVideoOnCell:(UITableViewCell *)cell {
-    [cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL progressView:nil];
+    [cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL
+                                bufferingIndicator:nil
+                                      progressView:nil];
 }
 
 

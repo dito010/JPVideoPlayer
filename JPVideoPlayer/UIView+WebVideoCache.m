@@ -19,9 +19,11 @@
 
 @property(nonatomic, strong) JPVideoPlayerView *videoPlayerView;
 
-@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *progressView;
+@property(nonatomic, strong) UIView<JPVideoPlayerProgressProtocol> *progressView;
 
-@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlView;
+@property(nonatomic, strong) UIView<JPVideoPlayerProgressProtocol> *controlView;
+
+@property(nonatomic, strong) UIView<JPVideoPlayerBufferingProtocol> *bufferingIndicator;
 
 @property(nonatomic, weak)id<JPVideoPlayerDelegate> videoPlayerDelegate;
 
@@ -60,20 +62,28 @@
     return self.helper.playerStatus;
 }
 
-- (void)setJp_progressView:(UIView <JPVideoPlayerProtocol> *)jp_progressView {
+- (void)setJp_progressView:(UIView <JPVideoPlayerProgressProtocol> *)jp_progressView {
     self.helper.progressView = jp_progressView;
 }
 
-- (UIView <JPVideoPlayerProtocol> *)jp_progressView {
+- (UIView <JPVideoPlayerProgressProtocol> *)jp_progressView {
     return self.helper.progressView;
 }
 
-- (void)setJp_controlView:(UIView <JPVideoPlayerProtocol> *)jp_controlView {
+- (void)setJp_controlView:(UIView <JPVideoPlayerProgressProtocol> *)jp_controlView {
     self.helper.controlView = jp_controlView;
 }
 
-- (UIView <JPVideoPlayerProtocol> *)jp_controlView {
+- (UIView <JPVideoPlayerProgressProtocol> *)jp_controlView {
     return self.helper.controlView;
+}
+
+- (void)setJp_bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *)jp_bufferingIndicator {
+    self.helper.bufferingIndicator = jp_bufferingIndicator;
+}
+
+- (UIView <JPVideoPlayerBufferingProtocol> *)jp_bufferingIndicator {
+    return self.helper.bufferingIndicator;
 }
 
 - (void)setJp_videoPlayerDelegate:(id <JPVideoPlayerDelegate>)jp_videoPlayerDelegate {
@@ -93,30 +103,42 @@
 }
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
-                   progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
+        bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+              progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
     if(!progressView && !self.jp_progressView){
-        // Use default `JPVideoPlayerProgressView` if no controlView.
+        // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
     }
+    if(!bufferingIndicator && !self.jp_bufferingIndicator){
+        // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
+        bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
+    }
     self.jp_progressView = progressView;
+    self.jp_bufferingIndicator = bufferingIndicator;
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect |
             JPVideoPlayerMutedPlay];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
-                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
-               progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
+         bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
+               progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+    if(!bufferingIndicator && !self.jp_bufferingIndicator){
+        // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
+        bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
+    }
     if(!controlView && !self.jp_controlView){
         // Use default `JPVideoPlayerControlView` if no controlView.
         controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
     }
     if(!progressView && !self.jp_progressView){
-        // Use default `JPVideoPlayerProgressView` if no controlView.
+        // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
     }
     self.jp_controlView = controlView;
     self.jp_progressView = progressView;
+    self.jp_bufferingIndicator = bufferingIndicator;
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -127,13 +149,19 @@
 
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;
-
         // Add progress view and control view if need.
         if(!self.helper.videoPlayerView.superview){
             [self addSubview:self.helper.videoPlayerView];
             self.helper.videoPlayerView.frame = self.bounds;
         }
         self.helper.videoPlayerView.hidden = NO;
+        if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
+           self.jp_bufferingIndicator.frame = self.bounds;
+           [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
+            if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
+                [self.jp_bufferingIndicator didStartBuffering];
+            }
+        }
 
         if(self.jp_progressView && !self.jp_progressView.superview){
             self.jp_progressView.frame = self.bounds;
@@ -203,7 +231,7 @@
 }
 
 - (void)jp_gotoLandscapeAnimated:(BOOL)animated
-                      completion:(JPVideoPlayerScreenAnimationCompletion)completion {
+                      completion:(dispatch_block_t)completion {
     if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
         return;
     }
@@ -259,7 +287,7 @@
 }
 
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
-                     completion:(JPVideoPlayerScreenAnimationCompletion)completion{
+                     completion:(dispatch_block_t)completion{
     if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
         return;
     }

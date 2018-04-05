@@ -22,8 +22,6 @@ typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
-
 @protocol JPVideoPlayerDelegate <NSObject>
 
 @optional
@@ -77,9 +75,11 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
 
 @property(nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
-@property(nonatomic) UIView<JPVideoPlayerProtocol> *jp_progressView;
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProgressProtocol> *jp_progressView;
 
-@property(nonatomic) UIView<JPVideoPlayerProtocol> *jp_controlView;
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProgressProtocol> *jp_controlView;
+
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
 @property(nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
 
@@ -99,11 +99,15 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  *
  * The download is asynchronous and cached.
  *
- * @param url          The url for the video.
- * @param progressView The view to display the download and play progress, it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
+ * @param url                The url for the video.
+ * @param bufferingIndicator The view show buffering animation when player buffering, should compliance with the `JPVideoPlayerBufferingProtocol`,
+ *                            it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
+ * @param progressView       The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                            it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
  */
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
-                   progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
+             bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                   progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
 
 /**
  * Play `video` with an `url` on the view, and play audio at the same time.
@@ -113,12 +117,17 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * The control view will display, and display indicator view when buffer empty.
  *
  * @param url          The url for the video.
- * @param controlView  The view to display the download and play progress, it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
- * @param progressView The view to display the download and play progress, it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
+ * @param bufferingIndicator The view show buffering animation when player buffering, should compliance with the `JPVideoPlayerBufferingProtocol`,
+ *                            it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
+ * @param controlView        The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                            it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
+ * @param progressView       The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                            it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
-                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView
-               progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
+         bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                controlView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlView
+               progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
 
 /**
  * Play `video` with an `url` on the view.
@@ -182,7 +191,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param completion call back when landscape finished.
  */
 - (void)jp_gotoLandscapeAnimated:(BOOL)animated
-                      completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+                      completion:(dispatch_block_t _Nullable)completion;
 
 /**
  * Call this method to exit full screen.
@@ -196,7 +205,7 @@ typedef void(^JPVideoPlayerScreenAnimationCompletion)(void);
  * @param completion call back when portrait finished.
  */
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
-                     completion:(JPVideoPlayerScreenAnimationCompletion _Nullable)completion;
+                     completion:(dispatch_block_t _Nullable)completion;
 
 @end
 

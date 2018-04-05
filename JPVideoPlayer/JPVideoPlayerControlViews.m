@@ -32,7 +32,6 @@
 
 @end
 
-static const CGFloat kJPVideoPlayerProgressViewWidth = 20;
 static const CGFloat kJPVideoPlayerDragSliderLeftEdge = 2;
 static const CGFloat kJPVideoPlayerCachedProgressViewHeight = 2;
 NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
@@ -42,7 +41,7 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [self setup];
+        [self _setup];
     }
     return self;
 }
@@ -99,7 +98,7 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
 
 #pragma mark - Private
 
-- (void)setup {
+- (void)_setup {
     self.trackProgressView = ({
         UIProgressView *view = [UIProgressView new];
         [self addSubview:view];
@@ -226,7 +225,7 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
 
 @end
 
-@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerControlProgressViewDelegate>
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProgressProtocol, JPVideoPlayerControlProgressViewDelegate>
 
 @property (nonatomic, strong) UIButton *playButton;
 
@@ -245,11 +244,11 @@ static const CGFloat kJPVideoPlayerControlBarElementGap = 16;
 static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 @implementation JPVideoPlayerControlBar
 
-- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
+- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
     self = [super init];
     if (self) {
         _progressView = progressView;
-        [self setup];
+        [self _setup];
     }
     return self;
 }
@@ -347,7 +346,7 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
     self.playerView.jp_viewStatus == JPVideoPlayerVideoViewStatusPortrait ? [self.playerView jp_gotoLandscape] : [self.playerView jp_gotoPortrait];
 }
 
-- (void)setup {
+- (void)_setup {
     self.backgroundColor = [UIColor clearColor];
 
     self.playButton = ({
@@ -403,13 +402,13 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 @implementation JPVideoPlayerControlView
 
-- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
+- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProgressProtocol> *)controlBar
                          blurImage:(UIImage *)blurImage {
     self = [super initWithFrame:CGRectZero];
     if(self){
         _controlBar = controlBar;
         _blurImage = blurImage;
-        [self setup];
+        [self _setup];
     }
     return self;
 }
@@ -459,7 +458,7 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 
 #pragma mark - Private
 
-- (void)setup {
+- (void)_setup {
     self.blurImageView = ({
         UIImageView *view = [UIImageView new];
         UIImage *blurImage = self.blurImage;
@@ -510,7 +509,7 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
 - (instancetype)init {
     self = [super init];
     if(self){
-       [self setup];
+        [self _setup];
     }
     return self;
 }
@@ -528,7 +527,7 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
 
 #pragma mark - Setup
 
-- (void)setup {
+- (void)_setup {
     self.trackProgressView = ({
         UIProgressView *view = [UIProgressView new];
         view.trackTintColor = [UIColor colorWithWhite:1 alpha:0.15];
@@ -642,6 +641,105 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
 
 @end
 
+@interface JPVideoPlayerBufferingIndicator()
+
+@property(nonatomic, strong)UIActivityIndicatorView *activityIndicator;
+
+@property(nonatomic, strong)UIVisualEffectView *blurView;
+
+@property(nonatomic, assign, getter=isAnimating)BOOL animating;
+
+@property (nonatomic, strong) UIView *blurBackgroundView;
+
+@end
+
+CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
+@implementation JPVideoPlayerBufferingIndicator
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self _setup];
+    }
+    return self;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    CGSize referenceSize = frame.size;
+    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+            JPVideoPlayerBufferingIndicatorWidthHeight,
+            JPVideoPlayerBufferingIndicatorWidthHeight);
+    self.activityIndicator.frame = self.blurBackgroundView.bounds;
+    self.blurView.frame = self.blurBackgroundView.bounds;
+}
+
+- (void)startAnimating{
+    if (!self.isAnimating) {
+        self.hidden = NO;
+        [self.activityIndicator startAnimating];
+        self.animating = YES;
+    }
+}
+
+- (void)stopAnimating{
+    if (self.isAnimating) {
+        self.hidden = YES;
+        [self.activityIndicator stopAnimating];
+        self.animating = NO;
+    }
+}
+
+
+#pragma mark - JPVideoPlayerBufferingProtocol
+
+- (void)didStartBuffering {
+    [self startAnimating];
+}
+
+- (void)didFinishBuffering {
+    [self stopAnimating];
+}
+
+
+#pragma mark - Private
+
+- (void)_setup{
+    self.backgroundColor = [UIColor clearColor];
+
+    self.blurBackgroundView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+        view.layer.cornerRadius = 10;
+        view.clipsToBounds = YES;
+        [self addSubview:view];
+
+        view;
+    });
+
+    self.blurView = ({
+        UIVisualEffectView *blurView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+        [self.blurBackgroundView addSubview:blurView];
+
+        blurView;
+    });
+
+    self.activityIndicator = ({
+        UIActivityIndicatorView *indicator = [UIActivityIndicatorView new];
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        indicator.color = [UIColor colorWithRed:35.0/255 green:35.0/255 blue:35.0/255 alpha:1];
+        [self.blurBackgroundView addSubview:indicator];
+
+        indicator;
+    });
+
+    self.animating = NO;
+}
+
+@end
+
 @interface JPVideoPlayerView()
 
 @property (nonatomic, strong) UIView *videoContainerView;
@@ -650,7 +748,7 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
 
 @property (nonatomic, strong) UIView *progressContainerView;
 
-@property (nonatomic, strong) UIView *cacheIndicatorContainerView;
+@property (nonatomic, strong) UIView *bufferingIndicatorContainerView;
 
 @property (nonatomic, strong) UIView *userInteractionContainerView;
 
@@ -670,7 +768,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 - (instancetype)init {
     self = [super init];
     if(self){
-        [self setup];
+        [self _setup];
     }
     return self;
 }
@@ -680,7 +778,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
     self.progressContainerView.frame = self.bounds;
-    self.cacheIndicatorContainerView.frame = self.bounds;
+    self.bufferingIndicatorContainerView.frame = self.bounds;
     self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = self.bounds;
@@ -688,7 +786,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     for(UIView *view in self.progressContainerView.subviews){
         view.frame = self.bounds;
     }
-    for(UIView *view in self.cacheIndicatorContainerView.subviews){
+    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
         view.frame = self.bounds;
     }
 }
@@ -701,7 +799,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             bounds.size.height);
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
-    self.cacheIndicatorContainerView.frame = self.videoContainerView.frame;
+    self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
     self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5,
             self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
@@ -718,7 +816,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                 bounds.size.width,
                 bounds.size.height);
     }
-    for(UIView *view in self.cacheIndicatorContainerView.subviews){
+    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
         view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
                 view.center.y - bounds.size.height * 0.5,
                 bounds.size.width,
@@ -734,7 +832,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             self.videoContainerView.bounds.size.height);
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
-    self.cacheIndicatorContainerView.frame = self.videoContainerView.frame;
+    self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
     self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5,
             center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
             self.userInteractionContainerView.bounds.size.width,
@@ -751,7 +849,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                 view.bounds.size.width,
                 view.bounds.size.height);
     }
-    for(UIView *view in self.cacheIndicatorContainerView.subviews){
+    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
         view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
                 center.x - view.bounds.size.height * 0.5,
                 view.bounds.size.width,
@@ -788,7 +886,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 #pragma mark - Setup
 
-- (void)setup {
+- (void)_setup {
     self.backgroundColor = [UIColor blackColor];
 
     self.videoContainerView = ({
@@ -800,7 +898,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
         view;
     });
 
-    self.cacheIndicatorContainerView = ({
+    self.bufferingIndicatorContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
@@ -882,77 +980,6 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 - (void)timeDidChange:(NSTimer *)timer {
     [self tapGestureDidTap];
     [self endTimer];
-}
-
-@end
-
-CGFloat const JPVideoPlayerActivityIndicatorWH = 46;
-
-@interface JPVideoPlayerActivityIndicator()
-
-@property(nonatomic, strong, nullable)UIActivityIndicatorView *activityIndicator;
-
-@property(nonatomic, strong, nullable)UIVisualEffectView *blurView;
-
-@property(nonatomic, assign, getter=isAnimating)BOOL animating;
-
-@end
-
-@implementation JPVideoPlayerActivityIndicator
-
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        [self setup_];
-    }
-    return self;
-}
-
-- (void)layoutSubviews{
-    [super layoutSubviews];
-
-    self.blurView.frame = self.bounds;
-    self.activityIndicator.frame = self.bounds;
-}
-
-
-#pragma mark - Public
-
-- (void)startAnimating{
-    if (!self.isAnimating) {
-        self.hidden = NO;
-        [self.activityIndicator startAnimating];
-        self.animating = YES;
-    }
-}
-
-- (void)stopAnimating{
-    if (self.isAnimating) {
-        self.hidden = YES;
-        [self.activityIndicator stopAnimating];
-        self.animating = NO;
-    }
-}
-
-
-#pragma mark - Private
-
-- (void)setup_{
-    self.backgroundColor = [UIColor clearColor];
-    self.layer.cornerRadius = 8;
-    self.clipsToBounds = YES;
-
-    UIVisualEffectView *blurView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    [self addSubview:blurView];
-    self.blurView = blurView;
-
-    UIActivityIndicatorView *indicator = [UIActivityIndicatorView new];
-    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    indicator.color = [UIColor colorWithRed:35.0/255 green:35.0/255 blue:35.0/255 alpha:1];
-    [self addSubview:indicator];
-    self.activityIndicator = indicator;
-
-    self.animating = NO;
 }
 
 @end

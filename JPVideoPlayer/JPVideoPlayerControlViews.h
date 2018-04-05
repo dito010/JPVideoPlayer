@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification;
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification;
-@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProtocol>
+@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProgressProtocol>
 
 @property (nonatomic, weak, nullable) id<JPVideoPlayerControlProgressViewDelegate> delegate;
 
@@ -50,7 +50,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @end
 
-@interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
+@interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProgressProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
 
@@ -60,11 +60,11 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @property (nonatomic, strong, readonly) UIButton *landscapeButton;
 
-- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
 
 @end
 
-@interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
+@interface JPVideoPlayerControlView : UIView<JPVideoPlayerProgressProtocol>
 
 @property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
 
@@ -73,18 +73,18 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 /**
  * A designated initializer.
  *
- * @param controlBar The view abide by the `JPVideoPlayerProtocol`.
+ * @param controlBar The view abide by the `JPVideoPlayerProgressProtocol`.
  * @param blurImage  A image on back of controlBar.
  *
  * @return The current instance.
  */
-- (instancetype)initWithControlBar:(UIView<JPVideoPlayerProtocol> *_Nullable)controlBar
+- (instancetype)initWithControlBar:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlBar
                          blurImage:(UIImage *_Nullable)blurImage NS_DESIGNATED_INITIALIZER;
 
 // TODO: 给外界布局专门一个方法, 抽取协议.
 @end
 
-@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
+@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProgressProtocol>
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 
@@ -102,6 +102,16 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @end
 
+@interface JPVideoPlayerBufferingIndicator : UIView<JPVideoPlayerBufferingProtocol>
+
+@property(nonatomic, strong, readonly)UIActivityIndicatorView *activityIndicator;
+
+@property(nonatomic, strong, readonly)UIVisualEffectView *blurView;
+
+@property(nonatomic, assign, readonly, getter=isAnimating)BOOL animating;
+
+@end
+
 @interface JPVideoPlayerView : UIView
 
 @property (nonatomic, strong, readonly) UIView *videoContainerLayer;
@@ -110,19 +120,9 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @property (nonatomic, strong, readonly) UIView *progressContainerView;
 
-@property (nonatomic, strong, readonly) UIView *cacheIndicatorContainerView;
+@property (nonatomic, strong, readonly) UIView *bufferingIndicatorContainerView;
 
 @property (nonatomic, strong, readonly) UIView *userInteractionContainerView;
-
-@end
-
-UIKIT_EXTERN CGFloat const JPVideoPlayerActivityIndicatorWH;
-
-@interface JPVideoPlayerActivityIndicator : UIView
-
-- (void)startAnimating;
-
-- (void)stopAnimating;
 
 @end
 
