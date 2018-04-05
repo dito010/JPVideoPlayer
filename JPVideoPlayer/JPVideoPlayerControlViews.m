@@ -66,6 +66,11 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
     self.playerView = view;
 }
 
+- (void)viewWillPrepareToReuse {
+    [self cacheRangeDidChange:nil];
+    [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
+}
+
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
     _rangesValue = cacheRanges;
     [self updateCacheProgressViewIfNeed];
@@ -297,6 +302,11 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
     [self.progressView viewWillAddToSuperView:view];
 }
 
+- (void)viewWillPrepareToReuse {
+    [self updateTimeLabelWithElapsedSeconds:0 totalSeconds:0];
+    [self.progressView viewWillPrepareToReuse];
+}
+
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
     [self.progressView cacheRangeDidChange:cacheRanges];
 }
@@ -441,6 +451,10 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
     [self.controlBar viewWillAddToSuperView:view];
 }
 
+- (void)viewWillPrepareToReuse {
+    [self.controlBar viewWillPrepareToReuse];
+}
+
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
     [self.controlBar cacheRangeDidChange:cacheRanges];
 }
@@ -558,6 +572,11 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
 #pragma mark - JPVideoPlayerControlProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
+}
+
+- (void)viewWillPrepareToReuse {
+    [self cacheRangeDidChange:nil];
+    [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
 }
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {

@@ -149,7 +149,6 @@
     if(controlView){
        self.jp_controlView = controlView;
     }
-    // TODO: 处理进度条循环利用.
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -157,6 +156,15 @@
 - (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options {
     [self jp_stopPlay];
     self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+
+    // handler the reuse of progressView in `UITableView`.
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillPrepareToReuse)]){
+        [self.jp_progressView viewWillPrepareToReuse];
+    }
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillPrepareToReuse)]){
+        [self.jp_controlView viewWillPrepareToReuse];
+    }
+    [self callFinishBufferingDelegate];
 
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;

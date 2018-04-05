@@ -21,6 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewWillAddToSuperView:(UIView *)view;
 
 /**
+ * This method will be call when the view be reuse in `UITableView`,
+ * you need reset progress value in this method for good user experience.
+ */
+- (void)viewWillPrepareToReuse;
+
+/**
  * This method will be called when the downloader fetched the file length or read from disk.
  *
  * @warning This method may be call repeatedly when download a video.
@@ -50,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol JPVideoPlayerBufferingProtocol<NSObject>
 
 @optional
+
 /**
  * This method will be called when player buffering.
  */
