@@ -30,23 +30,21 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 
 @property (nonatomic, weak, nullable) id<JPVideoPlayerProgressViewDelegate> delegate;
 
-@property (nonatomic, strong, readonly) UIImageView *controlHandlerImageView;
-
-@property (nonatomic, strong, readonly) UIView *backgroundView;
-
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 
 @property(nonatomic, assign, readonly) NSUInteger fileLength;
 
 @property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
 
-@property (nonatomic, strong, readonly) UIView *elapsedProgressView;
-
-@property (nonatomic, strong, readonly) UIView *cachedProgressView;
-
 @property(nonatomic, assign, readonly) BOOL userDragging;
 
 @property (nonatomic, weak, readonly, nullable) UIView *playerView;
+
+@property (nonatomic, strong, readonly) UISlider *dragSlider;
+
+@property (nonatomic, strong, readonly) UIView *cachedProgressView;
+
+@property (nonatomic, strong, readonly) UIProgressView *trackProgressView;
 
 @end
 
@@ -66,12 +64,6 @@ UIKIT_EXTERN NSString *JPVideoPlayerProgressViewUserDidEndDragNotification;
 
 // TODO: 做到 progressView, 接下来封装一个 progressView, 然后到播放分类中实现
 @interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
-
-@property (nonatomic, strong) UIColor *elapsedProgressColor;
-
-@property (nonatomic, strong) UIColor *progressBackgroundColor;
-
-@property (nonatomic, strong) UIColor *cachedProgressColor;
 
 @property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
 

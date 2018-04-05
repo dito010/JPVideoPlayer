@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #define JPMainThreadAssert NSParameterAssert([[NSThread currentThread] isMainThread])
 
-typedef NS_ENUM(NSInteger, JPVideoPlayerStatus) {
-    JPVideoPlayerStatusUnkown,
+typedef NS_ENUM(NSUInteger, JPVideoPlayerStatus) {
+    JPVideoPlayerStatusUnkown = 0,
     JPVideoPlayerStatusBuffering,
     JPVideoPlayerStatusPlaying,
     JPVideoPlayerStatusPause,

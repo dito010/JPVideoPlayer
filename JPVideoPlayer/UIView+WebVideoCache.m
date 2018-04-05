@@ -362,6 +362,7 @@
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
     self.helper.playerStatus = playerStatus;
+    JPDebugLog(@"playerStatus: %ld", playerStatus);
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
         [self.jp_videoPlayerDelegate playerStatusDidChanged:playerStatus];
     }

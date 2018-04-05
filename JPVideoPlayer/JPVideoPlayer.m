@@ -478,6 +478,9 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
         
         double elapsedSeconds = CMTimeGetSeconds(time);
         double totalSeconds = CMTimeGetSeconds(sItem.currentPlayerItem.duration);
+        if(totalSeconds == 0 || isnan(totalSeconds) ){
+            return;
+        }
         JPDispatchSyncOnMainQueue(^{
             if (sself.delegate && [sself.delegate respondsToSelector:@selector(videoPlayerPlayProgressDidChange:elapsedSeconds:totalSeconds:)]) {
                 [sself.delegate videoPlayerPlayProgressDidChange:sself

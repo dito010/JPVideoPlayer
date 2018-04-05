@@ -12,10 +12,6 @@
 
 @interface JPVideoPlayerProgressView()
 
-@property (nonatomic, strong) UIImageView *controlHandlerImageView;
-
-@property (nonatomic, strong) UIView *backgroundView;
-
 @property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
 
 @property(nonatomic, assign) NSUInteger fileLength;
@@ -24,9 +20,11 @@
 
 @property(nonatomic, assign) NSTimeInterval elapsedSeconds;
 
-@property (nonatomic, strong) UIView *elapsedProgressView;
+@property (nonatomic, strong) UISlider *dragSlider;
 
 @property (nonatomic, strong) UIView *cachedProgressView;
+
+@property (nonatomic, strong) UIProgressView *trackProgressView;
 
 @property(nonatomic, assign) BOOL userDragging;
 
@@ -35,7 +33,8 @@
 @end
 
 static const CGFloat kJPVideoPlayerProgressViewWidth = 20;
-static const CGFloat kJPVideoPlayerProgressBackgroundViewHeight = 2;
+static const CGFloat kJPVideoPlayerDragSliderLeftEdge = 2;
+static const CGFloat kJPVideoPlayerCachedProgressViewHeight = 2;
 NSString *JPVideoPlayerProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
 NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideoplayer.progressview.user.drag.end.www";;
 @implementation JPVideoPlayerProgressView
@@ -52,12 +51,10 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
     [super setFrame:frame];
 
     CGSize referenceSize = self.bounds.size;
-    self.controlHandlerImageView.frame = CGRectMake(0, 0, kJPVideoPlayerProgressViewWidth, kJPVideoPlayerProgressViewWidth);
-    self.backgroundView.frame = CGRectMake(kJPVideoPlayerProgressViewWidth * 0.5,
-            (referenceSize.height - kJPVideoPlayerProgressBackgroundViewHeight) * 0.5,
-            referenceSize.width - kJPVideoPlayerProgressViewWidth,
-            kJPVideoPlayerProgressBackgroundViewHeight);
-    self.elapsedProgressView.frame = CGRectMake(0, 0, 0, kJPVideoPlayerProgressBackgroundViewHeight);
+    self.trackProgressView.frame = CGRectMake(kJPVideoPlayerDragSliderLeftEdge,
+            (referenceSize.height - kJPVideoPlayerCachedProgressViewHeight) * 0.5,
+            referenceSize.width - 2 * kJPVideoPlayerDragSliderLeftEdge, kJPVideoPlayerCachedProgressViewHeight);
+    self.dragSlider.frame = self.bounds;
     [self updateCacheProgressViewIfNeed];
     [self playProgressDidChangeElapsedSeconds:self.elapsedSeconds
                                  totalSeconds:self.totalSeconds];
@@ -81,8 +78,16 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
         return;
     }
 
-    CGFloat controlHandleViewOriginX = (self.bounds.size.width - kJPVideoPlayerProgressViewWidth) * (elapsedSeconds / totalSeconds);
-    [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:controlHandleViewOriginX];
+    if(totalSeconds == 0){
+       totalSeconds = 1;
+    }
+
+    float delta = elapsedSeconds / totalSeconds;
+    NSParameterAssert(delta >= 0);
+    NSParameterAssert(delta <= 1);
+    delta = MIN(1, delta);
+    delta = MAX(0, delta);
+    [self.dragSlider setValue:delta animated:YES];
     self.totalSeconds = totalSeconds;
     self.elapsedSeconds = elapsedSeconds;
 }
@@ -95,8 +100,8 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 #pragma mark - Private
 
 - (void)setup {
-    self.backgroundView = ({
-        UIView *view = [UIView new];
+    self.trackProgressView = ({
+        UIProgressView *view = [UIProgressView new];
         [self addSubview:view];
 
         view;
@@ -104,75 +109,48 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 
     self.cachedProgressView = ({
         UIView *view = [UIView new];
-        [self.backgroundView addSubview:view];
+        [self.trackProgressView addSubview:view];
+        view.clipsToBounds = YES;
+        view.layer.cornerRadius = 1;
 
         view;
     });
 
-    self.elapsedProgressView = ({
-        UIView *view = [UIView new];
-        [self.backgroundView addSubview:view];
-
-        view;
-    });
-
-    self.controlHandlerImageView = ({
-        UIImageView *view = [UIImageView new];
-        view.userInteractionEnabled = YES;
-        view.image = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_progress_handler"];
+    self.dragSlider = ({
+        UISlider *view = [UISlider new];
+        [view setThumbImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_progress_handler_normal"] forState:UIControlStateNormal];
+        [view setThumbImage:[UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_progress_handler_hightlight"] forState:UIControlStateHighlighted];
+        view.maximumTrackTintColor = [UIColor clearColor];
+        [view addTarget:self action:@selector(dragSliderDidDrag:) forControlEvents:UIControlEventValueChanged];
+        [view addTarget:self action:@selector(dragSliderDidStart:) forControlEvents:UIControlEventTouchDown];
+        [view addTarget:self action:@selector(dragSliderDidEnd:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:view];
 
         view;
     });
-
-    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDidChange:)];
-    [self.controlHandlerImageView addGestureRecognizer:recognizer];
 }
 
-- (void)panGestureDidChange:(UIPanGestureRecognizer *)panGestureRecognizer {
-    CGPoint transPoint = [panGestureRecognizer translationInView:panGestureRecognizer.view];
-    CGFloat offsetX = transPoint.x;
-    CGRect frame = panGestureRecognizer.view.frame;
-    frame.origin.x += offsetX;
-    [self updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:frame.origin.x];
+- (void)dragSliderDidStart:(UISlider *)slider {
+    self.userDragging = YES;
+    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidStartDragNotification object:self];
+}
+
+- (void)dragSliderDidDrag:(UISlider *)slider {
     [self callTimeChangeDelegateMethod];
-    [panGestureRecognizer setTranslation:CGPointZero inView:panGestureRecognizer.view];
+}
 
-    switch(panGestureRecognizer.state){
-        case UIGestureRecognizerStateBegan:
-            self.userDragging = YES;
-            [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidStartDragNotification object:self];
-            break;
-
-        case UIGestureRecognizerStateEnded:
-            self.userDragging = NO;
-            [self userDidFinishDrag];
-            [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidEndDragNotification object:self];
-            break;
-
-        default:
-            break;
-    }
+- (void)dragSliderDidEnd:(UISlider *)slider {
+    self.userDragging = NO;
+    [self userDidFinishDrag];
+    [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerProgressViewUserDidEndDragNotification object:self];
 }
 
 - (void)callTimeChangeDelegateMethod {
     if (self.delegate && [self.delegate respondsToSelector:@selector(progressView:userDidDragToTime:totalSeconds:)]) {
         [self.delegate progressView:self
-                  userDidDragToTime:[self fetchElapsedProgressRatio] * self.totalSeconds
+                  userDidDragToTime:self.dragSlider.value * self.totalSeconds
                        totalSeconds:self.totalSeconds];
     }
-}
-
-- (void)updateElapsedProgressAndHandlerViewWithControlHandleViewOriginX:(CGFloat)controlHandleViewOriginX {
-    CGRect frame = self.controlHandlerImageView.frame;
-    CGFloat handlerWidth = frame.size.width;
-    frame.origin.x = controlHandleViewOriginX;
-    frame.origin.x = MAX(0, frame.origin.x);
-    frame.origin.x = MIN((self.bounds.size.width - handlerWidth), frame.origin.x);
-    self.controlHandlerImageView.frame = frame;
-    CGRect elapsedFrame = self.elapsedProgressView.frame;
-    elapsedFrame.size.width = frame.origin.x;
-    self.elapsedProgressView.frame = elapsedFrame;
 }
 
 - (void)userDidFinishDrag {
@@ -232,30 +210,18 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
     if(!JPValidFileRange(targetRange)){
         return;
     }
-    CGFloat cacheProgressViewOriginX = targetRange.location * self.backgroundView.bounds.size.width / self.fileLength;
-    CGFloat cacheProgressViewWidth = targetRange.length * self.backgroundView.bounds.size.width / self.fileLength;
-    self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.backgroundView.bounds.size.height);
-    [self.backgroundView insertSubview:self.cachedProgressView belowSubview:self.elapsedProgressView];
+    CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
+    CGFloat cacheProgressViewWidth = targetRange.length * self.trackProgressView.bounds.size.width / self.fileLength;
+    self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.trackProgressView.bounds.size.height);
+    [self.trackProgressView addSubview:self.cachedProgressView];
 }
 
 - (NSUInteger)fetchDragStartLocation {
-    return self.fileLength * [self fetchElapsedProgressRatio];
+    return self.fileLength * self.dragSlider.value;
 }
 
 - (NSTimeInterval)fetchElapsedTimeInterval {
-    return [self fetchElapsedProgressRatio] * self.totalSeconds;
-}
-
-- (CGFloat)fetchElapsedProgressRatio {
-    CGFloat totalDragWidth = self.bounds.size.width - kJPVideoPlayerProgressViewWidth;
-    // the view do not finish layout yet.
-    if(totalDragWidth == 0){
-        totalDragWidth = 1;
-    }
-    CGFloat delta = self.elapsedProgressView.frame.size.width / totalDragWidth;
-    delta = MIN(delta, 1);
-    delta = MAX(0, delta);
-    return delta;
+    return self.dragSlider.value * self.totalSeconds;
 }
 
 @end
@@ -413,6 +379,7 @@ NSString *JPVideoPlayerProgressViewUserDidEndDragNotification = @"com.jpvideopla
 @end
 
 static const CGFloat kJPVideoPlayerControlBarHeight = 38;
+static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 20;
 @implementation JPVideoPlayerControlView
 
 - (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
@@ -434,7 +401,17 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     self.blurImageView.frame = self.bounds;
-    self.controlBar.frame = CGRectMake(0, self.bounds.size.height - kJPVideoPlayerControlBarHeight, self.bounds.size.width, kJPVideoPlayerControlBarHeight);
+    CGRect controlBarFrame = CGRectMake(0,
+            self.bounds.size.height - kJPVideoPlayerControlBarHeight,
+            self.bounds.size.width,
+            kJPVideoPlayerControlBarHeight);
+    if(self.bounds.size.width == [UIScreen mainScreen].bounds.size.height){ // landscape.
+        controlBarFrame = CGRectMake(0,
+                self.bounds.size.height - kJPVideoPlayerControlBarHeight - kJPVideoPlayerControlBarLandscapeUpOffset,
+                self.bounds.size.width,
+                kJPVideoPlayerControlBarHeight);
+    }
+    self.controlBar.frame = controlBarFrame;
 }
 
 
@@ -459,24 +436,6 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 }
 
 
-#pragma mark - Setter
-
-- (void)setElapsedProgressColor:(UIColor *)elapsedProgressColor {
-    _elapsedProgressColor = elapsedProgressColor;
-    self.controlBar.progressView.elapsedProgressView.backgroundColor = elapsedProgressColor;
-}
-
-- (void)setProgressBackgroundColor:(UIColor *)progressBackgroundColor {
-    _progressBackgroundColor = progressBackgroundColor;
-    self.controlBar.progressView.backgroundView.backgroundColor = progressBackgroundColor;
-}
-
-- (void)setCachedProgressColor:(UIColor *)cachedProgressColor {
-    _cachedProgressColor = cachedProgressColor;
-    self.controlBar.progressView.cachedProgressView.backgroundColor = cachedProgressColor;
-}
-
-
 #pragma mark - Private
 
 - (void)setup {
@@ -496,9 +455,8 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
         self.controlBar = ({
             JPVideoPlayerControlBar *bar = [[JPVideoPlayerControlBar alloc] initWithProgressView:nil];
             [self addSubview:bar];
-            bar.progressView.backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
-            bar.progressView.elapsedProgressView.backgroundColor = [UIColor colorWithRed:37.0/255 green:131.0/255 blue:232.0/255 alpha:1];
-            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+            bar.progressView.trackProgressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.2];
+            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.7];
 
             bar;
         });
@@ -523,7 +481,8 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 
 @end
 
-static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 3;
+static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
+static const CGFloat kJPControlViewBarHeight = 50;
 @implementation JPVideoPlayerView
 
 - (instancetype)init {
@@ -539,7 +498,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 3;
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
     self.cacheIndicatorContainerView.frame = self.bounds;
-    self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
+    self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPControlViewBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = self.bounds;
     }
@@ -562,7 +521,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 3;
     self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5,
             self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
-            bounds.size.height - kJPVideoPlayerControlBarHeight);
+            bounds.size.height - kJPControlViewBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
                 view.center.y - bounds.size.height * 0.5,
@@ -588,7 +547,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 3;
     self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5,
             center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
             self.userInteractionContainerView.bounds.size.width,
-            self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
+            self.userInteractionContainerView.bounds.size.height - kJPControlViewBarHeight);
     for(UIView *view in self.controlContainerView.subviews){
         view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
                 center.x - view.bounds.size.height * 0.5,
