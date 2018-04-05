@@ -220,8 +220,13 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
+    // may runningTask is dealloc in main-thread and this method called in sub-thread.
+    if(!self.runningTask){
+        [self reset];
+        return;
+    }
+
     self.receivedSize += data.length;
-    NSParameterAssert(self.runningTask);
     [self.runningTask requestDidReceiveData:data];
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {

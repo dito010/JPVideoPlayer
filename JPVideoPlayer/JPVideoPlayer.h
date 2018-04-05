@@ -21,7 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol JPVideoPlayerInternalDelegate <NSObject>
 
 @required
-
 /**
  * This method will be called when the current instance receive new loading request.
  *
@@ -32,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
 
 @optional
-
 /**
  * Controls which video should automatic replay when the video is playing completed.
  *
@@ -77,11 +75,6 @@ playFailedWithError:(NSError *)error;
 
 @interface JPVideoPlayerModel : NSObject
 
-/** 
- * The current playing url key.
- */
-@property(nonatomic, strong, readonly)NSString *playingKey;
-
 /**
  * The current player's layer.
  */
@@ -103,10 +96,9 @@ playFailedWithError:(NSError *)error;
 
 @property(nullable, nonatomic, weak)id<JPVideoPlayerInternalDelegate> delegate;
 
-/**
- * The current play video item.
- */
 @property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentPlayerModel;
+
+@property(nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
 
 # pragma mark - Play Video.
 

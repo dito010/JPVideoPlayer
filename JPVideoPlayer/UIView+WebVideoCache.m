@@ -113,8 +113,12 @@
         // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
         bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
     }
-    self.jp_progressView = progressView;
-    self.jp_bufferingIndicator = bufferingIndicator;
+    if(progressView){
+        self.jp_progressView = progressView;
+    }
+    if(bufferingIndicator){
+       self.jp_bufferingIndicator = bufferingIndicator;
+    }
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect |
             JPVideoPlayerMutedPlay];
@@ -136,9 +140,15 @@
         // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
     }
-    self.jp_controlView = controlView;
-    self.jp_progressView = progressView;
-    self.jp_bufferingIndicator = bufferingIndicator;
+    if(progressView){
+        self.jp_progressView = progressView;
+    }
+    if(bufferingIndicator){
+        self.jp_bufferingIndicator = bufferingIndicator;
+    }
+    if(controlView){
+       self.jp_controlView = controlView;
+    }
     [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
             JPVideoPlayerLayerVideoGravityResizeAspect];
 }
@@ -158,9 +168,9 @@
         if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
            self.jp_bufferingIndicator.frame = self.bounds;
            [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
-            if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
-                [self.jp_bufferingIndicator didStartBuffering];
-            }
+        }
+        if(self.jp_bufferingIndicator){
+            [self callStartBufferingDelegate];
         }
 
         if(self.jp_progressView && !self.jp_progressView.superview){
@@ -204,6 +214,7 @@
 - (void)jp_stopPlay{
     [[JPVideoPlayerManager sharedManager] stopPlay];
     self.helper.videoPlayerView.hidden = YES;
+    [self callFinishBufferingDelegate];
 }
 
 - (void)jp_pause{
@@ -328,7 +339,19 @@
 
 #pragma mark - Private
 
-- (void)finishPortrait{
+- (void)callStartBufferingDelegate {
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
+        [self.jp_bufferingIndicator didStartBuffering];
+    }
+}
+
+- (void)callFinishBufferingDelegate {
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBuffering)]){
+        [self.jp_bufferingIndicator didFinishBuffering];
+    }
+}
+
+- (void)finishPortrait {
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
@@ -340,7 +363,7 @@
     }];
 }
 
-- (void)executePortrait{
+- (void)executePortrait {
     UIView *videoPlayerView = self.helper.videoPlayerView;
     CGRect frame = [self.superview convertRect:self.frame toView:nil];
     videoPlayerView.transform = CGAffineTransformIdentity;
@@ -348,7 +371,7 @@
     [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
 }
 
-- (void)executeLandscape{
+- (void)executeLandscape {
     UIView *videoPlayerView = self.helper.videoPlayerView;
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(screenBounds), CGRectGetWidth(screenBounds));
@@ -401,6 +424,11 @@
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
         [self.jp_videoPlayerDelegate playerStatusDidChanged:playerStatus];
     }
+    BOOL needDisplayBufferingIndicator =
+            playerStatus == JPVideoPlayerStatusBuffering ||
+            playerStatus == JPVideoPlayerStatusUnkown ||
+            playerStatus == JPVideoPlayerStatusFailed;
+    needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager

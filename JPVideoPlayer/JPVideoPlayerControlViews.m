@@ -711,7 +711,7 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
 
     self.blurBackgroundView = ({
         UIView *view = [UIView new];
-        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
         view.layer.cornerRadius = 10;
         view.clipsToBounds = YES;
         [self addSubview:view];
