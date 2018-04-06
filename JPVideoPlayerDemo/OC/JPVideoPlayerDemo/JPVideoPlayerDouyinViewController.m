@@ -13,17 +13,19 @@
 
 @implementation JPDouyinProgressView
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    [super layoutThatFits:constrainedRect
+     interfaceOrientation:interfaceOrientation];
 
+    UIEdgeInsets safeAreaInsets = self.superview.safeAreaInsets;
     self.trackProgressView.frame = CGRectMake(0,
-            frame.size.height - JPVideoPlayerProgressViewElementHeight - 49,
-            frame.size.width,
+            constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight - safeAreaInsets.bottom,
+            constrainedRect.size.width,
             JPVideoPlayerProgressViewElementHeight);
     self.cachedProgressView.frame = self.trackProgressView.bounds;
     self.elapsedProgressView.frame = self.trackProgressView.frame;
 }
-
 
 @end
 

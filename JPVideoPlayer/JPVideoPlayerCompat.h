@@ -22,8 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #define JPMainThreadAssert NSParameterAssert([[NSThread currentThread] isMainThread])
 
+typedef NS_ENUM(NSInteger, JPVideoPlayViewInterfaceOrientation) {
+    JPVideoPlayViewInterfaceOrientationUnknown = 0,
+    JPVideoPlayViewInterfaceOrientationPortrait,
+    JPVideoPlayViewInterfaceOrientationLandscape,
+    JPVideoPlayViewInterfaceOrientationAnimating
+};
+
 typedef NS_ENUM(NSUInteger, JPVideoPlayerStatus) {
-    JPVideoPlayerStatusUnkown = 0,
+    JPVideoPlayerStatusUnknown = 0,
     JPVideoPlayerStatusBuffering,
     JPVideoPlayerStatusPlaying,
     JPVideoPlayerStatusPause,

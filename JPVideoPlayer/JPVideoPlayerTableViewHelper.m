@@ -276,7 +276,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
     self.playingVideoCell = cell;
     if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
-        [self.delegate tableView:self.scrollView willPlayVideoOnCell:cell];
+        [self.delegate tableView:(UITableView *)self.scrollView willPlayVideoOnCell:cell];
     }
 }
 
@@ -303,10 +303,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
-        [self.delegate tableView:self.scrollView willPlayVideoOnCell:bestCell];
-    }
-    self.playingVideoCell = bestCell;
+    [self playVideoWithCell:bestCell];
 }
 
 - (BOOL)scrollViewIsTableView:(UIScrollView *)scrollView {

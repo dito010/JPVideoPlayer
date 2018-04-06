@@ -15,25 +15,44 @@
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerControlViews.h"
 
-@interface JPVideoPlayerCategoryHelper : NSObject
+@interface JPVideoPlayerHelper : NSObject
 
 @property(nonatomic, strong) JPVideoPlayerView *videoPlayerView;
 
-@property(nonatomic, strong) UIView<JPVideoPlayerProgressProtocol> *progressView;
+@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *progressView;
 
-@property(nonatomic, strong) UIView<JPVideoPlayerProgressProtocol> *controlView;
+@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlView;
 
 @property(nonatomic, strong) UIView<JPVideoPlayerBufferingProtocol> *bufferingIndicator;
 
-@property(nonatomic, weak)id<JPVideoPlayerDelegate> videoPlayerDelegate;
+@property(nonatomic, weak) id<JPVideoPlayerDelegate> videoPlayerDelegate;
 
-@property(nonatomic, assign)JPVideoPlayerVideoViewStatus viewStatus;
+@property(nonatomic, assign) JPVideoPlayViewInterfaceOrientation viewInterfaceOrientation;
 
 @property(nonatomic, assign)JPVideoPlayerStatus playerStatus;
 
+@property (nonatomic, weak) UIView *playVideoView;
+
 @end
 
-@implementation JPVideoPlayerCategoryHelper
+@implementation JPVideoPlayerHelper
+
+- (instancetype)initWithPlayVideoView:(UIView *)playVideoView {
+    self = [super init];
+    if(self){
+       _playVideoView = playVideoView;
+    }
+    return self;
+}
+
+- (JPVideoPlayViewInterfaceOrientation)viewInterfaceOrientation {
+    if(_viewInterfaceOrientation == JPVideoPlayViewInterfaceOrientationUnknown){
+       CGSize referenceSize = self.playVideoView.window.bounds.size;
+       _viewInterfaceOrientation = referenceSize.width < referenceSize.height ? JPVideoPlayViewInterfaceOrientationPortrait :
+               JPVideoPlayViewInterfaceOrientationLandscape;
+    }
+    return _viewInterfaceOrientation;
+}
 
 - (JPVideoPlayerView *)videoPlayerView {
     if(!_videoPlayerView){
@@ -46,7 +65,7 @@
 
 @interface UIView()
 
-@property(nonatomic, readonly)JPVideoPlayerCategoryHelper *helper;
+@property(nonatomic, readonly)JPVideoPlayerHelper *helper;
 
 @end
 
@@ -54,27 +73,27 @@
 
 #pragma mark - Properties
 
-- (JPVideoPlayerVideoViewStatus)jp_viewStatus {
-    return self.helper.viewStatus;
+- (JPVideoPlayViewInterfaceOrientation)jp_viewInterfaceOrientation {
+    return self.helper.viewInterfaceOrientation;
 }
 
 - (JPVideoPlayerStatus)jp_playerStatus {
     return self.helper.playerStatus;
 }
 
-- (void)setJp_progressView:(UIView <JPVideoPlayerProgressProtocol> *)jp_progressView {
+- (void)setJp_progressView:(UIView <JPVideoPlayerProtocol> *)jp_progressView {
     self.helper.progressView = jp_progressView;
 }
 
-- (UIView <JPVideoPlayerProgressProtocol> *)jp_progressView {
+- (UIView <JPVideoPlayerProtocol> *)jp_progressView {
     return self.helper.progressView;
 }
 
-- (void)setJp_controlView:(UIView <JPVideoPlayerProgressProtocol> *)jp_controlView {
+- (void)setJp_controlView:(UIView <JPVideoPlayerProtocol> *)jp_controlView {
     self.helper.controlView = jp_controlView;
 }
 
-- (UIView <JPVideoPlayerProgressProtocol> *)jp_controlView {
+- (UIView <JPVideoPlayerProtocol> *)jp_controlView {
     return self.helper.controlView;
 }
 
@@ -106,7 +125,7 @@
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                   progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+                   progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     [self jp_playVideoMuteWithURL:url
                bufferingIndicator:bufferingIndicator
                      progressView:progressView
@@ -115,7 +134,7 @@
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                   progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
+                   progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
             configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     // user update progressView.
     if(progressView && self.jp_progressView){
@@ -148,8 +167,8 @@
 
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
-               progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     [self jp_playVideoWithURL:url
            bufferingIndicator:bufferingIndicator
                   controlView:controlView
@@ -159,8 +178,8 @@
 
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
-               progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
+                controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
         configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     // user update progressView.
     if(progressView && self.jp_progressView){
@@ -205,7 +224,7 @@
                     options:(JPVideoPlayerOptions)options
         configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     [self jp_stopPlay];
-    self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
 
     // handler the reuse of progressView in `UITableView`.
     if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillPrepareToReuse)]){
@@ -219,10 +238,6 @@
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;
         // Add progress view and control view if need.
-        if(!self.helper.videoPlayerView.superview){
-            [self addSubview:self.helper.videoPlayerView];
-            self.helper.videoPlayerView.frame = self.bounds;
-        }
         self.helper.videoPlayerView.hidden = NO;
         if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
             self.jp_bufferingIndicator.frame = self.bounds;
@@ -247,6 +262,10 @@
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
             self.helper.videoPlayerView.progressContainerView.alpha = 0;
         }
+        if(!self.helper.videoPlayerView.superview){
+            [self addSubview:self.helper.videoPlayerView];
+        }
+        self.helper.videoPlayerView.frame = self.bounds;
 
         JPPlayVideoConfigFinishedBlock internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);
@@ -309,11 +328,11 @@
 
 - (void)jp_gotoLandscapeAnimated:(BOOL)animated
                       completion:(dispatch_block_t)completion {
-    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusPortrait) {
+    if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationPortrait) {
         return;
     }
 
-    self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationAnimating;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
 #pragma clang diagnostic push
@@ -336,7 +355,7 @@
                              [self executeLandscape];
                          }
                          completion:^(BOOL finished) {
-                             self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+                             self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
                              if (completion) {
                                  completion();
                              }
@@ -347,7 +366,7 @@
     }
     else{
         [self executeLandscape];
-        self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+        self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
         if (completion) {
             completion();
         }
@@ -365,7 +384,7 @@
 
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
                      completion:(dispatch_block_t)completion{
-    if (self.jp_viewStatus != JPVideoPlayerVideoViewStatusLandscape) {
+    if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationLandscape) {
         return;
     }
 
@@ -376,7 +395,7 @@
     // display status bar.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 #pragma clang diagnostic pop
-    self.helper.viewStatus = JPVideoPlayerVideoViewStatusAnimating;
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationAnimating;
     videoPlayerView.controlContainerView.alpha = 0;
     if (animated) {
         [UIView animateWithDuration:0.35
@@ -423,7 +442,7 @@
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
     [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
-    self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     [UIView animateWithDuration:0.5 animations:^{
         videoPlayerView.controlContainerView.alpha = 1;
     }];
@@ -455,10 +474,10 @@
 #pragma clang diagnostic pop
 }
 
-- (JPVideoPlayerCategoryHelper *)helper {
-    JPVideoPlayerCategoryHelper *helper = objc_getAssociatedObject(self, _cmd);
+- (JPVideoPlayerHelper *)helper {
+    JPVideoPlayerHelper *helper = objc_getAssociatedObject(self, _cmd);
     if(!helper){
-        helper = [JPVideoPlayerCategoryHelper new];
+        helper = [[JPVideoPlayerHelper alloc] initWithPlayVideoView:self];
         objc_setAssociatedObject(self, _cmd, helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return helper;
@@ -492,7 +511,7 @@
     }
     BOOL needDisplayBufferingIndicator =
             playerStatus == JPVideoPlayerStatusBuffering ||
-                    playerStatus == JPVideoPlayerStatusUnkown ||
+                    playerStatus == JPVideoPlayerStatusUnknown ||
                     playerStatus == JPVideoPlayerStatusFailed;
     needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
 }

@@ -163,7 +163,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         pthread_mutexattr_init(&mutexattr);
         pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_lock, &mutexattr);
-        _playerStatus = JPVideoPlayerStatusUnkown;
+        _playerStatus = JPVideoPlayerStatusUnknown;
         [self addObserver];
     }
     return self;
@@ -390,7 +390,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
             case AVPlayerItemStatusUnknown:{
                 self.playerStatus = AVPlayerItemStatusUnknown;
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-                    [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusUnkown];
+                    [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusUnknown];
                 }
             }
                 break;
@@ -580,7 +580,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     model.currentPlayerLayer.videoGravity = videoGravity;
     model.currentPlayerLayer.frame = showLayer.bounds;
     model.videoPlayer = self;
-    self.playerStatus = JPVideoPlayerStatusUnkown;
+    self.playerStatus = JPVideoPlayerStatusUnknown;
     [self startCheckBufferingTimer];
 
     // add observer for video playing progress.

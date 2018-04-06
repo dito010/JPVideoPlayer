@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification;
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification;
-@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProgressProtocol>
+@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, weak, nullable) id<JPVideoPlayerControlProgressViewDelegate> delegate;
 
@@ -50,7 +50,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @end
 
-@interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProgressProtocol>
+@interface JPVideoPlayerControlBar : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
 
@@ -60,11 +60,11 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @property (nonatomic, strong, readonly) UIButton *landscapeButton;
 
-- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
 
 @end
 
-@interface JPVideoPlayerControlView : UIView<JPVideoPlayerProgressProtocol>
+@interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
 
@@ -78,14 +78,15 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
  *
  * @return The current instance.
  */
-- (instancetype)initWithControlBar:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlBar
+- (instancetype)initWithControlBar:(UIView<JPVideoPlayerProtocol> *_Nullable)controlBar
                          blurImage:(UIImage *_Nullable)blurImage NS_DESIGNATED_INITIALIZER;
 
-// TODO: 给外界布局专门一个方法, 抽取协议.
+// TODO: 播放控制界面适配 iPhone X.
+// TODO: 捕获音量, 自定义音量控制.
 @end
 
 UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
-@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProgressProtocol>
+@interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 

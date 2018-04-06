@@ -4,10 +4,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JPVideoPlayerCompat.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol JPVideoPlayerProgressProtocol <NSObject>
+@protocol JPVideoPlayerLayoutProtocol<NSObject>
+
+@required
+/**
+ * This method called when need layout subviews, suggest you layout subviews in this method.
+ *
+ * @param constrainedRect      The bounds of superview.
+ * @param interfaceOrientation The current interface orientation of view.
+ */
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation;
+
+@end
+
+@protocol JPVideoPlayerProtocol<JPVideoPlayerLayoutProtocol>
 
 @optional
 /**
@@ -53,10 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol JPVideoPlayerBufferingProtocol<NSObject>
+@protocol JPVideoPlayerBufferingProtocol<JPVideoPlayerLayoutProtocol>
 
 @optional
-
 /**
  * This method will be called when player buffering.
  */

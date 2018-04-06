@@ -14,12 +14,6 @@
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerProtocol.h"
 
-typedef NS_ENUM(NSInteger, JPVideoPlayerVideoViewStatus) {
-    JPVideoPlayerVideoViewStatusPortrait = 0,
-    JPVideoPlayerVideoViewStatusLandscape,
-    JPVideoPlayerVideoViewStatusAnimating
-};
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol JPVideoPlayerDelegate <NSObject>
@@ -71,13 +65,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Property
 
-@property(nonatomic, readonly) JPVideoPlayerVideoViewStatus jp_viewStatus;
+@property(nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
 
 @property(nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
-@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProgressProtocol> *jp_progressView;
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_progressView;
 
-@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProgressProtocol> *jp_controlView;
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
 
 @property(nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
@@ -107,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                   progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
+                   progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
 
 /**
  * Play `video` mute with an `url` on the view.
@@ -124,8 +118,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                   progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView
-            configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+                   progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView
+            configFinishedBlock:(JPPlayVideoConfigFinishedBlock _Nullable)configFinishedBlock;
 
 /**
  * Play `video` with an `url` on the view, and play audio at the same time.
@@ -144,8 +138,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                controlView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlView
-               progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
+                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView;
 
 /**
  * Play `video` with an `url` on the view, and play audio at the same time.
@@ -166,9 +160,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-                controlView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlView
-               progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView
-        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+                controlView:(UIView<JPVideoPlayerProtocol> *_Nullable)controlView
+               progressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView
+        configFinishedBlock:(JPPlayVideoConfigFinishedBlock _Nullable)configFinishedBlock;
 
 /**
  * Play `video` with an `url` on the view.

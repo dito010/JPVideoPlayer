@@ -22,7 +22,6 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
     // 启动图片延时: 2 秒
 //    [NSThread sleepForTimeInterval:2];
     

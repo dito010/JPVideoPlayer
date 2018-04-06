@@ -46,21 +46,23 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
     return self;
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
 
-    CGSize referenceSize = self.bounds.size;
+#pragma mark - JPVideoPlayerLayoutProtocol
+
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    CGSize referenceSize = constrainedRect.size;
     self.trackProgressView.frame = CGRectMake(kJPVideoPlayerDragSliderLeftEdge,
             (referenceSize.height - kJPVideoPlayerCachedProgressViewHeight) * 0.5,
             referenceSize.width - 2 * kJPVideoPlayerDragSliderLeftEdge, kJPVideoPlayerCachedProgressViewHeight);
-    self.dragSlider.frame = self.bounds;
+    self.dragSlider.frame = constrainedRect;
     [self updateCacheProgressViewIfNeed];
     [self playProgressDidChangeElapsedSeconds:self.elapsedSeconds
                                  totalSeconds:self.totalSeconds];
 }
 
 
-#pragma mark - JPVideoPlayerControlProtocol
+#pragma mark - JPVideoPlayerProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
     self.playerView = view;
@@ -83,7 +85,7 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
     }
 
     if(totalSeconds == 0){
-       totalSeconds = 1;
+        totalSeconds = 1;
     }
 
     float delta = elapsedSeconds / totalSeconds;
@@ -203,8 +205,8 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
                     NSUInteger deltaDistance = abs(range.location - dragStartLocation);
                     deltaDistance = abs(NSMaxRange(range) - dragStartLocation) < deltaDistance ?: deltaDistance;
                     if(deltaDistance < distance){
-                       distance = deltaDistance;
-                       targetRange = range;
+                        distance = deltaDistance;
+                        targetRange = range;
                     }
                 }
             }
@@ -230,7 +232,7 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
 
 @end
 
-@interface JPVideoPlayerControlBar()<JPVideoPlayerProgressProtocol, JPVideoPlayerControlProgressViewDelegate>
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerControlProgressViewDelegate>
 
 @property (nonatomic, strong) UIButton *playButton;
 
@@ -249,7 +251,7 @@ static const CGFloat kJPVideoPlayerControlBarElementGap = 16;
 static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 @implementation JPVideoPlayerControlBar
 
-- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
     self = [super init];
     if (self) {
         _progressView = progressView;
@@ -263,9 +265,18 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
     return [self initWithProgressView:nil];
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    CGSize referenceSize = self.bounds.size;
+- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
+   userDidDragToTime:(NSTimeInterval)timeInterval
+        totalSeconds:(NSTimeInterval)totalSeconds {
+    [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:totalSeconds];
+}
+
+
+#pragma mark - JPVideoPlayerLayoutProtocol
+
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    CGSize referenceSize = constrainedRect.size;
     CGFloat elementOriginY = (referenceSize.height - kJPVideoPlayerControlBarButtonWidthHeight) * 0.5;
     self.playButton.frame = CGRectMake(kJPVideoPlayerControlBarElementGap,
             elementOriginY,
@@ -285,16 +296,13 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
             elementOriginY,
             progressViewWidth,
             kJPVideoPlayerControlBarButtonWidthHeight);
-}
-
-- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
-   userDidDragToTime:(NSTimeInterval)timeInterval
-        totalSeconds:(NSTimeInterval)totalSeconds {
-    [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:totalSeconds];
+    if([self.progressView respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
+        [self.progressView layoutThatFits:self.progressView.bounds interfaceOrientation:interfaceOrientation];
+    }
 }
 
 
-#pragma mark - JPVideoPlayerControlProtocol
+#pragma mark - JPVideoPlayerProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
     self.playerView = view;
@@ -353,7 +361,7 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 
 - (void)landscapeButtonDidClick:(UIButton *)button {
     button.selected = !button.selected;
-    self.playerView.jp_viewStatus == JPVideoPlayerVideoViewStatusPortrait ? [self.playerView jp_gotoLandscape] : [self.playerView jp_gotoPortrait];
+    self.playerView.jp_viewInterfaceOrientation == JPVideoPlayViewInterfaceOrientationPortrait ? [self.playerView jp_gotoLandscape] : [self.playerView jp_gotoPortrait];
 }
 
 - (void)_setup {
@@ -412,7 +420,7 @@ static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 @implementation JPVideoPlayerControlView
 
-- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProgressProtocol> *)controlBar
+- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
                          blurImage:(UIImage *)blurImage {
     self = [super initWithFrame:CGRectZero];
     if(self){
@@ -428,24 +436,30 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
     return [self initWithControlBar:nil blurImage:nil];
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    self.blurImageView.frame = self.bounds;
+
+#pragma mark - JPVideoPlayerLayoutProtocol
+
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    self.blurImageView.frame = constrainedRect;
     CGRect controlBarFrame = CGRectMake(0,
-            self.bounds.size.height - kJPVideoPlayerControlBarHeight,
-            self.bounds.size.width,
+            constrainedRect.size.height - kJPVideoPlayerControlBarHeight,
+            constrainedRect.size.width,
             kJPVideoPlayerControlBarHeight);
-    if(self.bounds.size.width == [UIScreen mainScreen].bounds.size.height){ // landscape.
+    if(interfaceOrientation == JPVideoPlayViewInterfaceOrientationLandscape){ // landscape.
         controlBarFrame = CGRectMake(0,
-                self.bounds.size.height - kJPVideoPlayerControlBarHeight - kJPVideoPlayerControlBarLandscapeUpOffset,
-                self.bounds.size.width,
+                constrainedRect.size.height - kJPVideoPlayerControlBarHeight - kJPVideoPlayerControlBarLandscapeUpOffset,
+                constrainedRect.size.width,
                 kJPVideoPlayerControlBarHeight);
     }
     self.controlBar.frame = controlBarFrame;
+    if([self.controlBar respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
+       [self.controlBar layoutThatFits:self.controlBar.bounds interfaceOrientation:interfaceOrientation];
+    }
 }
 
 
-#pragma mark - JPVideoPlayerControlProtocol
+#pragma mark - JPVideoPlayerProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
     [self.controlBar viewWillAddToSuperView:view];
@@ -477,7 +491,7 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
         UIImageView *view = [UIImageView new];
         UIImage *blurImage = self.blurImage;
         if(!blurImage){
-           blurImage = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_blur"];
+            blurImage = [UIImage imageNamed:@"JPVideoPlayer.bundle/jp_videoplayer_blur"];
         }
         view.image = blurImage;
         [self addSubview:view];
@@ -528,16 +542,6 @@ const CGFloat JPVideoPlayerProgressViewElementHeight = 2;
     return self;
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-
-    self.trackProgressView.frame = CGRectMake(0,
-            frame.size.height - JPVideoPlayerProgressViewElementHeight,
-            frame.size.width,
-            JPVideoPlayerProgressViewElementHeight);
-    self.cachedProgressView.frame = self.trackProgressView.bounds;
-    self.elapsedProgressView.frame = self.trackProgressView.frame;
-}
 
 #pragma mark - Setup
 
@@ -568,8 +572,19 @@ const CGFloat JPVideoPlayerProgressViewElementHeight = 2;
 }
 
 
+#pragma mark - JPVideoPlayerLayoutProtocol
 
-#pragma mark - JPVideoPlayerControlProtocol
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    self.trackProgressView.frame = CGRectMake(0,
+            constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight,
+            constrainedRect.size.width,
+            JPVideoPlayerProgressViewElementHeight);
+    self.cachedProgressView.frame = self.trackProgressView.bounds;
+    self.elapsedProgressView.frame = self.trackProgressView.frame;
+}
+
+#pragma mark - JPVideoPlayerProtocol
 
 - (void)viewWillAddToSuperView:(UIView *)view {
 }
@@ -683,10 +698,12 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
     return self;
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
 
-    CGSize referenceSize = frame.size;
+#pragma mark - JPVideoPlayerLayoutProtocol
+
+- (void)layoutThatFits:(CGRect)constrainedRect
+  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    CGSize referenceSize = constrainedRect.size;
     self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
             (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
             JPVideoPlayerBufferingIndicatorWidthHeight,
@@ -694,6 +711,7 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
     self.activityIndicator.frame = self.blurBackgroundView.bounds;
     self.blurView.frame = self.blurBackgroundView.bounds;
 }
+
 
 - (void)startAnimating{
     if (!self.isAnimating) {
@@ -799,15 +817,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     self.progressContainerView.frame = self.bounds;
     self.bufferingIndicatorContainerView.frame = self.bounds;
     self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
-    for(UIView *view in self.controlContainerView.subviews){
-        view.frame = self.bounds;
-    }
-    for(UIView *view in self.progressContainerView.subviews){
-        view.frame = self.bounds;
-    }
-    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
-        view.frame = self.bounds;
-    }
+    [self layoutContainerSubviewsWithBounds:CGRectZero center:CGPointZero  frame:frame];
+    [self callLayoutMethodForContainerSubviews];
 }
 
 - (void)setBounds:(CGRect)bounds {
@@ -823,24 +834,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
             bounds.size.height - kJPVideoPlayerControlBarHeight);
-    for(UIView *view in self.controlContainerView.subviews){
-        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
-                view.center.y - bounds.size.height * 0.5,
-                bounds.size.width,
-                bounds.size.height);
-    }
-    for(UIView *view in self.progressContainerView.subviews){
-        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
-                view.center.y - bounds.size.height * 0.5,
-                bounds.size.width,
-                bounds.size.height);
-    }
-    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
-        view.frame = CGRectMake(view.center.x - bounds.size.width * 0.5,
-                view.center.y - bounds.size.height * 0.5,
-                bounds.size.width,
-                bounds.size.height);
-    }
+    [self layoutContainerSubviewsWithBounds:bounds center:CGPointZero frame:CGRectZero];
+    [self callLayoutMethodForContainerSubviews];
 }
 
 - (void)setCenter:(CGPoint)center {
@@ -856,24 +851,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
             self.userInteractionContainerView.bounds.size.width,
             self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
-    for(UIView *view in self.controlContainerView.subviews){
-        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
-                center.x - view.bounds.size.height * 0.5,
-                view.bounds.size.width,
-                view.bounds.size.height);
-    }
-    for(UIView *view in self.progressContainerView.subviews){
-        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
-                center.x - view.bounds.size.height * 0.5,
-                view.bounds.size.width,
-                view.bounds.size.height);
-    }
-    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
-        view.frame = CGRectMake(center.y - view.bounds.size.width * 0.5,
-                center.x - view.bounds.size.height * 0.5,
-                view.bounds.size.width,
-                view.bounds.size.height);
-    }
+    [self layoutContainerSubviewsWithBounds:CGRectZero center:center frame:CGRectZero];
+    [self callLayoutMethodForContainerSubviews];
 }
 
 - (CALayer *)videoContainerLayer {
@@ -900,6 +879,82 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                      completion:^(BOOL finished) {
 
                      }];
+}
+
+- (void)layoutContainerSubviewsWithBounds:(CGRect)bounds center:(CGPoint)center frame:(CGRect)frame {
+    for(UIView *view in self.controlContainerView.subviews){
+        if(!CGRectIsEmpty(frame)){
+           view.frame = frame;
+        }
+        else {
+            if(CGRectIsEmpty(bounds)){
+                bounds = view.bounds;
+            }
+            if(CGPointEqualToPoint(center, CGPointZero)){
+                center = view.center;
+            }
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
+                    center.x - bounds.size.height * 0.5,
+                    bounds.size.width,
+                    bounds.size.height);
+        }
+    }
+    for(UIView *view in self.progressContainerView.subviews){
+        if(!CGRectIsEmpty(frame)){
+            view.frame = frame;
+        }
+        else {
+            if(CGRectIsEmpty(bounds)){
+                bounds = view.bounds;
+            }
+            if(CGPointEqualToPoint(center, CGPointZero)){
+                center = view.center;
+            }
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
+                    center.x - bounds.size.height * 0.5,
+                    bounds.size.width,
+                    bounds.size.height);
+        }
+    }
+    for(UIView *view in self.bufferingIndicatorContainerView.subviews){
+        if(!CGRectIsEmpty(frame)){
+            view.frame = frame;
+        }
+        else {
+            if(CGRectIsEmpty(bounds)){
+                bounds = view.bounds;
+            }
+            if(CGPointEqualToPoint(center, CGPointZero)){
+                center = view.center;
+            }
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
+                    center.x - bounds.size.height * 0.5,
+                    bounds.size.width,
+                    bounds.size.height);
+        }
+    }
+}
+
+- (void)callLayoutMethodForContainerSubviews {
+    for(UIView<JPVideoPlayerProtocol> *view in self.controlContainerView.subviews){
+        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        }
+    }
+    for(UIView<JPVideoPlayerProtocol> *view in self.progressContainerView.subviews){
+        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        }
+    }
+    for(UIView<JPVideoPlayerProtocol> *view in self.bufferingIndicatorContainerView.subviews){
+        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        }
+    }
+}
+
+- (JPVideoPlayViewInterfaceOrientation)fetchCurrentInterfaceOrientation {
+    return self.superview.jp_viewInterfaceOrientation;
 }
 
 
@@ -973,26 +1028,26 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)didReceiveUserEndDragNotification {
     if(self.isInterruptTimer){
-       [self startTimer];
+        [self startTimer];
     }
 }
 
 - (void)startTimer {
     if(!self.timer){
-       self.timer = [NSTimer timerWithTimeInterval:kJPControlViewAutoHiddenTimeInterval
-                                            target:self
-                                          selector:@selector(timeDidChange:)
-                                          userInfo:nil
-                                           repeats:NO];
-       [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+        self.timer = [NSTimer timerWithTimeInterval:kJPControlViewAutoHiddenTimeInterval
+                                             target:self
+                                           selector:@selector(timeDidChange:)
+                                           userInfo:nil
+                                            repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     }
 
 }
 
 - (void)endTimer {
     if(self.timer){
-       [self.timer invalidate];
-       self.timer = nil;
+        [self.timer invalidate];
+        self.timer = nil;
     }
 }
 
