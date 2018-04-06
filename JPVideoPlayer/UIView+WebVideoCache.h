@@ -110,13 +110,31 @@ NS_ASSUME_NONNULL_BEGIN
                    progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
 
 /**
+ * Play `video` mute with an `url` on the view.
+ *
+ * The download is asynchronous and cached.
+ *
+ * @param url                 The url for the video.
+ * @param bufferingIndicator  The view show buffering animation when player buffering, should compliance with the `JPVideoPlayerBufferingProtocol`,
+ *                             it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
+ * @param progressView        The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                             it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
+ * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
+ *                             so other category method is disabled before config finished.
+ */
+- (void)jp_playVideoMuteWithURL:(NSURL *)url
+             bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                   progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView
+            configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+
+/**
  * Play `video` with an `url` on the view, and play audio at the same time.
  *
  * The download is asynchronous and cached.
  *
  * The control view will display, and display indicator view when buffer empty.
  *
- * @param url          The url for the video.
+ * @param url                The url for the video.
  * @param bufferingIndicator The view show buffering animation when player buffering, should compliance with the `JPVideoPlayerBufferingProtocol`,
  *                            it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
  * @param controlView        The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
@@ -130,15 +148,41 @@ NS_ASSUME_NONNULL_BEGIN
                progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView;
 
 /**
+ * Play `video` with an `url` on the view, and play audio at the same time.
+ *
+ * The download is asynchronous and cached.
+ *
+ * The control view will display, and display indicator view when buffer empty.
+ *
+ * @param url                 The url for the video.
+ * @param bufferingIndicator  The view show buffering animation when player buffering, should compliance with the `JPVideoPlayerBufferingProtocol`,
+ *                             it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
+ * @param controlView         The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                             it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
+ * @param progressView        The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
+ *                             it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
+ * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
+ *                             so other category method is disabled before config finished.
+ */
+- (void)jp_playVideoWithURL:(NSURL *)url
+         bufferingIndicator:(UIView<JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                controlView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)controlView
+               progressView:(UIView<JPVideoPlayerProgressProtocol> *_Nullable)progressView
+        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+
+/**
  * Play `video` with an `url` on the view.
  *
  * The download is asynchronous and cached.
  *
- * @param url            The url for the video.
- * @param options        The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
+ * @param url                 The url for the video.
+ * @param options             The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
+ * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
+ *                             so other category method is disabled before config finished.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
-                    options:(JPVideoPlayerOptions)options;
+                    options:(JPVideoPlayerOptions)options
+        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
 
 #pragma mark - Play Control
 /**

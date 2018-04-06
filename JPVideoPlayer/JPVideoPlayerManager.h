@@ -145,13 +145,16 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Play the video for the given URL if not present in cache or return the cached version otherwise.
  
- * @param url             The URL of video.
- * @param showLayer       The layer of video layer display on.
- * @param options         A flag to specify options to use for this request.
+ * @param url                 The URL of video.
+ * @param showLayer           The layer of video layer display on.
+ * @param options             A flag to specify options to use for this request.
+ * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
+ *                             so other category method is disabled before config finished.
  */
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
-                 options:(JPVideoPlayerOptions)options;
+                 options:(JPVideoPlayerOptions)options
+     configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
 
 /**
  * Cancels all download operations in the queue.

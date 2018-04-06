@@ -81,7 +81,8 @@
 
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
-                 options:(JPVideoPlayerOptions)options {
+                 options:(JPVideoPlayerOptions)options
+     configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     JPMainThreadAssert;
     NSParameterAssert(showLayer);
 
@@ -90,7 +91,7 @@
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
     }
-    
+
     // Prevents app crashing on argument type error like sending NSNull instead of NSURL
     if (![url isKindOfClass:NSURL.class]) {
         url = nil;
@@ -106,7 +107,7 @@
             pthread_mutex_unlock(&_lock);
         }
     }
-    
+
     if (url.absoluteString.length == 0 || (!(options & JPVideoPlayerRetryFailed) && isFailedUrl)) {
         NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
                                              code:NSURLErrorFileDoesNotExist
@@ -117,13 +118,14 @@
                                                      error:error];
         return;
     }
-    
+
     BOOL isFileURL = [url isFileURL];
     if (isFileURL) {
         // play file URL.
         [self playLocalVideoWithShowLayer:showLayer
                                       url:url
-                                  options:options];
+                                  options:options
+                      configFinishedBlock:configFinishedBlock];
         return;
     }
     else {
@@ -140,7 +142,8 @@
                 JPDebugLog(@"Start play a web video: %@", url);
                 [self.videoPlayer playVideoWithURL:url
                                            options:options
-                                         showLayer:showLayer];
+                                         showLayer:showLayer
+                               configFinishedBlock:configFinishedBlock];
             } else if (videoPath) {
                 // full video cache file in disk.
                 if(cacheType == JPVideoPlayerCacheTypeFull){
@@ -149,13 +152,15 @@
                                                     url:url
                                               videoPath:videoPath
                                                 options:options
-                                              cacheType:cacheType];
+                                              cacheType:cacheType
+                                    configFinishedBlock:configFinishedBlock];
                 }
                 else if(cacheType == JPVideoPlayerCacheTypeFragment) {
                     JPDebugLog(@"Start play a fragment video: %@", url);
                     [self playFragmentVideoWithURL:url
                                            options:options
-                                         showLayer:showLayer];
+                                         showLayer:showLayer
+                               configFinishedBlock:configFinishedBlock];
                 }
             }
             else {
@@ -357,7 +362,7 @@ didCompleteWithError:(NSError *)error {
                options:(JPVideoPlayerOptions)options
               response:(NSURLResponse *)response {
     __weak __typeof(showView) wshowView = showView;
-    
+
     NSString *key = [[JPVideoPlayerManager sharedManager] cacheKeyForURL:url];
 //    [self.videoCache storeVideoData:videoData
 //                       expectedSize:expectedSize
@@ -419,10 +424,10 @@ didCompleteWithError:(NSError *)error {
 
 - (void)callVideoLengthDelegateMethodWithVideoLength:(NSUInteger)videoLength {
     JPDispatchSyncOnMainQueue(^{
-       if([self.delegate respondsToSelector:@selector(videoPlayerManager:didFetchVideoFileLength:)]){
-          [self.delegate videoPlayerManager:self
-                    didFetchVideoFileLength:videoLength];
-       }
+        if([self.delegate respondsToSelector:@selector(videoPlayerManager:didFetchVideoFileLength:)]){
+            [self.delegate videoPlayerManager:self
+                      didFetchVideoFileLength:videoLength];
+        }
     });
 }
 
@@ -434,7 +439,7 @@ didCompleteWithError:(NSError *)error {
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerDownloadProgressDidChange:cacheType:fragmentRanges:expectedSize:error:)]) {
             [self.delegate videoPlayerManagerDownloadProgressDidChange:self
                                                              cacheType:cacheType
-                                                          fragmentRanges:fragmentRanges
+                                                        fragmentRanges:fragmentRanges
                                                           expectedSize:expectedSize
                                                                  error:error];
         }
@@ -468,10 +473,12 @@ didCompleteWithError:(NSError *)error {
 
 - (void)playFragmentVideoWithURL:(NSURL *)url
                          options:(JPVideoPlayerOptions)options
-                       showLayer:(CALayer *)showLayer {
+                       showLayer:(CALayer *)showLayer
+             configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock{
     JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
-                               options:options
-                             showLayer:showLayer];
+                                                           options:options
+                                                         showLayer:showLayer
+                                               configFinishedBlock:configFinishedBlock];
     [self callVideoLengthDelegateMethodWithVideoLength:model.resourceLoader.cacheFile.fileLength];
     [self callDownloadDelegateMethodWithFragmentRanges:model.resourceLoader.cacheFile.fragmentRanges
                                           expectedSize:model.resourceLoader.cacheFile.fileLength
@@ -483,7 +490,8 @@ didCompleteWithError:(NSError *)error {
                                   url:(NSURL *)url
                             videoPath:(NSString *)videoPath
                               options:(JPVideoPlayerOptions)options
-                            cacheType:(JPVideoPlayerCacheType)cacheType {
+                            cacheType:(JPVideoPlayerCacheType)cacheType
+                  configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock{
     JPDebugLog(@"Start play a existed video: %@", url);
     NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
     [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
@@ -494,12 +502,14 @@ didCompleteWithError:(NSError *)error {
     [self.videoPlayer playExistedVideoWithURL:url
                            fullVideoCachePath:videoPath
                                       options:options
-                                  showOnLayer:showLayer];
+                                  showOnLayer:showLayer
+                          configFinishedBlock:configFinishedBlock];
 }
 
 - (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
                                 url:(NSURL *)url
-                            options:(JPVideoPlayerOptions)options {
+                            options:(JPVideoPlayerOptions)options
+                configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     JPDebugLog(@"Start play a local video: %@", url);
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
@@ -513,7 +523,8 @@ didCompleteWithError:(NSError *)error {
         [self.videoPlayer playExistedVideoWithURL:url
                                fullVideoCachePath:path
                                           options:options
-                                      showOnLayer:showLayer];
+                                      showOnLayer:showLayer
+                              configFinishedBlock:configFinishedBlock];
     }
     else{
         NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain

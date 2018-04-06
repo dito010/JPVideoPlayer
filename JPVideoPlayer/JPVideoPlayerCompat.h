@@ -13,6 +13,8 @@
 #import <AVFoundation/AVAssetResourceLoader.h>
 #import <objc/runtime.h>
 
+@class JPVideoPlayerModel;
+
 #ifndef JPVideoPlayerCompat
 #define JPVideoPlayerCompat
 
@@ -117,6 +119,8 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
      */
     JPVideoPlayerDownloaderAllowInvalidSSLCertificates = 1 << 3,
 };
+
+typedef void(^JPPlayVideoConfigFinishedBlock)(UIView *_Nonnull view, JPVideoPlayerModel *_Nonnull playerModel);
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotification;

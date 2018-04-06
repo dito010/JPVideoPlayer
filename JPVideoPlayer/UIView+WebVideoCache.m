@@ -37,7 +37,7 @@
 
 - (JPVideoPlayerView *)videoPlayerView {
     if(!_videoPlayerView){
-       _videoPlayerView = [JPVideoPlayerView new];
+        _videoPlayerView = [JPVideoPlayerView new];
     }
     return _videoPlayerView;
 }
@@ -98,13 +98,25 @@
 #pragma mark - Play Video Methods
 
 - (void)jp_playVideoWithURL:(NSURL *)url {
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
-            JPVideoPlayerLayerVideoGravityResizeAspect];
+    [self jp_playVideoWithURL:url
+                      options:JPVideoPlayerContinueInBackground |
+                              JPVideoPlayerLayerVideoGravityResizeAspect
+          configFinishedBlock:nil];
 }
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
-        bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
-              progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+             bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                   progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+    [self jp_playVideoMuteWithURL:url
+               bufferingIndicator:bufferingIndicator
+                     progressView:progressView
+              configFinishedBlock:nil];
+}
+
+- (void)jp_playVideoMuteWithURL:(NSURL *)url
+             bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                   progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
+            configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     if(!progressView && !self.jp_progressView){
         // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
@@ -117,17 +129,31 @@
         self.jp_progressView = progressView;
     }
     if(bufferingIndicator){
-       self.jp_bufferingIndicator = bufferingIndicator;
+        self.jp_bufferingIndicator = bufferingIndicator;
     }
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
-            JPVideoPlayerLayerVideoGravityResizeAspect |
-            JPVideoPlayerMutedPlay];
+    [self jp_playVideoWithURL:url
+                      options:JPVideoPlayerContinueInBackground |
+                              JPVideoPlayerLayerVideoGravityResizeAspect |
+                              JPVideoPlayerMutedPlay
+          configFinishedBlock:configFinishedBlock];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView {
+    [self jp_playVideoWithURL:url
+           bufferingIndicator:bufferingIndicator
+                  controlView:controlView
+                 progressView:progressView
+          configFinishedBlock:nil];
+}
+
+- (void)jp_playVideoWithURL:(NSURL *)url
+         bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
+                controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
+               progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
+        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     if(!bufferingIndicator && !self.jp_bufferingIndicator){
         // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
         bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
@@ -147,13 +173,17 @@
         self.jp_bufferingIndicator = bufferingIndicator;
     }
     if(controlView){
-       self.jp_controlView = controlView;
+        self.jp_controlView = controlView;
     }
-    [self jp_playVideoWithURL:url options:JPVideoPlayerContinueInBackground |
-            JPVideoPlayerLayerVideoGravityResizeAspect];
+    [self jp_playVideoWithURL:url
+                      options:JPVideoPlayerContinueInBackground |
+                              JPVideoPlayerLayerVideoGravityResizeAspect
+          configFinishedBlock:configFinishedBlock];
 }
 
-- (void)jp_playVideoWithURL:(NSURL *)url options:(JPVideoPlayerOptions)options {
+- (void)jp_playVideoWithURL:(NSURL *)url
+                    options:(JPVideoPlayerOptions)options
+        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
     [self jp_stopPlay];
     self.helper.viewStatus = JPVideoPlayerVideoViewStatusPortrait;
 
@@ -175,8 +205,8 @@
         }
         self.helper.videoPlayerView.hidden = NO;
         if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
-           self.jp_bufferingIndicator.frame = self.bounds;
-           [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
+            self.jp_bufferingIndicator.frame = self.bounds;
+            [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
         }
         if(self.jp_bufferingIndicator){
             [self callStartBufferingDelegate];
@@ -192,15 +222,22 @@
         if(self.jp_controlView && !self.jp_controlView.superview){
             self.jp_controlView.frame = self.bounds;
             if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
-               [self.jp_controlView viewWillAddToSuperView:self];
+                [self.jp_controlView viewWillAddToSuperView:self];
             }
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
             self.helper.videoPlayerView.progressContainerView.alpha = 0;
         }
 
+        JPPlayVideoConfigFinishedBlock internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
+            NSParameterAssert(model);
+            if(configFinishedBlock){
+               configFinishedBlock(self, model);
+            }
+        };
         [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
                                                    showOnLayer:self.helper.videoPlayerView.videoContainerLayer
-                                                       options:options];
+                                                       options:options
+                                           configFinishedBlock:internalConfigFinishedBlock];
     }
     else {
         JPDispatchSyncOnMainQueue(^{
@@ -276,17 +313,17 @@
                               delay:0
                             options:UIViewAnimationCurveEaseOut
                          animations:^{
-            [self executeLandscape];
-        }
-        completion:^(BOOL finished) {
-            self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
-            if (completion) {
-                completion();
-            }
-            [UIView animateWithDuration:0.5 animations:^{
-                videoPlayerView.controlContainerView.alpha = 1;
-            }];
-        }];
+                             [self executeLandscape];
+                         }
+                         completion:^(BOOL finished) {
+                             self.helper.viewStatus = JPVideoPlayerVideoViewStatusLandscape;
+                             if (completion) {
+                                 completion();
+                             }
+                             [UIView animateWithDuration:0.5 animations:^{
+                                 videoPlayerView.controlContainerView.alpha = 1;
+                             }];
+                         }];
     }
     else{
         [self executeLandscape];
@@ -326,14 +363,14 @@
                               delay:0
                             options:UIViewAnimationCurveEaseOut
                          animations:^{
-            [self executePortrait];
-        }
-        completion:^(BOOL finished) {
-            [self finishPortrait];
-            if (completion) {
-                completion();
-            }
-        }];
+                             [self executePortrait];
+                         }
+                         completion:^(BOOL finished) {
+                             [self finishPortrait];
+                             if (completion) {
+                                 completion();
+                             }
+                         }];
     }
     else{
         [self executePortrait];
@@ -435,8 +472,8 @@
     }
     BOOL needDisplayBufferingIndicator =
             playerStatus == JPVideoPlayerStatusBuffering ||
-            playerStatus == JPVideoPlayerStatusUnkown ||
-            playerStatus == JPVideoPlayerStatusFailed;
+                    playerStatus == JPVideoPlayerStatusUnkown ||
+                    playerStatus == JPVideoPlayerStatusFailed;
     needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
 }
 
@@ -493,7 +530,7 @@
     }
     if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
         [self.helper.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                                        totalSeconds:totalSeconds];
+                                                         totalSeconds:totalSeconds];
     }
 }
 
