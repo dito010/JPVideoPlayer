@@ -46,6 +46,7 @@
     UITabBarController *tabVC = [[UITabBarController alloc]init];
     tabVC.viewControllers = @[weiboNavigationController, douyinViewController,settingNavigationController];
     tabVC.tabBar.tintColor = [UIColor blackColor];
+    tabVC.tabBar.backgroundImage = [UIImage imageNamed:@"jp_videoplayer_tabbar"];
     
     self.window.rootViewController = tabVC;
     [self.window makeKeyAndVisible];
