@@ -3,7 +3,7 @@
 // Copyright (c) 2018 NewPan. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "UITableView+WebVideoCache.h"
 
 @protocol JPTableViewPlayVideoDelegate;
 
@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, readonly) UITableViewCell *playingVideoCell;
 
 @property(nonatomic, assign) CGRect tableViewVisibleFrame;
+
+@property(nonatomic, assign) JPScrollFindStrategy scrollFindStrategy;
 
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
 

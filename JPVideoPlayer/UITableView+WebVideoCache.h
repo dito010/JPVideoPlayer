@@ -4,7 +4,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UITableViewCell+VideoPlay.h"
+#import "UITableViewCell+WebVideoCache.h"
+
+typedef NS_ENUM(NSUInteger, JPScrollFindStrategy) {
+    /**
+     * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of cell
+     *  to the center of `jp_tableViewVisibleFrame`, h1 on bottom picture.
+     */
+    JPScrollFindStrategyBestCell = 0,
+
+    /**
+     * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of videoView
+     *  to the center of `jp_tableViewVisibleFrame`, h2 on bottom picture.
+     */
+    JPScrollFindStrategyBestVideoView,
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,16 +27,18 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- * This method will be call when call `jp_playVideoInVisibleCellsIfNeed` and the find the best cell to play video when tableView scroll end.
+ * This method will be call when call `jp_playVideoInVisibleCellsIfNeed` and the find the best cell to play video when
+ * tableView scroll end.
  *
  * @param tableView The tableView.
- * @param cell      The cell ready to play video, you can call `[cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL progressView:nil]` or other method given to play video.
+ * @param cell      The cell ready to play video, you can call `[cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL progressView:nil]`
+ *                  or other method given to play video.
  */
-- (void)tableView:(UITableView *)tableView readyPlayVideoOnCell:(UITableViewCell *)cell;
+- (void)tableView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell;
 
 @end
 
-@interface UITableView (VideoPlay)
+@interface UITableView (WebVideoCache)
 
 @property (nonatomic) id<JPTableViewPlayVideoDelegate> jp_delegate;
 
@@ -40,6 +56,30 @@ NS_ASSUME_NONNULL_BEGIN
  * @warning This value must be not empty.
  */
 @property(nonatomic) CGRect jp_tableViewVisibleFrame;
+
+/**
+ * The play cell strategy when tableView stop scroll, `JPScrollFindStrategyBestCell` by default.
+ *
+ * @see `JPScrollFindStrategy`.
+ *
+ *
+ *    ****************************** center of `jp_tableViewVisibleFrame`
+ *              |h2   |h1
+ *    ----------|-----|-------------
+ *    |         |     |            |
+ *    |  cell   |     |            |
+ *    |         |     |            |
+ *    | --------|-----|---         |
+ *    | |videoView    |  |         |
+ *    | |       |     * <- cell center
+ *    | |       * <- videoView center
+ *    | |                |         |
+ *    | |                |         |
+ *    | ------------------         |
+ *    |                            |
+ *    ------------------------------
+ */
+@property(nonatomic) JPScrollFindStrategy jp_scrollFindStrategy;
 
 /**
  * Because we play video on cell that stopped on screen center when the tableView was stopped scrolling,
@@ -62,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @note You can custom this dictionary.
  */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *jp_unreachableCellDictionary;
+@property (nonatomic) NSDictionary<NSString *, NSString *> *jp_unreachableCellDictionary;
 
 /**
  * This method be used to find the first cell need to play video in visible cells.

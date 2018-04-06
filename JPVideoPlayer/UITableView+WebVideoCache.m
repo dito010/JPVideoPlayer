@@ -3,7 +3,7 @@
 // Copyright (c) 2018 NewPan. All rights reserved.
 //
 
-#import "UITableView+VideoPlay.h"
+#import "UITableView+WebVideoCache.h"
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerTableViewHelper.h"
 
@@ -14,7 +14,7 @@
 @end
 
 static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.scrollview.helper.www";
-@implementation UITableView (VideoPlay)
+@implementation UITableView (WebVideoCache)
 
 - (void)setJp_delegate:(id <JPTableViewPlayVideoDelegate>)jp_delegate {
     self.helper.delegate = jp_delegate;
@@ -34,6 +34,14 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
 
 - (CGRect)jp_tableViewVisibleFrame {
     return self.helper.tableViewVisibleFrame;
+}
+
+- (void)setJp_scrollFindStrategy:(JPScrollFindStrategy)jp_scrollFindStrategy {
+    self.helper.scrollFindStrategy = jp_scrollFindStrategy;
+}
+
+- (JPScrollFindStrategy)jp_scrollFindStrategy {
+    return self.helper.scrollFindStrategy;
 }
 
 - (void)setJp_unreachableCellDictionary:(NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {

@@ -322,6 +322,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 }
 
 - (void)appDidEnterBackground {
+    // TODO: 前后台事件处理.
     [self.currentPlayerModel pausePlayVideo];
     // 拿到进入后台时的状态.
 //    if (self.currentPlayerModel.unownedShowLayer) {

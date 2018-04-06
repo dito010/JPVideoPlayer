@@ -4,9 +4,9 @@
 //
 
 #import "JPVideoPlayerTableViewHelper.h"
-#import "UITableViewCell+VideoPlay.h"
+#import "UITableViewCell+WebVideoCache.h"
 #import "UIView+WebVideoCache.h"
-#import "UITableView+VideoPlay.h"
+#import "UITableView+WebVideoCache.h"
 
 /**
  * The style of cell cannot stop in screen center.
@@ -202,40 +202,45 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     CGRect referenceRect = [tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
 
     for (UITableViewCell *cell in visibleCells) {
-        @autoreleasepool {
-            if (cell.jp_videoURL.absoluteString.length > 0) { // If need to play video.
-                // Find the cell cannot stop in screen center first.
-                if (cell.unreachableCellType != JPVideoPlayerUnreachableCellTypeNone) {
-                    // Must the all area of the cell is visible.
-                    if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeTop) {
-                        CGPoint cellLeftUpPoint = cell.frame.origin;
-                        cellLeftUpPoint.y += 2;
-                        CGPoint coordinatePoint = [cell.superview convertPoint:cellLeftUpPoint toView:nil];
-                        if (CGRectContainsPoint(referenceRect, coordinatePoint)){
-                            targetCell = cell;
-                            break;
-                        }
-                    }
-                    else if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
-                        CGPoint cellLeftUpPoint = cell.frame.origin;
-                        CGFloat cellDownY = cellLeftUpPoint.y + cell.bounds.size.height;
-                        CGPoint cellLeftDownPoint = CGPointMake(cellLeftUpPoint.x, cellDownY);
-                        cellLeftDownPoint.y -= 1;
-                        CGPoint coordinatePoint = [cell.superview convertPoint:cellLeftDownPoint toView:nil];
-                        if (CGRectContainsPoint(referenceRect, coordinatePoint)){
-                            targetCell = cell;
-                            break;
-                        }
-                    }
+        if (!(cell.jp_videoURL.absoluteString.length > 0)) {
+            continue;
+        }
+
+        // If need to play video.
+        // Find the cell cannot stop in screen center first.
+        UIView *strategyView = self.scrollFindStrategy == JPScrollFindStrategyBestCell ? cell : cell.jp_videoPlayView;
+        if(!strategyView){
+            continue;
+        }
+        if (cell.unreachableCellType != JPVideoPlayerUnreachableCellTypeNone) {
+            // Must the all area of the cell is visible.
+            if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeTop) {
+                CGPoint strategyViewLeftUpPoint = strategyView.frame.origin;
+                strategyViewLeftUpPoint.y += 2;
+                CGPoint coordinatePoint = [strategyView.superview convertPoint:strategyViewLeftUpPoint toView:nil];
+                if (CGRectContainsPoint(referenceRect, coordinatePoint)){
+                    targetCell = cell;
+                    break;
                 }
-                else{
-                    CGPoint coordinateCenterPoint = [cell.superview convertPoint:cell.center toView:nil];
-                    CGFloat delta = fabs(coordinateCenterPoint.y - referenceRect.size.height * 0.5 - referenceRect.origin.y);
-                    if (delta < gap) {
-                        gap = delta;
-                        targetCell = cell;
-                    }
+            }
+            else if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
+                CGPoint strategyViewLeftUpPoint = cell.frame.origin;
+                CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + cell.bounds.size.height;
+                CGPoint strategyViewLeftDownPoint = CGPointMake(strategyViewLeftUpPoint.x, strategyViewDownY);
+                strategyViewLeftDownPoint.y -= 1;
+                CGPoint coordinatePoint = [strategyView.superview convertPoint:strategyViewLeftDownPoint toView:nil];
+                if (CGRectContainsPoint(referenceRect, coordinatePoint)){
+                    targetCell = cell;
+                    break;
                 }
+            }
+        }
+        else{
+            CGPoint coordinateCenterPoint = [strategyView.superview convertPoint:strategyView.center toView:nil];
+            CGFloat delta = fabs(coordinateCenterPoint.y - referenceRect.size.height * 0.5 - referenceRect.origin.y);
+            if (delta < gap) {
+                gap = delta;
+                targetCell = cell;
             }
         }
     }
@@ -270,8 +275,8 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     self.playingVideoCell = cell;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:readyPlayVideoOnCell:)]) {
-        [self.delegate tableView:self.scrollView readyPlayVideoOnCell:cell];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
+        [self.delegate tableView:self.scrollView willPlayVideoOnCell:cell];
     }
 }
 
@@ -298,8 +303,8 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:readyPlayVideoOnCell:)]) {
-        [self.delegate tableView:self.scrollView readyPlayVideoOnCell:bestCell];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
+        [self.delegate tableView:self.scrollView willPlayVideoOnCell:bestCell];
     }
     self.playingVideoCell = bestCell;
 }

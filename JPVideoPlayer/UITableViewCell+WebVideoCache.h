@@ -7,7 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UITableViewCell (VideoPlay)
+@interface UITableViewCell (WebVideoCache)
 
 /**
  * The video path url.

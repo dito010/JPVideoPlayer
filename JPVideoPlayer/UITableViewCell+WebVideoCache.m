@@ -4,10 +4,10 @@
 // Copyright (c) 2018 NewPan. All rights reserved.
 //
 
-#import "UITableViewCell+VideoPlay.h"
+#import "UITableViewCell+WebVideoCache.h"
 #import <objc/runtime.h>
 
-@implementation UITableViewCell (VideoPlay)
+@implementation UITableViewCell (WebVideoCache)
 
 - (void)setJp_videoURL:(NSURL *)jp_videoURL {
     objc_setAssociatedObject(self, @selector(jp_videoURL), jp_videoURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

@@ -13,8 +13,8 @@
 #import "UIView+WebVideoCache.h"
 #import "JPVideoPlayerDemoCell.h"
 #import "JPVideoPlayerDemoVC_push.h"
-#import "UITableView+VideoPlay.h"
-#import "UITableViewCell+VideoPlay.h"
+#import "UITableView+WebVideoCache.h"
+#import "UITableViewCell+WebVideoCache.h"
 
 @interface JPVideoPlayerDemoVC_home ()<UITableViewDelegate, UITableViewDataSource, JPTableViewPlayVideoDelegate>
 
@@ -23,17 +23,6 @@
  * 播放路径数组集合.
  */
 @property(nonatomic, strong, nonnull)NSArray *pathStrings;
-
-/**
- * Center indicator line.
- * 中心指示线.
- */
-@property(nonatomic, strong, nonnull)UIView *tableViewRange;
-
-/*
- * videoPlayer.
- */
-@property(nonatomic, strong, nonnull) AVPlayer *videoPlayer;
 
 @end
 
@@ -47,7 +36,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [super viewDidLoad];
 
     [self setup];
-    [self insertLineInScreenCenter];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -65,7 +53,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = self;
-    self.tableViewRange.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -76,8 +63,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     if (self.tableView.jp_playingVideoCell) {
         [self.tableView.jp_playingVideoCell.jp_videoPlayView jp_stopPlay];
     }
-
-    self.tableViewRange.hidden = YES;
 }
 
 
@@ -137,7 +122,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
 
 #pragma mark - JPTableViewPlayVideoDelegate
 
-- (void)tableView:(UITableView *)tableView readyPlayVideoOnCell:(UITableViewCell *)cell {
+- (void)tableView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
     [cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL
                                 bufferingIndicator:nil
                                       progressView:nil];
@@ -159,6 +144,7 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([JPVideoPlayerDemoCell class]) bundle:nil] forCellReuseIdentifier:JPVideoPlayerDemoReuseID];
 
     self.tableView.jp_delegate = self;
+    self.tableView.jp_scrollFindStrategy = JPScrollFindStrategyBestVideoView;
 
     // location file in disk.
     // 本地视频播放.
@@ -166,20 +152,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
             url.absoluteString,
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-//            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
             @"http://p11s9kqxf.bkt.clouddn.com/lavameface.mp4",
@@ -210,71 +182,6 @@ static NSString *JPVideoPlayerDemoReuseID = @"JPVideoPlayerDemoReuseID";
             @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
             @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
     ];
-}
-
-
-#pragma mark - Private
-
-- (void)insertLineInScreenCenter{
-    [[UIApplication sharedApplication].keyWindow insertSubview:self.tableViewRange aboveSubview:self.tableView];
-}
-
-- (UIView *)tableViewRange{
-    CGFloat navAndStatusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.bounds.size.height;
-    CGFloat tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
-    if (!_tableViewRange) {
-        _tableViewRange = [UIView new];
-        _tableViewRange.userInteractionEnabled = NO;
-        CGSize screenSize = [UIScreen mainScreen].bounds.size;
-        _tableViewRange.backgroundColor = [UIColor clearColor];
-        _tableViewRange.frame = CGRectMake(0, navAndStatusBarHeight, screenSize.width, screenSize.height -  navAndStatusBarHeight - tabBarHeight);
-        _tableViewRange.hidden = YES;
-
-        UIBezierPath *linePath1 = [UIBezierPath bezierPath];
-        {
-            [linePath1 moveToPoint:CGPointMake(1, 1)];
-            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, 1)];
-            [linePath1 addLineToPoint:CGPointMake(screenSize.width-1, screenSize.height-navAndStatusBarHeight-tabBarHeight-1)];
-            [linePath1 addLineToPoint:CGPointMake(1, screenSize.height-navAndStatusBarHeight-tabBarHeight-1)];
-            [linePath1 addLineToPoint:CGPointMake(1, 1)];
-        }
-
-        CAShapeLayer *layer1 = [CAShapeLayer layer];
-        {
-            UIColor *drawColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:1];
-            layer1.path = linePath1.CGPath;
-            layer1.strokeColor = drawColor.CGColor;
-            layer1.fillColor = [UIColor clearColor].CGColor;
-            layer1.lineWidth = 1;
-            [layer1 setLineDashPattern:
-                    [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
-                                              [NSNumber numberWithInt:3],nil]];
-            layer1.lineCap = @"round";
-            [_tableViewRange.layer addSublayer:layer1];
-        }
-
-        UIBezierPath *linePath2 = [UIBezierPath bezierPath];
-        {
-            [linePath2 moveToPoint:CGPointMake(1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
-            [linePath2 addLineToPoint:CGPointMake(screenSize.width-1, 0.5*(screenSize.height-navAndStatusBarHeight-tabBarHeight-1))];
-        }
-
-        CAShapeLayer *layer2 = [CAShapeLayer layer];
-        {
-            UIColor *drawColor = [UIColor colorWithRed:0 green:0.98 blue:0 alpha:1];
-            layer2.path = linePath2.CGPath;
-            layer2.strokeColor = drawColor.CGColor;
-            layer2.fillColor = [UIColor clearColor].CGColor;
-            layer2.lineWidth = 1;
-            [layer2 setLineDashPattern:
-                    [NSArray arrayWithObjects:[NSNumber numberWithInt:6],
-                                              [NSNumber numberWithInt:3],nil]];
-            layer2.lineCap = @"round";
-            [_tableViewRange.layer addSublayer:layer2];
-        }
-
-    }
-    return _tableViewRange;
 }
 
 @end
