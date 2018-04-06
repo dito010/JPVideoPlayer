@@ -117,6 +117,14 @@
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                    progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
             configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+    // user update progressView.
+    if(progressView && self.jp_progressView){
+       [self.jp_progressView removeFromSuperview];
+    }
+    // user update bufferingIndicator.
+    if(bufferingIndicator && self.jp_bufferingIndicator){
+       [self.jp_bufferingIndicator removeFromSuperview];
+    }
     if(!progressView && !self.jp_progressView){
         // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
@@ -154,6 +162,18 @@
                 controlView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProgressProtocol> *_Nullable)progressView
         configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+    // user update progressView.
+    if(progressView && self.jp_progressView){
+        [self.jp_progressView removeFromSuperview];
+    }
+    // user update bufferingIndicator.
+    if(bufferingIndicator && self.jp_bufferingIndicator){
+        [self.jp_bufferingIndicator removeFromSuperview];
+    }
+    // user update controlView.
+    if(controlView && self.jp_controlView){
+        [self.jp_controlView removeFromSuperview];
+    }
     if(!bufferingIndicator && !self.jp_bufferingIndicator){
         // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
         bufferingIndicator = [JPVideoPlayerBufferingIndicator new];

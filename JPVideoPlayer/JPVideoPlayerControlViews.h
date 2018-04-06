@@ -84,6 +84,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 // TODO: 给外界布局专门一个方法, 抽取协议.
 @end
 
+UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 @interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProgressProtocol>
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;

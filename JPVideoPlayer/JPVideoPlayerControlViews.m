@@ -517,7 +517,7 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 
 @end
 
-static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
+const CGFloat JPVideoPlayerProgressViewElementHeight = 2;
 @implementation JPVideoPlayerProgressView
 
 - (instancetype)init {
@@ -532,9 +532,9 @@ static const CGFloat kJPVideoPlayerProgressViewEelementHeight = 2;
     [super setFrame:frame];
 
     self.trackProgressView.frame = CGRectMake(0,
-            frame.size.height - kJPVideoPlayerProgressViewEelementHeight,
+            frame.size.height - JPVideoPlayerProgressViewElementHeight,
             frame.size.width,
-            kJPVideoPlayerProgressViewEelementHeight);
+            JPVideoPlayerProgressViewElementHeight);
     self.cachedProgressView.frame = self.trackProgressView.bounds;
     self.elapsedProgressView.frame = self.trackProgressView.frame;
 }

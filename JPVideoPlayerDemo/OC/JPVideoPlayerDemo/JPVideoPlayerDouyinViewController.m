@@ -5,6 +5,27 @@
 
 #import "JPVideoPlayerDouyinViewController.h"
 #import "UIView+WebVideoCache.h"
+#import "JPVideoPlayerControlViews.h"
+
+@interface JPDouyinProgressView: JPVideoPlayerProgressView
+
+@end
+
+@implementation JPDouyinProgressView
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    self.trackProgressView.frame = CGRectMake(0,
+            frame.size.height - JPVideoPlayerProgressViewElementHeight - 49,
+            frame.size.width,
+            JPVideoPlayerProgressViewElementHeight);
+    self.cachedProgressView.frame = self.trackProgressView.bounds;
+    self.elapsedProgressView.frame = self.trackProgressView.frame;
+}
+
+
+@end
 
 @interface JPVideoPlayerDouyinViewController()<UIScrollViewDelegate>
 
@@ -72,7 +93,7 @@
     [self.secondImageView jp_stopPlay];
     [self.secondImageView jp_playVideoMuteWithURL:[self fetchDouyinURL]
                                bufferingIndicator:nil
-                                     progressView:nil
+                                     progressView:[JPDouyinProgressView new]
                               configFinishedBlock:^(UIView *view, JPVideoPlayerModel *playerModel) {
                                   [view jp_setPlayerMute:NO];
                               }];
