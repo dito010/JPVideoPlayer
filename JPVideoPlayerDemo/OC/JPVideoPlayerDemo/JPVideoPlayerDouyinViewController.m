@@ -41,6 +41,8 @@
 
 @property(nonatomic, assign) NSUInteger currentVideoIndex;
 
+@property(nonatomic, assign) CGFloat scrollViewOffsetYOnStartDrag;
+
 @end
 
 @implementation JPVideoPlayerDouyinViewController
@@ -61,12 +63,12 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    self.scrollViewOffsetYOnStartDrag = -100;
     [self scrollViewDidEndScrolling];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
     [self.secondImageView jp_stopPlay];
 }
 
@@ -84,10 +86,18 @@
     [self scrollViewDidEndScrolling];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.scrollViewOffsetYOnStartDrag = scrollView.contentOffset.y;
+}
+
 
 #pragma mark - Private
 
 - (void)scrollViewDidEndScrolling {
+    if(self.scrollViewOffsetYOnStartDrag == self.scrollView.contentOffset.y){
+        return;
+    }
+
     CGSize referenceSize = UIScreen.mainScreen.bounds.size;
     [self.scrollView setContentOffset:CGPointMake(0, referenceSize.height) animated:NO];
     [self.secondImageView jp_stopPlay];

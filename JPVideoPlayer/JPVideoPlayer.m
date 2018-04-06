@@ -593,7 +593,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
         double elapsedSeconds = CMTimeGetSeconds(time);
         double totalSeconds = CMTimeGetSeconds(sItem.currentPlayerItem.duration);
-        if(totalSeconds == 0 || isnan(totalSeconds) ){
+        if(totalSeconds == 0 || isnan(totalSeconds) || elapsedSeconds > totalSeconds){
             return;
         }
         JPDispatchSyncOnMainQueue(^{
