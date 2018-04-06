@@ -10,8 +10,9 @@
  */
 
 #import "AppDelegate.h"
-#import "JPVideoPlayerDemoVC_home.h"
-#import "JPVideoPlayerDemoVC_Setting.h"
+#import "JPVideoPlayerWeiBoViewController.h"
+#import "JPVideoPlayerSettingViewController.h"
+#import "JPVideoPlayerDouyinViewController.h"
 #import <JPNavigationControllerKit.h>
 
 @interface AppDelegate ()
@@ -27,24 +28,27 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     
-    JPNavigationController *nav_home = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerDemoVC_home new]];
-    nav_home.tabBarItem.image = [[UIImage imageNamed:@"player"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    nav_home.tabBarItem.selectedImage = [[UIImage imageNamed:@"player_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    nav_home.title = @"Player";
+    JPNavigationController *weiboNavigationController = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerWeiBoViewController new]];
+    weiboNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_weibo"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    weiboNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_weibo_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    weiboNavigationController.title = @"微博";
+
+    JPVideoPlayerDouyinViewController *douyinViewController = [JPVideoPlayerDouyinViewController new];
+    douyinViewController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_douyin"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    douyinViewController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_douyin_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    douyinViewController.title = @"抖音";
     
-    JPNavigationController *nav_setting = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerDemoVC_Setting new]];
-    nav_setting.tabBarItem.image = [[UIImage imageNamed:@"setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    nav_setting.tabBarItem.selectedImage = [[UIImage imageNamed:@"setting_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    nav_setting.title = @"Setting";
+    JPNavigationController *settingNavigationController = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerSettingViewController new]];
+    settingNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    settingNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    settingNavigationController.title = @"设置";
     
     UITabBarController *tabVC = [[UITabBarController alloc]init];
-    tabVC.viewControllers = @[nav_home, nav_setting];
-    tabVC.tabBar.tintColor = [UIColor colorWithRed:64.0/255.0 green:146.0/255.0 blue:75.0/255.0 alpha:1];
+    tabVC.viewControllers = @[weiboNavigationController, douyinViewController,settingNavigationController];
+    tabVC.tabBar.tintColor = [UIColor blackColor];
     
     self.window.rootViewController = tabVC;
-    
     [self.window makeKeyAndVisible];
-    
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     
     return YES;

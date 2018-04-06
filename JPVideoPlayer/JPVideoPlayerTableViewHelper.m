@@ -208,7 +208,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
         // If need to play video.
         // Find the cell cannot stop in screen center first.
-        UIView *strategyView = self.scrollFindStrategy == JPScrollFindStrategyBestCell ? cell : cell.jp_videoPlayView;
+        UIView *strategyView = self.scrollPlayStrategyType == JPScrollPlayStrategyTypeBestCell ? cell : cell.jp_videoPlayView;
         if(!strategyView){
             continue;
         }

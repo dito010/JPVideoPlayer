@@ -6,18 +6,18 @@
 #import <UIKit/UIKit.h>
 #import "UITableViewCell+WebVideoCache.h"
 
-typedef NS_ENUM(NSUInteger, JPScrollFindStrategy) {
+typedef NS_ENUM(NSUInteger, JPScrollPlayStrategyType) {
     /**
      * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of cell
      *  to the center of `jp_tableViewVisibleFrame`, h1 on bottom picture.
      */
-    JPScrollFindStrategyBestCell = 0,
+    JPScrollPlayStrategyTypeBestCell = 0,
 
     /**
      * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of videoView
      *  to the center of `jp_tableViewVisibleFrame`, h2 on bottom picture.
      */
-    JPScrollFindStrategyBestVideoView,
+    JPScrollPlayStrategyTypeBestVideoView,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    |                            |
  *    ------------------------------
  */
-@property(nonatomic) JPScrollFindStrategy jp_scrollFindStrategy;
+@property(nonatomic) JPScrollPlayStrategyType jp_scrollPlayStrategyType;
 
 /**
  * Because we play video on cell that stopped on screen center when the tableView was stopped scrolling,

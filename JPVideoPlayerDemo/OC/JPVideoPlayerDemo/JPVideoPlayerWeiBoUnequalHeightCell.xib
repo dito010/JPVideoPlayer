@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="390" id="KGk-i7-Jjw" customClass="JPVideoPlayerWeiBoUnequalHeightCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="390"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="389.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jp_videoplayer_unequal_cell" translatesAutoresizingMaskIntoConstraints="NO" id="QGP-4j-SbJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="140" id="ce4-aw-hHo"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PxA-La-Xkg">
+                        <rect key="frame" x="20" y="160" width="335" height="188.5"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="PxA-La-Xkg" secondAttribute="height" multiplier="16:9" id="eG1-yf-p0U"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="PxA-La-Xkg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="4Ki-hk-YUp"/>
+                    <constraint firstAttribute="trailing" secondItem="QGP-4j-SbJ" secondAttribute="trailing" id="IJX-ya-TfO"/>
+                    <constraint firstItem="QGP-4j-SbJ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="NTB-B7-Siw"/>
+                    <constraint firstItem="PxA-La-Xkg" firstAttribute="top" secondItem="QGP-4j-SbJ" secondAttribute="bottom" constant="20" id="OJq-fd-pNd"/>
+                    <constraint firstItem="QGP-4j-SbJ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="fW3-mO-bUo"/>
+                    <constraint firstAttribute="trailing" secondItem="PxA-La-Xkg" secondAttribute="trailing" constant="20" id="nK0-2W-kYf"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="videoPlayView" destination="PxA-La-Xkg" id="6NG-GQ-Hbj"/>
+            </connections>
+            <point key="canvasLocation" x="89" y="225"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="jp_videoplayer_unequal_cell" width="375" height="140"/>
+    </resources>
+</document>

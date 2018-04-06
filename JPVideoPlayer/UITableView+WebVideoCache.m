@@ -36,12 +36,12 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
     return self.helper.tableViewVisibleFrame;
 }
 
-- (void)setJp_scrollFindStrategy:(JPScrollFindStrategy)jp_scrollFindStrategy {
-    self.helper.scrollFindStrategy = jp_scrollFindStrategy;
+- (void)setJp_scrollPlayStrategyType:(JPScrollPlayStrategyType)jp_scrollPlayStrategyType {
+    self.helper.scrollPlayStrategyType = jp_scrollPlayStrategyType;
 }
 
-- (JPScrollFindStrategy)jp_scrollFindStrategy {
-    return self.helper.scrollFindStrategy;
+- (JPScrollPlayStrategyType)jp_scrollPlayStrategyType {
+    return self.helper.scrollPlayStrategyType;
 }
 
 - (void)setJp_unreachableCellDictionary:(NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {

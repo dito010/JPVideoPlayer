@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) CGRect tableViewVisibleFrame;
 
-@property(nonatomic, assign) JPScrollFindStrategy scrollFindStrategy;
+@property(nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
 
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
 
