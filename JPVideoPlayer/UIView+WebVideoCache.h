@@ -89,6 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Property
 
+@property (nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
+
 @property (nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
 
 @property (nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
@@ -98,8 +100,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
-
-@property (nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
 
 #pragma mark - Play Video Methods
 

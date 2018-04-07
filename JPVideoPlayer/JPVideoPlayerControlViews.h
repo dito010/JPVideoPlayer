@@ -9,36 +9,21 @@
 #import "JPVideoPlayerProtocol.h"
 
 @class JPVideoPlayerControlProgressView,
-       JPVideoPlayerControlView,
-       JPVideoPlayerControlProgressView;
+       JPVideoPlayerControlView;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol JPVideoPlayerControlProgressViewDelegate<NSObject>
-
-@optional
-
-- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
-   userDidDragToTime:(NSTimeInterval)timeInterval
-        totalSeconds:(NSTimeInterval)totalSeconds;
-
-@end
-
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification;
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification;
-@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerProtocol>
-
-@property (nonatomic, weak, nullable) id<JPVideoPlayerControlProgressViewDelegate> delegate;
+@interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerControlProgressProtocol>
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 
-@property(nonatomic, assign, readonly) NSUInteger fileLength;
+@property (nonatomic, assign, readonly) NSUInteger fileLength;
 
-@property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
+@property (nonatomic, assign, readonly) NSTimeInterval totalSeconds;
 
-@property(nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
-
-@property(nonatomic, assign, readonly) BOOL userDragging;
+@property (nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
 
 @property (nonatomic, weak, readonly, nullable) UIView *playerView;
 
@@ -54,19 +39,19 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @property (nonatomic, strong, readonly) UIButton *playButton;
 
-@property (nonatomic, strong, readonly) JPVideoPlayerControlProgressView *progressView;
+@property (nonatomic, strong, readonly) UIView<JPVideoPlayerControlProgressProtocol> *progressView;
 
 @property (nonatomic, strong, readonly) UILabel *timeLabel;
 
 @property (nonatomic, strong, readonly) UIButton *landscapeButton;
 
-- (instancetype)initWithProgressView:(UIView<JPVideoPlayerProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithProgressView:(UIView<JPVideoPlayerControlProgressProtocol> *_Nullable)progressView NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
 
-@property (nonatomic, strong, readonly) JPVideoPlayerControlBar *controlBar;
+@property (nonatomic, strong, readonly) UIView<JPVideoPlayerProtocol> *controlBar;
 
 @property (nonatomic, strong, readonly) UIImage *blurImage;
 
@@ -89,11 +74,11 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
 
-@property(nonatomic, assign, readonly) NSUInteger fileLength;
+@property (nonatomic, assign, readonly) NSUInteger fileLength;
 
-@property(nonatomic, assign, readonly) NSTimeInterval totalSeconds;
+@property (nonatomic, assign, readonly) NSTimeInterval totalSeconds;
 
-@property(nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
+@property (nonatomic, assign, readonly) NSTimeInterval elapsedSeconds;
 
 @property (nonatomic, strong, readonly) UIProgressView *trackProgressView;
 
@@ -105,17 +90,17 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @interface JPVideoPlayerBufferingIndicator : UIView<JPVideoPlayerBufferingProtocol>
 
-@property(nonatomic, strong, readonly)UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong, readonly)UIActivityIndicatorView *activityIndicator;
 
-@property(nonatomic, strong, readonly)UIVisualEffectView *blurView;
+@property (nonatomic, strong, readonly)UIVisualEffectView *blurView;
 
-@property(nonatomic, assign, readonly, getter=isAnimating)BOOL animating;
+@property (nonatomic, assign, readonly, getter=isAnimating)BOOL animating;
 
 @end
 
 @interface JPVideoPlayerView : UIView
 
-@property (nonatomic, strong, readonly) UIView *videoContainerLayer;
+@property (nonatomic, strong, readonly) CALayer *videoContainerLayer;
 
 @property (nonatomic, strong, readonly) UIView *controlContainerView;
 

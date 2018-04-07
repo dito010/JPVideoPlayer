@@ -72,6 +72,33 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @end
 
+@protocol JPVideoPlayerControlProgressProtocol<JPVideoPlayerProtocol>
+
+@required
+/**
+ * Control progress must implement this method, and implement
+ *
+ * @code
+ *      [self willChangeValueForKey:@"userDragging"];
+ *      _userDragging = userDragging;
+ *      [self didChangeValueForKey:@"userDragging"];
+ *@endcode
+ */
+@property(nonatomic) BOOL userDragging;
+
+/**
+ * Control progress must implement this method, and implement
+ *
+ * @code
+ *      [self willChangeValueForKey:@"userDragTimeInterval"];
+ *      _userDragTimeInterval = userDragTimeInterval;
+ *      [self didChangeValueForKey:@"userDragTimeInterval"];
+ *@endcode
+ */
+@property(nonatomic) NSTimeInterval userDragTimeInterval;
+
+@end
+
 @protocol JPVideoPlayerBufferingProtocol<JPVideoPlayerLayoutProtocol>
 
 @optional

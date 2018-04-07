@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JPVideoPlayerCacheConfig : NSObject
+@interface JPVideoPlayerCacheConfiguration : NSObject
 
 /**
  * The maximum length of time to keep an video in the cache, in seconds
@@ -74,14 +74,14 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 /**
  *  Cache Config object - storing all kind of settings.
  */
-@property (nonatomic, readonly)JPVideoPlayerCacheConfig *config;
+@property (nonatomic, readonly)JPVideoPlayerCacheConfiguration *config;
 
 /**
  * Init with given cacheConfig.
  *
  * @see `JPVideoPlayerCacheConfig`.
  */
-- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfig * _Nullable)cacheConfig NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfiguration * _Nullable)cacheConfig NS_DESIGNATED_INITIALIZER;
 
 /**
  * Returns global shared cache instance.

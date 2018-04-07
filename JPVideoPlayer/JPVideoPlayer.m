@@ -239,7 +239,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }
     self.currentPlayerModel = model;
     if(configFinishedBlock){
-        configFinishedBlock(nil, model);
+        configFinishedBlock([UIView new], model);
     }
     return model;
 }

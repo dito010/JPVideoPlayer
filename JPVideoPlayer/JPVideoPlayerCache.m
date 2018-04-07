@@ -23,7 +23,7 @@
 static const NSInteger kDefaultCacheMaxCacheAge = 60*60*24*7; // 1 week
 static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
-@implementation JPVideoPlayerCacheConfig
+@implementation JPVideoPlayerCacheConfiguration
 
 - (instancetype)init{
     self = [super init];
@@ -76,7 +76,7 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 @implementation JPVideoPlayerCache
 
-- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfig *)cacheConfig {
+- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfiguration *)cacheConfig {
     self = [super init];
     if (self) {
         // Create IO serial queue
@@ -85,9 +85,9 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
         pthread_mutexattr_init(&mutexattr);
         pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_lock, &mutexattr);
-        JPVideoPlayerCacheConfig *config = cacheConfig;
+        JPVideoPlayerCacheConfiguration *config = cacheConfig;
         if (!config) {
-            config = [[JPVideoPlayerCacheConfig alloc] init];
+            config = [[JPVideoPlayerCacheConfiguration alloc] init];
         }
         _config = config;
         _fileManager = [NSFileManager defaultManager];

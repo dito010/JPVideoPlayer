@@ -191,11 +191,6 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
      configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
 
 /**
- * Cancels all download operations in the queue.
- */
-- (void)cancelAllDownloads;
-
-/**
  * Return the cache key for a given URL.
  */
 - (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url;

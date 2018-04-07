@@ -26,8 +26,6 @@
 
 @property (nonatomic, strong) UIProgressView *trackProgressView;
 
-@property(nonatomic, assign) BOOL userDragging;
-
 @property (nonatomic, weak) UIView *playerView;
 
 @end
@@ -36,7 +34,10 @@ static const CGFloat kJPVideoPlayerDragSliderLeftEdge = 2;
 static const CGFloat kJPVideoPlayerCachedProgressViewHeight = 2;
 NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotification = @"com.jpvideoplayer.progressview.user.drag.start.www";
 NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpvideoplayer.progressview.user.drag.end.www";;
-@implementation JPVideoPlayerControlProgressView
+@implementation JPVideoPlayerControlProgressView {
+    BOOL _userDragging;
+    NSTimeInterval _userDragTimeInterval;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -70,7 +71,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:nil];
+    [self cacheRangeDidChange:@[]];
     [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
 }
 
@@ -103,12 +104,33 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.fileLength = videoLength;
 }
 
+- (void)setUserDragging:(BOOL)userDragging {
+    [self willChangeValueForKey:@"userDragging"];
+    _userDragging = userDragging;
+    [self didChangeValueForKey:@"userDragging"];
+}
+
+- (BOOL)userDragging {
+    return _userDragging;
+}
+
+- (void)setUserDragTimeInterval:(NSTimeInterval)userDragTimeInterval {
+    [self willChangeValueForKey:@"userDragTimeInterval"];
+    _userDragTimeInterval = userDragTimeInterval;
+    [self didChangeValueForKey:@"userDragTimeInterval"];
+}
+
+- (NSTimeInterval)userDragTimeInterval {
+    return _userDragTimeInterval;
+}
+
 
 #pragma mark - Private
 
 - (void)_setup {
     self.trackProgressView = ({
         UIProgressView *view = [UIProgressView new];
+        view.trackTintColor = [UIColor colorWithWhite:1 alpha:0.15];
         [self addSubview:view];
 
         view;
@@ -119,6 +141,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         [self.trackProgressView addSubview:view];
         view.clipsToBounds = YES;
         view.layer.cornerRadius = 1;
+        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
 
         view;
     });
@@ -143,21 +166,13 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)dragSliderDidDrag:(UISlider *)slider {
-    [self callTimeChangeDelegateMethod];
+    self.userDragTimeInterval = slider.value * self.totalSeconds;
 }
 
 - (void)dragSliderDidEnd:(UISlider *)slider {
     self.userDragging = NO;
     [self userDidFinishDrag];
     [NSNotificationCenter.defaultCenter postNotificationName:JPVideoPlayerControlProgressViewUserDidEndDragNotification object:self];
-}
-
-- (void)callTimeChangeDelegateMethod {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(progressView:userDidDragToTime:totalSeconds:)]) {
-        [self.delegate progressView:self
-                  userDidDragToTime:self.dragSlider.value * self.totalSeconds
-                       totalSeconds:self.totalSeconds];
-    }
 }
 
 - (void)userDidFinishDrag {
@@ -203,8 +218,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
                     break;
                 }
                 else {
-                    NSUInteger deltaDistance = abs(range.location - dragStartLocation);
-                    deltaDistance = abs(NSMaxRange(range) - dragStartLocation) < deltaDistance ?: deltaDistance;
+                    int deltaDistance = abs((int)(range.location - dragStartLocation));
+                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ?: deltaDistance;
                     if(deltaDistance < distance){
                         distance = deltaDistance;
                         targetRange = range;
@@ -233,17 +248,19 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @end
 
-@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol, JPVideoPlayerControlProgressViewDelegate>
+@interface JPVideoPlayerControlBar()<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong) UIButton *playButton;
 
-@property (nonatomic, strong) JPVideoPlayerControlProgressView *progressView;
+@property (nonatomic, strong) UIView<JPVideoPlayerControlProgressProtocol> *progressView;
 
 @property (nonatomic, strong) UILabel *timeLabel;
 
 @property (nonatomic, strong) UIButton *landscapeButton;
 
 @property (nonatomic, weak) UIView *playerView;
+
+@property(nonatomic, assign) NSTimeInterval totalSeconds;
 
 @end
 
@@ -252,8 +269,22 @@ static const CGFloat kJPVideoPlayerControlBarElementGap = 16;
 static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 @implementation JPVideoPlayerControlBar
 
-- (instancetype)initWithProgressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView {
-    self = [super init];
+- (void)dealloc {
+    [self.progressView removeObserver:self forKeyPath:@"userDragTimeInterval"];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithProgressView:nil];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithProgressView:nil];
+}
+
+- (instancetype)initWithProgressView:(UIView <JPVideoPlayerControlProgressProtocol> *_Nullable)progressView {
+    self = [super initWithFrame:CGRectZero];
     if (self) {
         _progressView = progressView;
         [self _setup];
@@ -264,12 +295,6 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 - (instancetype)init {
     NSAssert(NO, @"Please use given method to initialize this class.");
     return [self initWithProgressView:nil];
-}
-
-- (void)progressView:(JPVideoPlayerControlProgressView *)progressView
-   userDidDragToTime:(NSTimeInterval)timeInterval
-        totalSeconds:(NSTimeInterval)totalSeconds {
-    [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:totalSeconds];
 }
 
 
@@ -325,6 +350,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds {
+    self.totalSeconds = totalSeconds;
     if(!self.progressView.userDragging){
         [self updateTimeLabelWithElapsedSeconds:elapsedSeconds totalSeconds:totalSeconds];
     }
@@ -384,7 +410,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     if(!self.progressView){
         self.progressView = ({
             JPVideoPlayerControlProgressView *view = [JPVideoPlayerControlProgressView new];
-            view.delegate = self;
+            [view addObserver:self forKeyPath:@"userDragTimeInterval" options:NSKeyValueObservingOptionNew context:nil];
             [self addSubview:view];
 
             view;
@@ -410,11 +436,22 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     });
 }
 
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath
+                      ofObject:(nullable id)object
+                        change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change
+                       context:(nullable void *)context {
+    if([keyPath isEqualToString:@"userDragTimeInterval"]) {
+        NSNumber *timeIntervalNumber = change[NSKeyValueChangeNewKey];
+        NSTimeInterval timeInterval = timeIntervalNumber.floatValue;
+        [self updateTimeLabelWithElapsedSeconds:timeInterval totalSeconds:self.totalSeconds];
+    }
+}
+
 @end
 
 @interface JPVideoPlayerControlView()
 
-@property (nonatomic, strong) JPVideoPlayerControlBar *controlBar;
+@property (nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlBar;
 
 @property (nonatomic, strong) UIImageView *blurImageView;
 
@@ -423,6 +460,16 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 static const CGFloat kJPVideoPlayerControlBarHeight = 38;
 static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 @implementation JPVideoPlayerControlView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithControlBar:nil blurImage:nil];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    NSAssert(NO, @"Please use given method to initialize this class.");
+    return [self initWithControlBar:nil blurImage:nil];
+}
 
 - (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *)controlBar
                          blurImage:(UIImage *)blurImage {
@@ -515,8 +562,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         self.controlBar = ({
             JPVideoPlayerControlBar *bar = [[JPVideoPlayerControlBar alloc] initWithProgressView:nil];
             [self addSubview:bar];
-            bar.progressView.trackProgressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.15];
-            bar.progressView.cachedProgressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
 
             bar;
         });
@@ -603,7 +648,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:nil];
+    [self cacheRangeDidChange:@[]];
     [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
 }
 
@@ -656,8 +701,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
                     break;
                 }
                 else {
-                    NSUInteger deltaDistance = abs(range.location - dragStartLocation);
-                    deltaDistance = abs(NSMaxRange(range) - dragStartLocation) < deltaDistance ?: deltaDistance;
+                    int deltaDistance = abs((int)(range.location - dragStartLocation));
+                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ?: deltaDistance;
                     if(deltaDistance < distance){
                         distance = deltaDistance;
                         targetRange = range;
@@ -876,7 +921,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 - (void)tapGestureDidTap {
     [UIView animateWithDuration:0.35
                           delay:0
-                        options:UIViewAnimationCurveEaseOut
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          if(self.controlContainerView.alpha == 0){
                              self.controlContainerView.alpha = 1;
