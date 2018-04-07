@@ -1030,7 +1030,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
     BOOL isFind = [[view nextResponder] isKindOfClass:[UIViewController class]] && CGRectEqualToRect(view.bounds, [UIScreen mainScreen].bounds);
     if(isFind){
-        return [view nextResponder];
+        return (UIViewController *)[view nextResponder];
     }
     return [self findNearestViewControllerForView:view.superview];
 }

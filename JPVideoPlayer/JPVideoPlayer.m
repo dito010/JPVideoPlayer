@@ -282,7 +282,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         model.player.muted = YES;
     }
     if(configFinishedBlock){
-        configFinishedBlock(nil, model);
+        configFinishedBlock([UIView new], model);
     }
     return model;
 }

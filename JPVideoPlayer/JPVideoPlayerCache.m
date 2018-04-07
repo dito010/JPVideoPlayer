@@ -284,8 +284,11 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 - (void)clearDiskOnCompletion:(nullable dispatch_block_t)completion{
     dispatch_async(self.ioQueue, ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePathForAllFullFile] error:nil];
         [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePathForAllTemporaryFile] error:nil];
+#pragma clang diagnostic pop
         [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePath] error:nil];
         JPDispatchSyncOnMainQueue(^{
             if (completion) {
@@ -334,8 +337,11 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 - (unsigned long long)getSize {
     __block unsigned long long size = 0;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSString *tempFilePath = [JPVideoPlayerCachePath videoCachePathForAllTemporaryFile];
     NSString *fullFilePath = [JPVideoPlayerCachePath videoCachePathForAllFullFile];
+#pragma clang diagnostic pop
     NSString *videoCachePath = [JPVideoPlayerCachePath videoCachePath];
     @autoreleasepool {
         NSDirectoryEnumerator *fileEnumerator_temp = [self.fileManager enumeratorAtPath:tempFilePath];
@@ -364,8 +370,11 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 - (NSUInteger)getDiskCount{
     __block NSUInteger count = 0;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSString *tempFilePath = [JPVideoPlayerCachePath videoCachePathForAllTemporaryFile];
     NSString *fullFilePath = [JPVideoPlayerCachePath videoCachePathForAllFullFile];
+#pragma clang diagnostic pop
     NSString *videoCachePath = [JPVideoPlayerCachePath videoCachePath];
 
     NSDirectoryEnumerator *fileEnumerator_temp = [self.fileManager enumeratorAtPath:tempFilePath];
@@ -378,8 +387,11 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 }
 
 - (void)calculateSizeOnCompletion:(JPVideoPlayerCalculateSizeCompletion _Nullable)completion {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSString *tempFilePath = [JPVideoPlayerCachePath videoCachePathForAllTemporaryFile];
     NSString *fullFilePath = [JPVideoPlayerCachePath videoCachePathForAllFullFile];
+#pragma clang diagnostic pop
     NSString *videoFilePath = [JPVideoPlayerCachePath videoCachePath];
     NSURL *diskCacheURL_temp = [NSURL fileURLWithPath:tempFilePath isDirectory:YES];
     NSURL *diskCacheURL_full = [NSURL fileURLWithPath:fullFilePath isDirectory:YES];
