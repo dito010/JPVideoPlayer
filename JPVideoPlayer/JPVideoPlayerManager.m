@@ -33,8 +33,6 @@
 
 @property (nonatomic, assign) JPVideoPlayerOptions playerOptions;
 
-@property (nonatomic, getter=isMuted) BOOL mute;
-
 @property (nonatomic, strong, nonnull) JPVideoPlayer *videoPlayer;
 
 @property (nonatomic) pthread_mutex_t lock;
@@ -202,16 +200,35 @@
     return [url absoluteString];
 }
 
-- (void)seekToTime:(CMTime)time {
-    [self.videoPlayer seekToTime:time];
+
+#pragma mark - JPVideoPlayerPlaybackProtocol
+
+- (void)setRate:(float)rate {
+    [self.videoPlayer setRate:rate];
 }
 
-- (void)stopPlay {
-    JPDispatchSyncOnMainQueue(^{
-        [self.videoDownloader cancel];
-        [self.videoPlayer stopPlay];
-        [self reset];
-    });
+- (float)rate {
+    return self.videoPlayer.rate;
+}
+
+- (void)setMuted:(BOOL)muted {
+    [self.videoPlayer setMuted:muted];
+}
+
+- (BOOL)muted {
+    return self.videoPlayer.muted;
+}
+
+- (void)setVolume:(float)volume {
+    [self.videoPlayer setVolume:volume];
+}
+
+- (float)volume {
+    return self.videoPlayer.volume;
+}
+
+- (void)seekToTime:(CMTime)time {
+    [self.videoPlayer seekToTime:time];
 }
 
 - (void)pause {
@@ -222,15 +239,16 @@
     [self.videoPlayer resume];
 }
 
-- (void)setPlayerMute:(BOOL)mute {
-    if (self.videoPlayer.currentPlayerModel) {
-        [self.videoPlayer setMute:mute];
-    }
-    self.mute = mute;
+- (CMTime)currentTime {
+    return self.videoPlayer.currentTime;
 }
 
-- (BOOL)playerIsMute{
-    return self.mute;
+- (void)stopPlay {
+    JPDispatchSyncOnMainQueue(^{
+        [self.videoDownloader cancel];
+        [self.videoPlayer stopPlay];
+        [self reset];
+    });
 }
 
 
@@ -416,7 +434,6 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.vi
 
 // TODO: 列表中点击 cell 视频连贯播放.
 // TODO: 视频没加载出来是否显示黑色背景.
-// TODO: 播放控制抽取协议.
 
 
 #pragma mark - Private

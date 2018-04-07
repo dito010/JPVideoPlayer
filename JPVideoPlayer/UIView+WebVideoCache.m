@@ -290,32 +290,52 @@
 }
 
 
-#pragma mark - Play Control
+#pragma mark - Playback Control
+
+- (void)setJp_rate:(float)jp_rate {
+    JPVideoPlayerManager.sharedManager.rate = jp_rate;
+}
+
+- (float)jp_rate {
+    return JPVideoPlayerManager.sharedManager.rate;
+}
+
+- (void)setJp_muted:(BOOL)jp_muted {
+    JPVideoPlayerManager.sharedManager.muted = jp_muted;
+}
+
+- (BOOL)jp_muted {
+    return JPVideoPlayerManager.sharedManager.muted;
+}
+
+- (void)setJp_volume:(float)jp_volume {
+    JPVideoPlayerManager.sharedManager.volume = jp_volume;
+}
+
+- (float)jp_volume {
+    return JPVideoPlayerManager.sharedManager.volume;
+}
 
 - (void)jp_seekToTime:(CMTime)time {
     [[JPVideoPlayerManager sharedManager] seekToTime:time];
 }
 
-- (void)jp_stopPlay{
-    [[JPVideoPlayerManager sharedManager] stopPlay];
-    self.helper.videoPlayerView.hidden = YES;
-    [self callFinishBufferingDelegate];
-}
-
-- (void)jp_pause{
+- (void)jp_pause {
     [[JPVideoPlayerManager sharedManager] pause];
 }
 
-- (void)jp_resume{
+- (void)jp_resume {
     [[JPVideoPlayerManager sharedManager] resume];
 }
 
-- (void)jp_setPlayerMute:(BOOL)mute{
-    [[JPVideoPlayerManager sharedManager] setPlayerMute:mute];
+- (CMTime)jp_currentTime {
+    return JPVideoPlayerManager.sharedManager.currentTime;
 }
 
-- (BOOL)jp_playerIsMute{
-    return [JPVideoPlayerManager sharedManager].playerIsMute;
+- (void)jp_stopPlay {
+    [[JPVideoPlayerManager sharedManager] stopPlay];
+    self.helper.videoPlayerView.hidden = YES;
+    [self callFinishBufferingDelegate];
 }
 
 

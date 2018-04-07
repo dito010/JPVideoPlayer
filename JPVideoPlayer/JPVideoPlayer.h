@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "JPVideoPlayerCompat.h"
+#import "JPVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -73,34 +74,32 @@ playFailedWithError:(NSError *)error;
 
 @end
 
-@interface JPVideoPlayerModel : NSObject
+@interface JPVideoPlayerModel : NSObject<JPVideoPlayerPlaybackProtocol>
 
 /**
  * The current player's layer.
  */
-@property(nonatomic, strong, readonly, nullable)AVPlayerLayer *currentPlayerLayer;
+@property(nonatomic, strong, readonly, nullable) AVPlayerLayer *currentPlayerLayer;
 
 /**
  * The player to play video.
  */
-@property(nonatomic, strong, readonly, nullable)AVPlayer *player;
+@property(nonatomic, strong, readonly, nullable) AVPlayer *player;
 
 /**
  * The resourceLoader for the videoPlayer.
  */
-@property(nonatomic, strong, readonly, nullable)JPVideoPlayerResourceLoader *resourceLoader;
+@property(nonatomic, strong, readonly, nullable) JPVideoPlayerResourceLoader *resourceLoader;
 
 @end
 
-@interface JPVideoPlayer : NSObject
+@interface JPVideoPlayer : NSObject<JPVideoPlayerPlaybackProtocol>
 
-@property(nullable, nonatomic, weak)id<JPVideoPlayerInternalDelegate> delegate;
+@property(nullable, nonatomic, weak) id<JPVideoPlayerInternalDelegate> delegate;
 
-@property(nonatomic, strong, readonly, nullable)JPVideoPlayerModel *currentPlayerModel;
+@property(nonatomic, strong, readonly, nullable) JPVideoPlayerModel *currentPlayerModel;
 
 @property(nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
-
-# pragma mark - Play Video.
 
 /**
  * Play the existed video file in disk.
@@ -134,38 +133,6 @@ playFailedWithError:(NSError *)error;
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
                               configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
-
-
-# pragma mark - Player Control Events
-
-/**
- * Moves the playback cursor.
- *
- * @param time The time where seek to.
- */
-- (void)seekToTime:(CMTime)time;
-
-/** 
- * Call this method to control audio is play or not.
- *
- * @param mute the flag for audio status.
- */
-- (void)setMute:(BOOL)mute;
-
-/**
- * Call this method to stop play video.
- */
-- (void)stopPlay;
-
-/**
- *  Call this method to pause play.
- */
-- (void)pause;
-
-/**
- *  Call this method to resume play.
- */
-- (void)resume;
 
 @end
 

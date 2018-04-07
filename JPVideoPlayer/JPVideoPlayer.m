@@ -82,26 +82,54 @@ static NSString *JPVideoPlayerURLScheme = @"systemCannotRecognitionScheme";
 static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @implementation JPVideoPlayerModel
 
-- (void)stopPlayVideo{
+#pragma mark - JPVideoPlayerPlaybackProtocol
+
+- (void)setRate:(float)rate {
+    self.player.rate = rate;
+}
+
+- (float)rate {
+    return self.player.rate;
+}
+
+- (void)setMuted:(BOOL)muted {
+    self.player.muted = muted;
+}
+
+- (BOOL)muted {
+    return self.player.muted;
+}
+
+- (void)setVolume:(float)volume {
+    self.player.volume = volume;
+}
+
+- (float)volume {
+    return self.player.volume;
+}
+
+- (void)seekToTime:(CMTime)time {
+    NSAssert(NO, @"You cannot call this method.");
+}
+
+- (void)pause {
+    [self.player pause];
+}
+
+- (void)resume {
+    [self.player play];
+}
+
+- (CMTime)currentTime {
+    return self.player.currentTime;
+}
+
+- (void)stopPlay {
     self.cancelled = YES;
     [self reset];
 }
 
-- (void)pausePlayVideo{
-    if (!self.player) {
-        return;
-    }
-    [self.player pause];
-}
-
-- (void)resumePlayVideo{
-    if (!self.player) {
-        return;
-    }
-    [self.player play];
-}
-
-- (void)reset{
+- (void)reset {
     // remove video layer from superlayer.
     if (self.currentPlayerLayer.superlayer) {
         [self.currentPlayerLayer removeFromSuperlayer];
@@ -259,7 +287,55 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     return model;
 }
 
+
+#pragma mark - JPVideoPlayerPlaybackProtocol
+
+- (void)setRate:(float)rate {
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self.currentPlayerModel setRate:rate];
+}
+
+- (float)rate {
+    if(!self.currentPlayerModel){
+        return 0;
+    }
+    return self.currentPlayerModel.rate;
+}
+
+- (void)setMuted:(BOOL)muted {
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self.currentPlayerModel setMuted:muted];
+}
+
+- (BOOL)muted {
+    if(!self.currentPlayerModel){
+        return NO;
+    }
+    return self.currentPlayerModel.muted;
+}
+
+- (void)setVolume:(float)volume {
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self.currentPlayerModel setVolume:volume];
+}
+
+- (float)volume {
+    if(!self.currentPlayerModel){
+        return 0;
+    }
+    return self.currentPlayerModel.volume;
+}
+
 - (void)seekToTime:(CMTime)time {
+    if(!self.currentPlayerModel){
+        return;
+    }
     if(!CMTIME_IS_VALID(time)){
         return;
     }
@@ -277,12 +353,32 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }];
 }
 
-- (void)setMute:(BOOL)mute{
-    self.currentPlayerModel.player.muted = mute;
+- (void)pause {
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self internalPauseWithNeedCallDelegate:YES];
+}
+
+- (void)resume {
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self internalResumeWithNeedCallDelegate:YES];
+}
+
+- (CMTime)currentTime {
+    if(!self.currentPlayerModel){
+        return kCMTimeZero;
+    }
+    return self.currentPlayerModel.currentTime;
 }
 
 - (void)stopPlay{
-    [self.currentPlayerModel stopPlayVideo];
+    if(!self.currentPlayerModel){
+        return;
+    }
+    [self.currentPlayerModel stopPlay];
     [self stopCheckBufferingTimerIfNeed];
     [self resetAwakeWaitingTimeInterval];
     self.currentPlayerModel = nil;
@@ -290,14 +386,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
         [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
     }
-}
-
-- (void)pause {
-    [self internalPauseWithNeedCallDelegate:YES];
-}
-
-- (void)resume {
-    [self internalResumeWithNeedCallDelegate:YES];
 }
 
 
@@ -325,7 +413,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 }
 
 - (void)appReceivedMemoryWarning {
-    [self.currentPlayerModel stopPlayVideo];
+    [self.currentPlayerModel stopPlay];
 }
 
 
@@ -479,9 +567,9 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
             }
             JPDebugLog(@"Call resume in awake buffering block.");
             _isOpenAwakeWhenBuffering = NO;
-            [self.currentPlayerModel pausePlayVideo];
+            [self.currentPlayerModel pause];
             [self updateAwakeWaitingTimerInterval];
-            [self.currentPlayerModel resumePlayVideo];
+            [self.currentPlayerModel resume];
 
         });
     }
@@ -500,7 +588,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
 
 - (void)internalPauseWithNeedCallDelegate:(BOOL)needCallDelegate {
-    [self.currentPlayerModel pausePlayVideo];
+    [self.currentPlayerModel pause];
     [self stopCheckBufferingTimerIfNeed];
     self.playerStatus = JPVideoPlayerStatusPause;
     [self endAwakeFromBuffering];
@@ -512,7 +600,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 }
 
 - (void)internalResumeWithNeedCallDelegate:(BOOL)needCallDelegate {
-    [self.currentPlayerModel resumePlayVideo];
+    [self.currentPlayerModel resume];
     [self startCheckBufferingTimer];
     self.playerStatus = JPVideoPlayerStatusPlaying;
     if(needCallDelegate){

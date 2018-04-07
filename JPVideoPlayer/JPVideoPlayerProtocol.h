@@ -5,6 +5,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JPVideoPlayerCompat.h"
+#import <AVFoundation/AVFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -83,6 +84,53 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
  * This method will be called when player finish buffering and start play.
  */
 - (void)didFinishBuffering;
+
+@end
+
+@protocol JPVideoPlayerPlaybackProtocol<NSObject>
+
+@required
+/**
+ * The current playback rate.
+ */
+@property(nonatomic) float rate;
+
+/**
+ * A Boolean value that indicates whether the audio output of the player is muted.
+ */
+@property(nonatomic) BOOL muted;
+
+/**
+ * The audio playback volume for the player, ranging from 0.0 through 1.0 on a linear scale.
+ */
+@property(nonatomic) float volume;
+
+/**
+* Moves the playback cursor.
+*
+* @param time The time where seek to.
+*/
+- (void)seekToTime:(CMTime)time;
+
+/**
+ *  Call this method to pause playback.
+ */
+- (void)pause;
+
+/**
+ *  Call this method to resume playback.
+ */
+- (void)resume;
+
+/**
+ * @return Returns the current time of the current player item.
+ */
+- (CMTime)currentTime;
+
+/**
+ * Call this method to stop play video.
+ */
+- (void)stopPlay;
 
 @end
 

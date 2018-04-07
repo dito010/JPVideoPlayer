@@ -201,42 +201,49 @@ NS_ASSUME_NONNULL_BEGIN
                     options:(JPVideoPlayerOptions)options
         configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
 
-#pragma mark - Play Control
+#pragma mark - Playback Control
+
 /**
- * Moves the playback cursor.
- *
- * @param time The time where seek to.
+ * The current playback rate.
  */
+@property(nonatomic) float jp_rate;
+
+/**
+ * A Boolean value that indicates whether the audio output of the player is muted.
+ */
+@property(nonatomic) BOOL jp_muted;
+
+/**
+ * The audio playback volume for the player, ranging from 0.0 through 1.0 on a linear scale.
+ */
+@property(nonatomic) float jp_volume;
+
+/**
+* Moves the playback cursor.
+*
+* @param time The time where seek to.
+*/
 - (void)jp_seekToTime:(CMTime)time;
+
+/**
+ *  Call this method to pause playback.
+ */
+- (void)jp_pause;
+
+/**
+ *  Call this method to resume playback.
+ */
+- (void)jp_resume;
+
+/**
+ * @return Returns the current time of the current player item.
+ */
+- (CMTime)jp_currentTime;
 
 /**
  * Call this method to stop play video.
  */
 - (void)jp_stopPlay;
-
-/**
- *  Call this method to pause play.
- */
-- (void)jp_pause;
-
-/**
- *  Call this method to resume play.
- */
-- (void)jp_resume;
-
-/**
- * Call this method to play or pause audio of current video.
- *
- * @param mute the audio status will change to.
- */
-- (void)jp_setPlayerMute:(BOOL)mute;
-
-/**
- * Call this method to get the audio state for current player.
- *
- * @return The audio state for current player.
- */
-- (BOOL)jp_playerIsMute;
 
 #pragma mark - Landscape Or Portrait Control
 

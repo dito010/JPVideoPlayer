@@ -108,7 +108,7 @@ nearestViewControllerInViewTree:nearestViewController
                                bufferingIndicator:nil
                                      progressView:[JPDouyinProgressView new]
                               configFinishedBlock:^(UIView *view, JPVideoPlayerModel *playerModel) {
-                                  [view jp_setPlayerMute:NO];
+                                  view.jp_muted = NO;
                               }];
 }
 

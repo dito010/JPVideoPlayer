@@ -62,7 +62,7 @@
     
 //    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
 //    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
-    self.muteSwitch.on = ![self.videoContainer jp_playerIsMute];
+    self.muteSwitch.on = ![self.videoContainer jp_muted];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -75,7 +75,7 @@
 #pragma mark - Click Events
 
 - (IBAction)muteSwitch:(UISwitch *)sw {
-    [self.videoContainer jp_setPlayerMute:!sw.on];
+    self.videoContainer.jp_muted = !sw.on;
 }
 
 - (IBAction)closeBtnClick:(id)sender {

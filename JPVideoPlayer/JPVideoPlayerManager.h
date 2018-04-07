@@ -13,6 +13,7 @@
 #import "JPVideoPlayerDownloader.h"
 #import "JPVideoPlayerCache.h"
 #import "JPVideoPlayer.h"
+#import "JPVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -133,7 +134,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 
 @end
 
-@interface JPVideoPlayerManager : NSObject
+@interface JPVideoPlayerManager : NSObject<JPVideoPlayerPlaybackProtocol>
 
 @property (weak, nonatomic, nullable) id <JPVideoPlayerManagerDelegate> delegate;
 
@@ -147,7 +148,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 
 @property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
 
-#pragma mark - Singleton and initialization
+#pragma mark - Singleton and Initialization
 
 /**
  * Returns global `JPVideoPlayerManager` instance.
@@ -198,44 +199,6 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
  * Return the cache key for a given URL.
  */
 - (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url;
-
-# pragma mark - Play Control
-
-/**
- * Moves the playback cursor.
- *
- * @param time The time where seek to.
- */
-- (void)seekToTime:(CMTime)time;
-
-/**
- * Call this method to stop play video.
- */
-- (void)stopPlay;
-
-/**
- *  Call this method to pause play.
- */
-- (void)pause;
-
-/**
- *  Call this method to resume play.
- */
-- (void)resume;
-
-/**
- * Call this method to play or pause audio of current video.
- *
- * @param mute the audio status will change to.
- */
-- (void)setPlayerMute:(BOOL)mute;
-
-/**
- * Call this method to get the audio statu for current player.
- *
- * @return the audio status for current player.
- */
-- (BOOL)playerIsMute;
 
 @end
 
