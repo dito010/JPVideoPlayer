@@ -452,9 +452,14 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
             constrainedRect.size.width,
             kJPVideoPlayerControlBarHeight);
     if(interfaceOrientation == JPVideoPlayViewInterfaceOrientationLandscape){ // landscape.
-        controlBarFrame = CGRectMake(0,
+        CGFloat controlBarOriginX = 0;
+        if (@available(iOS 11.0, *)) {
+            UIEdgeInsets insets = self.window.safeAreaInsets;
+            controlBarOriginX = insets.bottom;
+        }
+        controlBarFrame = CGRectMake(controlBarOriginX,
                 constrainedRect.size.height - kJPVideoPlayerControlBarHeight - kJPVideoPlayerControlBarLandscapeUpOffset,
-                constrainedRect.size.width,
+                constrainedRect.size.width - 2 * controlBarOriginX,
                 kJPVideoPlayerControlBarHeight);
     }
     self.controlBar.frame = controlBarFrame;
