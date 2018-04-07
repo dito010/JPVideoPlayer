@@ -126,9 +126,11 @@ didCompleteWithError:(NSError *)error;
 /**
  * The request did receive data.
  *
- * @param data A fragment video data.
+ * @param data       A fragment video data.
+ * @param completion Call when store the data finished.
  */
-- (void)requestDidReceiveData:(NSData *)data;
+- (void)requestDidReceiveData:(NSData *)data
+             storedCompletion:(dispatch_block_t)completion;
 
 /**
  * The request did finish.

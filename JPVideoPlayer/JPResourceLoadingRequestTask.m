@@ -85,7 +85,8 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     NSAssert(NO, @"You must subclass this class and override this method");
 }
 
-- (void)requestDidReceiveData:(NSData *)data {
+- (void)requestDidReceiveData:(NSData *)data
+             storedCompletion:(dispatch_block_t)completion {
     NSAssert(NO, @"You must subclass this class and override this method");
 }
 
@@ -401,8 +402,13 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     }
 }
 
-- (void)requestDidReceiveData:(NSData *)data {
-    if (data.bytes && [self.cacheFile storeVideoData:data atOffset:self.offset synchronize:NO]) {
+- (void)requestDidReceiveData:(NSData *)data
+             storedCompletion:(dispatch_block_t)completion {
+    if (data.bytes) {
+        [self.cacheFile storeVideoData:data
+                              atOffset:self.offset
+                           synchronize:NO
+                      storedCompletion:completion];
         int lock = pthread_mutex_trylock(&_plock);
         self.haveDataSaved = YES;
         self.offset += [data length];

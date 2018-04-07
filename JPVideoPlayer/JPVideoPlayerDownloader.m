@@ -69,11 +69,13 @@
         sessionConfiguration.timeoutIntervalForRequest = 15.f;
 
         /**
-         *  Create the session for this task
-         *  We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate
+         *  Create the session for this task.
+         *  We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate.
          *  method calls and downloadCompletion handler calls.
          */
-        self.session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+        self.session = [NSURLSession sessionWithConfiguration:sessionConfiguration
+                                                     delegate:self
+                                                delegateQueue:nil];
     }
     return self;
 }
@@ -227,15 +229,17 @@ didReceiveResponse:(NSURLResponse *)response
     }
 
     self.receivedSize += data.length;
-    [self.runningTask requestDidReceiveData:data];
-    JPDispatchSyncOnMainQueue(^{
-        if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
-            [self.delegate downloader:self
-                       didReceiveData:data
-                         receivedSize:self.receivedSize
-                         expectedSize:self.expectedSize];
-        }
-    });
+    [self.runningTask requestDidReceiveData:data
+                           storedCompletion:^{
+                               JPDispatchSyncOnMainQueue(^{
+                                   if (self.delegate && [self.delegate respondsToSelector:@selector(downloader:didReceiveData:receivedSize:expectedSize:)]) {
+                                       [self.delegate downloader:self
+                                                  didReceiveData:data
+                                                    receivedSize:self.receivedSize
+                                                    expectedSize:self.expectedSize];
+                                   }
+                               });
+                           }];
 }
 
 - (void)URLSession:(NSURLSession *)session

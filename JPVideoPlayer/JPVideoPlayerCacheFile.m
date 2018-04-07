@@ -20,7 +20,7 @@
 
 @property (nonatomic, strong) NSFileHandle *readFileHandle;
 
-@property(nonatomic, assign) BOOL compelete;
+@property(nonatomic, assign) BOOL completed;
 
 @property (nonatomic, assign) NSUInteger fileLength;
 
@@ -30,28 +30,37 @@
 
 @property (nonatomic) pthread_mutex_t lock;
 
+@property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
+
 @end
 
 static const NSString *kJPVideoPlayerCacheFileZoneKey = @"com.newpan.zone.key.www";
 static const NSString *kJPVideoPlayerCacheFileSizeKey = @"com.newpan.size.key.www";
 static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.response.header.key.www";
 @implementation JPVideoPlayerCacheFile
-//TODO: 这里要持有自己的线程,防止线程抢夺资源.
+
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath {
+                        indexFilePath:(NSString *)indexFilePath
+                              ioQueue:(dispatch_queue_t)ioQueue {
     return [[self alloc] initWithFilePath:filePath
-                            indexFilePath:indexFilePath];
+                            indexFilePath:indexFilePath
+                                  ioQueue:ioQueue];
 }
 
 - (instancetype)init {
     NSAssert(NO, @"Please use given initializer method");
-    return [self initWithFilePath:@"" indexFilePath:@""];
+    return [self initWithFilePath:@""
+                    indexFilePath:@""
+                          ioQueue:dispatch_get_global_queue(0, 0)];
 }
 
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath {
+                   indexFilePath:(NSString *)indexFilePath
+                         ioQueue:(dispatch_queue_t)ioQueue {
+    JPMainThreadAssert;
     NSParameterAssert(filePath.length && indexFilePath.length);
-    if (!filePath.length || !indexFilePath.length) {
+    NSParameterAssert(ioQueue);
+    if (!filePath.length || !indexFilePath.length || !ioQueue) {
         return nil;
     }
 
@@ -59,6 +68,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     if (self) {
         _cacheFilePath = filePath;
         _indexFilePath = indexFilePath;
+        _ioQueue = ioQueue;
         _internalFragmentRanges = [[NSMutableArray alloc] init];
         _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
         _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
@@ -103,7 +113,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (BOOL)isCompeleted {
-    return self.compelete;
+    return self.completed;
 }
 
 - (BOOL)isEOF {
@@ -138,29 +148,36 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     }
 }
 
-- (void)addRange:(NSRange)range {
+- (void)addRange:(NSRange)range
+      completion:(dispatch_block_t)completion {
     if (range.length == 0 || range.location >= self.fileLength) {
         return;
     }
 
-    int lock = pthread_mutex_trylock(&_lock);
-    BOOL inserted = NO;
-    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
-        NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
-        if (currentRange.location >= range.location) {
-            [self.internalFragmentRanges insertObject:[NSValue valueWithRange:range] atIndex:i];
-            inserted = YES;
-            break;
+    dispatch_async(self.ioQueue, ^{
+        int lock = pthread_mutex_trylock(&_lock);
+        BOOL inserted = NO;
+        for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+            NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
+            if (currentRange.location >= range.location) {
+                [self.internalFragmentRanges insertObject:[NSValue valueWithRange:range] atIndex:i];
+                inserted = YES;
+                break;
+            }
         }
-    }
-    if (!inserted) {
-        [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
-    }
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
-    [self mergeRangesIfNeed];
-    [self checkIsCompleted];
+        if (!inserted) {
+            [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
+        }
+        if (!lock) {
+            pthread_mutex_unlock(&_lock);
+        }
+        [self mergeRangesIfNeed];
+        [self checkIsCompleted];
+
+        if(completion){
+           completion();
+        }
+    });
 }
 
 - (NSRange)cachedRangeForRange:(NSRange)range {
@@ -226,11 +243,11 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (void)checkIsCompleted {
     int lock = pthread_mutex_trylock(&_lock);
-    self.compelete = NO;
+    self.completed = NO;
     if (self.internalFragmentRanges && self.internalFragmentRanges.count == 1) {
         NSRange range = [self.internalFragmentRanges[0] rangeValue];
         if (range.location == 0 && (range.length == self.fileLength)) {
-            self.compelete = YES;
+            self.completed = YES;
         }
     }
     if (!lock) {
@@ -288,12 +305,11 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     return success;
 }
 
-- (BOOL)storeVideoData:(NSData *)data
+- (void)storeVideoData:(NSData *)data
               atOffset:(NSUInteger)offset
-           synchronize:(BOOL)synchronize {
-    if (!self.writeFileHandle) {
-        return NO;
-    }
+           synchronize:(BOOL)synchronize
+      storedCompletion:(dispatch_block_t)completion {
+    NSParameterAssert(self.writeFileHandle);
     @try {
         [self.writeFileHandle seekToFileOffset:offset];
         [self.writeFileHandle jp_safeWriteData:data];
@@ -301,14 +317,13 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     @catch (NSException * e) {
         // TODO: 处理异常.
         JPErrorLog(@"Write file raise a exception: %@", e);
-        return NO;
     }
 
-    [self addRange:NSMakeRange(offset, [data length])];
+    [self addRange:NSMakeRange(offset, [data length])
+        completion:completion];
     if (synchronize) {
         [self synchronize];
     }
-    return YES;
 }
 
 

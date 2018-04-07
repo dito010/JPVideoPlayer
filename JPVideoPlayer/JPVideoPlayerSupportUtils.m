@@ -26,42 +26,6 @@
 
 @end
 
-
-#pragma mark - Landscape Events
-//
-//- (void)layoutProgressViewForPortrait:(UIView *)progressView{
-//    CGFloat progressViewY = self.frame.size.height - JPVideoPlayerLayerFrameY;
-//    if ([self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldProgressViewOnTop)] && [self.jp_videoPlayerDelegate shouldProgressViewOnTop]) {
-//        progressViewY = 0;
-//    }
-//    progressView.frame = CGRectMake(0, progressViewY, self.frame.size.width, JPVideoPlayerLayerFrameY);
-//}
-//
-//- (void)layoutProgressViewForLandscape:(UIView *)progressView{
-//    CGFloat width = CGRectGetHeight(self.superview.bounds);
-//    CGFloat hei = CGRectGetWidth(self.superview.bounds);
-//    CGFloat progressViewY = hei - JPVideoPlayerLayerFrameY;
-//    if ([self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldProgressViewOnTop)] && [self.jp_videoPlayerDelegate shouldProgressViewOnTop]) {
-//        progressViewY = 0;
-//    }
-//    progressView.frame = CGRectMake(0, progressViewY, width, hei);
-//}
-//
-//- (void)layoutActivityIndicatorViewForPortrait:(UIView *)acv{
-//    CGSize viewSize = self.frame.size;
-//    CGFloat selfX = (viewSize.width-JPVideoPlayerActivityIndicatorWH)*0.5;
-//    CGFloat selfY = (viewSize.height-JPVideoPlayerActivityIndicatorWH)*0.5;
-//    acv.frame = CGRectMake(selfX, selfY, JPVideoPlayerActivityIndicatorWH, JPVideoPlayerActivityIndicatorWH);
-//}
-//
-//- (void)layoutActivityIndicatorViewForLandscape:(UIView *)acv{
-//    CGFloat width = CGRectGetHeight(self.superview.bounds);
-//    CGFloat hei = CGRectGetWidth(self.superview.bounds);
-//    CGFloat selfX = (width-JPVideoPlayerActivityIndicatorWH)*0.5;
-//    CGFloat selfY = (hei-JPVideoPlayerActivityIndicatorWH)*0.5;
-//    acv.frame = CGRectMake(selfX, selfY, JPVideoPlayerActivityIndicatorWH, JPVideoPlayerActivityIndicatorWH);
-//}
-
 @implementation NSFileHandle (JPVideoPlayer)
 
 - (BOOL)jp_safeWriteData:(NSData *)data {

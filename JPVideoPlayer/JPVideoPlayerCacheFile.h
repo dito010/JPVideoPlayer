@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *indexFilePath;
 
 /**
+ * The inner queue to prevent resource competition.
+ */
+@property (nonatomic, strong, readonly) dispatch_queue_t ioQueue;
+
+/**
  * The video data expected length.
  * Note this value is not always equal to the cache video data length.
  */
@@ -75,11 +80,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
+ * @param ioQueue       The inner queue to prevent resource competition.
  *
  * @return A instance of this class.
  */
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath;
+                        indexFilePath:(NSString *)indexFilePath
+                              ioQueue:(dispatch_queue_t)ioQueue;
 
 /**
  * Designated initializer method.
@@ -87,11 +94,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
+ * @param ioQueue       The inner queue to prevent resource competition.
  *
  * @return A instance of this class.
  */
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath NS_DESIGNATED_INITIALIZER;
+                   indexFilePath:(NSString *)indexFilePath
+                         ioQueue:(dispatch_queue_t)ioQueue NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Store
 
@@ -101,12 +110,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @param data        Video data.
  * @param offset      The offset of the data in video file.
  * @param synchronize A flag indicator store index to index file synchronize or not.
- *
- * @return The result of store video data successed or failed.
+ * @param completion  Call when store the data finished.
  */
-- (BOOL)storeVideoData:(NSData *)data
+- (void)storeVideoData:(NSData *)data
               atOffset:(NSUInteger)offset
-           synchronize:(BOOL)synchronize;
+           synchronize:(BOOL)synchronize
+      storedCompletion:(dispatch_block_t)completion;
 
 /**
  * Set the response from web when request video data.
