@@ -266,7 +266,15 @@
             [self addSubview:self.helper.videoPlayerView];
         }
         self.helper.videoPlayerView.frame = self.bounds;
+        self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundBeforePlaybackStart)]) {
+            BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundBeforePlaybackStart];
+            if(shouldShow){
+               self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+            }
+        }
 
+        // nobody retain this block.
         JPPlayVideoConfigFinishedBlock internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);
             if(configFinishedBlock){
@@ -335,6 +343,7 @@
 - (void)jp_stopPlay {
     [[JPVideoPlayerManager sharedManager] stopPlay];
     self.helper.videoPlayerView.hidden = YES;
+    self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
     [self callFinishBufferingDelegate];
 }
 
@@ -524,6 +533,9 @@
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
+    if(playerStatus == JPVideoPlayerStatusPlaying){
+        self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+    }
     self.helper.playerStatus = playerStatus;
     // JPDebugLog(@"playerStatus: %ld", playerStatus);
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {

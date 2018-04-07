@@ -30,7 +30,7 @@ nearestViewControllerInViewTree:nearestViewController
 
 @end
 
-@interface JPVideoPlayerDouyinViewController()<UIScrollViewDelegate>
+@interface JPVideoPlayerDouyinViewController()<UIScrollViewDelegate, JPVideoPlayerDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
@@ -93,6 +93,12 @@ nearestViewControllerInViewTree:nearestViewController
     self.scrollViewOffsetYOnStartDrag = scrollView.contentOffset.y;
 }
 
+
+#pragma mark - JPVideoPlayerDelegate
+
+- (BOOL)shouldShowBlackBackgroundBeforePlaybackStart {
+    return YES;
+}
 
 #pragma mark - Private
 
@@ -185,6 +191,7 @@ nearestViewControllerInViewTree:nearestViewController
         [self.scrollView addSubview:imageView];
         imageView.frame = CGRectMake(0, referenceSize.height, referenceSize.width, referenceSize.height);
         imageView.image = [UIImage imageNamed:@"placeholder2"];
+        imageView.jp_videoPlayerDelegate = self;
 
         imageView;
     });

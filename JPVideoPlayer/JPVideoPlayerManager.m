@@ -433,7 +433,6 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.vi
 }
 
 // TODO: 列表中点击 cell 视频连贯播放.
-// TODO: 视频没加载出来是否显示黑色背景.
 
 
 #pragma mark - Private

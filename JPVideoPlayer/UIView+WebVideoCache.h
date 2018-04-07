@@ -39,11 +39,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldAutoReplayForURL:(nonnull NSURL *)videoURL;
 
 /**
- * Controls the color of the layer under video palyer. by default it is NO, means that the color of the layer is `clearColor`.
+ * Controls the background color of the video layer before player really start play video.
+ *  by default it is NO, means that the color of the layer is `clearColor`.
  *
- * @return YES to make the color of the layer be `blackColor`.
+ * @return Return YES to make the background color of the video layer be `blackColor`.
  */
-- (BOOL)shouldDisplayBlackLayerBeforePlayStart;
+- (BOOL)shouldShowBlackBackgroundBeforePlaybackStart;
 
 /**
  * Notify the player status.

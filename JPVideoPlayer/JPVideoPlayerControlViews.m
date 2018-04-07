@@ -993,8 +993,6 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 #pragma mark - Setup
 
 - (void)_setup {
-    self.backgroundColor = [UIColor blackColor];
-
     self.videoContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
