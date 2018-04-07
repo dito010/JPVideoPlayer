@@ -58,7 +58,8 @@
     [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:self.videoPath]
                           bufferingIndicator:nil
                                  controlView:nil
-                                progressView:nil];
+                                progressView:nil
+                     configurationCompletion:nil];
     
 //    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
 //    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];

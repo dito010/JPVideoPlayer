@@ -188,7 +188,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
-     configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+     configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
 
 /**
  * Return the cache key for a given URL.

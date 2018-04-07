@@ -129,13 +129,13 @@
     [self jp_playVideoMuteWithURL:url
                bufferingIndicator:bufferingIndicator
                      progressView:progressView
-              configFinishedBlock:nil];
+          configurationCompletion:nil];
 }
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                    progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-            configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+        configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
     // user update progressView.
     if(progressView && self.jp_progressView){
        [self.jp_progressView removeFromSuperview];
@@ -162,7 +162,7 @@
                       options:JPVideoPlayerContinueInBackground |
                               JPVideoPlayerLayerVideoGravityResizeAspect |
                               JPVideoPlayerMutedPlay
-          configFinishedBlock:configFinishedBlock];
+          configFinishedBlock:configurationCompletion];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
@@ -173,14 +173,14 @@
            bufferingIndicator:bufferingIndicator
                   controlView:controlView
                  progressView:progressView
-          configFinishedBlock:nil];
+      configurationCompletion:nil];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+    configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
     // user update progressView.
     if(progressView && self.jp_progressView){
         [self.jp_progressView removeFromSuperview];
@@ -217,12 +217,12 @@
     [self jp_playVideoWithURL:url
                       options:JPVideoPlayerContinueInBackground |
                               JPVideoPlayerLayerVideoGravityResizeAspect
-          configFinishedBlock:configFinishedBlock];
+          configFinishedBlock:configurationCompletion];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
                     options:(JPVideoPlayerOptions)options
-        configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+        configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock {
     [self jp_stopPlay];
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
 
@@ -275,7 +275,7 @@
         }
 
         // nobody retain this block.
-        JPPlayVideoConfigFinishedBlock internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
+        JPPlayVideoConfigurationCompletion internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);
             if(configFinishedBlock){
                configFinishedBlock(self, model);

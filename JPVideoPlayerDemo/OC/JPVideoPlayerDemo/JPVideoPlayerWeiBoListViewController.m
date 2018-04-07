@@ -141,7 +141,8 @@
 - (void)tableView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
     [cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL
                                 bufferingIndicator:nil
-                                      progressView:nil];
+                                      progressView:nil
+                           configurationCompletion:nil];
 }
 
 

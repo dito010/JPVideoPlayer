@@ -93,7 +93,7 @@
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
-     configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+     configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock {
     JPMainThreadAssert;
     NSParameterAssert(showLayer);
 
@@ -509,7 +509,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.vi
 - (void)playFragmentVideoWithURL:(NSURL *)url
                          options:(JPVideoPlayerOptions)options
                        showLayer:(CALayer *)showLayer
-             configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock{
+             configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock{
     JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
                                                            options:options
                                                          showLayer:showLayer
@@ -526,7 +526,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.vi
                             videoPath:(NSString *)videoPath
                               options:(JPVideoPlayerOptions)options
                             cacheType:(JPVideoPlayerCacheType)cacheType
-                  configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock{
+                  configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock{
     JPDebugLog(@"Start play a existed video: %@", url);
     NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
     [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
@@ -544,7 +544,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.vi
 - (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
                                 url:(NSURL *)url
                             options:(JPVideoPlayerOptions)options
-                configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+                configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock {
     JPDebugLog(@"Start play a local video: %@", url);
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];

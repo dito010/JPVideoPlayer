@@ -113,9 +113,9 @@ nearestViewControllerInViewTree:nearestViewController
     [self.secondImageView jp_playVideoMuteWithURL:[self fetchDouyinURL]
                                bufferingIndicator:nil
                                      progressView:[JPDouyinProgressView new]
-                              configFinishedBlock:^(UIView *view, JPVideoPlayerModel *playerModel) {
-                                  view.jp_muted = NO;
-                              }];
+                          configurationCompletion:^(UIView *view, JPVideoPlayerModel *playerModel) {
+                              view.jp_muted = NO;
+                          }];
 }
 
 - (NSURL *)fetchDouyinURL {

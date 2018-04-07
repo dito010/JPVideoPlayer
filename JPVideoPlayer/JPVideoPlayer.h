@@ -116,7 +116,7 @@ playFailedWithError:(NSError *)error;
                                       fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
                                              showOnLayer:(CALayer *)showLayer
-                                     configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+                                     configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
 
 /**
  * Play the not existed video from web.
@@ -132,7 +132,7 @@ playFailedWithError:(NSError *)error;
 - (JPVideoPlayerModel *_Nullable)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                              configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock;
+                              configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
 
 @end
 

@@ -204,7 +204,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                              fullVideoCachePath:(NSString *)fullVideoCachePath
                                         options:(JPVideoPlayerOptions)options
                                     showOnLayer:(CALayer *)showLayer
-                            configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+                            configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock {
     if (!url.absoluteString.length) {
         NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The url is disable"}];
         [self callDelegateMethodWithError:e];
@@ -247,7 +247,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                              configFinishedBlock:(JPPlayVideoConfigFinishedBlock)configFinishedBlock {
+                              configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock {
     if (!url.absoluteString.length) {
         NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The url is disable"}];
         [self callDelegateMethodWithError:e];
