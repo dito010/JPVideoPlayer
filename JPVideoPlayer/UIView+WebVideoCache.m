@@ -505,7 +505,7 @@
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
     self.helper.playerStatus = playerStatus;
-    JPDebugLog(@"playerStatus: %ld", playerStatus);
+    // JPDebugLog(@"playerStatus: %ld", playerStatus);
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
         [self.jp_videoPlayerDelegate playerStatusDidChanged:playerStatus];
     }
@@ -571,6 +571,38 @@
         [self.helper.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
                                                          totalSeconds:totalSeconds];
     }
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenApplicationWillResignActiveForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldPausePlaybackWhenApplicationWillResignActiveForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldPausePlaybackWhenApplicationWillResignActiveForURL:videoURL];
+    }
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:videoURL];
+    }
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:videoURL];
+    }
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:videoURL];
+    }
+    return YES;
 }
 
 @end

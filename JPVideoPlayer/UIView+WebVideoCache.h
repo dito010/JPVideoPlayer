@@ -39,13 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldAutoReplayForURL:(nonnull NSURL *)videoURL;
 
 /**
- * Controls the progress view's frame on top or on bottom, by default it is on bottom.
- *
- * @return Return YES to take the progress view to top.
- */
-- (BOOL)shouldProgressViewOnTop;
-
-/**
  * Controls the color of the layer under video palyer. by default it is NO, means that the color of the layer is `clearColor`.
  *
  * @return YES to make the color of the layer be `blackColor`.
@@ -59,23 +52,53 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus;
 
+/**
+ * Called when application will resign active.
+ *
+ * @param videoURL The url of the video to be play.
+ */
+- (BOOL)shouldPausePlaybackWhenApplicationWillResignActiveForURL:(NSURL *)videoURL;
+
+/**
+ * Called when application did enter background.
+ *
+ * @param videoURL The url of the video to be play.
+ */
+- (BOOL)shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:(NSURL *)videoURL;
+
+/**
+ * Called only when application become active from `Control Center`,
+ *  `Notification Center`, `pop UIAlert`, `double click Home-Button`.
+ *
+ * @param videoURL The url of the video to be play.
+ */
+- (BOOL)shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL *)videoURL;
+
+/**
+ * Called only when application become active from `Share to other application`,
+ *  `Enter background`, `Lock screen`.
+ *
+ * @param videoURL The url of the video to be play.
+ */
+- (BOOL)shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)videoURL;
+
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
 
 #pragma mark - Property
 
-@property(nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
+@property (nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
 
-@property(nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
+@property (nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
-@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_progressView;
+@property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_progressView;
 
-@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
+@property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
 
-@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
+@property (nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
-@property(nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
+@property (nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
 
 #pragma mark - Play Video Methods
 

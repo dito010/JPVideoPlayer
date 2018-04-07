@@ -288,7 +288,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     self.currentPlayerModel = nil;
     self.playerStatus = JPVideoPlayerStatusStop;
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-        [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusStop];
+        [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
     }
 }
 
@@ -314,45 +314,18 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 #pragma mark - App Observer
 
 - (void)addObserver {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appReceivedMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidPlayToEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appReceivedMemoryWarning)
+                                                 name:UIApplicationDidReceiveMemoryWarningNotification
+                                               object:nil];
 }
 
 - (void)appReceivedMemoryWarning {
     [self.currentPlayerModel stopPlayVideo];
-}
-
-- (void)appDidEnterBackground {
-    // TODO: 前后台事件处理.
-    [self.currentPlayerModel pausePlayVideo];
-    // 拿到进入后台时的状态.
-//    if (self.currentPlayerModel.unownedShowLayer) {
-//        self.playerStatus_beforeEnterBackground = self.currentPlayerModel.unownShowView.jp_playerStatus;
-//    }
-//
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-//        [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPause];
-//    }
-}
-
-- (void)appWillEnterForeground {
-    // fixed #35.
-//    if (self.currentPlayerModel.unownShowView && (self.playerStatus_beforeEnterBackground == JPVideoPlayerStatusPlaying)) {
-//        [self.currentPlayerModel resumePlayVideo];
-//
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-//            [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPlaying];
-//        }
-//    }
-//    else{
-//        [self.currentPlayerModel pausePlayVideo];
-//
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-//            [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPause];
-//        }
-//    }
 }
 
 
@@ -390,7 +363,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
             case AVPlayerItemStatusUnknown:{
                 self.playerStatus = AVPlayerItemStatusUnknown;
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-                    [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusUnknown];
+                    [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
                 }
             }
                 break;
@@ -403,7 +376,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                 [self.currentPlayerModel.player play];
                 [self displayVideoPicturesOnShowLayer];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-                    [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPlaying];
+                    [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
                 }
             }
                 break;
@@ -414,7 +387,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                 NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"AVPlayerItemStatusFailed"}];
                 [self callDelegateMethodWithError:e];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-                    [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusFailed];
+                    [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
                 }
             }
                 break;
@@ -461,7 +434,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
         }
         self.playerStatus = JPVideoPlayerStatusPlaying;
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-            [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPlaying];
+            [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
         }
     }
     else{
@@ -471,7 +444,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
         }
         self.playerStatus = JPVideoPlayerStatusBuffering;
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-            [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusBuffering];
+            [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
         }
     }
 }
@@ -544,7 +517,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     self.playerStatus = JPVideoPlayerStatusPlaying;
     if(needCallDelegate){
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-            [self.delegate videoPlayer:self playerStatusDidChange:JPVideoPlayerStatusPlaying];
+            [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
         }
     }
 }

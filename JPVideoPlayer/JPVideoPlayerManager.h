@@ -93,6 +93,44 @@ NS_ASSUME_NONNULL_BEGIN
                                    totalSeconds:(double)totalSeconds
                                           error:(NSError *_Nullable)error;
 
+/**
+ * Called when application will resign active.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenApplicationWillResignActiveForURL:(NSURL *)videoURL;
+
+/**
+ * Called when application did enter background.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:(NSURL *)videoURL;
+
+/**
+ * Called only when application become active from `Control Center`,
+ *  `Notification Center`, `pop UIAlert`, `double click Home-Button`.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL *)videoURL;
+
+/**
+ * Called only when application become active from `Share to other application`,
+ *  `Enter background`, `Lock screen`.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)videoURL;
+
 @end
 
 @interface JPVideoPlayerManager : NSObject
@@ -103,17 +141,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic, readonly, nullable) JPVideoPlayerDownloader *videoDownloader;
 
-@property(nonatomic, strong, readonly) JPVideoPlayer *videoPlayer;
+@property (nonatomic, strong, readonly, nullable) JPVideoPlayer *videoPlayer;
 
-/*
- * url.
- */
-@property(nonatomic, strong, readonly) NSURL *url;
+@property (nonatomic, strong, readonly, nullable) NSURL *videoURL;
 
-/**
- * options
- */
-@property(nonatomic, assign, readonly)JPVideoPlayerOptions playerOptions;
+@property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
 
 #pragma mark - Singleton and initialization
 
@@ -137,7 +169,8 @@ NS_ASSUME_NONNULL_BEGIN
  * Allows to specify instance of cache and video downloader used with video manager.
  * @return new instance of `JPVideoPlayerManager` with specified cache and downloader.
  */
-- (nonnull instancetype)initWithCache:(nonnull JPVideoPlayerCache *)cache downloader:(nonnull JPVideoPlayerDownloader *)downloader NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithCache:(nonnull JPVideoPlayerCache *)cache
+                           downloader:(nonnull JPVideoPlayerDownloader *)downloader NS_DESIGNATED_INITIALIZER;
 
 
 # pragma mark - Play Video Options
@@ -165,7 +198,6 @@ NS_ASSUME_NONNULL_BEGIN
  * Return the cache key for a given URL.
  */
 - (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url;
-
 
 # pragma mark - Play Control
 
