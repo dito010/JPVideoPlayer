@@ -14,11 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * This method called when need layout subviews, suggest you layout subviews in this method.
  *
- * @param constrainedRect      The bounds of superview.
- * @param interfaceOrientation The current interface orientation of view.
+ * @param constrainedRect       The bounds of superview.
+ * @param nearestViewController The nearest `UIViewController` of view in view tree,
+ *                               it be use to fetch `safeAreaInsets` to help layout subviews.
+ * @param interfaceOrientation  The current interface orientation of view.
  */
 - (void)layoutThatFits:(CGRect)constrainedRect
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation;
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
+        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation;
 
 @end
 

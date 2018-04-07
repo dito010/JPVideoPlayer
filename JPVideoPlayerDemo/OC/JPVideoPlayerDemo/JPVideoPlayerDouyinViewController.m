@@ -14,13 +14,14 @@
 @implementation JPDouyinProgressView
 
 - (void)layoutThatFits:(CGRect)constrainedRect
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
   interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     [super layoutThatFits:constrainedRect
-     interfaceOrientation:interfaceOrientation];
+nearestViewControllerInViewTree:nearestViewController
+            interfaceOrientation:interfaceOrientation];
 
-    UIEdgeInsets safeAreaInsets = self.superview.safeAreaInsets;
     self.trackProgressView.frame = CGRectMake(0,
-            constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight - safeAreaInsets.bottom,
+            constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight - nearestViewController.tabBarController.tabBar.bounds.size.height,
             constrainedRect.size.width,
             JPVideoPlayerProgressViewElementHeight);
     self.cachedProgressView.frame = self.trackProgressView.bounds;

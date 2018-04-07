@@ -50,7 +50,8 @@ NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification = @"com.jpv
 #pragma mark - JPVideoPlayerLayoutProtocol
 
 - (void)layoutThatFits:(CGRect)constrainedRect
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
+        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
     self.trackProgressView.frame = CGRectMake(kJPVideoPlayerDragSliderLeftEdge,
             (referenceSize.height - kJPVideoPlayerCachedProgressViewHeight) * 0.5,
@@ -275,7 +276,8 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 #pragma mark - JPVideoPlayerLayoutProtocol
 
 - (void)layoutThatFits:(CGRect)constrainedRect
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
+        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
     CGFloat elementOriginY = (referenceSize.height - kJPVideoPlayerControlBarButtonWidthHeight) * 0.5;
     self.playButton.frame = CGRectMake(kJPVideoPlayerControlBarElementGap,
@@ -296,8 +298,10 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
             elementOriginY,
             progressViewWidth,
             kJPVideoPlayerControlBarButtonWidthHeight);
-    if([self.progressView respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
-        [self.progressView layoutThatFits:self.progressView.bounds interfaceOrientation:interfaceOrientation];
+    if([self.progressView respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+        [self.progressView layoutThatFits:self.progressView.bounds
+        nearestViewControllerInViewTree:nearestViewController
+                   interfaceOrientation:interfaceOrientation];
     }
 }
 
@@ -440,7 +444,8 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
 #pragma mark - JPVideoPlayerLayoutProtocol
 
 - (void)layoutThatFits:(CGRect)constrainedRect
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
+        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     self.blurImageView.frame = constrainedRect;
     CGRect controlBarFrame = CGRectMake(0,
             constrainedRect.size.height - kJPVideoPlayerControlBarHeight,
@@ -453,8 +458,10 @@ static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
                 kJPVideoPlayerControlBarHeight);
     }
     self.controlBar.frame = controlBarFrame;
-    if([self.controlBar respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
-       [self.controlBar layoutThatFits:self.controlBar.bounds interfaceOrientation:interfaceOrientation];
+    if([self.controlBar respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+       [self.controlBar layoutThatFits:self.controlBar.bounds
+       nearestViewControllerInViewTree:nearestViewController
+                  interfaceOrientation:interfaceOrientation];
     }
 }
 
@@ -575,7 +582,8 @@ const CGFloat JPVideoPlayerProgressViewElementHeight = 2;
 #pragma mark - JPVideoPlayerLayoutProtocol
 
 - (void)layoutThatFits:(CGRect)constrainedRect
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
+        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     self.trackProgressView.frame = CGRectMake(0,
             constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight,
             constrainedRect.size.width,
@@ -702,6 +710,7 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
 #pragma mark - JPVideoPlayerLayoutProtocol
 
 - (void)layoutThatFits:(CGRect)constrainedRect
+nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
   interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
     self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
@@ -936,19 +945,26 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 }
 
 - (void)callLayoutMethodForContainerSubviews {
+    UIViewController *nearestViewController = [self findNearestViewControllerForView:self.superview];
     for(UIView<JPVideoPlayerProtocol> *view in self.controlContainerView.subviews){
-        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
-            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds
+ nearestViewControllerInViewTree:nearestViewController
+            interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
         }
     }
     for(UIView<JPVideoPlayerProtocol> *view in self.progressContainerView.subviews){
-        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
-            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds
+ nearestViewControllerInViewTree:nearestViewController
+            interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
         }
     }
     for(UIView<JPVideoPlayerProtocol> *view in self.bufferingIndicatorContainerView.subviews){
-        if([view respondsToSelector:@selector(layoutThatFits:interfaceOrientation:)]){
-            [view layoutThatFits:self.bounds interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds
+ nearestViewControllerInViewTree:nearestViewController
+            interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
         }
     }
 }
@@ -957,6 +973,17 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     return self.superview.jp_viewInterfaceOrientation;
 }
 
+- (UIViewController *)findNearestViewControllerForView:(UIView *)view {
+    if(!view){
+        return nil;
+    }
+
+    BOOL isFind = [[view nextResponder] isKindOfClass:[UIViewController class]] && CGRectEqualToRect(view.bounds, [UIScreen mainScreen].bounds);
+    if(isFind){
+        return [view nextResponder];
+    }
+    return [self findNearestViewControllerForView:view.superview];
+}
 
 #pragma mark - Setup
 
