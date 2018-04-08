@@ -79,7 +79,7 @@ playFailedWithError:(NSError *)error;
 /**
  * The current player's layer.
  */
-@property(nonatomic, strong, readonly, nullable) AVPlayerLayer *currentPlayerLayer;
+@property(nonatomic, strong, readonly, nullable) AVPlayerLayer *playerLayer;
 
 /**
  * The player to play video.

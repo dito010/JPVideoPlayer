@@ -17,7 +17,7 @@
 @interface JPVideoPlayerModel()
 
 /**
- * The playing URL
+ * The playing URL.
  */
 @property(nonatomic, strong, nullable)NSURL *url;
 
@@ -27,7 +27,7 @@
 @property(nonatomic, weak, nullable)CALayer *unownedShowLayer;
 
 /**
- * options
+ * options,
  */
 @property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
 
@@ -39,12 +39,12 @@
 /**
  * The current player's layer.
  */
-@property(nonatomic, strong, nullable)AVPlayerLayer *currentPlayerLayer;
+@property(nonatomic, strong, nullable)AVPlayerLayer *playerLayer;
 
 /**
  * The current player's item.
  */
-@property(nonatomic, strong, nullable)AVPlayerItem *currentPlayerItem;
+@property(nonatomic, strong, nullable)AVPlayerItem *playerItem;
 
 /**
  * The current player's urlAsset.
@@ -131,12 +131,12 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (void)reset {
     // remove video layer from superlayer.
-    if (self.currentPlayerLayer.superlayer) {
-        [self.currentPlayerLayer removeFromSuperlayer];
+    if (self.playerLayer.superlayer) {
+        [self.playerLayer removeFromSuperlayer];
     }
 
     // remove observer.
-    [self.currentPlayerItem removeObserver:self.videoPlayer forKeyPath:@"status"];
+    [self.playerItem removeObserver:self.videoPlayer forKeyPath:@"status"];
     [self.player removeTimeObserver:self.timeObserver];
 
     // remove player
@@ -144,8 +144,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self.player cancelPendingPrerolls];
     self.player = nil;
     [self.videoURLAsset.resourceLoader setDelegate:nil queue:dispatch_get_main_queue()];
-    self.currentPlayerItem = nil;
-    self.currentPlayerLayer = nil;
+    self.playerItem = nil;
+    self.playerLayer = nil;
     self.videoURLAsset = nil;
     self.resourceLoader = nil;
 }
@@ -295,7 +295,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         [self callDelegateMethodWithError:e];
         return;
     }
-    [self.playerModel.currentPlayerLayer removeFromSuperlayer];
+    [self.playerModel.playerLayer removeFromSuperlayer];
     self.playerModel.unownedShowLayer = showLayer;
 
     if (options & JPVideoPlayerMutedPlay) {
@@ -443,7 +443,11 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 #pragma mark - AVPlayer Observer
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification {
-    // TODO: 处理不是自己的视频播放完成.
+    AVPlayerItem *playerItem = notification.object;
+    if(playerItem != self.playerModel.playerItem){
+        return;
+    }
+    
     // ask need automatic replay or not.
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:shouldAutoReplayVideoForURL:)]) {
         if (![self.delegate videoPlayer:self shouldAutoReplayVideoForURL:self.playerModel.url]) {
@@ -642,14 +646,14 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     model.unownedShowLayer = showLayer;
     model.url = url;
     model.playerOptions = options;
-    model.currentPlayerItem = playerItem;
+    model.playerItem = playerItem;
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
 
     model.player = [AVPlayer playerWithPlayerItem:playerItem];
     if ([model.player respondsToSelector:@selector(automaticallyWaitsToMinimizeStalling)]) {
         model.player.automaticallyWaitsToMinimizeStalling = NO;
     }
-    model.currentPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
+    model.playerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
     [self setVideoGravityWithOptions:options playerModel:model];
     model.videoPlayer = self;
     self.playerStatus = JPVideoPlayerStatusUnknown;
@@ -664,7 +668,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
         if (!sItem || !sself) return;
 
         double elapsedSeconds = CMTimeGetSeconds(time);
-        double totalSeconds = CMTimeGetSeconds(sItem.currentPlayerItem.duration);
+        double totalSeconds = CMTimeGetSeconds(sItem.playerItem.duration);
         if(totalSeconds == 0 || isnan(totalSeconds) || elapsedSeconds > totalSeconds){
             return;
         }
@@ -693,7 +697,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     else if (options&JPVideoPlayerLayerVideoGravityResizeAspectFill){
         videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
-    playerModel.currentPlayerLayer.videoGravity = videoGravity;
+    playerModel.playerLayer.videoGravity = videoGravity;
 }
 
 - (NSURL *)handleVideoURL {
@@ -705,8 +709,8 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 - (void)displayVideoPicturesOnShowLayer{
     if (!self.playerModel.isCancelled) {
         // fixed #26.
-        self.playerModel.currentPlayerLayer.frame = self.playerModel.unownedShowLayer.bounds;
-        [self.playerModel.unownedShowLayer addSublayer:self.playerModel.currentPlayerLayer];
+        self.playerModel.playerLayer.frame = self.playerModel.unownedShowLayer.bounds;
+        [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
     }
 }
 

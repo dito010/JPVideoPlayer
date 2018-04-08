@@ -504,7 +504,7 @@
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     [UIView animateWithDuration:0.5 animations:^{
         videoPlayerView.controlContainerView.alpha = 1;
@@ -516,7 +516,7 @@
     CGRect frame = [self.superview convertRect:self.frame toView:nil];
     videoPlayerView.transform = CGAffineTransformIdentity;
     videoPlayerView.frame = frame;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
 }
 
 - (void)executeLandscape {
@@ -527,7 +527,7 @@
     videoPlayerView.bounds = bounds;
     videoPlayerView.center = center;
     videoPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = bounds;
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
