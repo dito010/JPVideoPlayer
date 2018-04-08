@@ -196,7 +196,7 @@ shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
                            downloader:(nonnull JPVideoPlayerDownloader *)downloader NS_DESIGNATED_INITIALIZER;
 
 
-# pragma mark - Play Video Options
+# pragma mark - Play Video
 
 /**
  * Play the video for the given URL.
@@ -230,6 +230,15 @@ shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
  * Return the cache key for a given URL.
  */
 - (NSString *_Nullable)cacheKeyForURL:(NSURL *)url;
+
+#pragma mark - AudioSession
+
+/**
+ * This method use to control need active audioSession on silent-mode when application did become active. NO by default.
+ *
+ * @param needActive Need active audioSession or not.
+ */
+- (void)activeAudioSessionWhenWhenApplicationDidBecomeActive:(BOOL)needActive;
 
 @end
 

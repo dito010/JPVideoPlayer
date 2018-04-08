@@ -53,6 +53,8 @@
 
 @property (nonatomic, strong) JPVideoPlayer *videoPlayer;
 
+@property(nonatomic, assign) BOOL needActiveAudioSessionWhenApplicationDidBecomeActive;
+
 @end
 
 @implementation JPVideoPlayerManager
@@ -89,6 +91,7 @@
         _isReturnWhenApplicationWillResignActive = NO;
         _applicationStateMonitor = [JPApplicationStateMonitor new];
         _applicationStateMonitor.delegate = self;
+        _needActiveAudioSessionWhenApplicationDidBecomeActive = NO;
     }
     return self;
 }
@@ -249,7 +252,7 @@ shouldSwitchIntoPlayVideoFromResumePlayForURL:url];
     return [url absoluteString];
 }
 
-// TODO: 音频独占设置.
+
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
@@ -375,6 +378,10 @@ didCompleteWithError:(NSError *)error {
 
 - (void)applicationStateMonitor:(JPApplicationStateMonitor *)monitor
       applicationStateDidChange:(JPApplicationState)applicationState {
+    if(applicationState == JPApplicationStateDidBecomeActive){
+        [self activeAudioSessionIfNeed];
+    }
+
     BOOL needReturn = !self.managerModel.videoURL ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusStop ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusPause ||
@@ -590,6 +597,20 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                                               expectedSize:1
                                                  cacheType:JPVideoPlayerCacheTypeNone
                                                      error:error];
+    }
+}
+
+
+#pragma mark - AudioSession
+
+- (void)activeAudioSessionWhenWhenApplicationDidBecomeActive:(BOOL)needActive {
+    self.needActiveAudioSessionWhenApplicationDidBecomeActive = needActive;
+}
+
+- (void)activeAudioSessionIfNeed {
+    if(self.needActiveAudioSessionWhenApplicationDidBecomeActive){
+        [AVAudioSession.sharedInstance setActive:YES error:nil];
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:nil];
     }
 }
 

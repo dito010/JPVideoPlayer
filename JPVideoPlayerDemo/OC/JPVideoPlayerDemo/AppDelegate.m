@@ -13,6 +13,7 @@
 #import "JPVideoPlayerWeiBoViewController.h"
 #import "JPVideoPlayerSettingViewController.h"
 #import "JPVideoPlayerDouyinViewController.h"
+#import "JPVideoPlayerManager.h"
 #import <JPNavigationControllerKit.h>
 
 @interface AppDelegate ()
@@ -50,7 +51,10 @@
     self.window.rootViewController = tabVC;
     [self.window makeKeyAndVisible];
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-    
+
+    // 激活静音下播放音频且独占.
+    [JPVideoPlayerManager.sharedManager activeAudioSessionWhenWhenApplicationDidBecomeActive:YES];
+
     return YES;
 }
 
