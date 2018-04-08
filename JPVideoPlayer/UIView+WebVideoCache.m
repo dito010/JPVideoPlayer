@@ -298,7 +298,7 @@
                 self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
             }
         }
-        
+
         // nobody retain this block.
         JPPlayVideoConfigurationCompletion internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);

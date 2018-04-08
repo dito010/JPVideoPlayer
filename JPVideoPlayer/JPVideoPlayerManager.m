@@ -249,48 +249,11 @@ shouldSwitchIntoPlayVideoFromResumePlayForURL:url];
     return [url absoluteString];
 }
 
-// TODO: 播放控制可以使用消息转发简化代码
 // TODO: 音频独占设置.
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
-- (void)setRate:(float)rate {
-    [self.videoPlayer setRate:rate];
-}
-
-- (float)rate {
-    return self.videoPlayer.rate;
-}
-
-- (void)setMuted:(BOOL)muted {
-    [self.videoPlayer setMuted:muted];
-}
-
-- (BOOL)muted {
-    return self.videoPlayer.muted;
-}
-
-- (void)setVolume:(float)volume {
-    [self.videoPlayer setVolume:volume];
-}
-
-- (float)volume {
-    return self.videoPlayer.volume;
-}
-
-- (void)seekToTime:(CMTime)time {
-    [self.videoPlayer seekToTime:time];
-}
-
-- (void)pause {
-    [self.videoPlayer pause];
-}
-
-- (void)resume {
-    [self.videoPlayer resume];
-}
-
-- (CMTime)currentTime {
-    return self.videoPlayer.currentTime;
+- (id)forwardingTargetForSelector:(SEL)aSelector {
+    return self.videoPlayer;
 }
 
 - (void)stopPlay {
