@@ -298,7 +298,7 @@
                 self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
             }
         }
- // TODO: JPVideoPlayerManager 处理恢复播放.
+        
         // nobody retain this block.
         JPPlayVideoConfigurationCompletion internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);
@@ -306,10 +306,19 @@
                 configurationCompletion(self, model);
             }
         };
-        [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
-                                                   showOnLayer:self.helper.videoPlayerView.videoContainerLayer
-                                                       options:options
-                                           configFinishedBlock:internalConfigFinishedBlock];
+        
+        if(!isResume){
+            [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
+                                                       showOnLayer:self.helper.videoPlayerView.videoContainerLayer
+                                                           options:options
+                                           configurationCompletion:internalConfigFinishedBlock];
+        }
+        else {
+            [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
+                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
+                                                            options:options
+                                            configurationCompletion:internalConfigFinishedBlock];
+        }
     }
     else {
         JPDispatchSyncOnMainQueue(^{
@@ -495,7 +504,7 @@
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = self.bounds;
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     [UIView animateWithDuration:0.5 animations:^{
         videoPlayerView.controlContainerView.alpha = 1;
@@ -507,7 +516,7 @@
     CGRect frame = [self.superview convertRect:self.frame toView:nil];
     videoPlayerView.transform = CGAffineTransformIdentity;
     videoPlayerView.frame = frame;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = self.bounds;
 }
 
 - (void)executeLandscape {
@@ -518,7 +527,7 @@
     videoPlayerView.bounds = bounds;
     videoPlayerView.center = center;
     videoPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
-    [[JPVideoPlayerManager sharedManager] videoPlayer].currentPlayerModel.currentPlayerLayer.frame = bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.currentPlayerLayer.frame = bounds;
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -658,6 +667,14 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL *)videoURL {
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:)]) {
         return [self.jp_videoPlayerDelegate shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:videoURL];
+    }
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldSwitchIntoPlayVideoFromResumePlayForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldSwitchIntoPlayVideoFromResumePlayForURL:videoURL];
     }
     return YES;
 }

@@ -32,6 +32,12 @@
 #define JPVideoPlayerDemoRowHei ([UIScreen mainScreen].bounds.size.width*9.0/16.0)
 @implementation JPVideoPlayerWeiBoListViewController
 
+- (void)dealloc {
+    if (self.tableView.jp_playingVideoCell) {
+        [self.tableView.jp_playingVideoCell.jp_videoPlayView jp_stopPlay];
+    }
+}
+
 - (instancetype)initWithPlayStrategyType:(JPScrollPlayStrategyType)playStrategyType {
     self = [super init];
     if(self){
@@ -68,9 +74,6 @@
 
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = nil;
-    if (self.tableView.jp_playingVideoCell) {
-        [self.tableView.jp_playingVideoCell.jp_videoPlayView jp_stopPlay];
-    }
 }
 
 
@@ -139,10 +142,10 @@
 #pragma mark - JPTableViewPlayVideoDelegate
 
 - (void)tableView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
-    [cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL
-                                bufferingIndicator:nil
-                                      progressView:nil
-                           configurationCompletion:nil];
+    [cell.jp_videoPlayView jp_resumeMutePlayWithURL:cell.jp_videoURL
+                                 bufferingIndicator:nil
+                                       progressView:nil
+                            configurationCompletion:nil];
 }
 
 

@@ -83,6 +83,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)videoURL;
 
+/**
+ * Called when call resume play but can not resume play.
+ *
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
+
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>

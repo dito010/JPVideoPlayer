@@ -132,6 +132,30 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)videoURL;
 
+/**
+ * Called when call resume play but can not resume play.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
+
+@end
+
+@interface JPVideoPlayerManagerModel : NSObject
+
+@property (nonatomic, strong, readonly) NSURL *videoURL;
+
+@property (nonatomic, assign) JPVideoPlayerCacheType cacheType;
+
+@property (nonatomic, assign) NSUInteger fileLength;
+
+/**
+ * The fragment of video data that cached in disk.
+ */
+@property (nonatomic, strong, readonly, nullable) NSArray<NSValue *> *fragmentRanges;
+
 @end
 
 @interface JPVideoPlayerManager : NSObject<JPVideoPlayerPlaybackProtocol>
@@ -142,11 +166,9 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 
 @property (strong, nonatomic, readonly, nullable) JPVideoPlayerDownloader *videoDownloader;
 
-@property (nonatomic, strong, readonly, nullable) JPVideoPlayer *videoPlayer;
+@property (nonatomic, strong, readonly) JPVideoPlayerManagerModel *managerModel;
 
-@property (nonatomic, strong, readonly, nullable) NSURL *videoURL;
-
-@property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
+@property (nonatomic, strong, readonly) JPVideoPlayer *videoPlayer;
 
 #pragma mark - Singleton and Initialization
 
@@ -177,23 +199,37 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 # pragma mark - Play Video Options
 
 /**
- * Play the video for the given URL if not present in cache or return the cached version otherwise.
+ * Play the video for the given URL.
  
- * @param url                 The URL of video.
- * @param showLayer           The layer of video layer display on.
- * @param options             A flag to specify options to use for this request.
- * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
- *                             so other category method is disabled before config finished.
+ * @param url                     The URL of video.
+ * @param showLayer               The layer of video layer display on.
+ * @param options                 A flag to specify options to use for this request.
+ * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ *                                 so other category method is disabled before config finished.
  */
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
-     configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
+ configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
+
+/**
+ * Resume video play for the given URL.
+
+ * @param url                     The URL of video.
+ * @param showLayer               The layer of video layer display on.
+ * @param options                 A flag to specify options to use for this request.
+ * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ *                                 so other category method is disabled before config finished.
+ */
+- (void)resumePlayWithURL:(NSURL *)url
+              showOnLayer:(CALayer *)showLayer
+                  options:(JPVideoPlayerOptions)options
+  configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
 
 /**
  * Return the cache key for a given URL.
  */
-- (NSString *_Nullable)cacheKeyForURL:(nullable NSURL *)url;
+- (NSString *_Nullable)cacheKeyForURL:(NSURL *)url;
 
 @end
 

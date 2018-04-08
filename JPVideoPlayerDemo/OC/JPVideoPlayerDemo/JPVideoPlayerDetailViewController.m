@@ -53,23 +53,19 @@
     self.videoContainer.jp_videoPlayerDelegate = self;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    [self.videoContainer jp_resumePlayWithURL:[NSURL URLWithString:self.videoPath]
+                           bufferingIndicator:nil
+                                  controlView:nil
+                                 progressView:nil
+                      configurationCompletion:^(UIView *view, JPVideoPlayerModel *playerModel) {
+                          self.muteSwitch.on = ![self.videoContainer jp_muted];
+                      }];
+}
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self.videoContainer jp_playVideoWithURL:[NSURL URLWithString:self.videoPath]
-                          bufferingIndicator:nil
-                                 controlView:nil
-                                progressView:nil
-                     configurationCompletion:nil];
-    
-//    [self.videoContainer jp_perfersPlayingProgressViewColor:[UIColor redColor]];
-//    [self.videoContainer jp_perfersDownloadProgressViewColor:[UIColor lightGrayColor]];
-    self.muteSwitch.on = ![self.videoContainer jp_muted];
-}
-
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    
-    [self.videoContainer jp_stopPlay];
 }
 
 

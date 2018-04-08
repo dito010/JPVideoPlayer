@@ -67,6 +67,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
                          blurImage:(UIImage *_Nullable)blurImage NS_DESIGNATED_INITIALIZER;
 
 // TODO: 捕获音量, 自定义音量控制.
+// TODO: 处理使用 masonry 约束布局横屏.
 @end
 
 UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;

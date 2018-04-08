@@ -91,24 +91,29 @@ playFailedWithError:(NSError *)error;
  */
 @property(nonatomic, strong, readonly, nullable) JPVideoPlayerResourceLoader *resourceLoader;
 
+/**
+ * options
+ */
+@property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
+
 @end
 
 @interface JPVideoPlayer : NSObject<JPVideoPlayerPlaybackProtocol>
 
 @property(nullable, nonatomic, weak) id<JPVideoPlayerInternalDelegate> delegate;
 
-@property(nonatomic, strong, readonly, nullable) JPVideoPlayerModel *currentPlayerModel;
+@property(nonatomic, strong, readonly, nullable) JPVideoPlayerModel *playerModel;
 
 @property(nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
 
 /**
  * Play the existed video file in disk.
  *
- * @param url                 The video url to play.
- * @param fullVideoCachePath  The full video file path in disk.
- * @param showLayer           The layer to show the video display layer.
- * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
- *                             so other category method is disabled before config finished.
+ * @param url                     The video url to play.
+ * @param fullVideoCachePath      The full video file path in disk.
+ * @param showLayer               The layer to show the video display layer.
+ * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ *                                 so other category method is disabled before config finished.
  *
  * @return token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
@@ -116,23 +121,35 @@ playFailedWithError:(NSError *)error;
                                       fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
                                              showOnLayer:(CALayer *)showLayer
-                                     configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
+                                 configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
 
 /**
  * Play the not existed video from web.
  *
- * @param url                 The video url to play.
- * @param options             The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param showLayer           The view to show the video display layer.
- * @param configFinishedBlock The block will be call when video player config finished. because initialize player is not synchronize,
- *                             so other category method is disabled before config finished.
+ * @param url                     The video url to play.
+ * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
+ * @param showLayer               The view to show the video display layer.
+ * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ *                                 so other category method is disabled before config finished.
  *
  * @return token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
  */
 - (JPVideoPlayerModel *_Nullable)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                              configFinishedBlock:(JPPlayVideoConfigurationCompletion)configFinishedBlock;
+                          configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
+
+/**
+ * Call this method to resume play.
+ *
+ * @param showLayer               The view to show the video display layer.
+ * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
+ * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ *                                 so other category method is disabled before config finished.
+ */
+- (void)resumePlayWithShowLayer:(CALayer *)showLayer
+                        options:(JPVideoPlayerOptions)options
+        configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
 
 @end
 
