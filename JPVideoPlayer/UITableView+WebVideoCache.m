@@ -15,7 +15,7 @@
 
 static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.scrollview.helper.www";
 @implementation UITableView (WebVideoCache)
-// TODO: 处理 reloadData, 和开放刷新 topCell 类型方法给外界
+
 - (void)setJp_delegate:(id <JPTableViewPlayVideoDelegate>)jp_delegate {
     self.helper.delegate = jp_delegate;
 }
@@ -50,6 +50,10 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
 
 - (NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {
     return self.helper.unreachableCellDictionary;
+}
+
+- (void)jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData {
+    [self.helper handleCellUnreachableTypeInVisibleCellsAfterReloadData];
 }
 
 - (void)jp_handleCellUnreachableTypeForCell:(UITableViewCell *)cell

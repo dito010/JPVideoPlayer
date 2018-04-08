@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
                              atIndexPath:(NSIndexPath *)indexPath;
 
+- (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData;
+
 - (void)playVideoInVisibleCellsIfNeed;
 
 - (void)stopPlayIfNeed;

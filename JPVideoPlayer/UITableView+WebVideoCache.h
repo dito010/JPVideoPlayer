@@ -117,7 +117,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jp_stopPlayIfNeed;
 
 /**
- * This method must be call in `-tableView:cellForRowAtIndexPath:`, and pass cell and indexPath in.
+ * This method must be call after called `reloadData` for tableView.
+ */
+- (void)jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData;
+
+/**
+ * This method must be called in `-tableView:cellForRowAtIndexPath:`, and pass cell and indexPath in.
  *
  * @param cell      A `UITableViewCell`.
  * @param indexPath The indexPath of cell.

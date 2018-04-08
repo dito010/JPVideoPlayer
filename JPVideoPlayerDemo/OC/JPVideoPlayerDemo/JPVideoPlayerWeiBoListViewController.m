@@ -63,6 +63,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 
+    [self.tableView jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData];
     [self.tableView jp_playVideoInVisibleCellsIfNeed];
 
     // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.

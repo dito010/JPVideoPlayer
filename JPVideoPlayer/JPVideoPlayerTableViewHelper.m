@@ -62,6 +62,15 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     return self;
 }
 
+- (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UITableView *tableView = (UITableView *)self.scrollView;
+        for(UITableViewCell *cell in tableView.visibleCells){
+            [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
+        }
+    });
+}
+
 - (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
                              atIndexPath:(NSIndexPath *)indexPath {
     if(![self scrollViewIsTableView:self.scrollView]){
@@ -107,10 +116,8 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     }
 
     // handle the first cell cannot play video when initialized.
-    UITableView *tableView = (UITableView *)self.scrollView;
-    for(UITableViewCell *cell in tableView.visibleCells){
-        [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
-    }
+    [self handleCellUnreachableTypeInVisibleCellsAfterReloadData];
+
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     // Find first cell need play video in visible cells.
     UITableViewCell *targetCell = nil;
