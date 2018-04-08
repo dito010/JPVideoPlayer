@@ -303,6 +303,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }
     [self setVideoGravityWithOptions:options playerModel:self.playerModel];
     [self displayVideoPicturesOnShowLayer];
+
     if(configurationCompletion){
         configurationCompletion([UIView new], self.playerModel);
     }
@@ -710,7 +711,11 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     if (!self.playerModel.isCancelled) {
         // fixed #26.
         self.playerModel.playerLayer.frame = self.playerModel.unownedShowLayer.bounds;
-        [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
+        // use dispatch_after to prevent layer layout animation.
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
+        });
+
     }
 }
 

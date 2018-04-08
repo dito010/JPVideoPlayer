@@ -118,6 +118,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     // handle the first cell cannot play video when initialized.
     [self handleCellUnreachableTypeInVisibleCellsAfterReloadData];
 
+    UITableView *tableView = (UITableView *)self.scrollView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     // Find first cell need play video in visible cells.
     UITableViewCell *targetCell = nil;
