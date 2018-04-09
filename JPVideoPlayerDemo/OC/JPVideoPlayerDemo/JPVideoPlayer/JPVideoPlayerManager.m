@@ -92,6 +92,10 @@
         _applicationStateMonitor = [JPApplicationStateMonitor new];
         _applicationStateMonitor.delegate = self;
         _needActiveAudioSessionWhenApplicationDidBecomeActive = NO;
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(audioSessionInterruptionNotification:)
+                                                   name:AVAudioSessionInterruptionNotification
+                                                 object:nil];
     }
     return self;
 }
@@ -612,6 +616,31 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
         [AVAudioSession.sharedInstance setActive:YES error:nil];
         [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:nil];
     }
+}
+
+
+#pragma mark - AVAudioSessionInterruptionNotification
+
+- (void)audioSessionInterruptionNotification:(NSNotification *)note {
+    AVPlayer *player = note.object;
+    // the player is self player, return.
+    if(player == self.videoPlayer.playerModel.player){
+        return;
+    }
+    // self not playing.
+    if(!self.videoPlayer.playerModel){
+        return;
+    }
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:)]) {
+        BOOL shouldPause = [self.delegate videoPlayerManager:self
+shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.managerModel.videoURL];
+        if(shouldPause){
+            [self pause];
+        }
+        return;
+    }
+    [self pause];
 }
 
 @end

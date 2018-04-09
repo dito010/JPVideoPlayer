@@ -141,6 +141,15 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
 
+/**
+ * Called when receive audio session interruption notification.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL *)videoURL;
+
 @end
 
 @interface JPVideoPlayerManagerModel : NSObject

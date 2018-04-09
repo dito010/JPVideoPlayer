@@ -671,10 +671,18 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL 
     return YES;
 }
 
-- (BOOL)                      videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL {
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldTranslateIntoPlayVideoFromResumePlayForURL:)]) {
         return [self.jp_videoPlayerDelegate shouldTranslateIntoPlayVideoFromResumePlayForURL:videoURL];
+    }
+    return YES;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:videoURL];
     }
     return YES;
 }

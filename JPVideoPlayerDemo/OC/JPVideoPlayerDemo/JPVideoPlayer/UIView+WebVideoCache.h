@@ -90,6 +90,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
 
+/**
+ * Called when receive audio session interruption notification.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ */
+- (BOOL)shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL *)videoURL;
+
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
