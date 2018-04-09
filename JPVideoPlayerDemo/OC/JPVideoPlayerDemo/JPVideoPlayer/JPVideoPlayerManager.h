@@ -139,7 +139,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:(NSURL *)
  * @param videoURL           The url of the video to be play.
  */
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
-shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
+shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
 
 @end
 

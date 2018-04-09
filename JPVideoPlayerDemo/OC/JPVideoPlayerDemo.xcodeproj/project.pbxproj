@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		258180CE6D5C789E5D2988F8 /* JPVideoPlayerHoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */; };
 		258183E6274D79D6E72F4F8B /* UITableViewCell+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581893DF86BB283AC40399F /* UITableViewCell+WebVideoCache.m */; };
 		2581889C19EE76A9A5D48D80 /* JPVideoPlayerDouyinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25818C4F9FF902E2C26F116E /* JPVideoPlayerDouyinViewController.m */; };
 		258188DAB416370E7585394B /* JPVideoPlayerWeiBoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */; };
 		25818B50669444407D0A4E9B /* UITableView+WebVideoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581855A00489E540790B797 /* UITableView+WebVideoCache.m */; };
 		25818DB3B140DE7EDCFC3A66 /* JPVideoPlayerSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 258181A39BB5958976ECC258 /* JPVideoPlayerSupportUtils.m */; };
-		25818E4B414C1C6490262690 /* JPVideoPlayerTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 25818CD19BDD22E4637CA452 /* JPVideoPlayerTableViewHelper.m */; };
 		25818E851233F2B0623E1B0B /* JPResourceLoadingRequestTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581801C6AAE79C4B51BD5C0 /* JPResourceLoadingRequestTask.m */; };
 		481650661ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */; };
 		481650671ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */; };
@@ -70,9 +70,9 @@
 		25818741585718D3332D2C82 /* UITableViewCell+WebVideoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+WebVideoCache.h"; sourceTree = "<group>"; };
 		258188812C523F144972A264 /* UITableView+WebVideoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+WebVideoCache.h"; sourceTree = "<group>"; };
 		2581893DF86BB283AC40399F /* UITableViewCell+WebVideoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+WebVideoCache.m"; sourceTree = "<group>"; };
+		2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerHoverViewController.m; sourceTree = "<group>"; };
 		25818C4F9FF902E2C26F116E /* JPVideoPlayerDouyinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDouyinViewController.m; sourceTree = "<group>"; };
-		25818CD19BDD22E4637CA452 /* JPVideoPlayerTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerTableViewHelper.m; sourceTree = "<group>"; };
-		25818E6FB2BFB9DEBBFEFEE6 /* JPVideoPlayerTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerTableViewHelper.h; sourceTree = "<group>"; };
+		25818F3460CEF9465F4EF47F /* JPVideoPlayerHoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerHoverViewController.h; sourceTree = "<group>"; };
 		481650631ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDetailViewController.h; sourceTree = "<group>"; };
 		481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDetailViewController.m; sourceTree = "<group>"; };
 		481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerDetailViewController.xib; sourceTree = "<group>"; };
@@ -144,9 +144,21 @@
 		48FD32691EB6FF3B00ACCB05 /* Weibo */ = {
 			isa = PBXGroup;
 			children = (
-				CFD87BA5203C0C5B004206E8 /* JPVideoPlayer */,
-				48FD326C1EB6FF6300ACCB05 /* Detail */,
-				48FD326B1EB6FF5E00ACCB05 /* Weibo */,
+				481650631ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.h */,
+				481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */,
+				481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */,
+				5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.h */,
+				5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */,
+				48EE51CD1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.h */,
+				48EE51CE1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.m */,
+				48EE51CF1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.xib */,
+				CF533E3220773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.h */,
+				CF533E3320773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.m */,
+				CF533E3420773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.xib */,
+				258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */,
+				258180C10C9B1D5150EDD9C5 /* JPVideoPlayerWeiBoViewController.h */,
+				2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */,
+				25818F3460CEF9465F4EF47F /* JPVideoPlayerHoverViewController.h */,
 			);
 			name = Weibo;
 			sourceTree = "<group>";
@@ -160,33 +172,6 @@
 				488717501EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.xib */,
 			);
 			name = Setting;
-			sourceTree = "<group>";
-		};
-		48FD326B1EB6FF5E00ACCB05 /* Weibo */ = {
-			isa = PBXGroup;
-			children = (
-				5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.h */,
-				5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */,
-				48EE51CD1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.h */,
-				48EE51CE1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.m */,
-				48EE51CF1E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.xib */,
-				CF533E3220773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.h */,
-				CF533E3320773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.m */,
-				CF533E3420773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.xib */,
-				258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */,
-				258180C10C9B1D5150EDD9C5 /* JPVideoPlayerWeiBoViewController.h */,
-			);
-			name = Weibo;
-			sourceTree = "<group>";
-		};
-		48FD326C1EB6FF6300ACCB05 /* Detail */ = {
-			isa = PBXGroup;
-			children = (
-				481650631ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.h */,
-				481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */,
-				481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */,
-			);
-			name = Detail;
 			sourceTree = "<group>";
 		};
 		48FD326E1EB701AC00ACCB05 /* QRCode */ = {
@@ -219,6 +204,7 @@
 		5F6705651DADE88F001EBFAF /* JPVideoPlayerDemo */ = {
 			isa = PBXGroup;
 			children = (
+				CFD87BA5203C0C5B004206E8 /* JPVideoPlayer */,
 				CFA960C3207722EF003C456B /* Douyin */,
 				48FD32691EB6FF3B00ACCB05 /* Weibo */,
 				48FD326A1EB6FF4A00ACCB05 /* Setting */,
@@ -290,11 +276,8 @@
 				25818741585718D3332D2C82 /* UITableViewCell+WebVideoCache.h */,
 				2581855A00489E540790B797 /* UITableView+WebVideoCache.m */,
 				258188812C523F144972A264 /* UITableView+WebVideoCache.h */,
-				25818CD19BDD22E4637CA452 /* JPVideoPlayerTableViewHelper.m */,
-				25818E6FB2BFB9DEBBFEFEE6 /* JPVideoPlayerTableViewHelper.h */,
 			);
-			name = JPVideoPlayer;
-			path = ../../../JPVideoPlayer;
+			path = JPVideoPlayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -453,9 +436,9 @@
 				25818E851233F2B0623E1B0B /* JPResourceLoadingRequestTask.m in Sources */,
 				258183E6274D79D6E72F4F8B /* UITableViewCell+WebVideoCache.m in Sources */,
 				25818B50669444407D0A4E9B /* UITableView+WebVideoCache.m in Sources */,
-				25818E4B414C1C6490262690 /* JPVideoPlayerTableViewHelper.m in Sources */,
 				2581889C19EE76A9A5D48D80 /* JPVideoPlayerDouyinViewController.m in Sources */,
 				258188DAB416370E7585394B /* JPVideoPlayerWeiBoViewController.m in Sources */,
+				258180CE6D5C789E5D2988F8 /* JPVideoPlayerHoverViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

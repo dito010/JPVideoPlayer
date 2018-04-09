@@ -221,9 +221,9 @@
             self.videoPlayer.rate;
     JPDebugLog(@"Called resume play, but can not resume play.");
     if(!canResumePlay){
-        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldSwitchIntoPlayVideoFromResumePlayForURL:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldTranslateIntoPlayVideoFromResumePlayForURL:)]) {
             BOOL preferSwitch = [self.delegate videoPlayerManager:self
-shouldSwitchIntoPlayVideoFromResumePlayForURL:url];
+                 shouldTranslateIntoPlayVideoFromResumePlayForURL:url];
             if(preferSwitch){
                 [self playVideoWithURL:url
                            showOnLayer:showLayer

@@ -124,7 +124,7 @@
  * 松手时已经静止, 只会调用scrollViewDidEndDragging
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [self.tableView jp_scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    [self.tableView jp_scrollViewDidEndDraggingWillDecelerate:decelerate];
 }
 
 /**
@@ -132,11 +132,11 @@
  * 松手时还在运动, 先调用scrollViewDidEndDragging, 再调用scrollViewDidEndDecelerating
  */
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    [self.tableView jp_scrollViewDidEndDecelerating:scrollView];
+    [self.tableView jp_scrollViewDidEndDecelerating];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self.tableView jp_scrollViewDidScroll:scrollView];
+    [self.tableView jp_scrollViewDidScroll];
 }
 
 

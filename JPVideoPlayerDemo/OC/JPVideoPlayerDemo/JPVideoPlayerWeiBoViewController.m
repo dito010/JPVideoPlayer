@@ -5,6 +5,7 @@
 
 #import "JPVideoPlayerWeiBoViewController.h"
 #import "JPVideoPlayerWeiBoListViewController.h"
+#import "JPVideoPlayerHoverViewController.h"
 
 @interface JPVideoPlayerWeiBoViewController()
 
@@ -32,7 +33,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 40;
+    return 60;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -40,15 +41,19 @@
     JPVideoPlayerWeiBoListViewController *viewController = nil;
     if(indexPath.row == 0){
         viewController = [[JPVideoPlayerWeiBoListViewController alloc] initWithPlayStrategyType:JPScrollPlayStrategyTypeBestVideoView];
-    } else {
+    }
+    else if(indexPath.row == 1) {
         viewController = [[JPVideoPlayerWeiBoListViewController alloc] initWithPlayStrategyType:JPScrollPlayStrategyTypeBestCell];
+    }
+    else {
+        viewController = [JPVideoPlayerHoverViewController new];
     }
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (NSArray<NSString *> *)cellTypeStrings {
     if(!_cellTypeStrings){
-       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放"];
+       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放", @"悬停播放"];
     }
     return _cellTypeStrings;
 }

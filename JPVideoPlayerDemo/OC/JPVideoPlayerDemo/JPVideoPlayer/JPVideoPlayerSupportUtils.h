@@ -5,6 +5,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JPResourceLoadingRequestTask.h"
+#import "UITableView+WebVideoCache.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -169,6 +170,43 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 @property(nonatomic, weak) id<JPApplicationStateMonitorDelegate> delegate;
 
 @property (nonatomic, assign, readonly) JPApplicationState applicationState;
+
+@end
+
+@protocol JPTableViewPlayVideoDelegate;
+
+@interface JPVideoPlayerTableViewHelper : NSObject
+
+@property (nonatomic, weak, readonly, nullable) UIScrollView *scrollView;
+
+@property (nonatomic, weak, readonly) UITableViewCell *playingVideoCell;
+
+@property(nonatomic, assign) CGRect tableViewVisibleFrame;
+
+@property(nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
+
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
+
+@property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;
+
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView NS_DESIGNATED_INITIALIZER;
+
+- (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
+                             atIndexPath:(NSIndexPath *)indexPath;
+
+- (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData;
+
+- (void)playVideoInVisibleCellsIfNeed;
+
+- (void)stopPlayIfNeed;
+
+- (void)scrollViewDidScroll;
+
+- (void)scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate;
+
+- (void)scrollViewDidEndDecelerating;
+
+- (BOOL)viewIsVisibleInVisibleFrameAtScrollViewDidScroll:(UIView *)view;
 
 @end
 

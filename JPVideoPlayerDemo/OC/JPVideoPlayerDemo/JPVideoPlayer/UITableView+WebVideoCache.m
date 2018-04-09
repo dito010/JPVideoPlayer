@@ -5,7 +5,7 @@
 
 #import "UITableView+WebVideoCache.h"
 #import "JPVideoPlayerCompat.h"
-#import "JPVideoPlayerTableViewHelper.h"
+#import "JPVideoPlayerSupportUtils.h"
 
 @interface UITableView()
 
@@ -52,6 +52,14 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
     return self.helper.unreachableCellDictionary;
 }
 
+- (void)jp_playVideoInVisibleCellsIfNeed {
+    [self.helper playVideoInVisibleCellsIfNeed];
+}
+
+- (void)jp_stopPlayIfNeed {
+    [self.helper stopPlayIfNeed];
+}
+
 - (void)jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData {
     [self.helper handleCellUnreachableTypeInVisibleCellsAfterReloadData];
 }
@@ -62,26 +70,20 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
                                       atIndexPath:indexPath];
 }
 
-- (void)jp_scrollViewDidEndDragging:(UIScrollView *)scrollView
-                     willDecelerate:(BOOL)decelerate {
-    [self.helper scrollViewDidEndDragging:scrollView
-                           willDecelerate:decelerate];
+- (void)jp_scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate {
+    [self.helper scrollViewDidEndDraggingWillDecelerate:decelerate];
 }
 
-- (void)jp_scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self.helper scrollViewDidEndDecelerating:scrollView];
+- (void)jp_scrollViewDidEndDecelerating {
+    [self.helper scrollViewDidEndDecelerating];
 }
 
-- (void)jp_scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.helper scrollViewDidScroll:scrollView];
+- (void)jp_scrollViewDidScroll {
+    [self.helper scrollViewDidScroll];
 }
 
-- (void)jp_playVideoInVisibleCellsIfNeed {
-    [self.helper playVideoInVisibleCellsIfNeed];
-}
-
-- (void)jp_stopPlayIfNeed {
-    [self.helper stopPlayIfNeed];
+- (BOOL)jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:(UIView *)view {
+    return [self.helper viewIsVisibleInVisibleFrameAtScrollViewDidScroll:view];
 }
 
 

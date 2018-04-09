@@ -671,10 +671,10 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL 
     return YES;
 }
 
-- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
-shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL {
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldSwitchIntoPlayVideoFromResumePlayForURL:)]) {
-        return [self.jp_videoPlayerDelegate shouldSwitchIntoPlayVideoFromResumePlayForURL:videoURL];
+- (BOOL)                      videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldTranslateIntoPlayVideoFromResumePlayForURL:)]) {
+        return [self.jp_videoPlayerDelegate shouldTranslateIntoPlayVideoFromResumePlayForURL:videoURL];
     }
     return YES;
 }

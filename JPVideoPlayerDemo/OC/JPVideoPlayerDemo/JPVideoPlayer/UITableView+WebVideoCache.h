@@ -135,31 +135,34 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * This method must be call in `-scrollViewDidScroll:` method.
  *
- * @param scrollView The tableView.
- *
  * * @warning This method must be call in given method.
  */
-- (void)jp_scrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)jp_scrollViewDidScroll;
 
 /**
  * This method must be call in `scrollViewDidEndDragging:willDecelerate:`.
  *
- * @param scrollView The tableView.
  * @param decelerate The tableView will decelerate or not.
  *
  * @warning This method must be call in given method.
  */
-- (void)jp_scrollViewDidEndDragging:(UIScrollView *)scrollView
-                     willDecelerate:(BOOL)decelerate;
+- (void)jp_scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate;
 
 /**
  * This method must be call in `scrollViewDidEndDecelerating:`.
  *
- * @param scrollView The tableView.
- *
  * @warning This method must be call in given method.
  */
-- (void)jp_scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+- (void)jp_scrollViewDidEndDecelerating;
+
+/**
+ * You can use this method to judge a view is visible or not when scrollView did scroll.
+ *
+ * @param view The target view, the view must be a subview on this tableView.
+ *
+ * @return The result.
+ */
+- (BOOL)jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:(UIView *)view;
 
 @end
 

@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param videoURL           The url of the video to be play.
  */
-- (BOOL)shouldSwitchIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
+- (BOOL)shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
 
 @end
 
