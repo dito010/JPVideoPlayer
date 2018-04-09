@@ -165,11 +165,23 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     JPDebugLog(@"URLSession 收到响应");
-    // TODO: 这里做 mime 的检查, 只支持 video / audio.
     //'304 Not Modified' is an exceptional one.
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
         NSInteger expected = MAX((NSInteger)response.expectedContentLength, 0);
         self.expectedSize = expected;
+        // Support video / audio only.
+        BOOL isSupportMIMEType = [response.MIMEType containsString:@"video"] || [response.MIMEType containsString:@"audio"];
+        if(!isSupportMIMEType){
+            JPDispatchSyncOnMainQueue(^{
+                [self cancel];
+                [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription([NSString stringWithFormat:@"Not support MIMEType: %@", response.MIMEType])];
+                [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+            });
+            if (completionHandler) {
+                completionHandler(NSURLSessionResponseCancel);
+            }
+            return;
+        }
 
         // May the free size of the device less than the expected size of the video data.
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {

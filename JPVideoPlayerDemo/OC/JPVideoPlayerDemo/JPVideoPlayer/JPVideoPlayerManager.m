@@ -362,7 +362,7 @@ didCompleteWithError:(NSError *)error {
                 pthread_mutex_unlock(&_lock);
             }
         }
-        [self reset];
+        [self stopPlay];
     }
     else {
         if ((self.videoPlayer.playerModel.playerOptions & JPVideoPlayerRetryFailed)) {
