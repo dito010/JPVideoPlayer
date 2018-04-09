@@ -11,6 +11,38 @@
 #import "JPVideoPlayerDetailViewController.h"
 #import "UIView+WebVideoCache.h"
 #import <JPNavigationControllerKit.h>
+#import "JPVideoPlayerControlViews.h"
+#import <Masonry.h>
+
+@interface JPVideoPlayerDetailControlView : JPVideoPlayerControlView
+
+@property (nonatomic, strong) UILabel *label;
+
+@end
+
+@implementation JPVideoPlayerDetailControlView
+
+- (instancetype)initWithControlBar:(UIView <JPVideoPlayerProtocol> *_Nullable)controlBar
+                         blurImage:(UIImage *_Nullable)blurImage {
+    self = [super initWithControlBar:controlBar
+                           blurImage:blurImage];
+    if(self){
+        self.label = ({
+            UILabel *label = [UILabel new];
+            label.text = @"测试 Masonry 布局";
+            [self addSubview:label];
+            label.backgroundColor = [UIColor colorWithWhite:1 alpha:0.7];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.center.equalTo(self);
+            }];
+
+            label;
+        });
+    }
+    return self;
+}
+
+@end
 
 @interface JPVideoPlayerDetailViewController ()<JPVideoPlayerDelegate>
 
@@ -21,9 +53,6 @@
 @property (nonatomic, strong) UIView *videoContainer;
 
 @end
-
-#warning 注意: 播放视频的工具类是单例, 单例生命周期为整个应用生命周期, 故而须在 `-viewWillDisappear:`(推荐)或其他方法里 调用 `stopPlay` 方法来停止视频播放, 否则当前控制器销毁了, 视频仍然在后台播放, 虽然看不到图像, 但是能听到声音(如果有).
-#warning 由于 frame 和 Autolayout 的冲突关系, 所以建议需要横屏的那个视频容器 view 用 frame 的方式进行布局.
 
 @implementation JPVideoPlayerDetailViewController
 
@@ -58,7 +87,7 @@
 
     [self.videoContainer jp_resumePlayWithURL:[NSURL URLWithString:self.videoPath]
                            bufferingIndicator:nil
-                                  controlView:nil
+                                  controlView:[[JPVideoPlayerDetailControlView alloc] initWithControlBar:nil blurImage:nil]
                                  progressView:nil
                       configurationCompletion:^(UIView *view, JPVideoPlayerModel *playerModel) {
                           self.muteSwitch.on = ![self.videoContainer jp_muted];
@@ -89,20 +118,5 @@
 - (BOOL)shouldAutoReplayAfterPlayCompleteForURL:(NSURL *)videoURL{
     return self.autoReplaySwitch.on;
 }
-
-- (BOOL)shouldProgressViewOnTop{
-    return NO;
-}
-
-- (void)playingStatusDidChanged:(JPVideoPlayerStatus)playingStatus{
-}
-
-//- (void)downloadingProgressDidChanged:(CGFloat)downloadingProgress{
-//    NSLog(@"%0.2lf", downloadingProgress);
-//}
-//
-//- (void)playingProgressDidChanged:(CGFloat)playingProgress{
-//    NSLog(@"%0.2lf", playingProgress);
-//}
 
 @end
