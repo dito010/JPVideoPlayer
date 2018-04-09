@@ -74,14 +74,14 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 /**
  *  Cache Config object - storing all kind of settings.
  */
-@property (nonatomic, readonly)JPVideoPlayerCacheConfiguration *config;
+@property (nonatomic, readonly)JPVideoPlayerCacheConfiguration *cacheConfiguration;
 
 /**
  * Init with given cacheConfig.
  *
  * @see `JPVideoPlayerCacheConfig`.
  */
-- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfiguration * _Nullable)cacheConfig NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCacheConfiguration:(JPVideoPlayerCacheConfiguration * _Nullable)cacheConfiguration NS_DESIGNATED_INITIALIZER;
 
 /**
  * Returns global shared cache instance.
@@ -139,9 +139,17 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 
 /**
  * Async clear all disk cached videos. Non-blocking method - returns immediately.
+ *
  * @param completion    A block that should be executed after cache expiration completes (optional).
  */
 - (void)clearDiskOnCompletion:(dispatch_block_t _Nullable)completion;
+
+/**
+ * Async clear videos cache in disk on version 2.x.
+ *
+ * @param completion A block that should be executed after cache expiration completes (optional).
+ */
+- (void)clearVideoCacheOnVersion2OnCompletion:(dispatch_block_t _Nullable)completion;
 
 # pragma mark - Cache Info
 

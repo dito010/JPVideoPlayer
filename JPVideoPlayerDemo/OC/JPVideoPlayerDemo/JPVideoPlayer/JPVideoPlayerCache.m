@@ -36,47 +36,20 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 @end
 
-@interface JPVideoPlayerCacheTask: NSObject
-
-/**
- * videoSavePath.
- */
-@property(nonnull, nonatomic, copy)NSString *videoSavePath;
-
-/**
- * Received video size.
- */
-@property(nonatomic, assign)NSUInteger receivedVideoSize;
-
-@end
-
-@implementation JPVideoPlayerCacheTask
-
-@end
-
 @interface JPVideoPlayerCache()
 
 @property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
 
-/**
- * completionBlock can be call or not.
- */
-@property(nonatomic, assign, getter=isCompletionBlockEnable)BOOL completionBlockEnable;
-
 @property (nonatomic) pthread_mutex_t lock;
-
-/*
- * current cache task.
- */
-@property(nonatomic, strong) JPVideoPlayerCacheTask *currentCacheTask;
 
 @property (nonatomic, strong) NSFileManager *fileManager;
 
 @end
 
+static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.version2.cache.clear.key.www"
 @implementation JPVideoPlayerCache
 
-- (instancetype)initWithCacheConfig:(JPVideoPlayerCacheConfiguration *)cacheConfig {
+- (instancetype)initWithCacheConfiguration:(JPVideoPlayerCacheConfiguration *_Nullable)cacheConfiguration {
     self = [super init];
     if (self) {
         // Create IO serial queue
@@ -85,13 +58,12 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
         pthread_mutexattr_init(&mutexattr);
         pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_lock, &mutexattr);
-        JPVideoPlayerCacheConfiguration *config = cacheConfig;
-        if (!config) {
-            config = [[JPVideoPlayerCacheConfiguration alloc] init];
+        JPVideoPlayerCacheConfiguration *configuration = cacheConfiguration;
+        if (!configuration) {
+            configuration = [[JPVideoPlayerCacheConfiguration alloc] init];
         }
-        _config = config;
+        _cacheConfiguration = configuration;
         _fileManager = [NSFileManager defaultManager];
-        _currentCacheTask = nil;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(deleteOldFiles)
@@ -108,14 +80,14 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 - (instancetype)init{
     NSAssert(NO, @"please use given init method");
-    return [self initWithCacheConfig:nil];
+    return [self initWithCacheConfiguration:nil];
 }
 
 + (nonnull instancetype)sharedCache {
     static dispatch_once_t once;
     static id instance;
     dispatch_once(&once, ^{
-        instance = [[self alloc] initWithCacheConfig:nil];
+        instance = [[self alloc] initWithCacheConfiguration:nil];
     });
     return instance;
 }
@@ -211,7 +183,7 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                  errorHandler:NULL];
         
-        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-self.config.maxCacheAge];
+        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-self.cacheConfiguration.maxCacheAge];
         NSMutableDictionary<NSURL *, NSDictionary<NSString *, id> *> *cacheFiles = [NSMutableDictionary dictionary];
         NSUInteger currentCacheSize = 0;
         
@@ -251,9 +223,9 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
         
         // If our remaining disk cache exceeds a configured maximum size, perform a second
         // size-based cleanup pass.  We delete the oldest files first.
-        if (self.config.maxCacheSize > 0 && currentCacheSize > self.config.maxCacheSize) {
+        if (self.cacheConfiguration.maxCacheSize > 0 && currentCacheSize > self.cacheConfiguration.maxCacheSize) {
             // Target half of our maximum cache size for this cleanup pass.
-            const NSUInteger desiredCacheSize = self.config.maxCacheSize / 2;
+            const NSUInteger desiredCacheSize = self.cacheConfiguration.maxCacheSize / 2;
             
             // Sort the remaining cache files by their last modification time (oldest first).
             NSArray<NSURL *> *sortedFiles = [cacheFiles keysSortedByValueWithOptions:NSSortConcurrent
@@ -290,6 +262,30 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
         [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePathForAllTemporaryFile] error:nil];
 #pragma clang diagnostic pop
         [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePath] error:nil];
+        JPDispatchSyncOnMainQueue(^{
+            if (completion) {
+                completion();
+            }
+        });
+    });
+}
+
+- (void)clearVideoCacheOnVersion2OnCompletion:(dispatch_block_t _Nullable)completion {
+    BOOL version2CacheHasBeenCleared = [NSUserDefaults.standardUserDefaults boolForKey:kJPVideoPlayerVersion2CacheHasBeenClearedKey];
+    if(version2CacheHasBeenCleared){
+        if(completion){
+           completion();
+        }
+        return;
+    }
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:kJPVideoPlayerVersion2CacheHasBeenClearedKey];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    dispatch_async(self.ioQueue, ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePathForAllFullFile] error:nil];
+        [self.fileManager removeItemAtPath:[JPVideoPlayerCachePath videoCachePathForAllTemporaryFile] error:nil];
+#pragma clang diagnostic pop
         JPDispatchSyncOnMainQueue(^{
             if (completion) {
                 completion();
