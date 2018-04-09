@@ -54,3 +54,15 @@ NSString* JPRangeToHTTPRangeHeader(NSRange range) {
         return nil;
     }
 }
+
+NSError *JPErrorWithDescription(NSString *description) {
+    assert(description);
+    if(!description.length){
+        return nil;
+    }
+
+    return [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                               code:0 userInfo:@{
+                    NSLocalizedDescriptionKey : description
+    }];
+}

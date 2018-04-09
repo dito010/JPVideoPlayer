@@ -250,6 +250,7 @@
                      options:(JPVideoPlayerOptions)options
      configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion
                 isResume:(BOOL)isResume {
+    JPMainThreadAssert;
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;
         self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
@@ -322,11 +323,10 @@
     }
     else {
         JPDispatchSyncOnMainQueue(^{
-            // TODO: handle error.
-//            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(downloadProgressDidChangeReceivedSize:expectedSize:error:)]) {
-//                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Try to load a nil url"}];
-//                [self.jp_videoPlayerDelegate downloadProgressDidChangeReceivedSize:0 expectedSize:0 error:error];
-//            }
+            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playVideoFailWithError:videoURL:)]) {
+                [self.jp_videoPlayerDelegate playVideoFailWithError:JPErrorWithDescription(@"Try to play video with a invalid url")
+                                                           videoURL:url];
+            }
         });
     }
 }
@@ -598,7 +598,10 @@
                                        expectedSize:(NSUInteger)expectedSize
                                               error:(NSError *_Nullable)error {
     if(error){
-        // TODO handle error.
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playVideoFailWithError:videoURL:)]) {
+            [self.jp_videoPlayerDelegate playVideoFailWithError:JPErrorWithDescription(@"Try to play video with a invalid url")
+                                                       videoURL:videoPlayerManager.managerModel.videoURL];
+        }
         return;
     }
     switch(cacheType){
@@ -625,7 +628,10 @@
                                    totalSeconds:(double)totalSeconds
                                           error:(NSError *_Nullable)error {
     if(error){
-        //TODO handle error.
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playVideoFailWithError:videoURL:)]) {
+            [self.jp_videoPlayerDelegate playVideoFailWithError:JPErrorWithDescription(@"Try to play video with a invalid url")
+                                                       videoURL:videoPlayerManager.managerModel.videoURL];
+        }
         return;
     }
 

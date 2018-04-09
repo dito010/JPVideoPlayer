@@ -82,7 +82,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return 15;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -107,7 +107,7 @@
     else if(!headerVisible && self.hoverView.hidden){
         self.hoverView.hidden = NO;
         [self.hoverView jp_resumePlayWithURL:[NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"]
-                                     options:nil
+                                     options:JPVideoPlayerRetryFailed
                      configurationCompletion:nil];
     }
 }

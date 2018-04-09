@@ -277,7 +277,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         }
     }
     @catch (NSException * e) {
-        // TODO: 处理异常.
         JPErrorLog(@"Truncate file raise a exception: %@", e);
         if (!lock) {
             pthread_mutex_unlock(&_lock);
@@ -315,7 +314,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         [self.writeFileHandle jp_safeWriteData:data];
     }
     @catch (NSException * e) {
-        // TODO: 处理异常.
         JPErrorLog(@"Write file raise a exception: %@", e);
     }
 

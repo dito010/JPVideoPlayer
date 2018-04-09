@@ -89,10 +89,7 @@
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil.
     // If it is nil immediately call the completed block with no video or data.
     if (requestTask.customURL == nil) {
-        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
-                                             code:0
-                                         userInfo:@{NSLocalizedDescriptionKey : @"Please check the download URL, because it is nil"}];
-        [self callCompleteDelegateIfNeedWithError:error];
+        [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription(@"Please check the download URL, because it is nil")];
         return;
     }
 
@@ -178,8 +175,7 @@ didReceiveResponse:(NSURLResponse *)response
         if (![[JPVideoPlayerCache sharedCache] haveFreeSizeToCacheFileWithSize:expected]) {
             JPDispatchSyncOnMainQueue(^{
                 [self cancel];
-                NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"No enough size of device to cache the video data"}];
-                [self callCompleteDelegateIfNeedWithError:error];
+                [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription(@"No enough size of device to cache the video data")];
                 [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
             });
             if (completionHandler) {
@@ -209,8 +205,7 @@ didReceiveResponse:(NSURLResponse *)response
         JPDispatchSyncOnMainQueue(^{
             [self cancel];
             NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", ((NSHTTPURLResponse *)response).statusCode];
-            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : errorMsg}];
-            [self callCompleteDelegateIfNeedWithError:error];
+            [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription(errorMsg)];
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
         if (completionHandler) {

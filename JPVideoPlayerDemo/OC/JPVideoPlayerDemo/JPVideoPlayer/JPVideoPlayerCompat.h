@@ -183,6 +183,15 @@ BOOL JPRangeCanMerge(NSRange range1, NSRange range2);
  */
 NSString* JPRangeToHTTPRangeHeader(NSRange range);
 
+/**
+ * Generate error object with error message.
+ *
+ * @param description The error message.
+ *
+ * @return A `NSError` object.
+ */
+NSError *JPErrorWithDescription(NSString *description);
+
 #endif
 
 NS_ASSUME_NONNULL_END

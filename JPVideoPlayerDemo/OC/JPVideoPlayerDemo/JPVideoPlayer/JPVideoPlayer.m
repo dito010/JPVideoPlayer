@@ -206,20 +206,17 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                     showOnLayer:(CALayer *)showLayer
                         configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
     if (!url.absoluteString.length) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The url is disable"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
     }
 
     if (fullVideoCachePath.length==0) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The file path is disable"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The file path is disable")];
         return nil;
     }
 
     if (!showLayer) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The layer to display video layer is nil"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return nil;
     }
     if(self.playerModel){
@@ -249,14 +246,12 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                                         showLayer:(CALayer *)showLayer
                           configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
     if (!url.absoluteString.length) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The url is disable"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
     }
 
     if (!showLayer) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The layer to display video layer is nil"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return nil;
     }
 
@@ -291,8 +286,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                         options:(JPVideoPlayerOptions)options
         configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
     if (!showLayer) {
-        NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"The layer to display video layer is nil"}];
-        [self callDelegateMethodWithError:e];
+        [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return;
     }
     [self.playerModel.playerLayer removeFromSuperlayer];
@@ -500,8 +494,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
             case AVPlayerItemStatusFailed:{
                 [self stopCheckBufferingTimerIfNeed];
                 self.playerStatus = JPVideoPlayerStatusFailed;
-                NSError *e = [NSError errorWithDomain:JPVideoPlayerErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"AVPlayerItemStatusFailed"}];
-                [self callDelegateMethodWithError:e];
+                [self callDelegateMethodWithError:JPErrorWithDescription(@"AVPlayerItemStatusFailed")];
                 if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
                     [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
                 }

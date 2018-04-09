@@ -351,8 +351,7 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     NSParameterAssert(self.unownedSession);
     NSParameterAssert(self.request);
     if(!self.unownedSession || !self.request){
-        // TODO: 这里要处理 error.
-        [self requestDidCompleteWithError:nil];
+        [self requestDidCompleteWithError:JPErrorWithDescription(@"unownedSession or request can not be nil")];
         return;
     }
     
