@@ -295,6 +295,9 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (options & JPVideoPlayerMutedPlay) {
         self.playerModel.player.muted = YES;
     }
+    else {
+        self.playerModel.player.muted = NO;
+    }
     [self setVideoGravityWithOptions:options playerModel:self.playerModel];
     [self displayVideoPicturesOnShowLayer];
 
