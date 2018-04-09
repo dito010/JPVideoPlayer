@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Click https://github.com/Chris-Pan
+ * Click https://github.com/newyjp
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
@@ -98,7 +98,7 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerOptions) {
      */
     JPVideoPlayerLayerVideoGravityResizeAspectFill = 1 << 7,
 
-    // TODO: Disable cache.
+    // TODO: Disable cache if need.
 };
 
 typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {

@@ -1,10 +1,13 @@
-//
-//  JPVideoPlayerCompat.m
-//  JPVideoPlayerDemo
-//
-//  Created by 尹久盼 on 2017/12/6.
-//  Copyright © 2017年 NewPan. All rights reserved.
-//
+/*
+ * This file is part of the JPVideoPlayer package.
+ * (c) NewPan <13246884282@163.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Click https://github.com/newyjp
+ * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
+ */
 
 #import "JPVideoPlayerCompat.h"
 #import <AVFoundation/AVFoundation.h>

@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Click https://github.com/Chris-Pan
+ * Click https://github.com/newyjp
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
@@ -46,7 +46,7 @@ static const NSInteger kDefaultCacheMaxSize = 1000*1000*1000; // 1 GB
 
 @end
 
-static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.version2.cache.clear.key.www"
+static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.version2.cache.clear.key.www";
 @implementation JPVideoPlayerCache
 
 - (instancetype)initWithCacheConfiguration:(JPVideoPlayerCacheConfiguration *_Nullable)cacheConfiguration {
