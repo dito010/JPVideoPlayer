@@ -68,6 +68,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 // TODO: 捕获音量, 自定义音量控制.
 // TODO: 处理使用 masonry 约束布局横屏.
+// TODO: 版本过度缓存处理.
 @end
 
 UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
