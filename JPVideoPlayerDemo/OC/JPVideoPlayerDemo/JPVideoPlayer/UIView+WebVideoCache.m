@@ -389,7 +389,7 @@
                         completion:nil];
 }
 
-- (void)jp_gotoLandscapeAnimated:(BOOL)animated
+- (void)jp_gotoLandscapeAnimated:(BOOL)flag
                       completion:(dispatch_block_t)completion {
     if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationPortrait) {
         return;
@@ -410,7 +410,7 @@
     videoPlayerView.frame = videoPlayerViewFrameInWindow;
     videoPlayerView.controlContainerView.alpha = 0;
 
-    if (animated) {
+    if (flag) {
         [UIView animateWithDuration:0.35
                               delay:0
                             options:UIViewAnimationCurveEaseOut
@@ -445,7 +445,7 @@
                        completion:nil];
 }
 
-- (void)jp_gotoPortraitAnimated:(BOOL)animated
+- (void)jp_gotoPortraitAnimated:(BOOL)flag
                      completion:(dispatch_block_t)completion{
     if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationLandscape) {
         return;
@@ -460,7 +460,7 @@
 #pragma clang diagnostic pop
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationAnimating;
     videoPlayerView.controlContainerView.alpha = 0;
-    if (animated) {
+    if (flag) {
         [UIView animateWithDuration:0.35
                               delay:0
                             options:UIViewAnimationCurveEaseOut
@@ -572,7 +572,7 @@
     }
     self.helper.playerStatus = playerStatus;
     // JPDebugLog(@"playerStatus: %ld", playerStatus);
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoReplayForURL:)]) {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(playerStatusDidChanged:)]) {
         [self.jp_videoPlayerDelegate playerStatusDidChanged:playerStatus];
     }
     BOOL needDisplayBufferingIndicator =

@@ -9,7 +9,6 @@
  * or http://www.jianshu.com/users/e2f2d779c022/latest_articles to contact me.
  */
 
-#import <UIKit/UIKit.h>
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerProtocol.h"
@@ -20,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol JPVideoPlayerDelegate <NSObject>
 
 @optional
-
 /** 
  * Controls which video should be downloaded when the video is not found in the cache.
  *
@@ -309,10 +307,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Call this method to enter full screen.
  *
- * @param animated   Need landscape animation or not.
+ * @param flag       Need landscape animation or not.
  * @param completion Call back when landscape finished.
  */
-- (void)jp_gotoLandscapeAnimated:(BOOL)animated
+- (void)jp_gotoLandscapeAnimated:(BOOL)flag
                       completion:(dispatch_block_t _Nullable)completion;
 
 /**
@@ -323,10 +321,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Call this method to exit full screen.
  *
- * @param animated   Need portrait animation or not.
+ * @param flag       Need portrait animation or not.
  * @param completion Call back when portrait finished.
  */
-- (void)jp_gotoPortraitAnimated:(BOOL)animated
+- (void)jp_gotoPortraitAnimated:(BOOL)flag
                      completion:(dispatch_block_t _Nullable)completion;
 
 @end
