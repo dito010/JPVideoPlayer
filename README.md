@@ -1,7 +1,7 @@
 # Readme
 #JPVideoPlayer
 
-<p align="center" >
+<p align="left" >
 <img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
 </p>
 
@@ -13,8 +13,8 @@
 
 This library provides an video player with cache support in `UITableView`.
 
-<p align="center" >
-<img src="Images/demo.gif” title="demo" float=left>
+<p align="left" >
+<img src="Images/demo.gif" title="demo" float=left>
 </p>
 
 ## Features
