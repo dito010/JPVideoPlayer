@@ -39,13 +39,15 @@
     return UIStatusBarStyleLightContent;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self setNeedsStatusBarAppearanceUpdate];
+}
 
 #pragma mark - Click Events
 
 - (IBAction)clearBtnClick:(id)sender {
-    
     __weak typeof(self) weakSelf = self;
-    
     // Clear all cache.
     // 清空所有缓存
      [[JPVideoPlayerCache sharedCache] clearDiskOnCompletion:^{

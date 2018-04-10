@@ -104,8 +104,8 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JPVideoPlayer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tt9-Pu-j7E">
-                            <rect key="frame" x="130.5" y="40" width="114" height="21"/>
-                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                            <rect key="frame" x="119.5" y="40" width="136.5" height="25.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
                             <color key="textColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>

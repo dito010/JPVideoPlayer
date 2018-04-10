@@ -38,7 +38,7 @@
     douyinViewController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_douyin_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     douyinViewController.title = @"抖音";
     
-    JPNavigationController *settingNavigationController = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerSettingViewController new]];
+    JPNavigationController *settingNavigationController = [[UINavigationController alloc]initWithRootViewController:[JPVideoPlayerSettingViewController new]];
     settingNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     settingNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     settingNavigationController.title = @"设置";
@@ -51,9 +51,6 @@
     self.window.rootViewController = tabVC;
     [self.window makeKeyAndVisible];
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-
-    // 激活静音下播放音频且独占.
-    [JPVideoPlayerManager.sharedManager activeAudioSessionWhenWhenApplicationDidBecomeActive:YES];
 
     return YES;
 }

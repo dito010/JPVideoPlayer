@@ -53,8 +53,6 @@
 
 @property (nonatomic, strong) JPVideoPlayer *videoPlayer;
 
-@property(nonatomic, assign) BOOL needActiveAudioSessionWhenApplicationDidBecomeActive;
-
 @end
 
 @implementation JPVideoPlayerManager
@@ -91,7 +89,6 @@
         _isReturnWhenApplicationWillResignActive = NO;
         _applicationStateMonitor = [JPApplicationStateMonitor new];
         _applicationStateMonitor.delegate = self;
-        _needActiveAudioSessionWhenApplicationDidBecomeActive = NO;
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(audioSessionInterruptionNotification:)
                                                    name:AVAudioSessionInterruptionNotification
@@ -113,7 +110,12 @@
  configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
     JPMainThreadAssert;
     NSParameterAssert(showLayer);
+    if(!url || !showLayer){
+        return;
+    }
+
     [self reset];
+    [self activeAudioSessionIfNeed];
 
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
@@ -214,10 +216,12 @@
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
   configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+    JPMainThreadAssert;
     NSParameterAssert(url);
     if(!url){
         return;
     }
+    [self activeAudioSessionIfNeed];
 
     BOOL canResumePlay = self.managerModel &&
             [self.managerModel.videoURL.absoluteString isEqualToString:url.absoluteString] &&
@@ -607,12 +611,8 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 
 #pragma mark - AudioSession
 
-- (void)activeAudioSessionWhenWhenApplicationDidBecomeActive:(BOOL)needActive {
-    self.needActiveAudioSessionWhenApplicationDidBecomeActive = needActive;
-}
-
 - (void)activeAudioSessionIfNeed {
-    if(self.needActiveAudioSessionWhenApplicationDidBecomeActive){
+    if(![[AVAudioSession.sharedInstance category] isEqualToString:AVAudioSessionCategoryPlayback]){
         [AVAudioSession.sharedInstance setActive:YES error:nil];
         [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:nil];
     }

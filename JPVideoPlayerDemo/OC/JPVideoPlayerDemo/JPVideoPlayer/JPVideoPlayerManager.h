@@ -240,15 +240,6 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
  */
 - (NSString *_Nullable)cacheKeyForURL:(NSURL *)url;
 
-#pragma mark - AudioSession
-
-/**
- * This method use to control need active audioSession on silent-mode when application did become active. NO by default.
- *
- * @param needActive Need active audioSession or not.
- */
-- (void)activeAudioSessionWhenWhenApplicationDidBecomeActive:(BOOL)needActive;
-
 @end
 
 NS_ASSUME_NONNULL_END
