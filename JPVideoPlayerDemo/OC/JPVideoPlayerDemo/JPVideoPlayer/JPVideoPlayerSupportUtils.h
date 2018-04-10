@@ -183,19 +183,21 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @interface JPVideoPlayerTableViewHelper : NSObject
 
-@property (nonatomic, weak, readonly, nullable) UIScrollView *scrollView;
+@property (nonatomic, weak, readonly, nullable) UITableView *tableView;
 
 @property (nonatomic, weak, readonly) UITableViewCell *playingVideoCell;
 
-@property(nonatomic, assign) CGRect tableViewVisibleFrame;
+@property (nonatomic, assign) CGRect tableViewVisibleFrame;
 
-@property(nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
+@property (nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
 
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
 
 @property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;
 
-- (instancetype)initWithScrollView:(UIScrollView *)scrollView NS_DESIGNATED_INITIALIZER;
+@property(nonatomic, assign) NSUInteger playVideoSection;
+
+- (instancetype)initWithTableView:(UITableView *)tableView NS_DESIGNATED_INITIALIZER;
 
 - (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
                              atIndexPath:(NSIndexPath *)indexPath;

@@ -76,11 +76,10 @@
         CGFloat screenWid = [UIScreen mainScreen].bounds.size.width;
         videoView.frame = CGRectMake(0, 100, screenWid, screenWid * 9.0 / 16.0);
         [self.view addSubview:videoView];
+        videoView.jp_videoPlayerDelegate = self;
 
         videoView;
     });
-    
-    self.videoContainer.jp_videoPlayerDelegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

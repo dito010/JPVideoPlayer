@@ -13,6 +13,7 @@
 #import "JPVideoPlayerManager.h"
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerProtocol.h"
+#import "JPVideoPlayerCompat.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -308,8 +309,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Call this method to enter full screen.
  *
- * @param animated   need landscape animation or not.
- * @param completion call back when landscape finished.
+ * @param animated   Need landscape animation or not.
+ * @param completion Call back when landscape finished.
  */
 - (void)jp_gotoLandscapeAnimated:(BOOL)animated
                       completion:(dispatch_block_t _Nullable)completion;
@@ -322,8 +323,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Call this method to exit full screen.
  *
- * @param animated   need portrait animation or not.
- * @param completion call back when portrait finished.
+ * @param animated   Need portrait animation or not.
+ * @param completion Call back when portrait finished.
  */
 - (void)jp_gotoPortraitAnimated:(BOOL)animated
                      completion:(dispatch_block_t _Nullable)completion;

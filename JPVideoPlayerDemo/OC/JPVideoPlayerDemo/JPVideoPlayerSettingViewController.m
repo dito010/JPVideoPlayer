@@ -62,7 +62,7 @@
 }
 
 - (IBAction)githubBtnClick:(id)sender {
-    [self gotoWebForGivenWebSite:@"https://github.com/Chris-Pan"];
+    [self gotoWebForGivenWebSite:@"https://github.com/newyjp"];
 }
 
 - (IBAction)qqBtnClick:(id)sender {

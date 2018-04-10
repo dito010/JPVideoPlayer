@@ -98,7 +98,7 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
 - (JPVideoPlayerTableViewHelper *)helper {
     JPVideoPlayerTableViewHelper *_helper = objc_getAssociatedObject(self, &kJPVideoPlayerScrollViewHelperKey);
     if(!_helper){
-        _helper = [[JPVideoPlayerTableViewHelper alloc] initWithScrollView:self];
+        _helper = [[JPVideoPlayerTableViewHelper alloc] initWithTableView:self];
         objc_setAssociatedObject(self, &kJPVideoPlayerScrollViewHelperKey, _helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return _helper;

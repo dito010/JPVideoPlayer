@@ -369,18 +369,18 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 - (instancetype)init {
     NSAssert(NO, @"Please use given initialize method.");
-    return [self initWithScrollView:[UIScrollView new]];
+    return [self initWithTableView:[UITableView new]];
 };
 
-- (instancetype)initWithScrollView:(UIScrollView *)scrollView {
-    NSParameterAssert(scrollView);
-    if(!scrollView){
+- (instancetype)initWithTableView:(UITableView *)tableView {
+    NSParameterAssert(tableView);
+    if(!tableView){
         return nil;
     }
 
     self = [super init];
     if(self){
-        _scrollView = scrollView;
+        _tableView = tableView;
         _tableViewVisibleFrame = CGRectZero;
     }
     return self;
@@ -388,7 +388,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 - (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UITableView *tableView = (UITableView *)self.scrollView;
+        UITableView *tableView = self.tableView;
         for(UITableViewCell *cell in tableView.visibleCells){
             [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
         }
@@ -397,28 +397,38 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
 - (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
                              atIndexPath:(NSIndexPath *)indexPath {
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
-    UITableView *tableView = (UITableView *)self.scrollView;
-    NSParameterAssert(tableView.numberOfSections == 1);
-    if(tableView.numberOfSections != 1){
-        return;
-    }
-
+    UITableView *tableView = self.tableView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     if(!visibleCells.count){
         return;
     }
 
     NSUInteger unreachableCellCount = [self fetchUnreachableCellCountWithVisibleCellsCount:visibleCells.count];
-    NSUInteger rows = [tableView numberOfRowsInSection:0];
+    NSInteger sectionsCount = 1;
+    if(tableView.dataSource && [tableView.dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]){
+        sectionsCount = [tableView.dataSource numberOfSectionsInTableView:tableView];
+    }
+    BOOL isFirstSectionInSections = YES;
+    BOOL isLastSectionInSections = YES;
+    if(sectionsCount > 1){
+        if(indexPath.section != 0){
+           isFirstSectionInSections = NO;
+        }
+        if(indexPath.section != (sectionsCount - 1)){
+           isLastSectionInSections = NO;
+        }
+    }
+    NSUInteger rows = [tableView numberOfRowsInSection:indexPath.section];
     if (unreachableCellCount > 0) {
         if (indexPath.row <= (unreachableCellCount - 1)) {
-            cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeTop;
+            if(isFirstSectionInSections){
+                cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeTop;
+            }
         }
         else if (indexPath.row >= (rows - unreachableCellCount)){
-            cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeDown;
+            if(isLastSectionInSections){
+                cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeDown;
+            }
         }
         else{
             cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeNone;
@@ -435,14 +445,10 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
         return;
     }
 
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
-
     // handle the first cell cannot play video when initialized.
     [self handleCellUnreachableTypeInVisibleCellsAfterReloadData];
 
-    UITableView *tableView = (UITableView *)self.scrollView;
+    UITableView *tableView = (UITableView *)self.tableView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     // Find first cell need play video in visible cells.
     UITableViewCell *targetCell = nil;
@@ -460,35 +466,21 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (void)stopPlayIfNeed {
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
     self.playingVideoCell = nil;
 }
 
 - (void)scrollViewDidScroll {
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
-
     [self handleQuickScrollIfNeed];
 }
 
 - (void)scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate {
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
-
     if (decelerate == NO) {
         [self handleScrollStopIfNeed];
     }
 }
 
 - (void)scrollViewDidEndDecelerating {
-    if(![self scrollViewIsTableView:self.scrollView]){
-        return;
-    }
     [self handleScrollStopIfNeed];
 }
 
@@ -511,7 +503,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (BOOL)viewIsVisibleInTableViewVisibleFrame:(UIView *)view {
-    CGRect referenceRect = [self.scrollView.superview convertRect:self.tableViewVisibleFrame toView:nil];
+    CGRect referenceRect = [self.tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
     CGPoint viewLeftTopPoint = view.frame.origin;
     viewLeftTopPoint.y += 1;
     CGPoint topCoordinatePoint = [view.superview convertPoint:viewLeftTopPoint toView:nil];
@@ -535,7 +527,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
     // To find next cell need play video.
     UITableViewCell *targetCell = nil;
-    UITableView *tableView = (UITableView *)self.scrollView;
+    UITableView *tableView = self.tableView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     CGFloat gap = MAXFLOAT;
     CGRect referenceRect = [tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
@@ -615,7 +607,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
     self.playingVideoCell = cell;
     if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
-        [self.delegate tableView:(UITableView *)self.scrollView willPlayVideoOnCell:cell];
+        [self.delegate tableView:self.tableView willPlayVideoOnCell:cell];
     }
 }
 
@@ -643,13 +635,6 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
     [self.playingVideoCell.jp_videoPlayView jp_stopPlay];
     [self playVideoWithCell:bestCell];
-}
-
-- (BOOL)scrollViewIsTableView:(UIScrollView *)scrollView {
-    if([scrollView isKindOfClass:[UITableView class]]){
-        return YES;
-    }
-    return NO;
 }
 
 @end
