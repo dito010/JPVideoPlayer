@@ -87,7 +87,7 @@ didCompleteWithError:(NSError *)error;
 /**
  * The current downloaderOptions, may nil if no download operation.
  */
-@property(nonatomic, assign, readonly) JPVideoPlayerDownloaderOptions downloaderOptions;
+@property (nonatomic, assign, readonly) JPVideoPlayerDownloaderOptions downloaderOptions;
 
 @property (nonatomic, weak) id<JPVideoPlayerDownloaderDelegate> delegate;
 

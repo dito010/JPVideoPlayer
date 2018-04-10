@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @warning This value must be not empty.
  */
-@property(nonatomic) CGRect jp_tableViewVisibleFrame;
+@property (nonatomic) CGRect jp_tableViewVisibleFrame;
 
 /**
  * The play cell strategy when tableView stop scroll, `JPScrollFindStrategyBestCell` by default.
@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    |                            |
  *    ------------------------------
  */
-@property(nonatomic) JPScrollPlayStrategyType jp_scrollPlayStrategyType;
+@property (nonatomic) JPScrollPlayStrategyType jp_scrollPlayStrategyType;
 
 /**
  * Because we play video on cell that stopped on screen center when the tableView was stopped scrolling,

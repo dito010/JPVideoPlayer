@@ -195,7 +195,7 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;
 
-@property(nonatomic, assign) NSUInteger playVideoSection;
+@property (nonatomic, assign) NSUInteger playVideoSection;
 
 - (instancetype)initWithTableView:(UITableView *)tableView NS_DESIGNATED_INITIALIZER;
 

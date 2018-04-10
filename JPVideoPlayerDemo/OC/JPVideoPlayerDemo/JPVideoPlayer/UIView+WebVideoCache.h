@@ -260,17 +260,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The current playback rate.
  */
-@property(nonatomic) float jp_rate;
+@property (nonatomic) float jp_rate;
 
 /**
  * A Boolean value that indicates whether the audio output of the player is muted.
  */
-@property(nonatomic) BOOL jp_muted;
+@property (nonatomic) BOOL jp_muted;
 
 /**
  * The audio playback volume for the player, ranging from 0.0 through 1.0 on a linear scale.
  */
-@property(nonatomic) float jp_volume;
+@property (nonatomic) float jp_volume;
 
 /**
 * Moves the playback cursor.

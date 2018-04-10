@@ -74,7 +74,7 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 /**
  *  Cache Config object - storing all kind of settings.
  */
-@property (nonatomic, readonly)JPVideoPlayerCacheConfiguration *cacheConfiguration;
+@property (nonatomic, readonly) JPVideoPlayerCacheConfiguration *cacheConfiguration;
 
 /**
  * Init with given cacheConfig.

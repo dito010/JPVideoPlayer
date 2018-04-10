@@ -111,11 +111,7 @@
 
 #pragma mark - JPVideoPlayerDelegate
 
-- (BOOL)shouldDownloadVideoForURL:(NSURL *)videoURL{
-    return YES;
-}
-
-- (BOOL)shouldAutoReplayAfterPlayCompleteForURL:(NSURL *)videoURL{
+- (BOOL)shouldAutoReplayForURL:(nonnull NSURL *)videoURL {
     return self.autoReplaySwitch.on;
 }
 

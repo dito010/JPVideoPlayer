@@ -1135,3 +1135,5 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 }
 
 @end
+
+// TODO: 捕获音量, 自定义音量控制.

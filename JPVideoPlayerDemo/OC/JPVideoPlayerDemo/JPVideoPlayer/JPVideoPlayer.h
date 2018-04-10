@@ -80,17 +80,17 @@ playFailedWithError:(NSError *)error;
 /**
  * The current player's layer.
  */
-@property(nonatomic, strong, readonly, nullable) AVPlayerLayer *playerLayer;
+@property (nonatomic, strong, readonly, nullable) AVPlayerLayer *playerLayer;
 
 /**
  * The player to play video.
  */
-@property(nonatomic, strong, readonly, nullable) AVPlayer *player;
+@property (nonatomic, strong, readonly, nullable) AVPlayer *player;
 
 /**
  * The resourceLoader for the videoPlayer.
  */
-@property(nonatomic, strong, readonly, nullable) JPVideoPlayerResourceLoader *resourceLoader;
+@property (nonatomic, strong, readonly, nullable) JPVideoPlayerResourceLoader *resourceLoader;
 
 /**
  * options
@@ -101,11 +101,11 @@ playFailedWithError:(NSError *)error;
 
 @interface JPVideoPlayer : NSObject<JPVideoPlayerPlaybackProtocol>
 
-@property(nullable, nonatomic, weak) id<JPVideoPlayerInternalDelegate> delegate;
+@property (nonatomic, weak, nullable) id<JPVideoPlayerInternalDelegate> delegate;
 
-@property(nonatomic, strong, readonly, nullable) JPVideoPlayerModel *playerModel;
+@property (nonatomic, strong, readonly, nullable) JPVideoPlayerModel *playerModel;
 
-@property(nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
+@property (nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
 
 /**
  * Play the existed video file in disk.

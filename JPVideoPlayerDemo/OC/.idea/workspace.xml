@@ -2,14 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4001c70c-dc6c-4159-a8fb-626172356c95" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerSettingViewController.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerSettingViewController.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerWeiBoListViewController.m" beforeDir="false" afterPath="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerWeiBoListViewController.m" afterDir="false" />
     </list>
     <ignored path="$USER_HOME$/Library/Developer/Xcode/DerivedData/JPVideoPlayerDemo-azckrpubdrymrnffwlqlcmcfqhxx/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,20 +25,32 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="iphonesimulator_794EE680-4DD4-42E7-BE37-0DE86145B74D" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="UIView+WebVideoCache.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h">
+      <file leaf-file-name="JPVideoPlayerControlViews.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+            <state relative-caret-position="-339">
+              <caret line="70" selection-start-line="70" selection-end-line="70" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UITableView+WebVideoCache.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.m">
+      <file leaf-file-name="UIView+WebVideoCache.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="95" column="22" selection-start-line="95" selection-start-column="22" selection-end-line="95" selection-end-column="22" />
+            <state relative-caret-position="-621">
+              <caret line="272" column="10" selection-start-line="272" selection-start-column="10" selection-end-line="272" selection-end-column="10" />
+              <folding>
+                <element signature="e#342#365#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JPVideoPlayerDownloader.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-65">
+              <caret line="89" column="10" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -43,7 +58,7 @@
       <file leaf-file-name="JPVideoPlayerManager.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerManager.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
+            <state relative-caret-position="-4036">
               <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
               <folding>
                 <element signature="e#342#365#0" expanded="true" />
@@ -52,10 +67,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JPVideoPlayerCompat.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCompat.h">
+      <file leaf-file-name="JPVideoPlayerProtocol.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerProtocol.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
+            <state relative-caret-position="-2440">
               <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
             </state>
           </provider>
@@ -64,11 +79,20 @@
       <file leaf-file-name="UITableView+WebVideoCache.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="857">
-              <caret line="128" lean-forward="true" selection-start-line="128" selection-end-line="128" />
+            <state relative-caret-position="-1072">
+              <caret line="87" column="10" selection-start-line="87" selection-start-column="10" selection-end-line="87" selection-end-column="10" />
               <folding>
                 <element signature="e#342#365#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JPVideoPlayerResourceLoader.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-65">
+              <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
             </state>
           </provider>
         </entry>
@@ -76,8 +100,8 @@
       <file leaf-file-name="JPVideoPlayerSupportUtils.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="197" column="57" lean-forward="true" selection-start-line="197" selection-start-column="57" selection-end-line="197" selection-end-column="57" />
+            <state relative-caret-position="3705">
+              <caret line="197" column="10" selection-start-line="197" selection-start-column="10" selection-end-line="197" selection-end-column="10" />
               <folding>
                 <element signature="e#342#365#0" expanded="true" />
               </folding>
@@ -85,38 +109,20 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="JPVideoPlayerControlViews.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="581">
+              <caret line="1137" selection-start-line="1137" selection-end-line="1137" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="UITableViewCell+WebVideoCache.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JPVideoPlayerSupportUtils.m" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14">
-              <caret line="390" column="33" selection-start-line="390" selection-start-column="33" selection-end-line="390" selection-end-column="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NSIndexPath+UIKitAdditions.h" pinned="false" current-in-tab="false">
-        <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/NSIndexPath+UIKitAdditions.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="42" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UITableView.h" pinned="false" current-in-tab="false">
-        <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/UITableView.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="204" column="39" selection-start-line="204" selection-start-column="39" selection-end-line="204" selection-end-column="39" />
+            <state relative-caret-position="570">
+              <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -175,9 +181,7 @@
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDouyinViewController.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPResourceLoadingRequestTask.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPResourceLoadingRequestTask.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCacheFile.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCacheFile.m" />
@@ -185,15 +189,10 @@
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCachePath.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCompat.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCompat.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerManager.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerManager.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerProtocol.h" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.h" />
@@ -212,13 +211,20 @@
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPQRCodeTool.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPQRCodeTool.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerSettingViewController.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerWeiBoListViewController.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.m" />
-        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h" />
         <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.m" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h" />
+        <option value="$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h" />
       </list>
     </option>
   </component>
@@ -260,6 +266,12 @@
               <item name="JPVideoPlayerDemo" type="1d218c8b:XcodeProjectNode" />
               <item name="JPVideoPlayerDemo" type="fcab9f18:XcodeViewNode" />
               <item name="JPVideoPlayer" type="fcab9f18:XcodeViewNode" />
+            </path>
+            <path>
+              <item name="" type="efc3779f:XcodeRootNode" />
+              <item name="JPVideoPlayerDemo" type="1d218c8b:XcodeProjectNode" />
+              <item name="JPVideoPlayerDemo" type="fcab9f18:XcodeViewNode" />
+              <item name="Weibo" type="fcab9f18:XcodeViewNode" />
             </path>
           </expand>
           <select />
@@ -330,12 +342,12 @@
       <workItem from="1523251290127" duration="605000" />
       <workItem from="1523274177290" duration="127000" />
       <workItem from="1523274421547" duration="12041000" />
-      <workItem from="1523318718806" duration="3264000" />
+      <workItem from="1523318718806" duration="3832000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="230967000" />
+    <option name="totallyTimeSpent" value="231535000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -351,7 +363,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49839228" weight="0.24453841" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49839228" visible="true" weight="0.24453841" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.36666667" />
       <window_info anchor="bottom" id="Messages" order="7" weight="0.26923078" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
@@ -420,13 +432,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDouyinViewController.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDouyinViewController.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
@@ -451,21 +456,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCacheFile.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCacheFile.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCachePath.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
@@ -486,20 +477,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.m">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -511,20 +488,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
           <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerProtocol.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>
@@ -657,41 +620,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="883">
-          <caret line="81" column="7" selection-start-line="81" selection-start-column="7" selection-end-line="81" selection-end-column="7" />
-          <folding>
-            <element signature="e#342#387#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="173">
           <caret line="415" column="36" selection-start-line="415" selection-start-column="36" selection-end-line="415" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPResourceLoadingRequestTask.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -702,48 +634,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerWeiBoListViewController.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
           <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#342#365#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCompat.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -754,30 +648,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="857">
-          <caret line="128" lean-forward="true" selection-start-line="128" selection-end-line="128" />
-          <folding>
-            <element signature="e#342#365#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
           <caret line="95" column="22" selection-start-line="95" selection-start-column="22" selection-end-line="95" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="197" column="57" lean-forward="true" selection-start-line="197" selection-start-column="57" selection-end-line="197" selection-end-column="57" />
-          <folding>
-            <element signature="e#342#365#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -788,10 +662,151 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayerDetailViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1669">
+          <caret line="111" column="36" selection-start-line="111" selection-start-column="36" selection-end-line="111" selection-end-column="36" />
+          <folding>
+            <element signature="e#342#387#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPResourceLoadingRequestTask.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-472">
+          <caret selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14">
-          <caret line="390" column="33" selection-start-line="390" selection-start-column="33" selection-end-line="390" selection-end-column="33" />
+        <state relative-caret-position="133">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/objc/NSObject.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="52" column="25" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="103" column="36" selection-start-line="103" selection-start-column="36" selection-end-line="103" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCache.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2250">
+          <caret line="76" column="32" selection-start-line="76" selection-start-column="32" selection-end-line="76" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCacheFile.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3295">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCachePath.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1095">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerCompat.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2953">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="581">
+          <caret line="1137" selection-start-line="1137" selection-end-line="1137" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerControlViews.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-339">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerDownloader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-65">
+          <caret line="89" column="10" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4036">
+          <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
+          <folding>
+            <element signature="e#342#365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerProtocol.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2440">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerResourceLoader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-65">
+          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/JPVideoPlayerSupportUtils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3705">
+          <caret line="197" column="10" selection-start-line="197" selection-start-column="10" selection-end-line="197" selection-end-column="10" />
+          <folding>
+            <element signature="e#342#365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableView+WebVideoCache.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1072">
+          <caret line="87" column="10" selection-start-line="87" selection-start-column="10" selection-end-line="87" selection-end-column="10" />
+          <folding>
+            <element signature="e#342#365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UITableViewCell+WebVideoCache.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/JPVideoPlayerDemo/JPVideoPlayer/UIView+WebVideoCache.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-621">
+          <caret line="272" column="10" selection-start-line="272" selection-start-column="10" selection-end-line="272" selection-end-column="10" />
+          <folding>
+            <element signature="e#342#365#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
