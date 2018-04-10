@@ -14,7 +14,7 @@
 This library provides an video player with cache support in `UITableView`.
 
 <p align="left" >
-<img src="Images/demo.gif” title="demo" float=left>
+<img src="Images/demo.gif" title="demo" float=left>
 </p>
 
 ## Features
