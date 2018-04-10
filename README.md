@@ -18,17 +18,17 @@ This library provides an video player with cache support in `UITableView`.
 </p>
 
 ## Features
-- [ ] Cache video data at playing.
-- [ ] Seek time support(new).
-- [ ] Breakpoint continuingly support(new).
-- [ ] Landscape auto-layout support(new).
-- [ ] Custom player controlView support(new).
-- [ ] Excellent performance!
-- [ ] A guarantee that the same URL won't be downloaded several times
-- [ ] A guarantee that main thread will never be blocked
-- [ ] Location video play support
-- [ ] Swift support
-- [ ] Carthage support
+- [x] Cache video data at playing.
+- [x] Seek time support(new).
+- [x] Breakpoint continuingly support(new).
+- [x] Landscape auto-layout support(new).
+- [x] Custom player controlView support(new).
+- [x] Excellent performance!
+- [x] A guarantee that the same URL won't be downloaded several times
+- [x] A guarantee that main thread will never be blocked
+- [x] Location video play support
+- [x] Swift support
+- [x] Carthage support
 
 ## Requirements
 - iOS 8.0 or later
