@@ -85,7 +85,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 ```
 
 #### 1.5.Play video without controlView & progressView.
-```objective-c:
+```objective-c
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_playVideoWithURL:url
@@ -94,7 +94,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 ```
 
 #### 1.6. Resume play without controlView & progressView.
-```objective-c:
+```objective-c
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumePlayWithURL:url
@@ -105,7 +105,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 ### 2.Landscape Or Portrait Control
 #### 2.1. Go to landscape.
-```objective-c:
+```objective-c
 
 [aview jp_gotoLandscape];
 
@@ -113,7 +113,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 ```
 
 #### 2.2. Go to portrait.
-```objective-c:
+```objective-c
 
 [aview jp_gotoPortrait];
 
@@ -124,7 +124,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 Play video in  `UITableView` support equal height and un-eqaul height cell now, you can use a category method on  `UITableView` directly. You also should set the `jp_tableViewVisibleFrame` accurately to  insure playing video on the cell that closest to the center of the screen.
 
-```objective-c:
+```objective-c
 
 [tableView jp_playVideoInVisibleCellsIfNeed];
 
@@ -145,7 +145,7 @@ This library offered a basic `JPVideoPlayerProgressView`、`JPVideoPlayerBufferi
 
 
 ## 5. Cache manage.
-```objective-c:
+```objective-c
 
 [JPVideoPlayerCache.sharedCache calculateSizeOnCompletion:^(NSUInteger fileCount, NSUInteger totalSize) {
     // do something.
