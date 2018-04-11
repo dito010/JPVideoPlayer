@@ -1,7 +1,5 @@
-# Readme
-
 <p align="left" >
-<img src="Images/JPVideoPlayer.png" title="JPVideoPlayer logo" float=left>
+<img src="Images/logo.png" title="LOGO" float=left>
 </p>
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPVideoPlayer)
