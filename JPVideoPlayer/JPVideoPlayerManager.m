@@ -266,8 +266,44 @@
 
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
-- (id)forwardingTargetForSelector:(SEL)aSelector {
-    return self.videoPlayer;
+- (void)setRate:(float)rate {
+    [self.videoPlayer setRate:rate];
+}
+
+- (float)rate {
+    return self.videoPlayer.rate;
+}
+
+- (void)setMuted:(BOOL)muted {
+    [self.videoPlayer setMuted:muted];
+}
+
+- (BOOL)muted {
+    return self.videoPlayer.muted;
+}
+
+- (void)setVolume:(float)volume {
+    [self.videoPlayer setVolume:volume];
+}
+
+- (float)volume {
+    return self.videoPlayer.volume;
+}
+
+- (void)seekToTime:(CMTime)time {
+    [self.videoPlayer seekToTime:time];
+}
+
+- (void)pause {
+    [self.videoPlayer pause];
+}
+
+- (void)resume {
+    [self.videoPlayer resume];
+}
+
+- (CMTime)currentTime {
+    return self.videoPlayer.currentTime;
 }
 
 - (void)stopPlay {
