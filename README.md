@@ -8,7 +8,6 @@
 [![pod](https://img.shields.io/badge/pod-3.0.0-green.svg)](https://github.com/newyjp/JPVideoPlayer) 
 [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) 
 [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
-[![pod](https://img.shields.io/badge/Carthage-support-green.svg)](https://github.com/Carthage/Carthage)
 
 This library provides an video player with cache support in `UITableView`.
 
@@ -41,7 +40,8 @@ This library provides an video player with cache support in `UITableView`.
 - Try the example by downloading the project from Github
 
 ## How To Use
-#### Mute play video and display progressView in `UITableView`.
+### 01.Play video.
+#### 1.1.Mute play video and display progressView on `UITableViewCell` or any view.
 ```objective-c
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
@@ -52,94 +52,114 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 ```
 
 
-#### Resume play from `UITableView` to 
+#### 1.2.Resume mute play from `UITableViewController` to  a detail `UIViewController`when user selected a `UITableViewCell`.
 ```objective-c
 Objective-C:
 
-#import <UIView+WebVideoCache.h>
-
-...
-NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoHiddenStatusViewWithURL:url];
+NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
+[aview jp_resumeMutePlayWithURL:url
+             bufferingIndicator:nil
+                   progressView:nil
+        configurationCompletion:nil];
 ```
 
-#### Play video muted, hidden status view.
+#### 1.3.Play video and display controlView & progressView.
 ```objective-c
 Objective-C:
 
-#import <UIView+WebVideoCache.h>
-
-...
-NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoMutedHiddenStatusViewWithURL:url];
+NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
+[aview jp_playVideoWithURL:url
+        bufferingIndicator:nil
+               controlView:nil
+              progressView:nil
+    configurationCompletion:nil];
 ```
 
-#### Play video muted, display status view.
+#### 1.4.Resume play with displaying controlView & progressView.
 ```objective-c
 Objective-C:
 
-#import <UIView+WebVideoCache.h>
-
-...
-NSURL *url = [NSURL URLWithString:@"http://lavaweb-10015286.video.myqcloud.com/%E5%B0%BD%E6%83%85LAVA.mp4"];
-[aview jp_playVideoMutedDisplayStatusViewWithURL:url];
+NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
+[aview jp_resumePlayWithURL:url
+         bufferingIndicator:nil
+                controlView:nil
+               progressView:nil
+     configurationCompletion:nil];
 ```
 
-#### Custom progress view.
+#### 1.5.Play video without controlView & progressView.
 ```Objective-C:
 
-#import <UIView+WebVideoCache.h>
-
-...
-[aview jp_perfersDownloadProgressViewColor: [UIColor grayColor]];
-[aview jp_perfersPlayingProgressViewColor: [UIColor blueColor]];
+NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
+[aview jp_playVideoWithURL:url
+         			  options:kNilOptions
+   configurationCompletion:nil];
 ```
 
-#### Player control.
+#### 1.6. Resume play without controlView & progressView.
 ```Objective-C:
 
-#import <UIView+WebVideoCache.h>
-
-...
-[aview jp_stopPlay];
-[aview jp_pause];
-[aview jp_resume];
-[aview jp_setPlayerMute:YES];
-```
-
-#### Landscape Or Portrait Control
-```Objective-C:
-
-#import <UIView+WebVideoCache.h>
-
-...
-[aview jp_landscapeAnimated:YES completion:nil];
-[aview jp_portraitAnimated:YES completion:nil];
+NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
+[aview jp_resumePlayWithURL:url
+         			   options:kNilOptions
+    configurationCompletion:nil];
 ```
 
 
-#### Cache manage.
+### 2.Landscape Or Portrait Control
+#### 2.1. Go to landscape.
+```Objective-C:
+[aview jp_gotoLandscape];
+
+[aview jp_gotoLandscapeAnimated:YES
+						completion:nil];
+```
+
+#### 2.2. Go to portrait.
+```Objective-C:
+[aview jp_gotoPortrait];
+
+[aview jp_gotoPortraitAnimated:YES
+					   completion:nil];
+```
+
+### 3. Play video in `UITableView` like `Weibo`.
+Play video in  `UITableView` support equal height and un-eqaul height cell now, you can use a category method on  `UITableView` directly. You also should set the `jp_tableViewVisibleFrame` accurately to  insure playing video on the cell that closest to the center of the screen.
+```Objective-C:
+[tableView jp_playVideoInVisibleCellsIfNeed];
+
+[tableView jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData];
+
+[tableView jp_handleCellUnreachableTypeForCell:cell
+                                   atIndexPath:indexPath];
+
+[tableView jp_scrollViewDidScroll];
+
+[tableView jp_scrollViewDidEndDraggingWillDecelerate:decelerate];
+
+[tableView jp_scrollViewDidEndDecelerating];
+```
+
+### 4. Custom controlView & progressView & bufferingIndicator.
+This library offered a basic `JPVideoPlayerProgressView`、`JPVideoPlayerBufferingIndicator`、`JPVideoPlayerControlView`, so you can pass nil in play video method. You can inherit those basic class to custom your own UI, and you also can not inherit it, directly use your own UI, but you must implete the method in `JPVideoPlayerControlProgressProtocol`、`JPVideoPlayerBufferingProtocol`、`JPVideoPlayerProtocol`.
+
+
+#### 5. Cache manage.
 ```Objective-C:
 
-#import <JPVideoPlayerCache.h>
-
-...
-[[JPVideoPlayerCache sharedCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
-// do something.
+[JPVideoPlayerCache.sharedCache calculateSizeOnCompletion:^(NSUInteger fileCount, NSUInteger totalSize) {
+  // do something.
 }];
 
-[[JPVideoPlayerCache sharedCache] clearDiskOnCompletion:^{
-// do something
+[JPVideoPlayerCache.sharedCache clearDiskOnCompletion:^{
+  // do something
 }];
 ```
 
 
-Installation
-------------
-
-There are three ways to use JPVideoPlayer in your project:
+## Installation
+There are two ways to use `JPVideoPlayer` in your project:
 - using CocoaPods
-- using Carthage
 - by cloning the project into your repository
 
 ### Installation with CocoaPods
@@ -150,16 +170,8 @@ There are three ways to use JPVideoPlayer in your project:
 ```
 platform :ios, '8.0'
 target "YourProjectName" do
-pod 'JPVideoPlayer', '~> 2.4.0'
+pod 'JPVideoPlayer', '~> 3.0.0'
 end
-```
-
-### Installation with Carthage
-[Carthage](https://github.com/Carthage/Carthage) is a simple, decentralized dependency manager for Cocoa.
-
-```
-github "newyjp/JPVideoPlayer"
-
 ```
 
 
