@@ -300,7 +300,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (BOOL)storeResponse:(NSHTTPURLResponse *)response {
     BOOL success = YES;
     if (![self isFileLengthValid]) {
-        success = [self truncateFileWithFileLength:response.jp_fileLength];
+        success = [self truncateFileWithFileLength:(NSUInteger)response.jp_fileLength];
     }
     self.responseHeaders = [[response allHeaderFields] copy];
     success = success && [self synchronize];

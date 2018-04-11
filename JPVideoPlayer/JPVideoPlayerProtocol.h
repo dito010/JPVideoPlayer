@@ -80,7 +80,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @protocol JPVideoPlayerControlProgressProtocol<JPVideoPlayerProtocol>
 
-@required
 /**
  * Control progress must implement this method, and implement
  *

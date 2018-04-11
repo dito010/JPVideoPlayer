@@ -382,7 +382,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (NSString *)convertSecondsToTimeString:(NSTimeInterval)seconds {
     NSUInteger minute = (NSUInteger)(seconds / 60);
     NSUInteger second = (NSUInteger)((NSUInteger)seconds % 60);
-    return [NSString stringWithFormat:@"%02ld:%02ld", minute, second];
+    return [NSString stringWithFormat:@"%02d:%02d", (int)minute, (int)second];
 }
 
 - (void)playButtonDidClick:(UIButton *)button {

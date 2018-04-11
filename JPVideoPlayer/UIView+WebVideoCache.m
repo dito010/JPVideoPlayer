@@ -413,7 +413,7 @@
     if (flag) {
         [UIView animateWithDuration:0.35
                               delay:0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              [self executeLandscape];
                          }
@@ -461,7 +461,7 @@
     if (flag) {
         [UIView animateWithDuration:0.35
                               delay:0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              [self executePortrait];
                          }

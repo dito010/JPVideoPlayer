@@ -302,7 +302,7 @@ didCompleteWithError:(NSError *)error {
         length = loadingRequest.dataRequest.requestedLength;
     }
     if(loadingRequest.dataRequest.currentOffset > 0){
-        location = loadingRequest.dataRequest.currentOffset;
+        location = (NSUInteger)loadingRequest.dataRequest.currentOffset;
     }
     return NSMakeRange(location, length);
 }

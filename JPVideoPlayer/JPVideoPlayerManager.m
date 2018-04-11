@@ -56,6 +56,9 @@
 @end
 
 @implementation JPVideoPlayerManager
+@synthesize volume;
+@synthesize muted;
+@synthesize rate;
 
 + (nonnull instancetype)sharedManager {
     static dispatch_once_t once;
@@ -560,7 +563,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                             cacheType:(JPVideoPlayerCacheType)cacheType
               configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
     JPDebugLog(@"Start play a existed video: %@", url);
-    NSUInteger videoLength = [self fetchFileSizeAtPath:videoPath];
+    NSUInteger videoLength = (NSUInteger)[self fetchFileSizeAtPath:videoPath];
     self.managerModel.fileLength = videoLength;
     self.managerModel.fragmentRanges = @[[NSValue valueWithRange:NSMakeRange(0, videoLength)]];
     [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
@@ -584,7 +587,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         self.managerModel.cacheType = JPVideoPlayerCacheTypeLocation;
-        self.managerModel.fileLength = [self fetchFileSizeAtPath:path];;
+        self.managerModel.fileLength = (NSUInteger)[self fetchFileSizeAtPath:path];;
         self.managerModel.fragmentRanges = @[[NSValue valueWithRange:NSMakeRange(0, self.managerModel.fileLength)]];
         [self callVideoLengthDelegateMethodWithVideoLength:self.managerModel.fileLength];
         [self callDownloadDelegateMethodWithFragmentRanges:self.managerModel.fragmentRanges

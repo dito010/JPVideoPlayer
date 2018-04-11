@@ -580,10 +580,10 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (NSUInteger)fetchUnreachableCellCountWithVisibleCellsCount:(NSUInteger)visibleCellsCount {
-    if(![self.unreachableCellDictionary.allKeys containsObject:[NSString stringWithFormat:@"%ld", visibleCellsCount]]){
+    if(![self.unreachableCellDictionary.allKeys containsObject:[NSString stringWithFormat:@"%d", (int)visibleCellsCount]]){
         return 0;
     }
-    return [[self.unreachableCellDictionary valueForKey:[NSString stringWithFormat:@"%ld", visibleCellsCount]] intValue];
+    return [[self.unreachableCellDictionary valueForKey:[NSString stringWithFormat:@"%d", (int)visibleCellsCount]] intValue];
 }
 
 - (NSDictionary<NSString *, NSString *> *)unreachableCellDictionary {

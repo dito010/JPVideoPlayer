@@ -216,7 +216,7 @@ didReceiveResponse:(NSURLResponse *)response
     else {
         JPDispatchSyncOnMainQueue(^{
             [self cancel];
-            NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", ((NSHTTPURLResponse *)response).statusCode];
+            NSString *errorMsg = [NSString stringWithFormat:@"The statusCode of response is: %ld", (long)((NSHTTPURLResponse *)response).statusCode];
             [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription(errorMsg)];
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
         });
