@@ -395,7 +395,7 @@
         return;
     }
 
-    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationAnimating;
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
 #pragma clang diagnostic push
@@ -418,7 +418,6 @@
                              [self executeLandscape];
                          }
                          completion:^(BOOL finished) {
-                             self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
                              if (completion) {
                                  completion();
                              }
@@ -429,7 +428,6 @@
     }
     else{
         [self executeLandscape];
-        self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
         if (completion) {
             completion();
         }
@@ -451,6 +449,7 @@
         return;
     }
 
+    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor clearColor];
 #pragma clang diagnostic push
@@ -458,7 +457,6 @@
     // display status bar.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 #pragma clang diagnostic pop
-    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationAnimating;
     videoPlayerView.controlContainerView.alpha = 0;
     if (flag) {
         [UIView animateWithDuration:0.35
@@ -505,7 +503,6 @@
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
     [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
-    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     [UIView animateWithDuration:0.5 animations:^{
         videoPlayerView.controlContainerView.alpha = 1;
     }];
