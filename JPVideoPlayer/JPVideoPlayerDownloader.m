@@ -172,6 +172,7 @@ didReceiveResponse:(NSURLResponse *)response
         // Support video / audio only.
         BOOL isSupportMIMEType = [response.MIMEType containsString:@"video"] || [response.MIMEType containsString:@"audio"];
         if(!isSupportMIMEType){
+            JPErrorLog(@"Not support MIMEType: %@", response.MIMEType);
             JPDispatchSyncOnMainQueue(^{
                 [self cancel];
                 [self callCompleteDelegateIfNeedWithError:JPErrorWithDescription([NSString stringWithFormat:@"Not support MIMEType: %@", response.MIMEType])];
