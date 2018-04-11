@@ -73,8 +73,7 @@
         _loadingRequests = [@[] mutableCopy];
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
         _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath createVideoFileIfNeedThenFetchItForKey:key]
-                                                     indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]
-                                                           ioQueue:_ioQueue];
+                                                     indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]];
     }
     return self;
 }

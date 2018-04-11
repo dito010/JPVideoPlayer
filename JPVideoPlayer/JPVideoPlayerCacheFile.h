@@ -83,13 +83,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
- * @param ioQueue       The inner queue to prevent resource competition.
  *
  * @return A instance of this class.
  */
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath
-                              ioQueue:(dispatch_queue_t)ioQueue;
+                        indexFilePath:(NSString *)indexFilePath;
 
 /**
  * Designated initializer method.
@@ -97,13 +95,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
- * @param ioQueue       The inner queue to prevent resource competition.
  *
  * @return A instance of this class.
  */
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath
-                         ioQueue:(dispatch_queue_t)ioQueue NS_DESIGNATED_INITIALIZER;
+                   indexFilePath:(NSString *)indexFilePath NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Store
 

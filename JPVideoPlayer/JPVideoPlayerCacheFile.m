@@ -33,8 +33,6 @@
 
 @property (nonatomic) pthread_mutex_t lock;
 
-@property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
-
 @end
 
 static const NSString *kJPVideoPlayerCacheFileZoneKey = @"com.newpan.zone.key.www";
@@ -43,27 +41,22 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 @implementation JPVideoPlayerCacheFile
 
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath
-                              ioQueue:(dispatch_queue_t)ioQueue {
+                        indexFilePath:(NSString *)indexFilePath {
     return [[self alloc] initWithFilePath:filePath
-                            indexFilePath:indexFilePath
-                                  ioQueue:ioQueue];
+                            indexFilePath:indexFilePath];
 }
 
 - (instancetype)init {
     NSAssert(NO, @"Please use given initializer method");
     return [self initWithFilePath:@""
-                    indexFilePath:@""
-                          ioQueue:dispatch_get_global_queue(0, 0)];
+                    indexFilePath:@""];
 }
 
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath
-                         ioQueue:(dispatch_queue_t)ioQueue {
+                   indexFilePath:(NSString *)indexFilePath {
     JPMainThreadAssert;
     NSParameterAssert(filePath.length && indexFilePath.length);
-    NSParameterAssert(ioQueue);
-    if (!filePath.length || !indexFilePath.length || !ioQueue) {
+    if (!filePath.length || !indexFilePath.length) {
         return nil;
     }
 
@@ -71,7 +64,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     if (self) {
         _cacheFilePath = filePath;
         _indexFilePath = indexFilePath;
-        _ioQueue = ioQueue;
         _internalFragmentRanges = [[NSMutableArray alloc] init];
         _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
         _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
@@ -134,6 +126,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (void)mergeRangesIfNeed {
+    JPMainThreadAssert;
     int lock = pthread_mutex_trylock(&_lock);
     for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
         if ((i + 1) < self.internalFragmentRanges.count) {
@@ -157,7 +150,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         return;
     }
 
-    dispatch_async(self.ioQueue, ^{
+    JPDispatchSyncOnMainQueue(^{
         int lock = pthread_mutex_trylock(&_lock);
         BOOL inserted = NO;
         for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
