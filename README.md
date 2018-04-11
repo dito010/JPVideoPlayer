@@ -54,7 +54,6 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 #### 1.2.Resume mute play from `UITableViewController` to  a detail `UIViewController`when user selected a `UITableViewCell`.
 ```objective-c
-Objective-C:
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumeMutePlayWithURL:url
@@ -65,26 +64,24 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 #### 1.3.Play video and display controlView & progressView.
 ```objective-c
-Objective-C:
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_playVideoWithURL:url
         bufferingIndicator:nil
                controlView:nil
               progressView:nil
-    configurationCompletion:nil];
+   configurationCompletion:nil];
 ```
 
 #### 1.4.Resume play with displaying controlView & progressView.
 ```objective-c
-Objective-C:
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumePlayWithURL:url
          bufferingIndicator:nil
                 controlView:nil
                progressView:nil
-     configurationCompletion:nil];
+    configurationCompletion:nil];
 ```
 
 #### 1.5.Play video without controlView & progressView.
@@ -92,7 +89,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_playVideoWithURL:url
-         			  options:kNilOptions
+     				  options:kNilOptions
    configurationCompletion:nil];
 ```
 
@@ -101,8 +98,8 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumePlayWithURL:url
-         			   options:kNilOptions
-    configurationCompletion:nil];
+					   options:kNilOptions
+     configurationCompletion:nil];
 ```
 
 
@@ -148,11 +145,11 @@ This library offered a basic `JPVideoPlayerProgressView`、`JPVideoPlayerBufferi
 ```Objective-C:
 
 [JPVideoPlayerCache.sharedCache calculateSizeOnCompletion:^(NSUInteger fileCount, NSUInteger totalSize) {
-  // do something.
+    // do something.
 }];
 
 [JPVideoPlayerCache.sharedCache clearDiskOnCompletion:^{
-  // do something
+    // do something
 }];
 ```
 
