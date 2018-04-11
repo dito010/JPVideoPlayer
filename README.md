@@ -24,7 +24,6 @@ This library provides an video player with cache support in `UITableView` base o
 - [x] A guarantee that main thread will never be blocked
 - [x] Location video play support
 - [x] Swift support
-- [x] Carthage support
 
 ## Requirements
 - iOS 8.0 or later
