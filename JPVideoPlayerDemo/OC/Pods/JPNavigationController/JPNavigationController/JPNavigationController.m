@@ -93,6 +93,16 @@
 }
 
 
+#pragma mark - Public
+
+- (NSArray<UIViewController *> *)jp_viewControllers {
+    NSMutableArray<UIViewController *> *viewControllers = [NSMutableArray array];
+    for (JPWarpViewController *warpViewController in self.viewControllers) {
+        [viewControllers addObject:warpViewController.userViewController];
+    }
+    return [viewControllers copy];
+}
+
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(JPNavigationControllerGestureRecognizer *)gestureRecognizer{
@@ -285,7 +295,7 @@
     }
     
     NSString *targetClassString = arguments[@"targetClassString"];
-    JPNavigationContollerPopHandle handle = arguments[@"handle"];
+    JPNavigationContollerPopHandler handler = arguments[@"handle"];
     BOOL animated = [arguments[@"animated"] boolValue];
     
     NSMutableArray <JPWarpViewController *> *viewControllersM = [NSMutableArray array];
@@ -301,7 +311,7 @@
     // if find viewController for given class.
     if (viewControllersM.count) {
         
-        if (handle) {
+        if (handler) {
             NSMutableArray <UIViewController *> *targetViewControllersM = [NSMutableArray array];
             [viewControllersM enumerateObjectsUsingBlock:^(JPWarpViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                
@@ -309,7 +319,7 @@
                 
             }];
             
-            UIViewController *vc = handle([targetViewControllersM copy], nil);
+            UIViewController *vc = handler([targetViewControllersM copy], nil);
             if (vc) {
                 [self popToViewController:vc.jp_warpViewController animated:animated];
             }
@@ -324,9 +334,9 @@
     else{
         // don't find viewController in stack for given class.
         
-        if (handle) {
+        if (handler) {
             NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"JPNavigationController don't find viewController in stack for >> %@ <<.", targetClassString] code:0 userInfo:nil];
-            handle(nil, error);
+            handler(nil, error);
         }
     }
 }

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48CB2CC81EDF034D009DD486"
-               BuildableName = "VideoPlayer.framework"
-               BlueprintName = "VideoPlayer"
+               BlueprintIdentifier = "5F6705621DADE88F001EBFAF"
+               BuildableName = "JPVideoPlayerDemo.app"
+               BlueprintName = "JPVideoPlayerDemo"
                ReferencedContainer = "container:JPVideoPlayerDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,6 +44,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5F6705621DADE88F001EBFAF"
+            BuildableName = "JPVideoPlayerDemo.app"
+            BlueprintName = "JPVideoPlayerDemo"
+            ReferencedContainer = "container:JPVideoPlayerDemo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"

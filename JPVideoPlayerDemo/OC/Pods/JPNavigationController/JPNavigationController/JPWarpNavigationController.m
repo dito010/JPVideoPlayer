@@ -147,14 +147,14 @@ static NSString *const kJPWarpNavigationControllerBackImageName = @"JPNavigation
     [self didChangeValueForKey:@"navigationDelegate"];
 }
 
-- (void)jp_popToViewControllerClassString:(NSString *)targetClassString handle:(JPNavigationContollerPopHandle)handle animated:(BOOL)animated{
+- (void)jp_popToViewControllerWithClass:(Class _Nonnull __unsafe_unretained)targetClass handler:(JPNavigationContollerPopHandler)handler animated:(BOOL)animated {
     SEL sel = NSSelectorFromString(@"popToViewController:");
     NSMutableDictionary *arguments = [@{} mutableCopy];
-    if (targetClassString) {
-        arguments[@"targetClassString"] = targetClassString;
+    if (targetClass) {
+        arguments[@"targetClassString"] = NSStringFromClass(targetClass);
     }
-    if (handle) {
-        arguments[@"handle"] = handle;
+    if (handler) {
+        arguments[@"handler"] = handler;
     }
     arguments[@"animated"] = @(animated);
 #pragma clang diagnostic push

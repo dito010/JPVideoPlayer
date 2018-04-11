@@ -2,6 +2,7 @@ platform :ios, '8.0'
 
 target "JPVideoPlayerDemo" do
 
-pod 'JPNavigationController', '~> 2.1.2'
+pod 'JPNavigationController', '~> 2.1.3'
+pod 'Masonry'
 
 end

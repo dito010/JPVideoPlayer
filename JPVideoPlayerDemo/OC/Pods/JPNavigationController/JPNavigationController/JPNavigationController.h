@@ -47,6 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JPNavigationController : UINavigationController<UIGestureRecognizerDelegate>
 
+/*
+ * view controllers in navigation controller's stack.
+ */
+@property(nonatomic, strong, nonnull,readonly) NSArray<UIViewController *> *jp_viewControllers;
+
 @end
 
 NS_ASSUME_NONNULL_END
