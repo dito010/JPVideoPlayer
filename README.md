@@ -89,7 +89,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_playVideoWithURL:url
-     				  options:kNilOptions
+		   options:kNilOptions
    configurationCompletion:nil];
 ```
 
@@ -98,31 +98,34 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumePlayWithURL:url
-					   options:kNilOptions
-     configurationCompletion:nil];
+		    options:kNilOptions
+    configurationCompletion:nil];
 ```
 
 
 ### 2.Landscape Or Portrait Control
 #### 2.1. Go to landscape.
 ```Objective-C:
+
 [aview jp_gotoLandscape];
 
-[aview jp_gotoLandscapeAnimated:YES
-						completion:nil];
+[aview jp_gotoLandscapeAnimated:YES completion:nil];
 ```
 
 #### 2.2. Go to portrait.
 ```Objective-C:
+
 [aview jp_gotoPortrait];
 
-[aview jp_gotoPortraitAnimated:YES
-					   completion:nil];
+[aview jp_gotoPortraitAnimated:YES completion:nil];
 ```
 
 ### 3. Play video in `UITableView` like `Weibo`.
+
 Play video in  `UITableView` support equal height and un-eqaul height cell now, you can use a category method on  `UITableView` directly. You also should set the `jp_tableViewVisibleFrame` accurately to  insure playing video on the cell that closest to the center of the screen.
+
 ```Objective-C:
+
 [tableView jp_playVideoInVisibleCellsIfNeed];
 
 [tableView jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData];
@@ -141,7 +144,7 @@ Play video in  `UITableView` support equal height and un-eqaul height cell now, 
 This library offered a basic `JPVideoPlayerProgressView`、`JPVideoPlayerBufferingIndicator`、`JPVideoPlayerControlView`, so you can pass nil in play video method. You can inherit those basic class to custom your own UI, and you also can not inherit it, directly use your own UI, but you must implete the method in `JPVideoPlayerControlProgressProtocol`、`JPVideoPlayerBufferingProtocol`、`JPVideoPlayerProtocol`.
 
 
-#### 5. Cache manage.
+## 5. Cache manage.
 ```Objective-C:
 
 [JPVideoPlayerCache.sharedCache calculateSizeOnCompletion:^(NSUInteger fileCount, NSUInteger totalSize) {
