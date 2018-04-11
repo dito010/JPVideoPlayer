@@ -7,7 +7,7 @@
 [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles) 
 [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
 
-This library provides an video player with cache support in `UITableView`.
+This library provides an video player with cache support in `UITableView` base on `AVPlayer`.
 
 <p align="left" >
 <img src="Images/demo.gif" title="demo" float=left>
@@ -24,7 +24,6 @@ This library provides an video player with cache support in `UITableView`.
 - [x] A guarantee that main thread will never be blocked
 - [x] Location video play support
 - [x] Swift support
-- [x] Carthage support
 
 ## Requirements
 - iOS 8.0 or later
