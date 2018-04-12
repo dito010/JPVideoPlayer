@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="VideoPlayer" type="AppleRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="JPVideoPlayerDemo" TARGET_NAME="JPVideoPlayerDemo" CONFIG_NAME="Debug" SCHEME_NAME="VideoPlayer" RUN_TARGET_PROJECT_NAME="JPVideoPlayerDemo" RUN_TARGET_NAME="JPVideoPlayerDemo" MAKE_ACTIVE="TRUE">
-    <envs />
-    <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
-      <REVEAL_SETTINGS autoInject="true" autoInstall="true" askToEnableAutoInstall="true" />
-    </EXTENSION>
-    <method />
-  </configuration>
-</component>
