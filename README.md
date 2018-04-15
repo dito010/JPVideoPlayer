@@ -31,6 +31,7 @@ This library provides an video player with cache support in `UITableView` base o
 
 ## Getting Started
 - Read [[iOS]JPVideoPlayer 3.0 使用介绍](https://www.jianshu.com/p/282e3e0cfe78)
+- Read [[iOS]JPVideoPlayer 3.0 源码解析](https://www.jianshu.com/p/5de1965824d4)
 - Read [[iOS]仿微博视频边下边播之封装播放器](http://www.jianshu.com/p/0d4588a7540f)
 - Read [[iOS]仿微博视频边下边播之滑动TableView自动播放](http://www.jianshu.com/p/3946317760a6)
 - Read [[iOS]从使用 KVO 监听 readonly 属性说起](http://www.jianshu.com/p/abd238407e0d)
