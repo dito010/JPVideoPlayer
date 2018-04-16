@@ -235,6 +235,9 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     if(!JPValidFileRange(targetRange)){
         return;
     }
+    if(self.fileLength == 0){
+        return;
+    }
     CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
     CGFloat cacheProgressViewWidth = targetRange.length * self.trackProgressView.bounds.size.width / self.fileLength;
     self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.trackProgressView.bounds.size.height);
@@ -716,6 +719,9 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     }
 
     if(!JPValidFileRange(targetRange)){
+        return;
+    }
+    if(self.fileLength == 0){
         return;
     }
     CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
