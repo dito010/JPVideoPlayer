@@ -476,7 +476,11 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
         return NO;
     }
 
-    return [self viewIsVisibleInTableViewVisibleFrame:self.playingVideoCell];
+    UIView *strategyView = self.scrollPlayStrategyType == JPScrollPlayStrategyTypeBestCell ? self.playingVideoCell : self.playingVideoCell.jp_videoPlayView;
+    if(!strategyView){
+        return NO;
+    }
+    return [self viewIsVisibleInTableViewVisibleFrame:strategyView];
 }
 
 - (BOOL)viewIsVisibleInTableViewVisibleFrame:(UIView *)view {

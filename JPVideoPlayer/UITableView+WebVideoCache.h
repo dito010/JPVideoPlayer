@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, JPScrollPlayStrategyType) {
     JPScrollPlayStrategyTypeBestVideoView,
 };
 
-typedef UITableViewCell *_Nullable (^JPPlayVideoInVisibleCellsBlock)(NSArray<UITableViewCell *> _Nullable *visibleCells);
+typedef UITableViewCell *_Nullable (^JPPlayVideoInVisibleCellsBlock)(NSArray<UITableViewCell *> *_Nullable visibleCells);
 
 NS_ASSUME_NONNULL_BEGIN
 
