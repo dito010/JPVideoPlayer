@@ -503,21 +503,40 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 }
 
 - (BOOL)viewIsVisibleInTableViewVisibleFrame:(UIView *)view {
-    CGRect referenceRect = [self.tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
-    CGPoint viewLeftTopPoint = view.frame.origin;
-    viewLeftTopPoint.y += 1;
-    CGPoint topCoordinatePoint = [view.superview convertPoint:viewLeftTopPoint toView:nil];
-    BOOL isTopContain = CGRectContainsPoint(referenceRect, topCoordinatePoint);
-
-    CGFloat viewBottomY = viewLeftTopPoint.y + view.bounds.size.height;
-    viewBottomY -= 2;
-    CGPoint viewLeftBottomPoint = CGPointMake(viewLeftTopPoint.x, viewBottomY);
-    CGPoint bottomCoordinatePoint = [view.superview convertPoint:viewLeftBottomPoint toView:nil];
-    BOOL isBottomContain = CGRectContainsPoint(referenceRect, bottomCoordinatePoint);
-    if(!isTopContain && !isBottomContain){
-        return NO;
+    if (self.scrollPlayStrategyType == JPScrollPlayStrategyTypeBestVideoView) {
+        UITableViewCell *cell = (UITableViewCell *)view;
+        CGRect referenceRect = [self.tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
+        CGPoint viewLeftTopPoint = cell.jp_videoPlayView.frame.origin;
+        viewLeftTopPoint.y += 1;
+        CGPoint topCoordinatePoint = [cell.jp_videoPlayView.superview convertPoint:viewLeftTopPoint toView:nil];
+        BOOL isTopContain = CGRectContainsPoint(referenceRect, topCoordinatePoint);
+        
+        CGFloat viewBottomY = viewLeftTopPoint.y + cell.jp_videoPlayView.bounds.size.height;
+        viewBottomY -= 2;
+        CGPoint viewLeftBottomPoint = CGPointMake(viewLeftTopPoint.x, viewBottomY);
+        CGPoint bottomCoordinatePoint = [cell.jp_videoPlayView.superview convertPoint:viewLeftBottomPoint toView:nil];
+        BOOL isBottomContain = CGRectContainsPoint(referenceRect, bottomCoordinatePoint);
+        if(!isTopContain && !isBottomContain){
+            return NO;
+        }
+        return YES;
+    } else {
+        CGRect referenceRect = [self.tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
+        CGPoint viewLeftTopPoint = view.frame.origin;
+        viewLeftTopPoint.y += 1;
+        CGPoint topCoordinatePoint = [view.superview convertPoint:viewLeftTopPoint toView:nil];
+        BOOL isTopContain = CGRectContainsPoint(referenceRect, topCoordinatePoint);
+        
+        CGFloat viewBottomY = viewLeftTopPoint.y + view.bounds.size.height;
+        viewBottomY -= 2;
+        CGPoint viewLeftBottomPoint = CGPointMake(viewLeftTopPoint.x, viewBottomY);
+        CGPoint bottomCoordinatePoint = [view.superview convertPoint:viewLeftBottomPoint toView:nil];
+        BOOL isBottomContain = CGRectContainsPoint(referenceRect, bottomCoordinatePoint);
+        if(!isTopContain && !isBottomContain){
+            return NO;
+        }
+        return YES;
     }
-    return YES;
 }
 
 - (UITableViewCell *)findTheBestPlayVideoCell {
