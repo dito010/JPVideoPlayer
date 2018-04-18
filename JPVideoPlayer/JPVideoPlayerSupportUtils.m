@@ -332,33 +332,6 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @end
 
-/**
- * The style of cell cannot stop in screen center.
- */
-typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
-    JPVideoPlayerUnreachableCellTypeNone = 0,
-    JPVideoPlayerUnreachableCellTypeTop = 1,
-    JPVideoPlayerUnreachableCellTypeDown = 2
-};
-
-@interface UITableViewCell (UnreachableCellType)
-
-@property(nonatomic) JPVideoPlayerUnreachableCellType unreachableCellType;
-
-@end
-
-@implementation UITableViewCell (UnreachableCellType)
-
-- (void)setUnreachableCellType:(JPVideoPlayerUnreachableCellType)unreachableCellType {
-    objc_setAssociatedObject(self, @selector(unreachableCellType), @(unreachableCellType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (JPVideoPlayerUnreachableCellType)unreachableCellType {
-    return [objc_getAssociatedObject(self, _cmd) unsignedIntValue];
-}
-
-@end
-
 @interface JPVideoPlayerTableViewHelper()
 
 @property (nonatomic, weak) UITableViewCell *playingVideoCell;
@@ -422,20 +395,20 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     if (unreachableCellCount > 0) {
         if (indexPath.row <= (unreachableCellCount - 1)) {
             if(isFirstSectionInSections){
-                cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeTop;
+                cell.jp_unreachableCellType = JPVideoPlayerUnreachableCellTypeTop;
             }
         }
         else if (indexPath.row >= (rows - unreachableCellCount)){
             if(isLastSectionInSections){
-                cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeDown;
+                cell.jp_unreachableCellType = JPVideoPlayerUnreachableCellTypeDown;
             }
         }
         else{
-            cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeNone;
+            cell.jp_unreachableCellType = JPVideoPlayerUnreachableCellTypeNone;
         }
     }
     else{
-        cell.unreachableCellType = JPVideoPlayerUnreachableCellTypeNone;
+        cell.jp_unreachableCellType = JPVideoPlayerUnreachableCellTypeNone;
     }
 }
 
@@ -447,15 +420,19 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
 
     // handle the first cell cannot play video when initialized.
     [self handleCellUnreachableTypeInVisibleCellsAfterReloadData];
-
-    UITableView *tableView = (UITableView *)self.tableView;
-    NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
+    
+    NSArray<UITableViewCell *> *visibleCells = [self.tableView visibleCells];
     // Find first cell need play video in visible cells.
     UITableViewCell *targetCell = nil;
-    for (UITableViewCell *cell in visibleCells) {
-        if (cell.jp_videoURL.absoluteString.length > 0) {
-            targetCell = cell;
-            break;
+    if(self.playVideoInVisibleCellsBlock){
+       targetCell = self.playVideoInVisibleCellsBlock(visibleCells);
+    } 
+    else {
+        for (UITableViewCell *cell in visibleCells) {
+            if (cell.jp_videoURL.absoluteString.length > 0) {
+                targetCell = cell;
+                break;
+            }
         }
     }
 
@@ -529,6 +506,10 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
     UITableViewCell *targetCell = nil;
     UITableView *tableView = self.tableView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
+    if(self.findBestCellInVisibleCellsBlock){
+        return self.findBestCellInVisibleCellsBlock(visibleCells);
+    }
+    
     CGFloat gap = MAXFLOAT;
     CGRect referenceRect = [tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
 
@@ -543,9 +524,9 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
         if(!strategyView){
             continue;
         }
-        if (cell.unreachableCellType != JPVideoPlayerUnreachableCellTypeNone) {
+        if (cell.jp_unreachableCellType != JPVideoPlayerUnreachableCellTypeNone) {
             // Must the all area of the cell is visible.
-            if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeTop) {
+            if (cell.jp_unreachableCellType == JPVideoPlayerUnreachableCellTypeTop) {
                 CGPoint strategyViewLeftUpPoint = strategyView.frame.origin;
                 strategyViewLeftUpPoint.y += 2;
                 CGPoint coordinatePoint = [strategyView.superview convertPoint:strategyViewLeftUpPoint toView:nil];
@@ -554,7 +535,7 @@ typedef NS_OPTIONS(NSUInteger , JPVideoPlayerUnreachableCellType) {
                     break;
                 }
             }
-            else if (cell.unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
+            else if (cell.jp_unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
                 CGPoint strategyViewLeftUpPoint = cell.frame.origin;
                 CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + cell.bounds.size.height;
                 CGPoint strategyViewLeftDownPoint = CGPointMake(strategyViewLeftUpPoint.x, strategyViewDownY);

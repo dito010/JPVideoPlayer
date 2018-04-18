@@ -191,6 +191,10 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @property (nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
 
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock playVideoInVisibleCellsBlock;
+
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock findBestCellInVisibleCellsBlock;
+
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
 
 @property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;

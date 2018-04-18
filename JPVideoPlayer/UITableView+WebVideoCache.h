@@ -26,6 +26,8 @@ typedef NS_ENUM(NSUInteger, JPScrollPlayStrategyType) {
     JPScrollPlayStrategyTypeBestVideoView,
 };
 
+typedef UITableViewCell *_Nullable (^JPPlayVideoInVisibleCellsBlock)(NSArray<UITableViewCell *> _Nullable *visibleCells);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol JPTableViewPlayVideoDelegate<NSObject>
@@ -109,6 +111,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @note You can custom this dictionary.
  */
 @property (nonatomic) NSDictionary<NSString *, NSString *> *jp_unreachableCellDictionary;
+
+/**
+ * Use this block to custom choosing cell process when call `jp_playVideoInVisibleCellsIfNeed`.
+ */
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock jp_playVideoInVisibleCellsBlock;
+
+/**
+ * Use this block to custom finding the best cell process when scrollView did stop scroll.
+ */
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock jp_findBestCellInVisibleCellsBlock;
 
 /**
  * This method be used to find the first cell need to play video in visible cells.

@@ -30,4 +30,12 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
+- (void)setJp_unreachableCellType:(JPVideoPlayerUnreachableCellType)jp_unreachableCellType {
+    objc_setAssociatedObject(self, @selector(jp_unreachableCellType), @(jp_unreachableCellType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (JPVideoPlayerUnreachableCellType)jp_unreachableCellType {
+    return [objc_getAssociatedObject(self, _cmd) integerValue];
+}
+
 @end

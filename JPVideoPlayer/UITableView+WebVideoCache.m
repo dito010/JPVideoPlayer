@@ -58,6 +58,22 @@ static const NSString *kJPVideoPlayerScrollViewHelperKey = @"com.jpvideoplayer.s
     return self.helper.unreachableCellDictionary;
 }
 
+- (void)setJp_playVideoInVisibleCellsBlock:(JPPlayVideoInVisibleCellsBlock)jp_playVideoInVisibleCellsBlock {
+    self.helper.playVideoInVisibleCellsBlock = jp_playVideoInVisibleCellsBlock;
+}
+
+- (JPPlayVideoInVisibleCellsBlock)jp_playVideoInVisibleCellsBlock {
+    return self.helper.playVideoInVisibleCellsBlock;
+}
+
+- (void)setJp_findBestCellInVisibleCellsBlock:(JPPlayVideoInVisibleCellsBlock)jp_findBestCellInVisibleCellsBlock {
+    self.helper.findBestCellInVisibleCellsBlock = jp_findBestCellInVisibleCellsBlock;
+}
+
+- (JPPlayVideoInVisibleCellsBlock)jp_findBestCellInVisibleCellsBlock {
+    return self.helper.findBestCellInVisibleCellsBlock;
+}
+
 - (void)jp_playVideoInVisibleCellsIfNeed {
     [self.helper playVideoInVisibleCellsIfNeed];
 }
