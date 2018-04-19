@@ -76,6 +76,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds;
 
+- (void)videoPlayerDidConfigurationComplete;
+
 @end
 
 @protocol JPVideoPlayerControlProgressProtocol<JPVideoPlayerProtocol>

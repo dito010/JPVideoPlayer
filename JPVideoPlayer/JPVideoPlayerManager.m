@@ -228,10 +228,9 @@
 
     BOOL canResumePlay = self.managerModel &&
             [self.managerModel.videoURL.absoluteString isEqualToString:url.absoluteString] &&
-            self.videoPlayer &&
-            self.videoPlayer.rate;
-    JPDebugLog(@"Called resume play, but can not resume play.");
+            self.videoPlayer;
     if(!canResumePlay){
+        JPDebugLog(@"Called resume play, but can not resume play, translate to normal play if need.");
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldTranslateIntoPlayVideoFromResumePlayForURL:)]) {
             BOOL preferSwitch = [self.delegate videoPlayerManager:self
                  shouldTranslateIntoPlayVideoFromResumePlayForURL:url];
@@ -250,6 +249,7 @@
                                           expectedSize:self.managerModel.fileLength
                                              cacheType:self.managerModel.cacheType
                                                  error:nil];
+    JPDebugLog(@"Resume play now.");
     [self.videoPlayer resumePlayWithShowLayer:showLayer
                                       options:options
                       configurationCompletion:configurationCompletion];
