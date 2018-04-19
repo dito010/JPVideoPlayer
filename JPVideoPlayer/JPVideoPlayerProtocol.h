@@ -78,8 +78,17 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 /**
  * This method will be called when video player status did change.
+ *
+ * @param playerStatus The player status.
  */
 - (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus;
+
+/**
+ * This method will be called when the interfaceOrientation of player was changed.
+ *
+ * @param interfaceOrientation The interfaceOrientation of player.
+ */
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation;
 
 @end
 

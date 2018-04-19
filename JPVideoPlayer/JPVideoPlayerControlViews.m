@@ -373,6 +373,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.playButton.selected = !isPlaying;
 }
 
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    self.landscapeButton.selected = interfaceOrientation == JPVideoPlayViewInterfaceOrientationLandscape;
+}
+
 
 #pragma mark - Private
 
@@ -555,6 +559,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
     [self.controlBar videoPlayerStatusDidChange:playerStatus];
+}
+
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    [self.controlBar videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
 }
 
 

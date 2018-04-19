@@ -313,6 +313,7 @@
                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                            options:options
                                            configurationCompletion:internalConfigFinishedBlock];
+            [self callOrientationDelegateWithInterfaceOrientation:self.jp_viewInterfaceOrientation];
         }
         else {
             [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
@@ -436,6 +437,7 @@
         }];
     }
     [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+    [self callOrientationDelegateWithInterfaceOrientation:JPVideoPlayViewInterfaceOrientationLandscape];
 }
 
 - (void)jp_gotoPortrait {
@@ -480,10 +482,20 @@
         }
     }
     [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
+    [self callOrientationDelegateWithInterfaceOrientation:JPVideoPlayViewInterfaceOrientationPortrait];
 }
 
 
 #pragma mark - Private
+
+- (void)callOrientationDelegateWithInterfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:)]){
+        [self.jp_controlView videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
+    }
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:)]){
+        [self.jp_progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
+    }
+}
 
 - (void)callStartBufferingDelegate {
     if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
