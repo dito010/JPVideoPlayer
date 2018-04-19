@@ -708,4 +708,11 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
     return YES;
 }
 
+- (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager {
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(preferAudioSessionCategory)]) {
+        return [self.jp_videoPlayerDelegate preferAudioSessionCategory];
+    }
+    return AVAudioSessionCategoryPlayback;
+}
+
 @end

@@ -104,6 +104,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)playVideoFailWithError:(NSError *)error
                       videoURL:(NSURL *)videoURL;
+/**
+ * Provide custom audio session category to play video, `AVAudioSessionCategoryPlayback` by default.
+ *
+ * @return The prefer audio session category.
+ */
+- (NSString *)preferAudioSessionCategory;
 
 @end
 

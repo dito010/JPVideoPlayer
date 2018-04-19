@@ -150,6 +150,15 @@ shouldTranslateIntoPlayVideoFromResumePlayForURL:(NSURL *)videoURL;
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL *)videoURL;
 
+/**
+ * Provide custom audio session category to play video.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ *
+ * @return The prefer audio session category.
+ */
+- (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
+
 @end
 
 @interface JPVideoPlayerManagerModel : NSObject
