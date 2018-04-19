@@ -368,6 +368,11 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     [self.progressView didFetchVideoFileLength:videoLength];
 }
 
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
+    BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying;
+    self.playButton.selected = !isPlaying;
+}
+
 
 #pragma mark - Private
 
@@ -546,6 +551,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)didFetchVideoFileLength:(NSUInteger)videoLength {
     [self.controlBar didFetchVideoFileLength:videoLength];
+}
+
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
+    [self.controlBar videoPlayerStatusDidChange:playerStatus];
 }
 
 

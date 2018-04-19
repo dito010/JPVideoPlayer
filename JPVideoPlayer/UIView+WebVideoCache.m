@@ -577,6 +577,12 @@
                     playerStatus == JPVideoPlayerStatusUnknown ||
                     playerStatus == JPVideoPlayerStatusFailed;
     needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerStatusDidChange:)]){
+        [self.jp_controlView videoPlayerStatusDidChange:playerStatus];
+    }
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerStatusDidChange:)]){
+        [self.jp_progressView videoPlayerStatusDidChange:playerStatus];
+    }
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager

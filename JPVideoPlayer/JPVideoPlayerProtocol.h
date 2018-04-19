@@ -76,7 +76,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds;
 
-- (void)videoPlayerDidConfigurationComplete;
+/**
+ * This method will be called when video player status did change.
+ */
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus;
 
 @end
 
