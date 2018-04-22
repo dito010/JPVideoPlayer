@@ -578,6 +578,14 @@
     playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
     if(playerStatus == JPVideoPlayerStatusPlaying){
         self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
+            BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundWhenPlaybackStart];
+            if(shouldShow){
+                self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+            }else{
+                self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
+            }
+        }
     }
     self.helper.playerStatus = playerStatus;
     // JPDebugLog(@"playerStatus: %ld", playerStatus);
