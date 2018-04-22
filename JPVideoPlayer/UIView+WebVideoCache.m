@@ -453,7 +453,11 @@
 
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
-    videoPlayerView.backgroundColor = [UIColor clearColor];
+    videoPlayerView.backgroundColor = [UIColor blackColor];
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
+        BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundWhenPlaybackStart];
+        videoPlayerView.backgroundColor = shouldShow ? [UIColor blackColor] : [UIColor clearColor];
+    }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // display status bar.
@@ -580,11 +584,7 @@
         self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
         if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
             BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundWhenPlaybackStart];
-            if(shouldShow){
-                self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
-            }else{
-                self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
-            }
+            self.helper.videoPlayerView.backgroundColor = shouldShow ? [UIColor blackColor] : [UIColor clearColor];
         }
     }
     self.helper.playerStatus = playerStatus;
