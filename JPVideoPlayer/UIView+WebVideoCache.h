@@ -46,6 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldShowBlackBackgroundBeforePlaybackStart;
 
 /**
+ * Controls the background color of the video layer after player start play video.
+ *  by default it is YES, means that the color of the layer is `blackColor` after start playing.
+ *
+ * @return Return NO to make the background color of the video layer be `clearColor`.
+ */
+- (BOOL)shouldShowBlackBackgroundWhenPlaybackStart;
+
+/**
  * Notify the player status.
  *
  * @param playerStatus      The current playing status.
