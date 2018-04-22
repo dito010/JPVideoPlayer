@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return Return NO to make the background color of the video layer be `clearColor`.
  */
-- (BOOL)shouldShowBlackBackgroundAfterPlaybackStart;
+- (BOOL)shouldShowBlackBackgroundWhenPlaybackStart;
 
 /**
  * Notify the player status.
