@@ -119,6 +119,15 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
  */
 - (BOOL)diskVideoExistsOnPath:(NSString *)path;
 
+/**
+ * check if video is Completely cached.
+ *
+ * @param url The url need to be checked.
+ *
+ * @return If the video is Completely cached return YES, otherwise return NO.
+ */
+- (BOOL)videoIsCompletelyCachedWith:(NSURL*)url;
+
 # pragma mark - Clear Cache Events
 
 /**

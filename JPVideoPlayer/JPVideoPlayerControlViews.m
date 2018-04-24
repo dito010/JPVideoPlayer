@@ -817,11 +817,11 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 #pragma mark - JPVideoPlayerBufferingProtocol
 
-- (void)didStartBuffering {
+- (void)didStartBufferingFor:(NSURL *)url {
     [self startAnimating];
 }
 
-- (void)didFinishBuffering {
+- (void)didFinishBufferingFor:(NSURL *)url {
     [self stopAnimating];
 }
 

@@ -273,7 +273,7 @@
         if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillPrepareToReuse)]){
             [self.jp_controlView viewWillPrepareToReuse];
         }
-        [self callFinishBufferingDelegate];
+        [self callFinishBufferingDelegateWith:url];
         // Add progressView and controlView if need.
         self.helper.videoPlayerView.hidden = NO;
         if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
@@ -281,7 +281,7 @@
             [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
         }
         if(self.jp_bufferingIndicator){
-            [self callStartBufferingDelegate];
+            [self callStartBufferingDelegateWith:url];
         }
 
         if(self.jp_progressView && !self.jp_progressView.superview){
@@ -387,10 +387,10 @@
 }
 
 - (void)jp_stopPlay {
+    [self callFinishBufferingDelegateWith:[JPVideoPlayerManager sharedManager].managerModel.videoURL];
     [[JPVideoPlayerManager sharedManager] stopPlay];
     self.helper.videoPlayerView.hidden = YES;
     self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
-    [self callFinishBufferingDelegate];
 }
 
 
@@ -508,15 +508,15 @@
     }
 }
 
-- (void)callStartBufferingDelegate {
-    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
-        [self.jp_bufferingIndicator didStartBuffering];
+- (void)callStartBufferingDelegateWith:(NSURL*)url {
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBufferingFor:)]){
+        [self.jp_bufferingIndicator didStartBufferingFor:url];
     }
 }
 
-- (void)callFinishBufferingDelegate {
-    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBuffering)]){
-        [self.jp_bufferingIndicator didFinishBuffering];
+- (void)callFinishBufferingDelegateWith:(NSURL*)url {
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBufferingFor:)]){
+        [self.jp_bufferingIndicator didFinishBufferingFor:url];
     }
 }
 
@@ -607,7 +607,7 @@
             playerStatus == JPVideoPlayerStatusBuffering ||
                     playerStatus == JPVideoPlayerStatusUnknown ||
                     playerStatus == JPVideoPlayerStatusFailed;
-    needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
+    needDisplayBufferingIndicator ? [self callStartBufferingDelegateWith:videoPlayerManager.managerModel.videoURL] : [self callFinishBufferingDelegateWith:videoPlayerManager.managerModel.videoURL];
     if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerStatusDidChange:)]){
         [self.jp_controlView videoPlayerStatusDidChange:playerStatus];
     }

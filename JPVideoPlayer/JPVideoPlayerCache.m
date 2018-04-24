@@ -154,6 +154,13 @@ static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.ver
     return [self.fileManager fileExistsAtPath:path];
 }
 
+- (BOOL)videoIsCompletelyCachedWith:(NSURL*)url {
+    BOOL isCompletelyCached = NO;
+    if (url) {
+        isCompletelyCached = ![self.fileManager fileExistsAtPath:[JPVideoPlayerCachePath videoCacheIndexFilePathForKey:url.absoluteString]];
+    }
+    return isCompletelyCached;
+}
 
 #pragma mark - Clear Cache Events
 
