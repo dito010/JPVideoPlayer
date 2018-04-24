@@ -112,6 +112,10 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @property (nonatomic, strong, readonly) UIView *userInteractionContainerView;
 
+@property (nonatomic, assign, readonly) BOOL autoHide;
+
+- (instancetype)initWithAutoHide:(BOOL)autoHide;
+
 @end
 
 NS_ASSUME_NONNULL_END

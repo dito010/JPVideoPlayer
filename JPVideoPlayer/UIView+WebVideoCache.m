@@ -56,7 +56,11 @@
 
 - (JPVideoPlayerView *)videoPlayerView {
     if(!_videoPlayerView){
-        _videoPlayerView = [JPVideoPlayerView new];
+        BOOL autoHide = YES;
+        if (_playVideoView.jp_videoPlayerDelegate && [_playVideoView.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoHideControlContainerView)]) {
+            autoHide = [_playVideoView.jp_videoPlayerDelegate shouldAutoHideControlContainerView];
+        }
+        _videoPlayerView = [[JPVideoPlayerView alloc] initWithAutoHide:autoHide];
     }
     return _videoPlayerView;
 }
@@ -214,6 +218,8 @@
     }
 
     if(needSetControlView){
+        //before setting controllerView userInteractionEnabled should be enabled.
+        self.userInteractionEnabled = YES;
         // user update controlView.
         if(controlView && self.jp_controlView){
             [self.jp_controlView removeFromSuperview];

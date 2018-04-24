@@ -887,9 +887,10 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
-- (instancetype)init {
+- (instancetype)initWithAutoHide:(BOOL)autoHide {
     self = [super init];
     if(self){
+        _autoHide = autoHide;
         [self _setup];
     }
     return self;
@@ -1106,10 +1107,11 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
         view;
     });
 
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidTap)];
-    [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
-    [self startTimer];
-
+    if (_autoHide) {
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidTap)];
+        [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
+        [self startTimer];
+    }
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserStartDragNotification)
                                                name:JPVideoPlayerControlProgressViewUserDidStartDragNotification

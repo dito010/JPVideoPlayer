@@ -54,6 +54,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldShowBlackBackgroundWhenPlaybackStart;
 
 /**
+ * Controls the auto hiding of JPVideoPlayerView`s controlContainerView .
+ *  by default it is YES, means that JPVideoPlayerView`s auto hide controlContainerView after sevral sconds and show it again when user clicked the video playing view.
+ *
+ * @return Return NO to make the JPVideoPlayerView`s show controlContainerView all the time.
+ * @warning userInteractionEnabled will be set YES;
+ */
+- (BOOL)shouldAutoHideControlContainerView;
+
+/**
  * Notify the player status.
  *
  * @param playerStatus      The current playing status.
