@@ -155,10 +155,10 @@
 				CF533E3220773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.h */,
 				CF533E3320773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.m */,
 				CF533E3420773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.xib */,
-				258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */,
 				258180C10C9B1D5150EDD9C5 /* JPVideoPlayerWeiBoViewController.h */,
-				2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */,
+				258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */,
 				25818F3460CEF9465F4EF47F /* JPVideoPlayerHoverViewController.h */,
+				2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */,
 			);
 			name = Weibo;
 			sourceTree = "<group>";
@@ -237,36 +237,36 @@
 		CF5024CC207F66F300DE8E2E /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				CF5024CD207F66F300DE8E2E /* JPVideoPlayerManager.h */,
-				CF5024CE207F66F300DE8E2E /* UITableView+WebVideoCache.h */,
-				CF5024CF207F66F300DE8E2E /* JPVideoPlayerDownloader.m */,
-				CF5024D0207F66F300DE8E2E /* JPVideoPlayerCache.m */,
-				CF5024D1207F66F300DE8E2E /* JPVideoPlayerCacheFile.h */,
-				CF5024D2207F66F300DE8E2E /* JPVideoPlayerControlViews.h */,
-				CF5024D3207F66F300DE8E2E /* UIView+WebVideoCache.m */,
-				CF5024D4207F66F300DE8E2E /* JPVideoPlayerCompat.m */,
-				CF5024D5207F66F300DE8E2E /* JPVideoPlayerProtocol.h */,
 				CF5024D6207F66F300DE8E2E /* JPVideoPlayer.h */,
-				CF5024D7207F66F300DE8E2E /* JPVideoPlayerResourceLoader.m */,
-				CF5024D8207F66F300DE8E2E /* JPResourceLoadingRequestTask.h */,
-				CF5024D9207F66F300DE8E2E /* JPVideoPlayerCachePath.h */,
-				CF5024DA207F66F300DE8E2E /* UITableViewCell+WebVideoCache.h */,
-				CF5024DB207F66F300DE8E2E /* JPVideoPlayerSupportUtils.h */,
-				CF5024DC207F66F300DE8E2E /* JPVideoPlayerCacheFile.m */,
+				CF5024E6207F66F300DE8E2E /* JPVideoPlayer.m */,
+				CF5024D5207F66F300DE8E2E /* JPVideoPlayerProtocol.h */,
+				CF5024CD207F66F300DE8E2E /* JPVideoPlayerManager.h */,
+				CF5024E2207F66F300DE8E2E /* JPVideoPlayerManager.m */,
+				CF5024D2207F66F300DE8E2E /* JPVideoPlayerControlViews.h */,
 				CF5024DD207F66F300DE8E2E /* JPVideoPlayerControlViews.m */,
 				CF5024DE207F66F300DE8E2E /* JPVideoPlayerCache.h */,
-				CF5024DF207F66F300DE8E2E /* JPVideoPlayer.bundle */,
-				CF5024E0207F66F300DE8E2E /* JPVideoPlayerDownloader.h */,
-				CF5024E1207F66F300DE8E2E /* UITableView+WebVideoCache.m */,
-				CF5024E2207F66F300DE8E2E /* JPVideoPlayerManager.m */,
-				CF5024E3207F66F300DE8E2E /* JPVideoPlayerCompat.h */,
-				CF5024E4207F66F300DE8E2E /* UIView+WebVideoCache.h */,
-				CF5024E5207F66F300DE8E2E /* JPVideoPlayerResourceLoader.h */,
-				CF5024E6207F66F300DE8E2E /* JPVideoPlayer.m */,
-				CF5024E7207F66F300DE8E2E /* JPVideoPlayerSupportUtils.m */,
-				CF5024E8207F66F300DE8E2E /* UITableViewCell+WebVideoCache.m */,
+				CF5024D0207F66F300DE8E2E /* JPVideoPlayerCache.m */,
+				CF5024D1207F66F300DE8E2E /* JPVideoPlayerCacheFile.h */,
+				CF5024DC207F66F300DE8E2E /* JPVideoPlayerCacheFile.m */,
+				CF5024D9207F66F300DE8E2E /* JPVideoPlayerCachePath.h */,
 				CF5024E9207F66F300DE8E2E /* JPVideoPlayerCachePath.m */,
+				CF5024E0207F66F300DE8E2E /* JPVideoPlayerDownloader.h */,
+				CF5024CF207F66F300DE8E2E /* JPVideoPlayerDownloader.m */,
+				CF5024E5207F66F300DE8E2E /* JPVideoPlayerResourceLoader.h */,
+				CF5024D7207F66F300DE8E2E /* JPVideoPlayerResourceLoader.m */,
+				CF5024D8207F66F300DE8E2E /* JPResourceLoadingRequestTask.h */,
 				CF5024EA207F66F300DE8E2E /* JPResourceLoadingRequestTask.m */,
+				CF5024E3207F66F300DE8E2E /* JPVideoPlayerCompat.h */,
+				CF5024D4207F66F300DE8E2E /* JPVideoPlayerCompat.m */,
+				CF5024E4207F66F300DE8E2E /* UIView+WebVideoCache.h */,
+				CF5024D3207F66F300DE8E2E /* UIView+WebVideoCache.m */,
+				CF5024CE207F66F300DE8E2E /* UITableView+WebVideoCache.h */,
+				CF5024E1207F66F300DE8E2E /* UITableView+WebVideoCache.m */,
+				CF5024DA207F66F300DE8E2E /* UITableViewCell+WebVideoCache.h */,
+				CF5024E8207F66F300DE8E2E /* UITableViewCell+WebVideoCache.m */,
+				CF5024DB207F66F300DE8E2E /* JPVideoPlayerSupportUtils.h */,
+				CF5024E7207F66F300DE8E2E /* JPVideoPlayerSupportUtils.m */,
+				CF5024DF207F66F300DE8E2E /* JPVideoPlayer.bundle */,
 			);
 			name = JPVideoPlayer;
 			path = ../../JPVideoPlayer;
@@ -275,8 +275,8 @@
 		CFA960C3207722EF003C456B /* Douyin */ = {
 			isa = PBXGroup;
 			children = (
-				25818C4F9FF902E2C26F116E /* JPVideoPlayerDouyinViewController.m */,
 				2581816193D49E7210A222B1 /* JPVideoPlayerDouyinViewController.h */,
+				25818C4F9FF902E2C26F116E /* JPVideoPlayerDouyinViewController.m */,
 			);
 			name = Douyin;
 			sourceTree = "<group>";
