@@ -84,6 +84,7 @@
 		5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerWeiBoListViewController.h; sourceTree = "<group>"; };
 		5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerWeiBoListViewController.m; sourceTree = "<group>"; };
 		8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FB27241208F0C510025FF63 /* JPPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPPlayer.h; sourceTree = "<group>"; };
 		CF5024CD207F66F300DE8E2E /* JPVideoPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerManager.h; sourceTree = "<group>"; };
 		CF5024CE207F66F300DE8E2E /* UITableView+WebVideoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+WebVideoCache.h"; sourceTree = "<group>"; };
 		CF5024CF207F66F300DE8E2E /* JPVideoPlayerDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDownloader.m; sourceTree = "<group>"; };
@@ -237,6 +238,7 @@
 		CF5024CC207F66F300DE8E2E /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				8FB27241208F0C510025FF63 /* JPPlayer.h */,
 				CF5024D6207F66F300DE8E2E /* JPVideoPlayer.h */,
 				CF5024E6207F66F300DE8E2E /* JPVideoPlayer.m */,
 				CF5024D5207F66F300DE8E2E /* JPVideoPlayerProtocol.h */,

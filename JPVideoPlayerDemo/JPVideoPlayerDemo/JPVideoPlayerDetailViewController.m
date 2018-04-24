@@ -10,9 +10,8 @@
  */
 
 #import "JPVideoPlayerDetailViewController.h"
-#import "UIView+WebVideoCache.h"
+#import "JPPlayer.h"
 #import <JPNavigationControllerKit.h>
-#import "JPVideoPlayerControlViews.h"
 #import <Masonry.h>
 
 @interface JPVideoPlayerDetailControlView : JPVideoPlayerControlView

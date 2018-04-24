@@ -10,8 +10,7 @@
  */
 
 #import "JPVideoPlayerDouyinViewController.h"
-#import "UIView+WebVideoCache.h"
-#import "JPVideoPlayerControlViews.h"
+#import "JPPlayer.h"
 
 @interface JPDouyinProgressView: JPVideoPlayerProgressView
 

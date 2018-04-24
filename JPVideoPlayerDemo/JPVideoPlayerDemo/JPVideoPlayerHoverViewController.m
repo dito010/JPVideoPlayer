@@ -10,7 +10,7 @@
  */
 
 #import "JPVideoPlayerHoverViewController.h"
-#import "UIView+WebVideoCache.h"
+#import "JPPlayer.h"
 #import "UINavigationController+FulllScreenPopPush.h"
 
 @interface JPVideoPlayerHoverViewController()<UITableViewDataSource, UITableViewDelegate>
