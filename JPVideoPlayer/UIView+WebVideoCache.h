@@ -63,6 +63,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldAutoHideControlContainerView;
 
 /**
+ * Controls the Behavior of adding default ControlView/BufferingIndicater/ProgressView when give nil to params.
+ * By default it is YES, which means default views will be added when params given nil.
+ *
+ * @return Return NO to don`t display any view when params are given nil.
+ */
+- (BOOL)shouldShowDefaultControlingAndIndicatingViews;
+
+/**
  * Notify the player status.
  *
  * @param playerStatus      The current playing status.

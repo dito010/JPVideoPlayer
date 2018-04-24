@@ -59,8 +59,8 @@
         weakSelf.playingCell = weakCell;
         weakSelf.playingCell.videoPlayView.jp_videoPlayerDelegate = weakSelf;
         [weakSelf.playingCell.videoPlayView jp_playVideoWithURL:[NSURL URLWithString:weakSelf.pathStrings[indexPath.row]]
-                   bufferingIndicator:nil
-                          controlView:nil
+                   bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
+                          controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
                          progressView:nil
               configurationCompletion:nil];
         
@@ -139,6 +139,10 @@
 
 - (BOOL)shouldAutoHideControlContainerView { 
     return YES;
+}
+
+- (BOOL)shouldShowDefaultControlingAndIndicatingViews {
+    return NO;
 }
 
 @end

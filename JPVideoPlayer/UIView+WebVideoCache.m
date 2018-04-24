@@ -193,11 +193,16 @@
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
               needSetControlView:(BOOL)needSetControlView {
+    // should show default
+    BOOL showDefaultView = YES;
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlingAndIndicatingViews)]) {
+        showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlingAndIndicatingViews];
+    }
     // user update progressView.
     if(progressView && self.jp_progressView){
         [self.jp_progressView removeFromSuperview];
     }
-    if(!progressView && !self.jp_progressView){
+    if(showDefaultView && !progressView && !self.jp_progressView){
         // Use default `JPVideoPlayerProgressView` if no progressView.
         progressView = [JPVideoPlayerProgressView new];
     }
@@ -209,7 +214,7 @@
     if(bufferingIndicator && self.jp_bufferingIndicator){
         [self.jp_bufferingIndicator removeFromSuperview];
     }
-    if(!bufferingIndicator && !self.jp_bufferingIndicator){
+    if(showDefaultView && !bufferingIndicator && !self.jp_bufferingIndicator){
         // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
         bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
     }
@@ -224,7 +229,7 @@
         if(controlView && self.jp_controlView){
             [self.jp_controlView removeFromSuperview];
         }
-        if(!controlView && !self.jp_controlView){
+        if(showDefaultView && !controlView && !self.jp_controlView){
             // Use default `JPVideoPlayerControlView` if no controlView.
             controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
         }
