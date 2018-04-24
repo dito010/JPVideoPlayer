@@ -123,13 +123,15 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 @optional
 /**
  * This method will be called when player buffering.
+ * @param url Start buffering video url
  */
-- (void)didStartBuffering;
+- (void)didStartBufferingFor:(NSURL*)url;
 
 /**
  * This method will be called when player finish buffering and start play.
+ * @param url End buffering video url
  */
-- (void)didFinishBuffering;
+- (void)didFinishBufferingFor:(NSURL*)url;
 
 @end
 
