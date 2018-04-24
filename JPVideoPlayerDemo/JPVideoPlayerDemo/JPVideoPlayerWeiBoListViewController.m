@@ -10,11 +10,9 @@
  */
 
 #import "JPVideoPlayerWeiBoListViewController.h"
-#import "UIView+WebVideoCache.h"
+#import "JPPlayer.h"
 #import "JPVideoPlayerWeiBoEqualHeightCell.h"
 #import "JPVideoPlayerDetailViewController.h"
-#import "UITableView+WebVideoCache.h"
-#import "UITableViewCell+WebVideoCache.h"
 #import "JPVideoPlayerWeiBoUnequalHeightCell.h"
 
 @interface JPVideoPlayerWeiBoListViewController ()<JPTableViewPlayVideoDelegate>
