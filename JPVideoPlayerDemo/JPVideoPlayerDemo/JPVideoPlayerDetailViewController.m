@@ -85,6 +85,7 @@
     [super viewWillAppear:animated];
 
     [self.videoContainer jp_resumePlayWithURL:[NSURL URLWithString:self.videoPath]
+                                  placeHolder:nil
                            bufferingIndicator:nil
                                   controlView:[[JPVideoPlayerDetailControlView alloc] initWithControlBar:nil blurImage:nil]
                                  progressView:nil

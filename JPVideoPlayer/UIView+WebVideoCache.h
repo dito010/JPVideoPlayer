@@ -148,6 +148,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
+@property (nonatomic, readonly, nullable) UIImage *jp_placeHolder;
+
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_progressView;
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
@@ -222,6 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
+                placeHolder:(UIImage*)placeHolder
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
@@ -248,6 +251,7 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_resumePlayWithURL:(NSURL *)url
+                 placeHolder:(UIImage*)placeHolder
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView

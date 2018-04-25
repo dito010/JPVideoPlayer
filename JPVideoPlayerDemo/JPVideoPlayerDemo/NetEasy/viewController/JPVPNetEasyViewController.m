@@ -59,6 +59,7 @@
         weakSelf.playingCell = weakCell;
         weakSelf.playingCell.videoPlayView.jp_videoPlayerDelegate = weakSelf;
         [weakSelf.playingCell.videoPlayView jp_playVideoWithURL:[NSURL URLWithString:weakSelf.pathStrings[indexPath.row]]
+                          placeHolder:nil
                    bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
                           controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
                          progressView:nil
