@@ -104,6 +104,8 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @property (nonatomic, strong, readonly) CALayer *videoContainerLayer;
 
+@property (nonatomic, strong, readonly) UIImageView *placeHolderView;
+
 @property (nonatomic, strong, readonly) UIView *controlContainerView;
 
 @property (nonatomic, strong, readonly) UIView *progressContainerView;

@@ -19,6 +19,8 @@
 
 @property(nonatomic, strong) JPVideoPlayerView *videoPlayerView;
 
+@property(nonatomic, strong) UIImage *placeHolderImage;
+
 @property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *progressView;
 
 @property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlView;
@@ -85,6 +87,14 @@
     return self.helper.playerStatus;
 }
 
+- (void)setJp_placeHolder:(UIImage*)jp_placeHolder {
+    self.helper.placeHolderImage = jp_placeHolder;
+}
+
+- (UIImage*)jp_placeHolder {
+    return self.helper.placeHolderImage;
+}
+
 - (void)setJp_progressView:(UIView <JPVideoPlayerProtocol> *)jp_progressView {
     self.helper.progressView = jp_progressView;
 }
@@ -134,6 +144,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
+                    placeHolder:nil
              needSetControlView:NO];
     [self jp_stopPlay];
     [self jp_playVideoWithURL:url
@@ -150,6 +161,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
+                    placeHolder:nil
              needSetControlView:NO];
     [self jp_resumePlayWithURL:url
                        options:JPVideoPlayerContinueInBackground |
@@ -159,6 +171,7 @@
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
+                placeHolder:(UIImage*)placeHolder
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
@@ -166,6 +179,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
+                    placeHolder:placeHolder
              needSetControlView:YES];
     [self jp_stopPlay];
     [self jp_playVideoWithURL:url
@@ -175,6 +189,7 @@
 }
 
 - (void)jp_resumePlayWithURL:(NSURL *)url
+                 placeHolder:(UIImage*)placeHolder
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
@@ -182,6 +197,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
+                    placeHolder:placeHolder
              needSetControlView:YES];
     [self jp_resumePlayWithURL:url
                        options:JPVideoPlayerContinueInBackground |
@@ -192,12 +208,15 @@
 - (void)setBufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                  placeHolder:(UIImage*)placeHolder
               needSetControlView:(BOOL)needSetControlView {
     // should show default
     BOOL showDefaultView = YES;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlingAndIndicatingViews)]) {
         showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlingAndIndicatingViews];
     }
+    // set placeHolder
+    self.jp_placeHolder = placeHolder?:nil;
     // user update progressView.
     if(progressView && self.jp_progressView){
         [self.jp_progressView removeFromSuperview];
@@ -274,6 +293,9 @@
             [self.jp_controlView viewWillPrepareToReuse];
         }
         [self callFinishBufferingDelegateWith:url];
+        //add placeHolderView if need.
+        self.helper.videoPlayerView.placeHolderView.image = self.jp_placeHolder;
+
         // Add progressView and controlView if need.
         self.helper.videoPlayerView.hidden = NO;
         if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){

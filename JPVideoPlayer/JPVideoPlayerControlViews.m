@@ -866,6 +866,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @property (nonatomic, strong) UIView *videoContainerView;
 
+@property (nonatomic, strong) UIImageView *placeHolderView;
+
 @property (nonatomic, strong) UIView *controlContainerView;
 
 @property (nonatomic, strong) UIView *progressContainerView;
@@ -898,6 +900,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
+    self.placeHolderView.frame = self.bounds;
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
     self.progressContainerView.frame = self.bounds;
@@ -1065,6 +1068,14 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 #pragma mark - Setup
 
 - (void)_setup {
+    self.placeHolderView = ({
+        UIImageView *view = [UIImageView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+        view.userInteractionEnabled = NO;
+        view;
+    });
+    
     self.videoContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];

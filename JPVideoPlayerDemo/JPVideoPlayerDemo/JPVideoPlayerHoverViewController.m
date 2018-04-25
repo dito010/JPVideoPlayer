@@ -81,6 +81,7 @@
     [super viewDidAppear:animated];
 
     [self.headerView jp_playVideoWithURL:[NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"]
+                             placeHolder:nil
                       bufferingIndicator:nil
                              controlView:nil
                             progressView:nil
@@ -105,6 +106,7 @@
     if(headerVisible && !self.hoverView.hidden){
        self.hoverView.hidden = YES;
        [self.headerView jp_resumePlayWithURL:[NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"]
+                                 placeHolder:nil
                           bufferingIndicator:nil
                                  controlView:nil
                                 progressView:nil
