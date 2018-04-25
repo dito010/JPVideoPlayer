@@ -1070,6 +1070,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 - (void)_setup {
     self.placeHolderView = ({
         UIImageView *view = [UIImageView new];
+        view.contentMode = UIViewContentModeScaleAspectFit;
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
         view.userInteractionEnabled = NO;
