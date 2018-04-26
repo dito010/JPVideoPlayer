@@ -40,8 +40,8 @@
     douyinViewController.title = @"抖音";
     
     JPNavigationController *netEasyNavigationController = [[JPNavigationController alloc] initWithRootViewController:[JPVPNetEasyViewController new]];
-    netEasyNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_douyin"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    netEasyNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_douyin_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    netEasyNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_netease"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    netEasyNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_netease_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     netEasyNavigationController.title = @"网易云音乐";
     
     JPNavigationController *settingNavigationController = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerSettingViewController new]];

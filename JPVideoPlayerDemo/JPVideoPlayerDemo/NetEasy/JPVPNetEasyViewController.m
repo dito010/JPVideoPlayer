@@ -10,7 +10,7 @@
 #import "JPVPNetEasyTableViewCell.h"
 #import "JPPlayer.h"
 
-@interface JPVPNetEasyViewController ()<JPVideoPlayerDelegate>
+@interface JPVPNetEasyViewController ()<JPVideoPlayerDelegate, JPVPNetEasyTableViewCellDelegate>
 
 /**
  * Arrary of video paths.
@@ -44,29 +44,36 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 210;
+    return 260;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *reuseIdentifier = NSStringFromClass([JPVPNetEasyTableViewCell class]);
     JPVPNetEasyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-    __weak typeof(self)weakSelf = self;
-    __weak typeof(cell)weakCell = cell;
-    cell.PlayBtnClicked = ^{
-        if (weakSelf.playingCell) {
-            [weakSelf.playingCell.videoPlayView jp_stopPlay];
-        }
-        weakSelf.playingCell = weakCell;
-        weakSelf.playingCell.videoPlayView.jp_videoPlayerDelegate = weakSelf;
-        [weakSelf.playingCell.videoPlayView jp_playVideoWithURL:[NSURL URLWithString:weakSelf.pathStrings[indexPath.row]]
-                   bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
-                          controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
-                         progressView:nil
-              configurationCompletion:nil];
-        
-    };
+    cell.delegate = self;
+    cell.indexPath = indexPath;
+    cell.playButton.hidden = NO;
     return cell;
 }
+
+#pragma mark - JPVPNetEasyTableViewCellDelegate
+
+- (void)cellPlayButtonDidClick:(JPVPNetEasyTableViewCell *)cell {
+    if (self.playingCell) {
+        [self.playingCell.videoPlayView jp_stopPlay];
+        self.playingCell.playButton.hidden = NO;
+    }
+    self.playingCell = cell;
+    self.playingCell.playButton.hidden = YES;
+    self.playingCell.videoPlayView.jp_videoPlayerDelegate = self;
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self.playingCell.videoPlayView jp_playVideoWithURL:[NSURL URLWithString:self.pathStrings[indexPath.row]]
+                                     bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
+                                            controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
+                                           progressView:nil
+                                configurationCompletion:nil];
+}
+
 
 #pragma mark - TableViewDelegate
 
@@ -80,6 +87,7 @@
     }
     if (cell.hash == self.playingCell.hash) {
         [self.playingCell.videoPlayView jp_stopPlay];
+        self.playingCell.playButton.hidden = NO;
         self.playingCell = nil;
     }
 }
