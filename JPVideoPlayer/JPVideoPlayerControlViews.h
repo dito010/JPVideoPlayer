@@ -112,9 +112,9 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @property (nonatomic, strong, readonly) UIView *userInteractionContainerView;
 
-@property (nonatomic, assign, readonly) BOOL autoHide;
+@property (nonatomic, assign, readonly) BOOL needAutoHideControlViewWhenUserTapping;
 
-- (instancetype)initWithAutoHide:(BOOL)autoHide;
+- (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping;
 
 @end
 

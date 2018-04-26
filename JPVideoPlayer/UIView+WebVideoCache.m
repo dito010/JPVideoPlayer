@@ -57,10 +57,10 @@
 - (JPVideoPlayerView *)videoPlayerView {
     if(!_videoPlayerView){
         BOOL autoHide = YES;
-        if (_playVideoView.jp_videoPlayerDelegate && [_playVideoView.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoHideControlContainerView)]) {
-            autoHide = [_playVideoView.jp_videoPlayerDelegate shouldAutoHideControlContainerView];
+        if (_playVideoView.jp_videoPlayerDelegate && [_playVideoView.jp_videoPlayerDelegate respondsToSelector:@selector(shouldAutoHideControlContainerViewWhenUserTapping)]) {
+            autoHide = [_playVideoView.jp_videoPlayerDelegate shouldAutoHideControlContainerViewWhenUserTapping];
         }
-        _videoPlayerView = [[JPVideoPlayerView alloc] initWithAutoHide:autoHide];
+        _videoPlayerView = [[JPVideoPlayerView alloc] initWithNeedAutoHideControlViewWhenUserTapping:autoHide];
     }
     return _videoPlayerView;
 }
@@ -83,6 +83,10 @@
 
 - (JPVideoPlayerStatus)jp_playerStatus {
     return self.helper.playerStatus;
+}
+
+- (JPVideoPlayerView *)jp_videoPlayerView {
+    return self.helper.videoPlayerView;
 }
 
 - (void)setJp_progressView:(UIView <JPVideoPlayerProtocol> *)jp_progressView {
@@ -193,10 +197,10 @@
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
               needSetControlView:(BOOL)needSetControlView {
-    // should show default
+    // should show default.
     BOOL showDefaultView = YES;
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlingAndIndicatingViews)]) {
-        showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlingAndIndicatingViews];
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlAndIndicatorViews)]) {
+        showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlAndIndicatorViews];
     }
     // user update progressView.
     if(progressView && self.jp_progressView){

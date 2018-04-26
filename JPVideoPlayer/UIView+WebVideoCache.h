@@ -13,6 +13,7 @@
 #import "JPVideoPlayerSupportUtils.h"
 #import "JPVideoPlayerProtocol.h"
 #import "JPVideoPlayerCompat.h"
+#import "JPVideoPlayerControlViews.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,20 +56,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Controls the auto hiding of JPVideoPlayerView`s controlContainerView .
- *  by default it is YES, means that JPVideoPlayerView`s auto hide controlContainerView after sevral sconds and show it again when user clicked the video playing view.
+ *  by default it is YES, means that JPVideoPlayerView`s auto hide controlContainerView after a few seconds and show it
+ *  again when user tapping the video playing view.
  *
  * @return Return NO to make the JPVideoPlayerView`s show controlContainerView all the time.
- * @warning userInteractionEnabled will be set YES;
+ *
+ * @warning The `userInteractionEnabled` need be set YES;
  */
-- (BOOL)shouldAutoHideControlContainerView;
+- (BOOL)shouldAutoHideControlContainerViewWhenUserTapping;
 
 /**
- * Controls the Behavior of adding default ControlView/BufferingIndicater/ProgressView when give nil to params.
+ * Controls the Behavior of adding default ControlView / BufferingIndicator / ProgressView when give nil to params.
  * By default it is YES, which means default views will be added when params given nil.
  *
  * @return Return NO to don`t display any view when params are given nil.
  */
-- (BOOL)shouldShowDefaultControlingAndIndicatingViews;
+- (BOOL)shouldShowDefaultControlAndIndicatorViews;
 
 /**
  * Notify the player status.
@@ -147,6 +150,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
 
 @property (nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
+
+@property(nonatomic, strong, readonly, nullable) JPVideoPlayerView *jp_videoPlayerView;
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_progressView;
 

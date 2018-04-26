@@ -887,10 +887,10 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
-- (instancetype)initWithAutoHide:(BOOL)autoHide {
+- (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping {
     self = [super init];
     if(self){
-        _autoHide = autoHide;
+        _needAutoHideControlViewWhenUserTapping = needAutoHideControlViewWhenUserTapping;
         [self _setup];
     }
     return self;
@@ -1107,7 +1107,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
         view;
     });
 
-    if (_autoHide) {
+    if (self.needAutoHideControlViewWhenUserTapping) {
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidTap)];
         [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
         [self startTimer];

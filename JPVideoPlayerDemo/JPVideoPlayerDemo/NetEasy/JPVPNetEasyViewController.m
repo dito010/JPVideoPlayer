@@ -145,11 +145,11 @@
     return YES;
 }
 
-- (BOOL)shouldAutoHideControlContainerView { 
+- (BOOL)shouldAutoHideControlContainerViewWhenUserTapping {
     return YES;
 }
 
-- (BOOL)shouldShowDefaultControlingAndIndicatingViews {
+- (BOOL)shouldShowDefaultControlAndIndicatorViews {
     return NO;
 }
 
