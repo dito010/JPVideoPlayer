@@ -8,7 +8,7 @@
 
 #import "JPVPNetEasyViewController.h"
 #import "JPVPNetEasyTableViewCell.h"
-#import "JPPlayer.h"
+#import "JPVideoPlayerKit.h"
 
 @interface JPVPNetEasyViewController ()<JPVideoPlayerDelegate, JPVPNetEasyTableViewCellDelegate>
 

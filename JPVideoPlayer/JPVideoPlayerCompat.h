@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, JPVideoPlayViewInterfaceOrientation) {
 typedef NS_ENUM(NSUInteger, JPVideoPlayerStatus)  {
     JPVideoPlayerStatusUnknown = 0,
     JPVideoPlayerStatusBuffering,
+    JPVideoPlayerStatusReadyToPlay,
     JPVideoPlayerStatusPlaying,
     JPVideoPlayerStatusPause,
     JPVideoPlayerStatusFailed,

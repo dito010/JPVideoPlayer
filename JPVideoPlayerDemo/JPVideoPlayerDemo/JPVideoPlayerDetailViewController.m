@@ -10,7 +10,7 @@
  */
 
 #import "JPVideoPlayerDetailViewController.h"
-#import "JPPlayer.h"
+#import "JPVideoPlayerKit.h"
 #import <JPNavigationControllerKit.h>
 #import <Masonry.h>
 

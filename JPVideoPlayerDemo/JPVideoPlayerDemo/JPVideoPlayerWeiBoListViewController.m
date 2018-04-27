@@ -10,7 +10,7 @@
  */
 
 #import "JPVideoPlayerWeiBoListViewController.h"
-#import "JPPlayer.h"
+#import "JPVideoPlayerKit.h"
 #import "JPVideoPlayerWeiBoEqualHeightCell.h"
 #import "JPVideoPlayerDetailViewController.h"
 #import "JPVideoPlayerWeiBoUnequalHeightCell.h"

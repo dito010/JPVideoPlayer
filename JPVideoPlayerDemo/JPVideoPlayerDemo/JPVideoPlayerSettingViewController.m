@@ -10,7 +10,7 @@
  */
 
 #import "JPVideoPlayerSettingViewController.h"
-#import "JPPlayer.h"
+#import "JPVideoPlayerKit.h"
 #import "JPQRCodeTool.h"
 
 @interface JPVideoPlayerSettingViewController ()

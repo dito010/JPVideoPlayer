@@ -518,7 +518,6 @@
 
 #pragma mark - Private
 // TODO: 处理播放完的状态菊花.
-// TODO: 获取正真的播放状态,防止黑屏.
 - (void)callOrientationDelegateWithInterfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
         [self.jp_controlView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];

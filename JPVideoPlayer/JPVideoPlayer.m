@@ -138,6 +138,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     // remove observer.
     [self.playerItem removeObserver:self.videoPlayer forKeyPath:@"status"];
     [self.player removeTimeObserver:self.timeObserver];
+    [self.player removeObserver:self.videoPlayer forKeyPath:@"rate"];
 
     // remove player
     [self.player pause];
@@ -468,7 +469,10 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     }];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSString *,id> *)change
+                       context:(void *)context{
     if ([keyPath isEqualToString:@"status"]) {
         AVPlayerItem *playerItem = (AVPlayerItem *)object;
         AVPlayerItemStatus status = playerItem.status;
@@ -483,7 +487,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
             case AVPlayerItemStatusReadyToPlay:{
                 JPDebugLog(@"AVPlayerItemStatusReadyToPlay");
-                self.playerStatus = JPVideoPlayerStatusPlaying;
+                self.playerStatus = JPVideoPlayerStatusReadyToPlay;
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 if (!self.playerModel) return;
                 [self.playerModel.player play];
@@ -508,6 +512,17 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
             default:
                 break;
+        }
+    }
+    else if([keyPath isEqualToString:@"rate"]) {
+        float rate = [change[NSKeyValueChangeNewKey] floatValue];
+        if((rate != 0) && (self.playerStatus == JPVideoPlayerStatusReadyToPlay)){
+            self.playerStatus = JPVideoPlayerStatusPlaying;
+            JPDispatchSyncOnMainQueue(^{
+                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
+                    [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
+                }
+            });
         }
     }
 }
@@ -649,6 +664,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
 
     model.player = [AVPlayer playerWithPlayerItem:playerItem];
+    [model.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
     if ([model.player respondsToSelector:@selector(automaticallyWaitsToMinimizeStalling)]) {
         model.player.automaticallyWaitsToMinimizeStalling = NO;
     }

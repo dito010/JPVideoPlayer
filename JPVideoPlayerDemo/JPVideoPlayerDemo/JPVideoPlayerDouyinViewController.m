@@ -10,7 +10,7 @@
  */
 
 #import "JPVideoPlayerDouyinViewController.h"
-#import "JPPlayer.h"
+#import "JPVideoPlayerKit.h"
 
 @interface JPDouyinProgressView: JPVideoPlayerProgressView
 
