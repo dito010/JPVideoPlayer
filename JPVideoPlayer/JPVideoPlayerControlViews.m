@@ -63,7 +63,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.dragSlider.frame = constrainedRect;
     [self updateCacheProgressViewIfNeed];
     [self playProgressDidChangeElapsedSeconds:self.elapsedSeconds
-                                 totalSeconds:self.totalSeconds];
+                                 totalSeconds:self.totalSeconds
+                                     videoURL:nil];
 }
 
 
@@ -74,17 +75,21 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:@[]];
-    [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
+    [self cacheRangeDidChange:@[] videoURL:nil];
+    [self playProgressDidChangeElapsedSeconds:0
+                                 totalSeconds:1
+                                     videoURL:nil];
 }
 
-- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
+                   videoURL:(NSURL *)videoURL {
     _rangesValue = cacheRanges;
     [self updateCacheProgressViewIfNeed];
 }
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
-                               totalSeconds:(NSTimeInterval)totalSeconds {
+                               totalSeconds:(NSTimeInterval)totalSeconds
+                                   videoURL:(NSURL *)videoURL {
     if(self.userDragging){
         return;
     }
@@ -103,7 +108,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.elapsedSeconds = elapsedSeconds;
 }
 
-- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength
+                       videoURL:(NSURL *)videoURL {
     self.fileLength = videoLength;
 }
 
@@ -350,30 +356,38 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     [self.progressView viewWillPrepareToReuse];
 }
 
-- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
-    [self.progressView cacheRangeDidChange:cacheRanges];
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
+                   videoURL:(NSURL *)videoURL {
+    [self.progressView cacheRangeDidChange:cacheRanges
+                                  videoURL:videoURL];
 }
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
-                               totalSeconds:(NSTimeInterval)totalSeconds {
+                               totalSeconds:(NSTimeInterval)totalSeconds
+                                   videoURL:(NSURL *)videoURL {
     self.totalSeconds = totalSeconds;
     if(!self.progressView.userDragging){
         [self updateTimeLabelWithElapsedSeconds:elapsedSeconds totalSeconds:totalSeconds];
     }
     [self.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                              totalSeconds:totalSeconds];
+                                              totalSeconds:totalSeconds
+                                                  videoURL:videoURL];
 }
 
-- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
-    [self.progressView didFetchVideoFileLength:videoLength];
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength
+                       videoURL:(NSURL *)videoURL {
+    [self.progressView didFetchVideoFileLength:videoLength
+                                      videoURL:videoURL];
 }
 
-- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus
+                          videoURL:(NSURL *)videoURL {
     BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying;
     self.playButton.selected = !isPlaying;
 }
 
-- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation
+                                        videoURL:(NSURL *)videoURL {
     self.landscapeButton.selected = interfaceOrientation == JPVideoPlayViewInterfaceOrientationLandscape;
 }
 
@@ -543,26 +557,36 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     [self.controlBar viewWillPrepareToReuse];
 }
 
-- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
-    [self.controlBar cacheRangeDidChange:cacheRanges];
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
+                   videoURL:(NSURL *)videoURL {
+    [self.controlBar cacheRangeDidChange:cacheRanges
+                                videoURL:videoURL];
 }
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
-                               totalSeconds:(NSTimeInterval)totalSeconds {
+                               totalSeconds:(NSTimeInterval)totalSeconds
+                                   videoURL:(NSURL *)videoURL {
     [self.controlBar playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                            totalSeconds:totalSeconds];
+                                            totalSeconds:totalSeconds
+                                                videoURL:videoURL];
 }
 
-- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
-    [self.controlBar didFetchVideoFileLength:videoLength];
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength
+                       videoURL:(NSURL *)videoURL {
+    [self.controlBar didFetchVideoFileLength:videoLength
+                                    videoURL:videoURL];
 }
 
-- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
-    [self.controlBar videoPlayerStatusDidChange:playerStatus];
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus
+                          videoURL:(NSURL *)videoURL {
+    [self.controlBar videoPlayerStatusDidChange:playerStatus
+                                       videoURL:videoURL];
 }
 
-- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
-    [self.controlBar videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation
+                                        videoURL:(NSURL *)videoURL {
+    [self.controlBar videoPlayerInterfaceOrientationDidChange:interfaceOrientation
+                                                     videoURL:videoURL];
 }
 
 
@@ -671,17 +695,21 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:@[]];
-    [self playProgressDidChangeElapsedSeconds:0 totalSeconds:1];
+    [self cacheRangeDidChange:@[] videoURL:nil];
+    [self playProgressDidChangeElapsedSeconds:0
+                                 totalSeconds:1
+                                     videoURL:nil];
 }
 
-- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges {
+- (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
+                   videoURL:(NSURL *)videoURL {
     _rangesValue = cacheRanges;
     [self displayCacheProgressViewIfNeed];
 }
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
-                               totalSeconds:(NSTimeInterval)totalSeconds {
+                               totalSeconds:(NSTimeInterval)totalSeconds
+                                   videoURL:(NSURL *)videoURL {
     if(totalSeconds == 0){
         totalSeconds = 1;
     }
@@ -696,7 +724,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.elapsedSeconds = elapsedSeconds;
 }
 
-- (void)didFetchVideoFileLength:(NSUInteger)videoLength {
+- (void)didFetchVideoFileLength:(NSUInteger)videoLength
+                       videoURL:(NSURL *)videoURL {
     self.fileLength = videoLength;
 }
 
@@ -817,11 +846,11 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 #pragma mark - JPVideoPlayerBufferingProtocol
 
-- (void)didStartBuffering {
+- (void)didStartBufferingVideoURL:(NSURL *)videoURL {
     [self startAnimating];
 }
 
-- (void)didFinishBuffering {
+- (void)didFinishBufferingVideoURL:(NSURL *)videoURL {
     [self stopAnimating];
 }
 

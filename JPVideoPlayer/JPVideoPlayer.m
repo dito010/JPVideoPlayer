@@ -488,9 +488,11 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                 if (!self.playerModel) return;
                 [self.playerModel.player play];
                 [self displayVideoPicturesOnShowLayer];
-                if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-                    [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
-                }
+                JPDispatchSyncOnMainQueue(^{
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
+                        [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
+                    }
+                });
             }
                 break;
 

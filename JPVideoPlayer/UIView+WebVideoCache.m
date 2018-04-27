@@ -33,6 +33,8 @@
 
 @property (nonatomic, weak) UIView *playVideoView;
 
+@property(nonatomic, copy) NSURL *videoURL;
+
 @end
 
 @implementation JPVideoPlayerHelper
@@ -119,6 +121,14 @@
 
 - (id <JPVideoPlayerDelegate>)jp_videoPlayerDelegate {
     return self.helper.videoPlayerDelegate;
+}
+
+- (NSURL *)jp_videoURL {
+    return self.helper.videoURL;
+}
+
+- (void)setJp_videoURL:(NSURL *)jp_videoURL {
+    self.helper.videoURL = jp_videoURL.copy;
 }
 
 
@@ -266,6 +276,7 @@
      configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion
                 isResume:(BOOL)isResume {
     JPMainThreadAssert;
+    self.jp_videoURL = url;
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;
         self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
@@ -506,25 +517,26 @@
 
 
 #pragma mark - Private
-
+// TODO: 处理播放完的状态菊花.
+// TODO: 获取正真的播放状态,防止黑屏.
 - (void)callOrientationDelegateWithInterfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
-    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:)]){
-        [self.jp_controlView videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
+        [self.jp_controlView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
     }
-    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:)]){
-        [self.jp_progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation];
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
+        [self.jp_progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
     }
 }
 
 - (void)callStartBufferingDelegate {
-    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBuffering)]){
-        [self.jp_bufferingIndicator didStartBuffering];
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBufferingVideoURL:)]){
+        [self.jp_bufferingIndicator didStartBufferingVideoURL:self.jp_videoURL];
     }
 }
 
 - (void)callFinishBufferingDelegate {
-    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBuffering)]){
-        [self.jp_bufferingIndicator didFinishBuffering];
+    if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBufferingVideoURL:)]){
+        [self.jp_bufferingIndicator didFinishBufferingVideoURL:self.jp_videoURL];
     }
 }
 
@@ -612,21 +624,21 @@
                     playerStatus == JPVideoPlayerStatusUnknown ||
                     playerStatus == JPVideoPlayerStatusFailed;
     needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
-    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerStatusDidChange:)]){
-        [self.jp_controlView videoPlayerStatusDidChange:playerStatus];
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerStatusDidChange:videoURL:)]){
+        [self.jp_controlView videoPlayerStatusDidChange:playerStatus videoURL:self.jp_videoURL];
     }
-    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerStatusDidChange:)]){
-        [self.jp_progressView videoPlayerStatusDidChange:playerStatus];
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerStatusDidChange:videoURL:)]){
+        [self.jp_progressView videoPlayerStatusDidChange:playerStatus videoURL:self.jp_videoURL];
     }
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
    didFetchVideoFileLength:(NSUInteger)videoLength {
-    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:)]){
-        [self.helper.controlView didFetchVideoFileLength:videoLength];
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(didFetchVideoFileLength:videoURL:)]){
+        [self.helper.controlView didFetchVideoFileLength:videoLength videoURL:self.jp_videoURL];
     }
-    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(didFetchVideoFileLength:)]){
-        [self.helper.progressView didFetchVideoFileLength:videoLength];
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(didFetchVideoFileLength:videoURL:)]){
+        [self.helper.progressView didFetchVideoFileLength:videoLength videoURL:self.jp_videoURL];
     }
 }
 
@@ -653,11 +665,11 @@
         default:
             break;
     }
-    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:)]){
-        [self.helper.controlView cacheRangeDidChange:fragmentRanges];
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:videoURL:)]){
+        [self.helper.controlView cacheRangeDidChange:fragmentRanges videoURL:self.jp_videoURL];
     }
-    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(cacheRangeDidChange:)]){
-        [self.helper.progressView cacheRangeDidChange:fragmentRanges];
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(cacheRangeDidChange:videoURL:)]){
+        [self.helper.progressView cacheRangeDidChange:fragmentRanges videoURL:self.jp_videoURL];
     }
 }
 
@@ -673,13 +685,15 @@
         return;
     }
 
-    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
+    if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:videoURL:)]){
         [self.helper.controlView playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                                        totalSeconds:totalSeconds];
+                                                        totalSeconds:totalSeconds
+                                                            videoURL:self.jp_videoURL];
     }
-    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:)]){
+    if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:videoURL:)]){
         [self.helper.progressView playProgressDidChangeElapsedSeconds:elapsedSeconds
-                                                         totalSeconds:totalSeconds];
+                                                         totalSeconds:totalSeconds
+                                                             videoURL:self.jp_videoURL];
     }
 }
 

@@ -159,6 +159,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
+@property(nonatomic, copy, readonly, nullable) NSURL *jp_videoURL;
+
 #pragma mark - Play Video Methods
 
 /**
