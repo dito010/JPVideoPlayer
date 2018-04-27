@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger, JPVideoPlayerStatus)  {
     JPVideoPlayerStatusPlaying,
     JPVideoPlayerStatusPause,
     JPVideoPlayerStatusFailed,
-    JPVideoPlayerStatusStop
+    JPVideoPlayerStatusStop,
 };
 
 typedef NS_ENUM(NSUInteger, JPLogLevel) {
