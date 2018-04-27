@@ -384,6 +384,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if(!self.playerModel){
         return;
     }
+    if(self.playerStatus == JPVideoPlayerStatusStop){
+       self.playerStatus = JPVideoPlayerStatusUnknown;
+       [self seekToHeaderThenStartPlayback];
+        return;
+    }
     [self internalResumeWithNeedCallDelegate:YES];
 }
 
@@ -453,19 +458,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
             return;
         }
     }
-
-    // Seek the start point of file data and repeat play, this handle have no memory surge.
-    __weak typeof(self.playerModel) weak_Item = self.playerModel;
-    [self.playerModel.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
-        __strong typeof(weak_Item) strong_Item = weak_Item;
-        if (!strong_Item) return;
-
-        self.playerModel.lastTime = 0;
-        [strong_Item.player play];
-        [self callPlayerStatusDidChangeDelegateMethod];
-        [self startCheckBufferingTimer];
-
-    }];
+    [self seekToHeaderThenStartPlayback];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -609,6 +602,21 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
 
 #pragma mark - Private
+
+- (void)seekToHeaderThenStartPlayback {
+    // Seek the start point of file data and repeat play, this handle have no memory surge.
+    __weak typeof(self.playerModel) weak_Item = self.playerModel;
+    [self.playerModel.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
+        __strong typeof(weak_Item) strong_Item = weak_Item;
+        if (!strong_Item) return;
+
+        self.playerModel.lastTime = 0;
+        [strong_Item.player play];
+        [self callPlayerStatusDidChangeDelegateMethod];
+        [self startCheckBufferingTimer];
+
+    }];
+}
 
 - (void)callPlayerStatusDidChangeDelegateMethod {
     JPDispatchSyncOnMainQueue(^{
