@@ -535,7 +535,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
 - (void)checkBufferingTimeDidChange {
     NSTimeInterval currentTime = CMTimeGetSeconds(self.playerModel.player.currentTime);
-    if (currentTime != 0 && currentTime > (self.playerModel.lastTime + 0.2)) {
+    if (currentTime != 0 && currentTime > (self.playerModel.lastTime + 0.3)) {
         self.playerModel.lastTime = currentTime;
         [self endAwakeFromBuffering];
         if(self.playerStatus == JPVideoPlayerStatusPlaying){
@@ -698,13 +698,13 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 - (void)setVideoGravityWithOptions:(JPVideoPlayerOptions)options
                        playerModel:(JPVideoPlayerModel *)playerModel {
     NSString *videoGravity = nil;
-    if (options&JPVideoPlayerLayerVideoGravityResizeAspect) {
+    if (options & JPVideoPlayerLayerVideoGravityResizeAspect) {
         videoGravity = AVLayerVideoGravityResizeAspect;
     }
-    else if (options&JPVideoPlayerLayerVideoGravityResize){
+    else if (options & JPVideoPlayerLayerVideoGravityResize){
         videoGravity = AVLayerVideoGravityResize;
     }
-    else if (options&JPVideoPlayerLayerVideoGravityResizeAspectFill){
+    else if (options & JPVideoPlayerLayerVideoGravityResizeAspectFill){
         videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
     playerModel.playerLayer.videoGravity = videoGravity;
@@ -724,7 +724,6 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
         });
-
     }
 }
 
