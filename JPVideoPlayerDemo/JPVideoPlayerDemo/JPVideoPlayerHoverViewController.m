@@ -40,7 +40,6 @@
         [self.view addSubview:view];
         view.frame = self.view.bounds;
         view.dataSource = self;
-        view.delegate = self;
 
         view;
     });
@@ -80,6 +79,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    self.tableView.delegate = self;
     [self.headerView jp_playVideoWithURL:[NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"]
                       bufferingIndicator:nil
                              controlView:nil
@@ -89,6 +89,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    self.tableView.delegate = nil;
     [self.headerView jp_stopPlay];
 }
 

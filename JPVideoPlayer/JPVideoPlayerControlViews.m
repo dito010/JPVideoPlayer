@@ -64,7 +64,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     [self updateCacheProgressViewIfNeed];
     [self playProgressDidChangeElapsedSeconds:self.elapsedSeconds
                                  totalSeconds:self.totalSeconds
-                                     videoURL:nil];
+                                     videoURL:[NSURL new]];
 }
 
 
@@ -75,10 +75,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:@[] videoURL:nil];
+    [self cacheRangeDidChange:@[] videoURL:[NSURL new]];
     [self playProgressDidChangeElapsedSeconds:0
                                  totalSeconds:1
-                                     videoURL:nil];
+                                     videoURL:[NSURL new]];
 }
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
@@ -695,10 +695,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)viewWillPrepareToReuse {
-    [self cacheRangeDidChange:@[] videoURL:nil];
+    [self cacheRangeDidChange:@[] videoURL:[NSURL new]];
     [self playProgressDidChangeElapsedSeconds:0
                                  totalSeconds:1
-                                     videoURL:nil];
+                                     videoURL:[NSURL new]];
 }
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges

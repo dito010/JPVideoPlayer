@@ -244,8 +244,10 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         NSRange range = [self.internalFragmentRanges[0] rangeValue];
         if (range.location == 0 && (range.length == self.fileLength)) {
             self.completed = YES;
+            [NSFileManager.defaultManager removeItemAtPath:self.indexFilePath error:nil];
         }
     }
+
     if (!lock) {
         pthread_mutex_unlock(&_lock);
     }
@@ -437,7 +439,10 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     int lock = pthread_mutex_trylock(&_lock);
     JPDebugLog(@"Did synchronize index file");
     [self.writeFileHandle synchronizeFile];
-    BOOL synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    BOOL synchronize = YES;
+    if (!self.isCompeleted) {
+        synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    }
     if (!lock) {
         pthread_mutex_unlock(&_lock);
     }
