@@ -139,6 +139,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)preferAudioSessionCategory;
 
+/**
+ * Called when play a already played video, `NO` by default, return `YES` to enable resume playback from a playback record.
+ *
+ * @param videoURL       The url of the video to be play.
+ * @param elapsedSeconds The elapsed seconds last playback recorded.
+ */
+- (BOOL)shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
+                                      elapsedSeconds:(NSTimeInterval)elapsedSeconds;
+
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
@@ -314,6 +323,16 @@ NS_ASSUME_NONNULL_BEGIN
 * @param time The time where seek to.
 */
 - (void)jp_seekToTime:(CMTime)time;
+
+/**
+ * Fetch the elapsed seconds of player.
+ */
+- (NSTimeInterval)jp_elapsedSeconds;
+
+/**
+ * Fetch the total seconds of player.
+ */
+- (NSTimeInterval)jp_totalSeconds;
 
 /**
  *  Call this method to pause playback.

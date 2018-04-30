@@ -159,6 +159,17 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
  */
 - (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
 
+/**
+ * Called when play a already played video.
+ *
+ * @param videoPlayerManager The current `JPVideoPlayerManager`.
+ * @param videoURL           The url of the video to be play.
+ * @param elapsedSeconds     The elapsed seconds last playback recorded.
+ */
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
+            elapsedSeconds:(NSTimeInterval)elapsedSeconds;
+
 @end
 
 @interface JPVideoPlayerManagerModel : NSObject

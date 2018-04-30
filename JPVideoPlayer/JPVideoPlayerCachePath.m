@@ -18,6 +18,7 @@ NSString * const JPVideoPlayerCacheVideoPathForFullFile = @"/FullFile";
 static NSString * const kJPVideoPlayerCacheVideoPathDomain = @"/com.jpvideoplayer.www";
 static NSString * const kJPVideoPlayerCacheVideoFileExtension = @".mp4";
 static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
+static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @".record";
 @implementation JPVideoPlayerCachePath
 
 #pragma mark - Public
@@ -75,6 +76,19 @@ static NSString * const kJPVideoPlayerCacheVideoIndexFileExtension = @".index";
     if(!filePath){
         return nil;
     }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:filePath]) {
+        [fileManager createFileAtPath:filePath contents:nil attributes:nil];
+    }
+    return filePath;
+}
+
++ (NSString *)videoPlaybackRecordFilePath {
+    NSString *filePath = [self videoCachePath];
+    if(!filePath){
+        return nil;
+    }
+    filePath = [filePath stringByAppendingPathComponent:kJPVideoPlayerCacheVideoPlaybackRecordFileExtension];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:filePath]) {
         [fileManager createFileAtPath:filePath contents:nil attributes:nil];

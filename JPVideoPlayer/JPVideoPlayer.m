@@ -76,6 +76,10 @@
  */
 @property(nonatomic, weak) JPVideoPlayer *videoPlayer;
 
+@property(nonatomic, assign) NSTimeInterval elapsedSeconds;
+
+@property(nonatomic, assign) NSTimeInterval totalSeconds;
+
 @end
 
 static NSString *JPVideoPlayerURLScheme = @"systemCannotRecognitionScheme";
@@ -149,6 +153,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     self.playerLayer = nil;
     self.videoURLAsset = nil;
     self.resourceLoader = nil;
+    self.elapsedSeconds = 0;
+    self.totalSeconds = 0;
 }
 
 @end
@@ -371,6 +377,14 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         }
 
     }];
+}
+
+- (NSTimeInterval)elapsedSeconds {
+    return [self.playerModel elapsedSeconds];
+}
+
+- (NSTimeInterval)totalSeconds {
+    return [self.playerModel totalSeconds];
 }
 
 - (void)pause {
@@ -679,6 +693,8 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
         double elapsedSeconds = CMTimeGetSeconds(time);
         double totalSeconds = CMTimeGetSeconds(sItem.playerItem.duration);
+        sself.playerModel.elapsedSeconds = elapsedSeconds;
+        sself.playerModel.totalSeconds = totalSeconds;
         if(totalSeconds == 0 || isnan(totalSeconds) || elapsedSeconds > totalSeconds){
             return;
         }

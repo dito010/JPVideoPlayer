@@ -173,6 +173,16 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)seekToTime:(CMTime)time;
 
 /**
+ * Fetch the elapsed seconds of player.
+ */
+- (NSTimeInterval)elapsedSeconds;
+
+/**
+ * Fetch the total seconds of player.
+ */
+- (NSTimeInterval)totalSeconds;
+
+/**
  *  Call this method to pause playback.
  */
 - (void)pause;

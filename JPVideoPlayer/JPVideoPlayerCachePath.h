@@ -62,6 +62,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)createVideoIndexFileIfNeedThenFetchItForKey:(NSString *)key;
 
+/**
+ * Fetch the playback record file path.
+ *
+ * @return The path of playback record.
+ */
++ (NSString *)videoPlaybackRecordFilePath;
+
 @end
 
 

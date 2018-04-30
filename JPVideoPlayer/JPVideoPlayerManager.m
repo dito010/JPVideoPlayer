@@ -153,6 +153,25 @@
         return;
     }
 
+    // nobody retain this block.
+    configurationCompletion = ^(UIView *view, JPVideoPlayerModel *model){
+        NSParameterAssert(model);
+        if([self fetchPlaybackRecordForVideoURL:url] > 0){
+            BOOL shouldSeek = YES;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldResumePlaybackFromPlaybackRecordForURL:elapsedSeconds:)]) {
+                shouldSeek = [self.delegate videoPlayerManager:self
+                  shouldResumePlaybackFromPlaybackRecordForURL:url
+                                                elapsedSeconds:[self fetchPlaybackRecordForVideoURL:url]];
+            }
+            if(shouldSeek){
+                [view jp_seekToTime:CMTimeMakeWithSeconds([self fetchPlaybackRecordForVideoURL:url], 1000)];
+            }
+        }
+        if(configurationCompletion){
+            configurationCompletion(view, model);
+        }
+    };
+
     BOOL isFileURL = [url isFileURL];
     if (isFileURL) {
         // play file URL.
@@ -294,6 +313,14 @@
     [self.videoPlayer seekToTime:time];
 }
 
+- (NSTimeInterval)elapsedSeconds {
+    return [self.videoPlayer elapsedSeconds];
+}
+
+- (NSTimeInterval)totalSeconds {
+    return [self.videoPlayer totalSeconds];
+}
+
 - (void)pause {
     [self.videoPlayer pause];
 }
@@ -326,6 +353,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
 - (BOOL)videoPlayer:(JPVideoPlayer *)videoPlayer
 shouldAutoReplayVideoForURL:(NSURL *)videoURL {
+    [self savePlaybackElapsedSeconds:0 forVideoURL:videoURL];
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldAutoReplayForURL:)]) {
         return [self.delegate videoPlayerManager:self shouldAutoReplayForURL:videoURL];
     }
@@ -342,6 +370,9 @@ playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
 - (void)videoPlayerPlayProgressDidChange:(nonnull JPVideoPlayer *)videoPlayer
                           elapsedSeconds:(double)elapsedSeconds
                             totalSeconds:(double)totalSeconds {
+    if(elapsedSeconds > 0){
+        [self savePlaybackElapsedSeconds:self.elapsedSeconds forVideoURL:self.managerModel.videoURL];
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerPlayProgressDidChange:elapsedSeconds:totalSeconds:error:)]) {
         [self.delegate videoPlayerManagerPlayProgressDidChange:self
                                                 elapsedSeconds:elapsedSeconds
@@ -682,6 +713,42 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
         return;
     }
     [self pause];
+}
+
+
+#pragma mark - Playback Record
+
+- (double)fetchPlaybackRecordForVideoURL:(NSURL *)videoURL {
+    NSParameterAssert(videoURL);
+    if(!videoURL){
+        return 0;
+    }
+    NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath]];
+    if(!dictionary){
+        return 0;
+    }
+    NSNumber *number = [dictionary valueForKey:[self cacheKeyForURL:videoURL]];
+    if(number){
+        return [number doubleValue];
+    }
+    return 0;
+}
+
+- (void)savePlaybackElapsedSeconds:(double)elapsedSeconds
+                       forVideoURL:(NSURL *)videoURL {
+    NSParameterAssert(videoURL);
+    if(!videoURL){
+        return;
+    }
+
+    JPDispatchSyncOnMainQueue(^{
+        NSMutableDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath]].mutableCopy;
+        if(!dictionary){
+            dictionary = [@{} mutableCopy];
+        }
+        elapsedSeconds == 0 ? [dictionary removeObjectForKey:[self cacheKeyForURL:videoURL]] : [dictionary setObject:@(elapsedSeconds) forKey:[self cacheKeyForURL:videoURL]];
+        [dictionary writeToFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath] atomically:YES];
+    });
 }
 
 @end

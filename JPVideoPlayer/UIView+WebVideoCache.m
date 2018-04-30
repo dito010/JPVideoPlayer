@@ -389,6 +389,14 @@
     [[JPVideoPlayerManager sharedManager] seekToTime:time];
 }
 
+- (NSTimeInterval)jp_elapsedSeconds {
+    return [JPVideoPlayerManager.sharedManager elapsedSeconds];
+}
+
+- (NSTimeInterval)jp_totalSeconds {
+    return [JPVideoPlayerManager.sharedManager totalSeconds];
+}
+
 - (void)jp_pause {
     [[JPVideoPlayerManager sharedManager] pause];
 }
@@ -683,7 +691,6 @@
         }
         return;
     }
-
     if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(playProgressDidChangeElapsedSeconds:totalSeconds:videoURL:)]){
         [self.helper.controlView playProgressDidChangeElapsedSeconds:elapsedSeconds
                                                         totalSeconds:totalSeconds
@@ -749,6 +756,17 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
         return [self.jp_videoPlayerDelegate preferAudioSessionCategory];
     }
     return AVAudioSessionCategoryPlayback;
+}
+
+- (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
+            elapsedSeconds:(NSTimeInterval)elapsedSeconds {
+    BOOL shouldResume = NO;
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackFromPlaybackRecordForURL:elapsedSeconds:)]) {
+        shouldResume = [self.jp_videoPlayerDelegate shouldResumePlaybackFromPlaybackRecordForURL:videoURL
+                                                                   elapsedSeconds:elapsedSeconds];
+    }
+    return shouldResume;
 }
 
 @end

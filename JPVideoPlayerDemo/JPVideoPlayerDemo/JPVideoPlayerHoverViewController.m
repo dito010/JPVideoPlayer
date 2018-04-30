@@ -13,7 +13,7 @@
 #import "JPVideoPlayerKit.h"
 #import "UINavigationController+FulllScreenPopPush.h"
 
-@interface JPVideoPlayerHoverViewController()<UITableViewDataSource, UITableViewDelegate>
+@interface JPVideoPlayerHoverViewController()<UITableViewDataSource, UITableViewDelegate, JPVideoPlayerDelegate>
 
 @property (nonatomic, strong) UIView *headerView;
 
@@ -48,6 +48,7 @@
         UIView *view = [UIView new];
         view.bounds = CGRectMake(0, 0, 0, ([UIScreen mainScreen].bounds.size.width * 9.0 / 16.0));
         view.backgroundColor = [UIColor blackColor];
+        view.jp_videoPlayerDelegate = self;
 
         view;
     });
@@ -122,6 +123,14 @@
                                      options:JPVideoPlayerRetryFailed
                      configurationCompletion:nil];
     }
+}
+
+
+#pragma mark - JPVideoPlayerDelegate
+
+- (BOOL)shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
+                                      elapsedSeconds:(NSTimeInterval)elapsedSeconds {
+    return YES;
 }
 
 @end
