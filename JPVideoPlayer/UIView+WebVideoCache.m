@@ -433,11 +433,6 @@
     self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // hide status bar.
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-#pragma clang diagnostic pop
 
     CGRect videoPlayerViewFrameInWindow = [self convertRect:videoPlayerView.frame toView:nil];
     [videoPlayerView removeFromSuperview];
@@ -459,6 +454,11 @@
                              [UIView animateWithDuration:0.5 animations:^{
                                  videoPlayerView.controlContainerView.alpha = 1;
                              }];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                             // hide status bar.
+                             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic pop
                          }];
     }
     else{
