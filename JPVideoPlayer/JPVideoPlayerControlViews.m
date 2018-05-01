@@ -893,6 +893,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @interface JPVideoPlayerView()
 
+@property (nonatomic, strong) UIView *placeholderView;
+
 @property (nonatomic, strong) UIView *videoContainerView;
 
 @property (nonatomic, strong) UIView *controlContainerView;
@@ -927,6 +929,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
+    self.placeholderView.frame = self.bounds;
     self.videoContainerView.frame = self.bounds;
     self.controlContainerView.frame = self.bounds;
     self.progressContainerView.frame = self.bounds;
@@ -942,6 +945,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             self.videoContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
             bounds.size.height);
+    self.placeholderView.frame = self.videoContainerView.frame;
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
     self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
@@ -959,6 +963,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             center.x - self.videoContainerView.bounds.size.height * 0.5,
             self.videoContainerView.bounds.size.width,
             self.videoContainerView.bounds.size.height);
+    self.placeholderView.frame = self.videoContainerView.frame;
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
     self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
@@ -1094,6 +1099,14 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 #pragma mark - Setup
 
 - (void)_setup {
+    self.placeholderView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+
+        view;
+    });
+
     self.videoContainerView = ({
         UIView *view = [UIView new];
         view.backgroundColor = [UIColor clearColor];
