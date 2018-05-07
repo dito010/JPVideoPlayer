@@ -107,7 +107,7 @@
     // 本地视频播放.
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"designedByAppleInCalifornia" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
-    self.pathStrings = @[
+    self.pathStrings = @[@"http://hbpic-10057247.file.myqcloud.com/music/005d200a60086adcc9a8d3f7f27f4a33.mp3",
                          url.absoluteString,
                          @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
                          @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
