@@ -37,6 +37,12 @@
     }
 }
 
+///  修复网易云页面播放状态下切换到其他界面再返回到网易云音乐界面时不加载tableViewCell的问题
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 #pragma mark - TableViewDataSouce
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -101,7 +107,7 @@
     // 本地视频播放.
     NSString *locVideoPath = [[NSBundle mainBundle]pathForResource:@"designedByAppleInCalifornia" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
-    self.pathStrings = @[
+    self.pathStrings = @[@"http://hbpic-10057247.file.myqcloud.com/music/005d200a60086adcc9a8d3f7f27f4a33.mp3",
                          url.absoluteString,
                          @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
                          @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",

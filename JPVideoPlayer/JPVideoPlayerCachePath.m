@@ -41,7 +41,9 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
     NSString *videoCachePath = [self videoCachePath];
     NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
+    NSString *fileType = [NSString stringWithFormat:@".%@",key.pathExtension];
+    filePath = [filePath stringByAppendingString:fileType];
+//    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSParameterAssert(filePath);
     return filePath;
 }
@@ -108,7 +110,9 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 
     NSString *path = [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForTemporaryFile];
     path = [path stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    path = [path stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
+    NSString *fileType = [NSString stringWithFormat:@".%@",key.pathExtension];
+    path = [path stringByAppendingString:fileType];
+//    path = [path stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:path]) {
         [fileManager createFileAtPath:path contents:nil attributes:nil];
@@ -123,8 +127,11 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
     }
 
     NSString *path = [self getFilePathWithAppendingString:JPVideoPlayerCacheVideoPathForFullFile];
+    NSString *fileType = [NSString stringWithFormat:@".%@",key.pathExtension];
     NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]
-            stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
+                          stringByAppendingString:fileType];
+//    NSString *fileName = [[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]
+//            stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     path = [path stringByAppendingPathComponent:fileName];
     return path;
 }
