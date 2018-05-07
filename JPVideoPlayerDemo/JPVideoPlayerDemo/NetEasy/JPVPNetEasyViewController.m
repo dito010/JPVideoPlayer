@@ -37,6 +37,12 @@
     }
 }
 
+///  修复网易云页面播放状态下切换到其他界面再返回到网易云音乐界面时不加载tableViewCell的问题
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 #pragma mark - TableViewDataSouce
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
