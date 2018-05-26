@@ -12,6 +12,7 @@
 #import "JPVideoPlayerWeiBoViewController.h"
 #import "JPVideoPlayerWeiBoListViewController.h"
 #import "JPVideoPlayerHoverViewController.h"
+#import "JPVideoPlayerAudioViewController.h"
 
 @interface JPVideoPlayerWeiBoViewController()
 
@@ -51,15 +52,19 @@
     else if(indexPath.row == 1) {
         viewController = [[JPVideoPlayerWeiBoListViewController alloc] initWithPlayStrategyType:JPScrollPlayStrategyTypeBestCell];
     }
-    else {
+    else if(indexPath.row == 2) {
         viewController = [JPVideoPlayerHoverViewController new];
     }
+    else {
+        viewController = [JPVideoPlayerAudioViewController new];
+    }
+    viewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (NSArray<NSString *> *)cellTypeStrings {
     if(!_cellTypeStrings){
-       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放", @"悬停播放"];
+       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放", @"悬停播放", @"音频播放"];
     }
     return _cellTypeStrings;
 }
