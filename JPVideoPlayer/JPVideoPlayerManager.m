@@ -156,17 +156,6 @@
     // nobody retain this block.
     configurationCompletion = ^(UIView *view, JPVideoPlayerModel *model){
         NSParameterAssert(model);
-        if([self fetchPlaybackRecordForVideoURL:url] > 0){
-            BOOL shouldSeek = YES;
-            if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldResumePlaybackFromPlaybackRecordForURL:elapsedSeconds:)]) {
-                shouldSeek = [self.delegate videoPlayerManager:self
-                  shouldResumePlaybackFromPlaybackRecordForURL:url
-                                                elapsedSeconds:[self fetchPlaybackRecordForVideoURL:url]];
-            }
-            if(shouldSeek){
-                [view jp_seekToTime:CMTimeMakeWithSeconds([self fetchPlaybackRecordForVideoURL:url], 1000)];
-            }
-        }
         if(configurationCompletion){
             configurationCompletion(view, model);
         }
@@ -362,6 +351,19 @@ shouldAutoReplayVideoForURL:(NSURL *)videoURL {
 
 - (void)videoPlayer:(nonnull JPVideoPlayer *)videoPlayer
 playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
+    if(playerStatus == JPVideoPlayerStatusReadyToPlay){
+        if([self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL] > 0){
+            BOOL shouldSeek = YES;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldResumePlaybackFromPlaybackRecordForURL:elapsedSeconds:)]) {
+                shouldSeek = [self.delegate videoPlayerManager:self
+                  shouldResumePlaybackFromPlaybackRecordForURL:self.managerModel.videoURL
+                                                elapsedSeconds:[self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL]];
+            }
+            if(shouldSeek){
+                [self.videoPlayer seekToTime:CMTimeMakeWithSeconds([self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL], 1000)];
+            }
+        }
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:playerStatusDidChanged:)]) {
         [self.delegate videoPlayerManager:self playerStatusDidChanged:playerStatus];
     }

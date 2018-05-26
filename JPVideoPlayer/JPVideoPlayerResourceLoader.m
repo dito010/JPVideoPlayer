@@ -32,7 +32,7 @@
 
 @property (nonatomic) pthread_mutex_t lock;
 
-@property (nonatomic, strong, nonnull) dispatch_queue_t ioQueue;
+@property (nonatomic, strong) dispatch_queue_t ioQueue;
 
 @end
 
