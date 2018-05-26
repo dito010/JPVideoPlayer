@@ -244,7 +244,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         NSRange range = [self.internalFragmentRanges[0] rangeValue];
         if (range.location == 0 && (range.length == self.fileLength)) {
             self.completed = YES;
-            [NSFileManager.defaultManager removeItemAtPath:self.indexFilePath error:nil];
         }
     }
 

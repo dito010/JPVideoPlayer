@@ -37,22 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType)   {
     
     /**
-     * The video wasn't available the JPVideoPlayer caches, but was downloaded from the web.
+     * The video wasn't available the JPVideoPlayer caches.
      */
     JPVideoPlayerCacheTypeNone,
-    
-    /**
-     * The video was obtained on the disk cache, and the video is cache finished.
-     */
-    JPVideoPlayerCacheTypeFull,
 
     /**
-     * The video was obtained on the disk cache, but the video does not cache finish.
+     * The video was obtained on the disk cache.
      */
-    JPVideoPlayerCacheTypeFragment,
+    JPVideoPlayerCacheTypeExisted,
 
     /**
-     * A location video.
+     * A location source.
      */
     JPVideoPlayerCacheTypeLocation
 };

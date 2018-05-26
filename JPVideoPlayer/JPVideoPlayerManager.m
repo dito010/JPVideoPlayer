@@ -187,26 +187,14 @@
                                            options:options
                                          showLayer:showLayer
                            configurationCompletion:configurationCompletion];
-            } else if (videoPath) {
-                // full video cache file in disk.
-                if(cacheType == JPVideoPlayerCacheTypeFull){
-                    JPDebugLog(@"Start play a cached video: %@", url);
-                    self.managerModel.cacheType = JPVideoPlayerCacheTypeFull;
-                    [self playExistedVideoWithShowLayer:showLayer
-                                                    url:url
-                                              videoPath:videoPath
-                                                options:options
-                                              cacheType:cacheType
-                                configurationCompletion:configurationCompletion];
-                }
-                else if(cacheType == JPVideoPlayerCacheTypeFragment) {
-                    self.managerModel.cacheType = JPVideoPlayerCacheTypeFragment;
-                    JPDebugLog(@"Start play a fragment video: %@", url);
-                    [self playFragmentVideoWithURL:url
-                                           options:options
-                                         showLayer:showLayer
-                           configurationCompletion:configurationCompletion];
-                }
+            }
+            else if (videoPath) {
+                self.managerModel.cacheType = JPVideoPlayerCacheTypeExisted;
+                JPDebugLog(@"Start play a existed video: %@", url);
+                [self playFragmentVideoWithURL:url
+                                       options:options
+                                     showLayer:showLayer
+                       configurationCompletion:configurationCompletion];
             }
             else {
                 // video not in cache and download disallowed by delegate.
@@ -407,7 +395,7 @@ didReceiveResponse:(NSURLResponse *)response {
       expectedSize:(NSUInteger)expectedSize {
     NSUInteger fileLength = self.videoPlayer.playerModel.resourceLoader.cacheFile.fileLength;
     NSArray<NSValue *> *fragmentRanges = self.videoPlayer.playerModel.resourceLoader.cacheFile.fragmentRanges;
-    self.managerModel.cacheType = JPVideoPlayerCacheTypeFragment;
+    self.managerModel.cacheType = JPVideoPlayerCacheTypeExisted;
     self.managerModel.fragmentRanges = fragmentRanges;
     [self callDownloadDelegateMethodWithFragmentRanges:fragmentRanges
                                           expectedSize:fileLength
@@ -623,28 +611,6 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                                           expectedSize:model.resourceLoader.cacheFile.fileLength
                                              cacheType:self.managerModel.cacheType
                                                  error:nil];
-}
-
-- (void)playExistedVideoWithShowLayer:(CALayer *)showLayer
-                                  url:(NSURL *)url
-                            videoPath:(NSString *)videoPath
-                              options:(JPVideoPlayerOptions)options
-                            cacheType:(JPVideoPlayerCacheType)cacheType
-              configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
-    JPDebugLog(@"Start play a existed video: %@", url);
-    NSUInteger videoLength = (NSUInteger)[self fetchFileSizeAtPath:videoPath];
-    self.managerModel.fileLength = videoLength;
-    self.managerModel.fragmentRanges = @[[NSValue valueWithRange:NSMakeRange(0, videoLength)]];
-    [self callVideoLengthDelegateMethodWithVideoLength:videoLength];
-    [self callDownloadDelegateMethodWithFragmentRanges:self.managerModel.fragmentRanges
-                                          expectedSize:videoLength
-                                             cacheType:self.managerModel.cacheType
-                                                 error:nil];
-    [self.videoPlayer playExistedVideoWithURL:url
-                           fullVideoCachePath:videoPath
-                                      options:options
-                                  showOnLayer:showLayer
-                      configurationCompletion:configurationCompletion];
 }
 
 - (void)playLocalVideoWithShowLayer:(CALayer *)showLayer

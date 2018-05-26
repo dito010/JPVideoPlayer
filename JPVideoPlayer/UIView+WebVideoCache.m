@@ -663,7 +663,6 @@
     }
     switch(cacheType){
         case JPVideoPlayerCacheTypeLocation:
-        case JPVideoPlayerCacheTypeFull:
             NSParameterAssert(fragmentRanges);
             NSRange range = [fragmentRanges.firstObject rangeValue];
             NSParameterAssert(range.length == expectedSize);

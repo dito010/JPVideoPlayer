@@ -130,20 +130,9 @@ static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.ver
                 return;
             }
 
-            // we will remove index file when cache video finished, so we can judge video is cached finished or not by index file existed or not.
-            BOOL isCacheFull = ![self.fileManager fileExistsAtPath:[JPVideoPlayerCachePath videoCacheIndexFilePathForKey:key]];
-            if(isCacheFull){
-                if (completion) {
-                    JPDispatchSyncOnMainQueue(^{
-                        completion([JPVideoPlayerCachePath videoCachePathForKey:key], JPVideoPlayerCacheTypeFull);
-                    });
-                }
-                return;
-            }
-
             if (completion) {
                 JPDispatchSyncOnMainQueue(^{
-                    completion([JPVideoPlayerCachePath videoCachePathForKey:key], JPVideoPlayerCacheTypeFragment);
+                    completion([JPVideoPlayerCachePath videoCachePathForKey:key], JPVideoPlayerCacheTypeExisted);
                 });
             }
         }

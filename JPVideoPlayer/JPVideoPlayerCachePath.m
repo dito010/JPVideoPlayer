@@ -41,7 +41,8 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
     NSString *videoCachePath = [self videoCachePath];
     NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
+// TODO: 文件路径兼容
+//    filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoFileExtension];
     NSParameterAssert(filePath);
     return filePath;
 }
