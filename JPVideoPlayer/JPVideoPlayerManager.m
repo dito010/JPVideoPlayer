@@ -360,7 +360,7 @@ playerStatusDidChange:(JPVideoPlayerStatus)playerStatus {
                                                 elapsedSeconds:[self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL]];
             }
             if(shouldSeek){
-                [self.videoPlayer seekToTime:CMTimeMakeWithSeconds([self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL], 1000)];
+                [self.videoPlayer seekToTimeWhenRecordPlayback:CMTimeMakeWithSeconds([self fetchPlaybackRecordForVideoURL:self.managerModel.videoURL], 1000)];
             }
         }
     }

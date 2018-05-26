@@ -152,6 +152,11 @@ playFailedWithError:(NSError *)error;
                         options:(JPVideoPlayerOptions)options
         configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
 
+/**
+ * This method used to seek to record playback when hava record playback history.
+ */
+- (void)seekToTimeWhenRecordPlayback:(CMTime)time;
+
 @end
 
 NS_ASSUME_NONNULL_END

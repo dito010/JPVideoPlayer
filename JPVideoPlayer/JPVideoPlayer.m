@@ -314,6 +314,25 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self callPlayerStatusDidChangeDelegateMethod];
 }
 
+- (void)seekToTimeWhenRecordPlayback:(CMTime)time {
+    if(!self.playerModel){
+        return;
+    }
+    if(!CMTIME_IS_VALID(time)){
+        return;
+    }
+    __weak typeof(self) wself = self;
+    [self.playerModel.player seekToTime:time completionHandler:^(BOOL finished) {
+
+        __strong typeof(wself) sself = wself;
+        if(finished){
+            [sself internalResumeWithNeedCallDelegate:YES];
+        }
+
+    }];
+}
+
+
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
 - (void)setRate:(float)rate {
