@@ -494,9 +494,9 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                 self.playerStatus = JPVideoPlayerStatusReadyToPlay;
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 if (!self.playerModel) return;
+                [self callPlayerStatusDidChangeDelegateMethod];
                 [self.playerModel.player play];
                 [self displayVideoPicturesOnShowLayer];
-                [self callPlayerStatusDidChangeDelegateMethod];
             }
                 break;
 
@@ -633,13 +633,10 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 }
 
 - (void)callPlayerStatusDidChangeDelegateMethod {
-    JPDispatchSyncOnMainQueue(^{
-        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
-            [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
-        }
-    });
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playerStatusDidChange:)]) {
+        [self.delegate videoPlayer:self playerStatusDidChange:self.playerStatus];
+    }
 }
-
 
 - (void)internalPauseWithNeedCallDelegate:(BOOL)needCallDelegate {
     [self.playerModel pause];
