@@ -446,11 +446,6 @@ didCompleteWithError:(NSError *)error {
 
 - (void)applicationStateMonitor:(JPApplicationStateMonitor *)monitor
       applicationStateDidChange:(JPApplicationState)applicationState {
-    if(applicationState == JPApplicationStateDidBecomeActive){
-        [self activeAudioSessionIfNeed];
-    }
-
-
     BOOL needReturn = !self.managerModel.videoURL ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusStop ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusPause ||
@@ -502,6 +497,7 @@ didCompleteWithError:(NSError *)error {
        shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:self.managerModel.videoURL];
         if(needResume){
             [self.videoPlayer resume];
+            [self activeAudioSessionIfNeed];
         }
     }
 }
@@ -516,6 +512,7 @@ didCompleteWithError:(NSError *)error {
 shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.managerModel.videoURL];
         if(needResume){
             [self.videoPlayer resume];
+            [self activeAudioSessionIfNeed];
         }
     }
 }
