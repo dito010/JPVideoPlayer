@@ -80,8 +80,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    NSString *videoString = @"https://course-cdn.ibeiliao.com/o_1cebgb3jesq19lb1psb199v1mc110.mp4?e=1527486524&token=4VoIiaZtDMPOh1jx-TVpfErS1pWWs4WnsdZ_ISvc:qlknzDsluIebryG2wv8uViqyy-M=";
-//    NSString *videoString = @"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4";
+    NSString *videoString = @"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4";
     self.tableView.delegate = self;
     [self.headerView jp_playVideoWithURL:[NSURL URLWithString:videoString]
                       bufferingIndicator:nil
@@ -110,8 +109,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSString *videoString = @"https://course-cdn.ibeiliao.com/o_1cebgb3jesq19lb1psb199v1mc110.mp4?e=1527486524&token=4VoIiaZtDMPOh1jx-TVpfErS1pWWs4WnsdZ_ISvc:qlknzDsluIebryG2wv8uViqyy-M=";
-//    NSString *videoString = @"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4";
+    NSString *videoString = @"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4";
     BOOL headerVisible = [self.tableView jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:self.headerView];
     if(headerVisible && !self.hoverView.hidden){
        self.hoverView.hidden = YES;
