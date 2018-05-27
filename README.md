@@ -13,6 +13,9 @@ This library provides an video player with cache support in `UITableView` base o
 <img src="Images/demo.gif" title="demo" float=left>
 </p>
 
+## Watch out!
+When you update the library from 3.0.9(contain before) to 3.1.0, please clear all your video caches. because the library support audio resources now. To clear cache see [Cache manage](#cache-manage) please.
+
 ## Features
 - [x] Cache video data at playing.
 - [x] Seek time support(new).
