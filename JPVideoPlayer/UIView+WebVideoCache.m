@@ -707,7 +707,7 @@ shouldPausePlaybackWhenApplicationWillResignActiveForURL:(NSURL *)videoURL {
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldPausePlaybackWhenApplicationWillResignActiveForURL:)]) {
         return [self.jp_videoPlayerDelegate shouldPausePlaybackWhenApplicationWillResignActiveForURL:videoURL];
     }
-    return YES;
+    return NO;
 }
 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
@@ -731,7 +731,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:(NSURL 
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:)]) {
         return [self.jp_videoPlayerDelegate shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:videoURL];
     }
-    return YES;
+    return NO;
 }
 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager

@@ -450,41 +450,44 @@ didCompleteWithError:(NSError *)error {
         [self activeAudioSessionIfNeed];
     }
 
+
     BOOL needReturn = !self.managerModel.videoURL ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusStop ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusPause ||
             self.videoPlayer.playerStatus == JPVideoPlayerStatusFailed;
-
     if(applicationState == JPApplicationStateWillResignActive){
+        BOOL needPause = YES;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationWillResignActiveForURL:)]) {
+            needPause = [self.delegate videoPlayerManager:self
+            shouldPausePlaybackWhenApplicationWillResignActiveForURL:self.managerModel.videoURL];
+        }
+        if(!needPause){
+            self.isReturnWhenApplicationWillResignActive = YES;
+            return;
+        }
         self.isReturnWhenApplicationWillResignActive = needReturn;
         if(needReturn){
             return;
         }
-        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationWillResignActiveForURL:)]) {
-            BOOL needPause = [self.delegate videoPlayerManager:self
-            shouldPausePlaybackWhenApplicationWillResignActiveForURL:self.managerModel.videoURL];
-            if(needPause){
-                [self.videoPlayer pause];
-            }
-            return;
-        }
-
         [self.videoPlayer pause];
     }
     else if(applicationState == JPApplicationStateDidEnterBackground){
+        if(!self.isReturnWhenApplicationWillResignActive){
+            self.isReturnWhenApplicationDidEnterBackground = self.isReturnWhenApplicationWillResignActive;
+            return;
+        }
+        BOOL needPause = YES;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:)]) {
+            needPause = [self.delegate videoPlayerManager:self
+      shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:self.managerModel.videoURL];
+        }
+        if(!needPause){
+            return;
+        }
         self.isReturnWhenApplicationDidEnterBackground = needReturn;
         if(needReturn){
             return;
         }
-        if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:)]) {
-            BOOL needPause = [self.delegate videoPlayerManager:self
-      shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:self.managerModel.videoURL];
-            if(needPause){
-                [self.videoPlayer pause];
-            }
-            return;
-        }
-
         [self.videoPlayer pause];
     }
 }
@@ -500,10 +503,7 @@ didCompleteWithError:(NSError *)error {
         if(needResume){
             [self.videoPlayer resume];
         }
-        return;
     }
-
-    [self.videoPlayer resume];
 }
 
 - (void)applicationDidBecomeActiveFromResignActive:(JPApplicationStateMonitor *)monitor {
@@ -517,10 +517,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
         if(needResume){
             [self.videoPlayer resume];
         }
-        return;
     }
-
-    [self.videoPlayer resume];
 }
 
 
