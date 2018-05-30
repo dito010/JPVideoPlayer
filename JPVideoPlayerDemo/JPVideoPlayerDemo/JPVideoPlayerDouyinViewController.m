@@ -135,28 +135,14 @@ nearestViewControllerInViewTree:nearestViewController
 - (NSArray<NSString *> *)douyinVideoStrings {
     if(!_douyinVideoStrings){
         _douyinVideoStrings = @[
-                @"http://p11s9kqxf.bkt.clouddn.com/coder.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/buff.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/cat.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/child.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/english.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/erha.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/face.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/fanglian.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/gao.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/girlfriend.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/haha.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/hide.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/juzi.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/keai.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/nvpengy.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/samo.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/shagou.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/shagougou.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/shamiao.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/sichuan.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/tuolaiji.mp4",
-                @"http://p11s9kqxf.bkt.clouddn.com/xiaobiaozi.mp4",
+                @"https://www.apple.com/105/media/cn/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-cn-20170912_1280x720h.mp4",
+                @"https://static.smartisanos.cn/common/video/smartisan-tnt.mp4",
+                @"https://static.smartisanos.cn/common/video/video-jgpro.mp4",
+                @"https://static.smartisanos.cn/common/video/m1-coffee.mp4",
+                @"https://static.smartisanos.cn/common/video/m1-white.mp4",
+                @"https://static.smartisanos.cn/common/video/smartisanT2.mp4",
+                @"https://static.smartisanos.cn/common/video/smartisant1.mp4 https://static.smartisanos.cn/common/video/ammounition-video.mp4",
+                @"https://static.smartisanos.cn/common/video/t1-ui.mp4"
         ];
     }
     return _douyinVideoStrings;

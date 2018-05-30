@@ -37,7 +37,7 @@
 - (instancetype)initWithPlayStrategyType:(JPScrollPlayStrategyType)playStrategyType {
     self = [super init];
     if(self){
-       _scrollPlayStrategyType = playStrategyType;
+        _scrollPlayStrategyType = playStrategyType;
     }
     return self;
 }
@@ -85,7 +85,7 @@
     NSString *reuseIdentifier = indexPath.row % 2 == 0 ? NSStringFromClass([JPVideoPlayerWeiBoEqualHeightCell class]) :
             NSStringFromClass([JPVideoPlayerWeiBoUnequalHeightCell class]);
     if(self.scrollPlayStrategyType == JPScrollPlayStrategyTypeBestCell){
-       reuseIdentifier = NSStringFromClass([JPVideoPlayerWeiBoEqualHeightCell class]);
+        reuseIdentifier = NSStringFromClass([JPVideoPlayerWeiBoEqualHeightCell class]);
     }
     JPVideoPlayerWeiBoEqualHeightCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.indexPath = indexPath;
@@ -164,35 +164,14 @@
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
             url.absoluteString,
-            @"http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/faceid.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/lavameface.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/screen.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/lavame.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/iPhoneX.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/kingOfGlory.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/worldStart.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/wechat.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/threeminutes.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/designedByAppleInCalifornia.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/thinkDifferent.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/steveInStanford.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/Bitcoin.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/chunjie.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/liangliang.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/nanianhuakai.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/wanghanxu.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/xiaochou.mp4",
-            @"http://p11s9kqxf.bkt.clouddn.com/fukua.mp4",
-            @"http://static.smartisanos.cn/common/video/smartisanT2.mp4",
-            @"http://static.smartisanos.cn/common/video/m1-white.mp4",
-            @"http://static.smartisanos.cn/common/video/video-jgpro.mp4",
-            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-            @"http://static.smartisanos.cn/common/video/t1-ui.mp4",
-            @"http://static.smartisanos.cn/common/video/smartisant1.mp4",
-            @"http://static.smartisanos.cn/common/video/ammounition-video.mp4",
-            @"http://static.smartisanos.cn/common/video/proud-driver.mp4",
-            @"http://static.smartisanos.cn/common/video/proud-farmer.mp4"
+            @"https://www.apple.com/105/media/cn/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-cn-20170912_1280x720h.mp4",
+            @"https://static.smartisanos.cn/common/video/smartisan-tnt.mp4",
+            @"https://static.smartisanos.cn/common/video/video-jgpro.mp4",
+            @"https://static.smartisanos.cn/common/video/m1-coffee.mp4",
+            @"https://static.smartisanos.cn/common/video/m1-white.mp4",
+            @"https://static.smartisanos.cn/common/video/smartisanT2.mp4",
+            @"https://static.smartisanos.cn/common/video/smartisant1.mp4 https://static.smartisanos.cn/common/video/ammounition-video.mp4",
+            @"https://static.smartisanos.cn/common/video/t1-ui.mp4"
     ];
 }
 
