@@ -193,12 +193,12 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 ## 赞助
 你这一赞助，我写的就更来劲了！
 
-微信赞助扫码
+#### 微信赞助扫码
 <p align="left" >
-<img src="Images/wechat.png" title="Wechat" height="400" width="400" float=left>
+<img src="Images/wechat.png" title="Wechat" height="300" width="300" float=left>
 </p>
 
-支付宝赞助扫码
+#### 支付宝赞助扫码
 <p align="left" >
-<img src="Images/zhifubao.png" title="Zhifubao" height="400" width="400" float=left>
+<img src="Images/zhifubao.png" title="Zhifubao" height="300" width="300" float=left>
 </p>
