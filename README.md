@@ -195,10 +195,10 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 
 #### 微信赞助扫码
 <p align="left" >
-<img src="Images/wechat.png" title="Wechat" height="300" width="300" float=left>
+<img src="Images/wechat.png" title="Wechat" height="250" width="250" float=left>
 </p>
 
 #### 支付宝赞助扫码
 <p align="left" >
-<img src="Images/zhifubao.png" title="Zhifubao" height="300" width="300" float=left>
+<img src="Images/zhifubao.png" title="Zhifubao" height="250" width="250" float=left>
 </p>
