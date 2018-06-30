@@ -17,17 +17,79 @@
 #import "JPVideoPlayerCompat.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@implementation NSURL (StripQuery)
+NS_ASSUME_NONNULL_BEGIN
 
-- (NSString *)absoluteStringByStrippingQuery{
-    NSString *absoluteString = [self absoluteString];
-    NSUInteger queryLength = [[self query] length];
-    NSString* strippedString = (queryLength ? [absoluteString substringToIndex:[absoluteString length] - (queryLength + 1)] : absoluteString);
+@interface NSMutableString (JPURLRequestFormatter)
 
-    if ([strippedString hasSuffix:@"?"]) {
-        strippedString = [strippedString substringToIndex:absoluteString.length-1];
+- (void)jp_appendCommandLineArgument:(NSString *)arg;
+
+@end
+
+@implementation NSMutableString (JPURLRequestFormatter)
+
+- (void)jp_appendCommandLineArgument:(NSString *)arg {
+    [self appendFormat:@" %@", [arg stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+}
+
+@end
+
+@interface JPURLRequestFormatter : NSObject
+
+@end
+
+@implementation JPURLRequestFormatter
+
++ (NSString *)cURLCommandFromURLRequest:(NSURLRequest *)request {
+    NSMutableString *command = [NSMutableString stringWithString:@"curl"];
+
+    [command jp_appendCommandLineArgument:[NSString stringWithFormat:@"-X %@", [request HTTPMethod]]];
+
+    if ([[request HTTPBody] length] > 0) {
+        NSMutableString *HTTPBodyString = [[NSMutableString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
+        [HTTPBodyString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:0 range:NSMakeRange(0, [HTTPBodyString length])];
+        [HTTPBodyString replaceOccurrencesOfString:@"`" withString:@"\\`" options:0 range:NSMakeRange(0, [HTTPBodyString length])];
+        [HTTPBodyString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:0 range:NSMakeRange(0, [HTTPBodyString length])];
+        [HTTPBodyString replaceOccurrencesOfString:@"$" withString:@"\\$" options:0 range:NSMakeRange(0, [HTTPBodyString length])];
+        [command jp_appendCommandLineArgument:[NSString stringWithFormat:@"-d \"%@\"", HTTPBodyString]];
     }
-    return strippedString;
+
+    NSString *acceptEncodingHeader = [[request allHTTPHeaderFields] valueForKey:@"Accept-Encoding"];
+    if ([acceptEncodingHeader rangeOfString:@"gzip"].location != NSNotFound) {
+        [command jp_appendCommandLineArgument:@"--compressed"];
+    }
+
+    if ([request URL]) {
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[request URL]];
+        if (cookies.count) {
+            NSMutableString *mutableCookieString = [NSMutableString string];
+            for (NSHTTPCookie *cookie in cookies) {
+                [mutableCookieString appendFormat:@"%@=%@;", cookie.name, cookie.value];
+            }
+
+            [command jp_appendCommandLineArgument:[NSString stringWithFormat:@"--cookie \"%@\"", mutableCookieString]];
+        }
+    }
+
+    for (id field in [request allHTTPHeaderFields]) {
+        [command jp_appendCommandLineArgument:[NSString stringWithFormat:@"-H %@", [NSString stringWithFormat:@"'%@: %@'", field, [[request valueForHTTPHeaderField:field] stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"]]]];
+    }
+
+    [command jp_appendCommandLineArgument:[NSString stringWithFormat:@"\"%@\"", [[request URL] absoluteString]]];
+
+    return [NSString stringWithString:command];
+}
+
+@end
+
+@implementation NSURL (cURL)
+
+- (NSString *)jp_cURLCommand {
+    NSURLRequest *request = [NSURLRequest requestWithURL:self];
+    NSParameterAssert(request);
+    if(!request){
+        return nil;
+    }
+    return [JPURLRequestFormatter cURLCommandFromURLRequest:request];
 }
 
 @end
@@ -623,3 +685,30 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 @end
+
+static NSString * const JPMigrationLastSDKVersionKey = @"com.jpvideoplayer.last.migration.version.www";
+@implementation JPMigration
+
++ (void)migrateToSDKVersion:(NSString *)version
+                      block:(dispatch_block_t)migrationBlock {
+    // version > lastMigrationVersion
+    if ([version compare:[self lastMigrationVersion] options:NSNumericSearch] == NSOrderedDescending) {
+        migrationBlock();
+        JPDebugLog(@"JPMigration: Running migration for version %@", version);
+        [self setLastMigrationVersion:version];
+    }
+}
+
++ (NSString *)lastMigrationVersion {
+    NSString *res = [[NSUserDefaults standardUserDefaults] valueForKey:JPMigrationLastSDKVersionKey];
+    return (res ? res : @"");
+}
+
++ (void)setLastMigrationVersion:(NSString *)version {
+    [[NSUserDefaults standardUserDefaults] setValue:version forKey:JPMigrationLastSDKVersionKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+@end
+
+NS_ASSUME_NONNULL_END

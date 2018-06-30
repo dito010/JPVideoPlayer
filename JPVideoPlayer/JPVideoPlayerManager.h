@@ -260,6 +260,13 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
  */
 - (NSString *_Nullable)cacheKeyForURL:(NSURL *)url;
 
+#pragma mark - Version
+
+/**
+ * Return the version of SDK;
+ */
+- (NSString *)SDKVersion;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -292,12 +292,13 @@ static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.ver
 
 - (NSString *)cachedFileNameForKey:(NSString *)key {
     NSParameterAssert(key);
-    if(!key){
+    if(!key.length){
         return nil;
     }
-    if ([key length]) {
-        NSString *strippedQueryKey = [[NSURL URLWithString:key] absoluteStringByStrippingQuery];
-        key = [strippedQueryKey length] ? strippedQueryKey : key;
+
+    NSURL *url = [NSURL URLWithString:key];
+    if(url){
+        key = [url jp_cURLCommand];
     }
     const char *str = key.UTF8String;
     if (str == NULL) str = "";

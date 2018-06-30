@@ -146,7 +146,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
            NSRange range = [rangeValue rangeValue];
            string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
        }
-        JPDebugLog(@"合并后已缓存区间: %@", string);
+        /// JPDebugLog(@"合并后已缓存区间: %@", string);
     }
 }
 

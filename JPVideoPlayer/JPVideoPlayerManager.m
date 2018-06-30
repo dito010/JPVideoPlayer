@@ -55,6 +55,7 @@
 
 @end
 
+static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.version.www";
 @implementation JPVideoPlayerManager
 @synthesize volume;
 @synthesize muted;
@@ -62,11 +63,18 @@
 
 + (nonnull instancetype)sharedManager {
     static dispatch_once_t once;
-    static id instance;
+    static JPVideoPlayerManager *jpVideoPlayerManagerInstance;
     dispatch_once(&once, ^{
-        instance = [self new];
+        jpVideoPlayerManagerInstance = [self new];
+        [[NSUserDefaults standardUserDefaults] setObject:@"3.1.1" forKey:JPVideoPlayerSDKVersionKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [JPMigration migrateToSDKVersion:@"3.1.1" block:^{
+
+            [jpVideoPlayerManagerInstance.videoCache clearDiskOnCompletion:nil];
+
+        }];
     });
-    return instance;
+    return jpVideoPlayerManagerInstance;
 }
 
 - (nonnull instancetype)init {
@@ -257,6 +265,11 @@
         return nil;
     }
     return [url absoluteString];
+}
+
+- (NSString *)SDKVersion {
+    NSString *res = [[NSUserDefaults standardUserDefaults] valueForKey:JPVideoPlayerSDKVersionKey];
+    return (res ? res : @"");
 }
 
 
