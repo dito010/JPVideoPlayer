@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * A flag represent the video data is cache finished or not.
  */
-@property (nonatomic, readonly) BOOL isCompeleted;
+@property (nonatomic, readonly) BOOL isCompleted;
 
 /**
  * A flag represent read offset is point to the end of video data file.

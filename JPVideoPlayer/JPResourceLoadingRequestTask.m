@@ -76,15 +76,15 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 }
 
 + (instancetype)requestTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
-                                 requestRange:(NSRange)requestRange
-                                    cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                                    customURL:(NSURL *)customURL
-                                       cached:(BOOL)cached {
-    return [[[self class] alloc] initWithLoadingRequest:loadingRequest
-                                           requestRange:requestRange
-                                              cacheFile:cacheFile
-                                              customURL:customURL
-                                                 cached:cached];
+        requestRange:(NSRange)requestRange
+        cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+        customURL:(NSURL *)customURL
+        cached:(BOOL)cached {
+    return [[self.class alloc] initWithLoadingRequest:loadingRequest
+                                         requestRange:requestRange
+                                            cacheFile:cacheFile
+                                            customURL:customURL
+                                               cached:cached];
 }
 
 - (void)requestDidReceiveResponse:(NSURLResponse *)response {

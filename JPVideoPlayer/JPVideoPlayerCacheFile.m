@@ -107,7 +107,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     return self.fileLength != 0;
 }
 
-- (BOOL)isCompeleted {
+- (BOOL)isCompleted {
     return self.completed;
 }
 
@@ -127,7 +127,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (void)mergeRangesIfNeed {
     JPMainThreadAssert;
-    int lock = pthread_mutex_trylock(&_lock);
+    BOOL isMerge = NO;
     for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
         if ((i + 1) < self.internalFragmentRanges.count) {
             NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
@@ -136,11 +136,17 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                 [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
                 [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
                 i -= 1;
+                isMerge = YES;
             }
         }
     }
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
+    if(isMerge){
+       NSString *string = @"";
+       for(NSValue *rangeValue in self.internalFragmentRanges){
+           NSRange range = [rangeValue rangeValue];
+           string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
+       }
+        JPDebugLog(@"合并后已缓存区间: %@", string);
     }
 }
 
@@ -151,7 +157,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     }
 
     JPDispatchSyncOnMainQueue(^{
-        int lock = pthread_mutex_trylock(&_lock);
         BOOL inserted = NO;
         for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
             NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
@@ -163,9 +168,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         }
         if (!inserted) {
             [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
-        }
-        if (!lock) {
-            pthread_mutex_unlock(&_lock);
         }
         [self mergeRangesIfNeed];
         [self checkIsCompleted];
@@ -407,18 +409,25 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (NSString *)unserializeIndex {
     int lock = pthread_mutex_trylock(&_lock);
+
+    NSMutableDictionary *dict = [@{
+            kJPVideoPlayerCacheFileSizeKey: @(self.fileLength),
+    } mutableCopy];
+
     NSMutableArray *rangeArray = [[NSMutableArray alloc] init];
     for (NSValue *range in self.internalFragmentRanges) {
         [rangeArray addObject:NSStringFromRange([range rangeValue])];
     }
-    NSMutableDictionary *dict = [@{
-            kJPVideoPlayerCacheFileSizeKey: @(self.fileLength),
-            kJPVideoPlayerCacheFileZoneKey: rangeArray
-    } mutableCopy];
+    if(rangeArray.count){
+        dict[kJPVideoPlayerCacheFileZoneKey] = rangeArray;
+    }
+
+    JPDebugLog(@"存储字典: %@", dict);
 
     if (self.responseHeaders) {
         dict[kJPVideoPlayerCacheFileResponseHeadersKey] = self.responseHeaders;
     }
+
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     if (data) {
         NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -438,10 +447,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     int lock = pthread_mutex_trylock(&_lock);
     JPDebugLog(@"Did synchronize index file");
     [self.writeFileHandle synchronizeFile];
-    BOOL synchronize = YES;
-    if (!self.isCompeleted) {
-        synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-    }
+    BOOL synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     if (!lock) {
         pthread_mutex_unlock(&_lock);
     }
