@@ -211,7 +211,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                              fullVideoCachePath:(NSString *)fullVideoCachePath
                                         options:(JPVideoPlayerOptions)options
                                     showOnLayer:(CALayer *)showLayer
-                        configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+                        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     if (!url.absoluteString.length) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
@@ -251,7 +251,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                          configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+                          configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     if (!url.absoluteString.length) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
@@ -291,7 +291,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (void)resumePlayWithShowLayer:(CALayer *)showLayer
                         options:(JPVideoPlayerOptions)options
-        configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     if (!showLayer) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return;

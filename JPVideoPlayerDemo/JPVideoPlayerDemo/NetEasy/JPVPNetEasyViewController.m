@@ -71,7 +71,7 @@
                                      bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
                                             controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
                                            progressView:nil
-                                configurationCompletion:nil];
+                                          configuration:nil];
 }
 
 

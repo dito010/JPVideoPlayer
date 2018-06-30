@@ -88,9 +88,9 @@
                            bufferingIndicator:nil
                                   controlView:[[JPVideoPlayerDetailControlView alloc] initWithControlBar:nil blurImage:nil]
                                  progressView:nil
-                      configurationCompletion:^(UIView *view, JPVideoPlayerModel *playerModel) {
-                          self.muteSwitch.on = ![self.videoContainer jp_muted];
-                      }];
+                                configuration:^(UIView *view, JPVideoPlayerModel *playerModel) {
+                                    self.muteSwitch.on = ![self.videoContainer jp_muted];
+                                }];
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];

@@ -86,7 +86,7 @@
                       bufferingIndicator:nil
                              controlView:nil
                             progressView:nil
-                 configurationCompletion:nil];
+                           configuration:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -113,17 +113,17 @@
     BOOL headerVisible = [self.tableView jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:self.headerView];
     if(headerVisible && !self.hoverView.hidden){
        self.hoverView.hidden = YES;
-       [self.headerView jp_resumePlayWithURL:[NSURL URLWithString:videoString]
-                          bufferingIndicator:nil
-                                 controlView:nil
-                                progressView:nil
-                     configurationCompletion:nil];
+        [self.headerView jp_resumePlayWithURL:[NSURL URLWithString:videoString]
+                           bufferingIndicator:nil
+                                  controlView:nil
+                                 progressView:nil
+                                configuration:nil];
     }
     else if(!headerVisible && self.hoverView.hidden){
         self.hoverView.hidden = NO;
         [self.hoverView jp_resumePlayWithURL:[NSURL URLWithString:videoString]
                                      options:JPVideoPlayerRetryFailed
-                     configurationCompletion:nil];
+                               configuration:nil];
     }
 }
 

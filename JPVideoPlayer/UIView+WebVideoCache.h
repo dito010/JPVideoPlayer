@@ -191,13 +191,13 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
  * @param progressView            The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
  *                                 it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                    progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-        configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+                  configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
  * Resume play for given url with bufferingIndicator and progressView, and the player is muted.
@@ -212,13 +212,13 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 it will display default bufferingIndicator if pass nil in. @see `JPVideoPlayerBufferingIndicator`.
  * @param progressView            The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
  *                                 it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_resumeMutePlayWithURL:(NSURL *)url
               bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                     progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-         configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+                   configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
  * Play a local or web video for given url with bufferingIndicator, controlView, progressView, and play audio at the same time.
@@ -234,14 +234,14 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
  * @param progressView            The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
  *                                 it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-    configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+              configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
  * Resume play for given url with bufferingIndicator, controlView, progressView, and play audio at the same time.
@@ -260,14 +260,14 @@ NS_ASSUME_NONNULL_BEGIN
  *                                 it will display default controlView if pass nil, @see `JPVideoPlayerControlView`.
  * @param progressView            The view to display the download and play progress, should compliance with the `JPVideoPlayerProgressProtocol`,
  *                                 it will display default progressView if pass nil, @see `JPVideoPlayerProgressView`.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_resumePlayWithURL:(NSURL *)url
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-     configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+               configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
  * Play a local or web video with given url.
@@ -276,12 +276,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param url                     The url for the video.
  * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_playVideoWithURL:(NSURL *)url
                     options:(JPVideoPlayerOptions)options
-    configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+              configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
  * Resume play with given url.
@@ -293,12 +293,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param url                     The url for the video.
  * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param configurationCompletion The block will be call when video player complete the configuration. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player complete the configuration. because initialize player is not synchronize,
  *                                 so other category method is disabled before complete the configuration.
  */
 - (void)jp_resumePlayWithURL:(NSURL *)url
                      options:(JPVideoPlayerOptions)options
-     configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion;
+               configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 #pragma mark - Playback Control
 

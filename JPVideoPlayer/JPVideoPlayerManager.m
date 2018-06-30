@@ -110,7 +110,7 @@
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
- configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+ configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
     NSParameterAssert(showLayer);
     if(!url || !showLayer){
@@ -214,7 +214,7 @@
 - (void)resumePlayWithURL:(NSURL *)url
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
-  configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+  configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
     NSParameterAssert(url);
     if(!url){
@@ -593,7 +593,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 - (void)playFragmentVideoWithURL:(NSURL *)url
                          options:(JPVideoPlayerOptions)options
                        showLayer:(CALayer *)showLayer
-         configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+         configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
                                                            options:options
                                                          showLayer:showLayer
@@ -610,7 +610,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 - (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
                                 url:(NSURL *)url
                             options:(JPVideoPlayerOptions)options
-            configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+            configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPDebugLog(@"Start play a local video: %@", url);
     // local file.
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];

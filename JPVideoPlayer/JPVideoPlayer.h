@@ -122,7 +122,7 @@ playFailedWithError:(NSError *)error;
                                       fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
                                              showOnLayer:(CALayer *)showLayer
-                                 configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
+                                 configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
 
 /**
  * Play the not existed video from web.
@@ -138,7 +138,7 @@ playFailedWithError:(NSError *)error;
 - (JPVideoPlayerModel *_Nullable)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                          configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
+                          configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
 
 /**
  * Call this method to resume play.
@@ -150,7 +150,7 @@ playFailedWithError:(NSError *)error;
  */
 - (void)resumePlayWithShowLayer:(CALayer *)showLayer
                         options:(JPVideoPlayerOptions)options
-        configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion;
+        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
 
 /**
  * This method used to seek to record playback when hava record playback history.

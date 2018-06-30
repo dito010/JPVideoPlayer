@@ -142,7 +142,7 @@
     [cell.jp_videoPlayView jp_resumeMutePlayWithURL:cell.jp_videoURL
                                  bufferingIndicator:nil
                                        progressView:nil
-                            configurationCompletion:nil];
+                                      configuration:nil];
 }
 
 

@@ -138,13 +138,13 @@
     [self jp_playVideoWithURL:url
                       options:JPVideoPlayerContinueInBackground |
                               JPVideoPlayerLayerVideoGravityResizeAspect
-      configurationCompletion:nil];
+                configuration:nil];
 }
 
 - (void)jp_playVideoMuteWithURL:(NSURL *)url
              bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                    progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-        configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
+                  configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
@@ -154,13 +154,13 @@
                       options:JPVideoPlayerContinueInBackground |
                               JPVideoPlayerLayerVideoGravityResizeAspect |
                               JPVideoPlayerMutedPlay
-      configurationCompletion:configurationCompletion];
+                configuration:configuration];
 }
 
 - (void)jp_resumeMutePlayWithURL:(NSURL *)url
               bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                     progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-         configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
+                   configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
@@ -169,14 +169,14 @@
                        options:JPVideoPlayerContinueInBackground |
                                JPVideoPlayerLayerVideoGravityResizeAspect |
                                JPVideoPlayerMutedPlay
-       configurationCompletion:configurationCompletion];
+                 configuration:configuration];
 }
 
 - (void)jp_playVideoWithURL:(NSURL *)url
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-    configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
+              configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
@@ -185,14 +185,14 @@
     [self jp_playVideoWithURL:url
                       options:JPVideoPlayerContinueInBackground |
                               JPVideoPlayerLayerVideoGravityResizeAspect
-      configurationCompletion:configurationCompletion];
+                configuration:configuration];
 }
 
 - (void)jp_resumePlayWithURL:(NSURL *)url
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-     configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
+               configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
@@ -200,7 +200,7 @@
     [self jp_resumePlayWithURL:url
                        options:JPVideoPlayerContinueInBackground |
                                JPVideoPlayerLayerVideoGravityResizeAspect
-       configurationCompletion:configurationCompletion];
+                 configuration:configuration];
 }
 
 - (void)setBufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
@@ -255,25 +255,25 @@
 
 - (void)jp_playVideoWithURL:(NSURL *)url
                     options:(JPVideoPlayerOptions)options
-    configurationCompletion:(JPPlayVideoConfigurationCompletion)configurationCompletion {
+              configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configurationCompletion
+   configurationCompletion:configuration
                   isResume:NO];
 }
 
 - (void)jp_resumePlayWithURL:(NSURL *)url
                      options:(JPVideoPlayerOptions)options
-     configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion {
+               configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configurationCompletion
+   configurationCompletion:configuration
                   isResume:YES];
 }
 
 - (void)playVideoWithURL:(NSURL *)url
                      options:(JPVideoPlayerOptions)options
-     configurationCompletion:(JPPlayVideoConfigurationCompletion _Nullable)configurationCompletion
+     configurationCompletion:(JPPlayVideoConfiguration _Nullable)configurationCompletion
                 isResume:(BOOL)isResume {
     JPMainThreadAssert;
     self.jp_videoURL = url;
@@ -327,7 +327,7 @@
         }
 
         // nobody retain this block.
-        JPPlayVideoConfigurationCompletion internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
+        JPPlayVideoConfiguration internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
             NSParameterAssert(model);
             if(configurationCompletion){
                 configurationCompletion(self, model);
