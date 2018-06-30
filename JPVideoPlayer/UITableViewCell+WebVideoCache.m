@@ -38,4 +38,11 @@
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
+- (BOOL)jp_isEqualToCell:(UITableViewCell *)cell {
+    if(!self.jp_videoURL && !cell.jp_videoURL){
+        return self == cell;
+    }
+    return [self.jp_videoURL.absoluteString isEqualToString:cell.jp_videoURL.absoluteString];
+}
+
 @end

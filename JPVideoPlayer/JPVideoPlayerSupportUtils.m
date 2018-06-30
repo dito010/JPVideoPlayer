@@ -614,7 +614,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     }
 
     // If the found cell is the cell playing video, this situation cannot play video again.
-    if(bestCell == self.playingVideoCell){
+    if([bestCell jp_isEqualToCell:self.playingVideoCell]){
         return;
     }
 
