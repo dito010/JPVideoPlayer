@@ -103,6 +103,8 @@
     NSURL *url = [NSURL fileURLWithPath:locVideoPath];
     self.pathStrings = @[
             url.absoluteString,
+            @"https://api.tuwan.com/apps/Video/play?key=aHR0cHM6Ly92LnFxLmNvbS9pZnJhbWUvcGxheWVyLmh0bWw%2FdmlkPXUwNjk3MmtqNWV6JnRpbnk9MCZhdXRvPTA%3D&aid=381374",
+            @"https://api.tuwan.com/apps/Video/play?key=aHR0cHM6Ly92LnFxLmNvbS9pZnJhbWUvcGxheWVyLmh0bWw%2FdmlkPWswNjk2enBud2xvJnRpbnk9MCZhdXRvPTA%3D&aid=381395",
             @"https://www.apple.com/105/media/cn/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-cn-20170912_1280x720h.mp4",
             @"https://static.smartisanos.cn/common/video/smartisan-tnt.mp4",
             @"https://static.smartisanos.cn/common/video/video-jgpro.mp4",
