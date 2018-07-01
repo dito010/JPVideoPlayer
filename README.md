@@ -13,9 +13,6 @@ This library provides an video player with cache support in `UITableView` base o
 <img src="Images/demo.gif" title="demo" float=left>
 </p>
 
-## Watch out!
-When you update the library from 3.0.9(contain before) to 3.1.0, please clear all your video caches. because the library support audio resources now. To clear cache see [Cache manage](#5-cache-manage) please.
-
 ## Features
 - [x] Cache video data at playing.
 - [x] Seek time support(new).
@@ -50,7 +47,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 [aview jp_playVideoMuteWithURL:url
             bufferingIndicator:nil
                   progressView:nil
-       configurationCompletion:nil];
+           	 configuration:nil];
 ```
 
 
@@ -61,7 +58,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 [aview jp_resumeMutePlayWithURL:url
              bufferingIndicator:nil
                    progressView:nil
-        configurationCompletion:nil];
+        	  configuration:nil];
 ```
 
 #### 1.3.Play video and display controlView & progressView.
@@ -83,7 +80,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
          bufferingIndicator:nil
                 controlView:nil
                progressView:nil
-    configurationCompletion:nil];
+    	      configuration:nil];
 ```
 
 #### 1.5.Play video without controlView & progressView.
@@ -92,7 +89,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_playVideoWithURL:url
 		   options:kNilOptions
-   configurationCompletion:nil];
+   	     configuration:nil];
 ```
 
 #### 1.6. Resume play without controlView & progressView.
@@ -101,7 +98,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
 NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4"];
 [aview jp_resumePlayWithURL:url
 		    options:kNilOptions
-    configurationCompletion:nil];
+    	      configuration:nil];
 ```
 
 
