@@ -80,7 +80,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    NSString *videoString = @"https://static.smartisanos.cn/common/video/m1-white.mp4";
+    NSString *videoString = @"http://mvvideo2.meitudata.com/576bc2fc91ef22121.mp4";
     self.tableView.delegate = self;
     [self.headerView jp_playVideoWithURL:[NSURL URLWithString:videoString]
                       bufferingIndicator:nil
@@ -109,7 +109,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSString *videoString = @"https://static.smartisanos.cn/common/video/m1-white.mp4";
+    NSString *videoString = @"http://mvvideo2.meitudata.com/576bc2fc91ef22121.mp4";
     BOOL headerVisible = [self.tableView jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:self.headerView];
     if(headerVisible && !self.hoverView.hidden){
        self.hoverView.hidden = YES;
