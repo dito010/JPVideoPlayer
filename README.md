@@ -3,7 +3,7 @@
 </p>
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/newyjp/JPVideoPlayer)
-[![pod](https://img.shields.io/badge/pod-3.1.0-green.svg)](https://github.com/newyjp/JPVideoPlayer)
+[![pod](https://img.shields.io/badge/pod-3.1.1-green.svg)](https://github.com/newyjp/JPVideoPlayer)
 [![pod](https://img.shields.io/badge/about%20me-NewPan-red.svg)](http://www.jianshu.com/users/e2f2d779c022/latest_articles)
 [![pod](https://img.shields.io/badge/swift-support-fc2f24.svg?maxAge=2592000)](https://github.com/apple/swift)
 
@@ -69,7 +69,7 @@ NSURL *url = [NSURL URLWithString:@"http://p11s9kqxf.bkt.clouddn.com/bianche.mp4
         bufferingIndicator:nil
                controlView:nil
               progressView:nil
-   configurationCompletion:nil];
+   	     configuration:nil];
 ```
 
 #### 1.4.Resume play with displaying controlView & progressView.
