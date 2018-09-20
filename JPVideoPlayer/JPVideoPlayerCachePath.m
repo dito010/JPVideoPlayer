@@ -55,6 +55,7 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 }
 
 + (NSString *)videoCacheIndexFilePathForKey:(NSString *)key {
+    if (!key) {
         return nil;
     }
     NSString *videoCachePath = [self videoCachePath];
