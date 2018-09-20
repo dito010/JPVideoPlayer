@@ -328,7 +328,6 @@
 
         // nobody retain this block.
         JPPlayVideoConfiguration internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
-            NSParameterAssert(model);
             if(configurationCompletion){
                 configurationCompletion(self, model);
             }
@@ -660,16 +659,6 @@
                                                        videoURL:videoPlayerManager.managerModel.videoURL];
         }
         return;
-    }
-    switch(cacheType){
-        case JPVideoPlayerCacheTypeLocation:
-            NSParameterAssert(fragmentRanges);
-            NSRange range = [fragmentRanges.firstObject rangeValue];
-            NSParameterAssert(range.length == expectedSize);
-            break;
-
-        default:
-            break;
     }
     if(self.helper.controlView && [self.helper.controlView respondsToSelector:@selector(cacheRangeDidChange:videoURL:)]){
         [self.helper.controlView cacheRangeDidChange:fragmentRanges videoURL:self.jp_videoURL];

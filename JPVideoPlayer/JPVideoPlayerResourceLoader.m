@@ -57,7 +57,6 @@
 }
 
 - (instancetype)initWithCustomURL:(NSURL *)customURL {
-    NSParameterAssert(customURL);
     if(!customURL){
         return nil;
     }

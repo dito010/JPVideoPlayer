@@ -120,7 +120,6 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                  options:(JPVideoPlayerOptions)options
  configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
-    NSParameterAssert(showLayer);
     if(!url || !showLayer){
         return;
     }
@@ -163,7 +162,6 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 
     // nobody retain this block.
     configurationCompletion = ^(UIView *view, JPVideoPlayerModel *model){
-        NSParameterAssert(model);
         if(configurationCompletion){
             configurationCompletion(view, model);
         }
@@ -224,7 +222,6 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                   options:(JPVideoPlayerOptions)options
   configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
-    NSParameterAssert(url);
     if(!url){
         return;
     }
@@ -694,7 +691,6 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
 #pragma mark - Playback Record
 
 - (double)fetchPlaybackRecordForVideoURL:(NSURL *)videoURL {
-    NSParameterAssert(videoURL);
     if(!videoURL){
         return 0;
     }
@@ -711,7 +707,6 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
 
 - (void)savePlaybackElapsedSeconds:(double)elapsedSeconds
                        forVideoURL:(NSURL *)videoURL {
-    NSParameterAssert(videoURL);
     if(!videoURL){
         return;
     }

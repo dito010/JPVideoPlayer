@@ -34,14 +34,11 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 }
 
 + (NSString *)videoCachePathForKey:(NSString *)key {
-    NSParameterAssert(key);
     if (!key) {
         return nil;
     }
     NSString *videoCachePath = [self videoCachePath];
-    NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
-    NSParameterAssert(filePath);
     return filePath;
 }
 
@@ -58,15 +55,11 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 }
 
 + (NSString *)videoCacheIndexFilePathForKey:(NSString *)key {
-    NSParameterAssert(key);
-    if (!key) {
         return nil;
     }
     NSString *videoCachePath = [self videoCachePath];
-    NSParameterAssert(videoCachePath);
     NSString *filePath = [videoCachePath stringByAppendingPathComponent:[JPVideoPlayerCache.sharedCache cacheFileNameForKey:key]];
     filePath = [filePath stringByAppendingString:kJPVideoPlayerCacheVideoIndexFileExtension];
-    NSParameterAssert(filePath);
     return filePath;
 }
 
@@ -100,7 +93,6 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 @implementation JPVideoPlayerCachePath(Deprecated)
 
 + (NSString *)videoCacheTemporaryPathForKey:(NSString * _Nonnull)key{
-    NSParameterAssert(key);
     if (!key) {
         return nil;
     }
@@ -116,7 +108,6 @@ static NSString * const kJPVideoPlayerCacheVideoPlaybackRecordFileExtension = @"
 }
 
 + (NSString *)videoCacheFullPathForKey:(NSString * _Nonnull)key{
-    NSParameterAssert(key);
     if (!key) {
         return nil;
     }

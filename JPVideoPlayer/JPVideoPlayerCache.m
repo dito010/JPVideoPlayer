@@ -291,7 +291,6 @@ static NSString *kJPVideoPlayerVersion2CacheHasBeenClearedKey = @"com.newpan.ver
 }
 
 - (NSString *)cachedFileNameForKey:(NSString *)key {
-    NSParameterAssert(key);
     if(!key.length){
         return nil;
     }

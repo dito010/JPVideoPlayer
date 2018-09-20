@@ -85,7 +85,6 @@
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
-    NSParameterAssert(requestTask);
     // The URL will be used as the key to the callbacks dictionary so it cannot be nil.
     // If it is nil immediately call the completed block with no video or data.
     if (requestTask.customURL == nil) {

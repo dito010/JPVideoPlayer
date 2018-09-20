@@ -99,8 +99,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     }
 
     float delta = elapsedSeconds / totalSeconds;
-    NSParameterAssert(delta >= 0);
-    NSParameterAssert(delta <= 1);
     delta = MIN(1, delta);
     delta = MAX(0, delta);
     [self.dragSlider setValue:delta animated:YES];
@@ -188,7 +186,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)userDidFinishDrag {
-    NSParameterAssert(!self.userDragging);
     if(!self.totalSeconds){
         return;
     }
@@ -724,8 +721,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     }
 
     float delta = elapsedSeconds / totalSeconds;
-    NSParameterAssert(delta >= 0);
-    NSParameterAssert(delta <= 1);
     delta = MIN(1, delta);
     delta = MAX(0, delta);
     [self.elapsedProgressView setProgress:delta animated:YES];
