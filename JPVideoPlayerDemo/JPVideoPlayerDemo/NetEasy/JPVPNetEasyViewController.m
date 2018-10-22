@@ -104,7 +104,6 @@
     self.pathStrings = @[
             url.absoluteString,
             @"http://www.w3school.com.cn/example/html5/mov_bbb.mp4",
-            @"https://www.w3schools.com/html/movie.mp4",
             @"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
             @"https://media.w3.org/2010/05/sintel/trailer.mp4",
             @"http://mvvideo2.meitudata.com/576bc2fc91ef22121.mp4",
