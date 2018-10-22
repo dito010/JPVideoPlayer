@@ -85,7 +85,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)jp_cURLCommand {
     NSURLRequest *request = [NSURLRequest requestWithURL:self];
-    NSParameterAssert(request);
     if(!request){
         return nil;
     }
@@ -408,8 +407,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 };
 
 - (instancetype)initWithTableView:(UITableView *)tableView {
-    NSParameterAssert(tableView);
     if(!tableView){
+        JPErrorLog(@"tableView can not be nil.");
         return nil;
     }
 
@@ -647,7 +646,6 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (void)playVideoWithCell:(UITableViewCell *)cell {
-    NSParameterAssert(cell);
     if(!cell){
         return;
     }

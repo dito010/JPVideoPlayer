@@ -57,8 +57,8 @@
 }
 
 - (instancetype)initWithCustomURL:(NSURL *)customURL {
-    NSParameterAssert(customURL);
     if(!customURL){
+        JPErrorLog(@"customURL can not be nil");
         return nil;
     }
 

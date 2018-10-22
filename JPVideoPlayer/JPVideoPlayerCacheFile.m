@@ -55,8 +55,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (instancetype)initWithFilePath:(NSString *)filePath
                    indexFilePath:(NSString *)indexFilePath {
     JPMainThreadAssert;
-    NSParameterAssert(filePath.length && indexFilePath.length);
     if (!filePath.length || !indexFilePath.length) {
+        JPErrorLog(@"filePath and indexFilePath can not be nil.");
         return nil;
     }
 
@@ -307,7 +307,9 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
               atOffset:(NSUInteger)offset
            synchronize:(BOOL)synchronize
       storedCompletion:(dispatch_block_t)completion {
-    NSParameterAssert(self.writeFileHandle);
+    if (!self.writeFileHandle) {
+        JPErrorLog(@"self.writeFileHandle is nil");
+    }
     @try {
         [self.writeFileHandle seekToFileOffset:offset];
         [self.writeFileHandle jp_safeWriteData:data];

@@ -328,7 +328,9 @@
 
         // nobody retain this block.
         JPPlayVideoConfiguration internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
-            NSParameterAssert(model);
+            if (!model) {
+                JPDebugLog(@"model can not be nil");
+            }
             if(configurationCompletion){
                 configurationCompletion(self, model);
             }
@@ -663,9 +665,9 @@
     }
     switch(cacheType){
         case JPVideoPlayerCacheTypeLocation:
-            NSParameterAssert(fragmentRanges);
-            NSRange range = [fragmentRanges.firstObject rangeValue];
-            NSParameterAssert(range.length == expectedSize);
+            if (!fragmentRanges) {
+                JPErrorLog(@"fragmentRanges can not be nil");
+            }
             break;
 
         default:

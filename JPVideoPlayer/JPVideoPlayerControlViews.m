@@ -99,8 +99,9 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     }
 
     float delta = elapsedSeconds / totalSeconds;
-    NSParameterAssert(delta >= 0);
-    NSParameterAssert(delta <= 1);
+    if (delta < 0 || delta > 1) {
+        JPErrorLog(@"delta must between [0, 1]");
+    }
     delta = MIN(1, delta);
     delta = MAX(0, delta);
     [self.dragSlider setValue:delta animated:YES];
@@ -188,7 +189,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)userDidFinishDrag {
-    NSParameterAssert(!self.userDragging);
     if(!self.totalSeconds){
         return;
     }
@@ -719,13 +719,14 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds
                                    videoURL:(NSURL *)videoURL {
-    if(totalSeconds == 0){
+    if((NSInteger)totalSeconds == 0){
         totalSeconds = 1;
     }
 
-    float delta = elapsedSeconds / totalSeconds;
-    NSParameterAssert(delta >= 0);
-    NSParameterAssert(delta <= 1);
+    float delta = (float)(elapsedSeconds / totalSeconds);
+    if (delta < 0 || delta > 1) {
+        JPErrorLog(@"delta must between [0, 1]");
+    }
     delta = MIN(1, delta);
     delta = MAX(0, delta);
     [self.elapsedProgressView setProgress:delta animated:YES];

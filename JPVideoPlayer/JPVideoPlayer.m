@@ -760,7 +760,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 }
 
 - (void)callDelegateMethodWithError:(NSError *)error {
-    JPDebugLog(@"Player abort because of error: %@", error);
+    JPErrorLog(@"Player abort because of error: %@", error);
     JPDispatchSyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playFailedWithError:)]) {
             [self.delegate videoPlayer:self playFailedWithError:error];

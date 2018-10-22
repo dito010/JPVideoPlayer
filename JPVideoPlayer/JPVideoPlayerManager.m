@@ -120,8 +120,8 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                  options:(JPVideoPlayerOptions)options
  configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
-    NSParameterAssert(showLayer);
     if(!url || !showLayer){
+        JPErrorLog(@"url and showLayer can not be nil");
         return;
     }
 
@@ -163,7 +163,6 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 
     // nobody retain this block.
     configurationCompletion = ^(UIView *view, JPVideoPlayerModel *model){
-        NSParameterAssert(model);
         if(configurationCompletion){
             configurationCompletion(view, model);
         }
@@ -224,8 +223,8 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                   options:(JPVideoPlayerOptions)options
   configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
     JPMainThreadAssert;
-    NSParameterAssert(url);
     if(!url){
+        JPErrorLog(@"url can not be nil");
         return;
     }
     [self activeAudioSessionIfNeed];
@@ -694,8 +693,8 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
 #pragma mark - Playback Record
 
 - (double)fetchPlaybackRecordForVideoURL:(NSURL *)videoURL {
-    NSParameterAssert(videoURL);
     if(!videoURL){
+        JPErrorLog(@"videoURL can not be nil.");
         return 0;
     }
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath]];
@@ -711,7 +710,6 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
 
 - (void)savePlaybackElapsedSeconds:(double)elapsedSeconds
                        forVideoURL:(NSURL *)videoURL {
-    NSParameterAssert(videoURL);
     if(!videoURL){
         return;
     }
