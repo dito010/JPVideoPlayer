@@ -418,8 +418,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         return;
     }
     if(self.playerStatus == JPVideoPlayerStatusStop){
-       self.playerStatus = JPVideoPlayerStatusUnknown;
-       [self seekToHeaderThenStartPlayback];
+        self.playerStatus = JPVideoPlayerStatusUnknown;
+        [self seekToHeaderThenStartPlayback];
         return;
     }
     [self internalResumeWithNeedCallDelegate:YES];
@@ -753,9 +753,9 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
         // fixed #26.
         self.playerModel.playerLayer.frame = self.playerModel.unownedShowLayer.bounds;
         // use dispatch_after to prevent layer layout animation.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
-        });
+        [self.playerModel.unownedShowLayer removeAllAnimations];
+        [self.playerModel.playerLayer removeAllAnimations];
+        [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
     }
 }
 
