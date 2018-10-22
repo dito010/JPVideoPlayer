@@ -752,7 +752,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     if (!self.playerModel.isCancelled) {
         // fixed #26.
         self.playerModel.playerLayer.frame = self.playerModel.unownedShowLayer.bounds;
-        // use dispatch_after to prevent layer layout animation.
+        // remove all layer layout animations.
         [self.playerModel.unownedShowLayer removeAllAnimations];
         [self.playerModel.playerLayer removeAllAnimations];
         [self.playerModel.unownedShowLayer addSublayer:self.playerModel.playerLayer];
