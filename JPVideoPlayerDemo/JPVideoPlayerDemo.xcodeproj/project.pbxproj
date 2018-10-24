@@ -323,7 +323,6 @@
 				5F67055F1DADE88F001EBFAF /* Sources */,
 				5F6705601DADE88F001EBFAF /* Frameworks */,
 				5F6705611DADE88F001EBFAF /* Resources */,
-				818F9AB63D84633DC080A828 /* [CP] Embed Pods Frameworks */,
 				428134F9DF52FE292474C6FA /* [CP] Copy Pods Resources */,
 				48B548F91ED5B3AB00062DC2 /* Embed Frameworks */,
 			);
@@ -401,26 +400,11 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JPNavigationController.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JPVideoPlayerDemo/Pods-JPVideoPlayerDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		818F9AB63D84633DC080A828 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JPVideoPlayerDemo/Pods-JPVideoPlayerDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FB1F63520C1F406AFCCB0116 /* [CP] Check Pods Manifest.lock */ = {

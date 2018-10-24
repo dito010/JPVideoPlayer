@@ -103,7 +103,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     NSParameterAssert(delta <= 1);
     delta = MIN(1, delta);
     delta = MAX(0, delta);
-    [self.dragSlider setValue:delta animated:YES];
+    [self.dragSlider setValue:delta animated:NO];
     self.totalSeconds = totalSeconds;
     self.elapsedSeconds = elapsedSeconds;
 }
@@ -728,7 +728,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     NSParameterAssert(delta <= 1);
     delta = MIN(1, delta);
     delta = MAX(0, delta);
-    [self.elapsedProgressView setProgress:delta animated:YES];
+    [self.elapsedProgressView setProgress:delta animated:NO];
     self.totalSeconds = totalSeconds;
     self.elapsedSeconds = elapsedSeconds;
 }
