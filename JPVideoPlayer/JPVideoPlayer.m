@@ -384,6 +384,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if(!CMTIME_IS_VALID(time)){
         return;
     }
+
+    // TODO: seekToTime 只有系统通知可以播放才可用, seekToTime 要把结果回调给使用者来判断是否成功 seek.
     BOOL needResume = self.playerModel.player.rate != 0;
     self.playerModel.lastTime = 0;
     [self internalPauseWithNeedCallDelegate:NO];
