@@ -12,6 +12,8 @@
 #import "JPVideoPlayerControlViews.h"
 #import "JPVideoPlayerCompat.h"
 #import "UIView+WebVideoCache.h"
+#import "MRActivityIndicatorView.h"
+#import "UIView+EnlargeEdge.h"
 
 @interface JPVideoPlayerControlProgressView()
 
@@ -466,7 +468,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         [button setImage:[UIImage imageNamed:[bundlePath stringByAppendingPathComponent:@"jp_videoplayer_portrait"]] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
-
         button;
     });
 }
@@ -799,13 +800,13 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @interface JPVideoPlayerBufferingIndicator()
 
-@property(nonatomic, strong)UIActivityIndicatorView *activityIndicator;
+@property(nonatomic, strong)MRActivityIndicatorView *activityIndicator;
 
-@property(nonatomic, strong)UIVisualEffectView *blurView;
+//@property(nonatomic, strong)UIVisualEffectView *blurView;
 
 @property(nonatomic, assign, getter=isAnimating)BOOL animating;
 
-@property (nonatomic, strong) UIView *blurBackgroundView;
+//@property (nonatomic, strong) UIView *blurBackgroundView;
 
 @end
 
@@ -827,12 +828,15 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
   interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
-    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
-            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
-            JPVideoPlayerBufferingIndicatorWidthHeight,
-            JPVideoPlayerBufferingIndicatorWidthHeight);
-    self.activityIndicator.frame = self.blurBackgroundView.bounds;
-    self.blurView.frame = self.blurBackgroundView.bounds;
+//    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+//            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+//            JPVideoPlayerBufferingIndicatorWidthHeight,
+//            JPVideoPlayerBufferingIndicatorWidthHeight);
+    self.activityIndicator.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+                                              (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+                                              JPVideoPlayerBufferingIndicatorWidthHeight,
+                                              JPVideoPlayerBufferingIndicatorWidthHeight);
+    //self.blurView.frame = self.blurBackgroundView.bounds;
 }
 
 
@@ -869,28 +873,30 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)_setup{
     self.backgroundColor = [UIColor clearColor];
 
-    self.blurBackgroundView = ({
-        UIView *view = [UIView new];
-        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
-        view.layer.cornerRadius = 10;
-        view.clipsToBounds = YES;
-        [self addSubview:view];
+//    self.blurBackgroundView = ({
+//        UIView *view = [UIView new];
+//        view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+//        view.layer.cornerRadius = 10;
+//        view.clipsToBounds = YES;
+//        [self addSubview:view];
+//
+//        view;
+//    });
 
-        view;
-    });
-
-    self.blurView = ({
-        UIVisualEffectView *blurView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-        [self.blurBackgroundView addSubview:blurView];
-
-        blurView;
-    });
+//    self.blurView = ({
+//        UIVisualEffectView *blurView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+//        [self.blurBackgroundView addSubview:blurView];
+//
+//        blurView;
+//    });
 
     self.activityIndicator = ({
-        UIActivityIndicatorView *indicator = [UIActivityIndicatorView new];
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        indicator.color = [UIColor colorWithRed:35.0/255 green:35.0/255 blue:35.0/255 alpha:1];
-        [self.blurBackgroundView addSubview:indicator];
+        MRActivityIndicatorView *indicator = [MRActivityIndicatorView new];
+        indicator.tintColor = [UIColor whiteColor];
+        //indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        //indicator.backgroundColor = [UIColor clearColor];
+        //indicator.color = [UIColor colorWithRed:35.0/255 green:35.0/255 blue:35.0/255 alpha:1];
+        [self addSubview:indicator];
 
         indicator;
     });

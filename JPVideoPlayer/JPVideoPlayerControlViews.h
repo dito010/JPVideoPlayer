@@ -12,7 +12,7 @@
 #import "JPVideoPlayerProtocol.h"
 
 @class JPVideoPlayerControlProgressView,
-       JPVideoPlayerControlView;
+       JPVideoPlayerControlView,MRActivityIndicatorView;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -92,7 +92,7 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @interface JPVideoPlayerBufferingIndicator : UIView<JPVideoPlayerBufferingProtocol>
 
-@property (nonatomic, strong, readonly)UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong, readonly)MRActivityIndicatorView *activityIndicator;
 
 @property (nonatomic, strong, readonly)UIVisualEffectView *blurView;
 
