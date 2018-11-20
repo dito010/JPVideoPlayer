@@ -510,6 +510,10 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
             case AVPlayerItemStatusReadyToPlay:{
                 JPDebugLog(@"AVPlayerItemStatusReadyToPlay");
+                /// if current is pause state, do nothing
+                if (self.playerStatus == JPVideoPlayerStatusPause) {
+                    break;
+                }
                 self.playerStatus = JPVideoPlayerStatusReadyToPlay;
                 // When get ready to play note, we can go to play, and can add the video picture on show view.
                 if (!self.playerModel) return;
