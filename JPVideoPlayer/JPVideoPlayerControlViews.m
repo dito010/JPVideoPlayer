@@ -281,8 +281,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @end
 
-static const CGFloat kJPVideoPlayerControlBarButtonWidthHeight = 22;
-static const CGFloat kJPVideoPlayerControlBarElementGap = 16;
+static const CGFloat kJPVideoPlayerControlBarButtonWidthHeight = 28;
+static const CGFloat kJPVideoPlayerControlBarElementGap = 15;
 static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 @implementation JPVideoPlayerControlBar
 
@@ -503,7 +503,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 @end
 
 static const CGFloat kJPVideoPlayerControlBarHeight = 38;
-static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 12;
+static const CGFloat kJPVideoPlayerControlBarLandscapeUpOffset = 4;
 @implementation JPVideoPlayerControlView
 
 - (instancetype)initWithFrame:(CGRect)frame {
