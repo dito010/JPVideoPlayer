@@ -21,6 +21,8 @@
 		5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67056A1DADE88F001EBFAF /* AppDelegate.m */; };
 		5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F6705721DADE88F001EBFAF /* Assets.xcassets */; };
 		5FF7BAF11E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */; };
+		767932EE21B116300011D853 /* UIView+EnlargeEdge.m in Sources */ = {isa = PBXBuildFile; fileRef = 767932EA21B1162F0011D853 /* UIView+EnlargeEdge.m */; };
+		767932EF21B116300011D853 /* MRActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 767932ED21B1162F0011D853 /* MRActivityIndicatorView.m */; };
 		C3D50D2EF7B7EB2F36B72E2D /* libPods-JPVideoPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */; };
 		CF45AA1220B8571C00E07B8E /* JPVideoPlayerAudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF45AA1020B8571C00E07B8E /* JPVideoPlayerAudioViewController.m */; };
 		CF45AA1320B8571C00E07B8E /* JPVideoPlayerAudioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF45AA1120B8571C00E07B8E /* JPVideoPlayerAudioViewController.xib */; };
@@ -88,6 +90,10 @@
 		5F6705771DADE88F001EBFAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FF7BAED1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerWeiBoListViewController.h; sourceTree = "<group>"; };
 		5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerWeiBoListViewController.m; sourceTree = "<group>"; };
+		767932EA21B1162F0011D853 /* UIView+EnlargeEdge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+EnlargeEdge.m"; sourceTree = "<group>"; };
+		767932EB21B1162F0011D853 /* UIView+EnlargeEdge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+EnlargeEdge.h"; sourceTree = "<group>"; };
+		767932EC21B1162F0011D853 /* MRActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRActivityIndicatorView.h; sourceTree = "<group>"; };
+		767932ED21B1162F0011D853 /* MRActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRActivityIndicatorView.m; sourceTree = "<group>"; };
 		8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerKit.h; sourceTree = "<group>"; };
 		CF45AA0F20B8571C00E07B8E /* JPVideoPlayerAudioViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerAudioViewController.h; sourceTree = "<group>"; };
@@ -267,37 +273,41 @@
 		CF5024CC207F66F300DE8E2E /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */,
+				CF5024D8207F66F300DE8E2E /* JPResourceLoadingRequestTask.h */,
+				CF5024EA207F66F300DE8E2E /* JPResourceLoadingRequestTask.m */,
+				CF5024DF207F66F300DE8E2E /* JPVideoPlayer.bundle */,
 				CF5024D6207F66F300DE8E2E /* JPVideoPlayer.h */,
 				CF5024E6207F66F300DE8E2E /* JPVideoPlayer.m */,
-				CF5024D5207F66F300DE8E2E /* JPVideoPlayerProtocol.h */,
-				CF5024CD207F66F300DE8E2E /* JPVideoPlayerManager.h */,
-				CF5024E2207F66F300DE8E2E /* JPVideoPlayerManager.m */,
-				CF5024D2207F66F300DE8E2E /* JPVideoPlayerControlViews.h */,
-				CF5024DD207F66F300DE8E2E /* JPVideoPlayerControlViews.m */,
 				CF5024DE207F66F300DE8E2E /* JPVideoPlayerCache.h */,
 				CF5024D0207F66F300DE8E2E /* JPVideoPlayerCache.m */,
 				CF5024D1207F66F300DE8E2E /* JPVideoPlayerCacheFile.h */,
 				CF5024DC207F66F300DE8E2E /* JPVideoPlayerCacheFile.m */,
 				CF5024D9207F66F300DE8E2E /* JPVideoPlayerCachePath.h */,
 				CF5024E9207F66F300DE8E2E /* JPVideoPlayerCachePath.m */,
-				CF5024E0207F66F300DE8E2E /* JPVideoPlayerDownloader.h */,
-				CF5024CF207F66F300DE8E2E /* JPVideoPlayerDownloader.m */,
-				CF5024E5207F66F300DE8E2E /* JPVideoPlayerResourceLoader.h */,
-				CF5024D7207F66F300DE8E2E /* JPVideoPlayerResourceLoader.m */,
-				CF5024D8207F66F300DE8E2E /* JPResourceLoadingRequestTask.h */,
-				CF5024EA207F66F300DE8E2E /* JPResourceLoadingRequestTask.m */,
 				CF5024E3207F66F300DE8E2E /* JPVideoPlayerCompat.h */,
 				CF5024D4207F66F300DE8E2E /* JPVideoPlayerCompat.m */,
-				CF5024E4207F66F300DE8E2E /* UIView+WebVideoCache.h */,
-				CF5024D3207F66F300DE8E2E /* UIView+WebVideoCache.m */,
+				CF5024D2207F66F300DE8E2E /* JPVideoPlayerControlViews.h */,
+				CF5024DD207F66F300DE8E2E /* JPVideoPlayerControlViews.m */,
+				CF5024E0207F66F300DE8E2E /* JPVideoPlayerDownloader.h */,
+				CF5024CF207F66F300DE8E2E /* JPVideoPlayerDownloader.m */,
+				8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */,
+				CF5024CD207F66F300DE8E2E /* JPVideoPlayerManager.h */,
+				CF5024E2207F66F300DE8E2E /* JPVideoPlayerManager.m */,
+				CF5024D5207F66F300DE8E2E /* JPVideoPlayerProtocol.h */,
+				CF5024E5207F66F300DE8E2E /* JPVideoPlayerResourceLoader.h */,
+				CF5024D7207F66F300DE8E2E /* JPVideoPlayerResourceLoader.m */,
+				CF5024DB207F66F300DE8E2E /* JPVideoPlayerSupportUtils.h */,
+				CF5024E7207F66F300DE8E2E /* JPVideoPlayerSupportUtils.m */,
+				767932EC21B1162F0011D853 /* MRActivityIndicatorView.h */,
+				767932ED21B1162F0011D853 /* MRActivityIndicatorView.m */,
 				CF5024CE207F66F300DE8E2E /* UITableView+WebVideoCache.h */,
 				CF5024E1207F66F300DE8E2E /* UITableView+WebVideoCache.m */,
 				CF5024DA207F66F300DE8E2E /* UITableViewCell+WebVideoCache.h */,
 				CF5024E8207F66F300DE8E2E /* UITableViewCell+WebVideoCache.m */,
-				CF5024DB207F66F300DE8E2E /* JPVideoPlayerSupportUtils.h */,
-				CF5024E7207F66F300DE8E2E /* JPVideoPlayerSupportUtils.m */,
-				CF5024DF207F66F300DE8E2E /* JPVideoPlayer.bundle */,
+				767932EB21B1162F0011D853 /* UIView+EnlargeEdge.h */,
+				767932EA21B1162F0011D853 /* UIView+EnlargeEdge.m */,
+				CF5024E4207F66F300DE8E2E /* UIView+WebVideoCache.h */,
+				CF5024D3207F66F300DE8E2E /* UIView+WebVideoCache.m */,
 			);
 			name = JPVideoPlayer;
 			path = ../../JPVideoPlayer;
@@ -341,7 +351,7 @@
 		5F67055B1DADE88F001EBFAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = NewPan;
 				TargetAttributes = {
 					5F6705621DADE88F001EBFAF = {
@@ -432,6 +442,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				767932EF21B116300011D853 /* MRActivityIndicatorView.m in Sources */,
 				CF5024EC207F66F400DE8E2E /* JPVideoPlayerCache.m in Sources */,
 				5FF7BAF11E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m in Sources */,
 				CF5024F8207F66F400DE8E2E /* JPVideoPlayerCachePath.m in Sources */,
@@ -441,6 +452,7 @@
 				CF5024EF207F66F400DE8E2E /* JPVideoPlayerResourceLoader.m in Sources */,
 				CF73A143209217F000F8F63E /* JPVPNetEasyTableViewCell.m in Sources */,
 				CF45AA1220B8571C00E07B8E /* JPVideoPlayerAudioViewController.m in Sources */,
+				767932EE21B116300011D853 /* UIView+EnlargeEdge.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
 				48FD32711EB701D400ACCB05 /* JPQRCodeTool.m in Sources */,
 				CF5024EB207F66F400DE8E2E /* JPVideoPlayerDownloader.m in Sources */,
@@ -479,6 +491,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -486,6 +499,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -533,6 +547,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -540,6 +555,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

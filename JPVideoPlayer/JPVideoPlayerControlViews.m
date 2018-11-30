@@ -440,7 +440,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         [button setImage:[UIImage imageNamed:[bundlePath stringByAppendingPathComponent:@"jp_videoplayer_play"]] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(playButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
-
+        [button setEnlargeEdge:15];
         button;
     });
 
@@ -468,6 +468,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         [button setImage:[UIImage imageNamed:[bundlePath stringByAppendingPathComponent:@"jp_videoplayer_portrait"]] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(landscapeButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
+        [button setEnlargeEdge:15];
         button;
     });
 }
