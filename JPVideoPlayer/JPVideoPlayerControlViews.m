@@ -1025,6 +1025,13 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                      }];
 }
 
+- (void)tapGestureDidDoubleTap {
+    NSLog(@"双击视频");
+    if(self.doubleClickBlock) {
+        self.doubleClickBlock();
+    }
+}
+
 - (void)layoutContainerSubviewsWithBounds:(CGRect)bounds center:(CGPoint)center frame:(CGRect)frame {
     for(UIView *view in self.controlContainerView.subviews){
         if(!CGRectIsEmpty(frame)){
@@ -1178,6 +1185,11 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
         [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
         [self startTimer];
     }
+    
+    UITapGestureRecognizer* doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidDoubleTap)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    [self.userInteractionContainerView addGestureRecognizer:doubleTapGestureRecognizer];
+
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserStartDragNotification)
                                                name:JPVideoPlayerControlProgressViewUserDidStartDragNotification

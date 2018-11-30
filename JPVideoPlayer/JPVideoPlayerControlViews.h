@@ -52,11 +52,14 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 
 @end
 
+
 @interface JPVideoPlayerControlView : UIView<JPVideoPlayerProtocol>
 
 @property (nonatomic, strong, readonly) UIView<JPVideoPlayerProtocol> *controlBar;
 
 @property (nonatomic, strong, readonly) UIImage *blurImage;
+
+
 
 /**
  * A designated initializer.
@@ -100,7 +103,11 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 
 @end
 
+typedef void(^JPVideoPlayerControlViewDoubleClickBlock)(void);
+
 @interface JPVideoPlayerView : UIView
+
+@property (nonatomic, copy) JPVideoPlayerControlViewDoubleClickBlock doubleClickBlock;
 
 /**
  * A placeholderView to custom your own business.
