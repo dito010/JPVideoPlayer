@@ -1114,6 +1114,13 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
         }
     }
+    for(UIView<JPVideoPlayerProtocol> *view in self.coverContainerView.subviews){
+        if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:interfaceOrientation:)]){
+            [view layoutThatFits:self.bounds
+ nearestViewControllerInViewTree:nearestViewController
+            interfaceOrientation:[self fetchCurrentInterfaceOrientation]];
+        }
+    }
 }
 
 - (JPVideoPlayViewInterfaceOrientation)fetchCurrentInterfaceOrientation {

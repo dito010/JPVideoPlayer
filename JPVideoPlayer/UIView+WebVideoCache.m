@@ -718,6 +718,9 @@
     if(self.helper.progressView && [self.helper.progressView respondsToSelector:@selector(cacheRangeDidChange:videoURL:)]){
         [self.helper.progressView cacheRangeDidChange:fragmentRanges videoURL:self.jp_videoURL];
     }
+    if(self.helper.coverView && [self.helper.coverView respondsToSelector:@selector(cacheRangeDidChange:videoURL:)]){
+        [self.helper.coverView cacheRangeDidChange:fragmentRanges videoURL:self.jp_videoURL];
+    }
 }
 
 - (void)videoPlayerManagerPlayProgressDidChange:(JPVideoPlayerManager *)videoPlayerManager
