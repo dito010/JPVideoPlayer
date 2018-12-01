@@ -309,6 +309,9 @@
         if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillPrepareToReuse)]){
             [self.jp_controlView viewWillPrepareToReuse];
         }
+        if(self.jp_coverView && [self.jp_coverView respondsToSelector:@selector(viewWillPrepareToReuse)]){
+            [self.jp_coverView viewWillPrepareToReuse];
+        }
         [self callFinishBufferingDelegate];
         // Add progressView and controlView if need.
         self.helper.videoPlayerView.hidden = NO;
@@ -565,6 +568,9 @@
     if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
         [self.jp_progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
     }
+    if(self.jp_coverView && [self.jp_coverView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
+        [self.jp_coverView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
+    }
 }
 
 - (void)callStartBufferingDelegate {
@@ -668,6 +674,9 @@
     }
     if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerStatusDidChange:videoURL:)]){
         [self.jp_progressView videoPlayerStatusDidChange:playerStatus videoURL:self.jp_videoURL];
+    }
+    if(self.jp_coverView && [self.jp_coverView respondsToSelector:@selector(videoPlayerStatusDidChange:videoURL:)]){
+        [self.jp_coverView videoPlayerStatusDidChange:playerStatus videoURL:self.jp_videoURL];
     }
 }
 
