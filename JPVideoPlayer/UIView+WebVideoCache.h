@@ -166,6 +166,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerProtocol> *jp_controlView;
 
+@property (nonatomic, strong, nullable) UIView<JPVideoPlayerProtocol> *jp_coverView;
+
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
 @property(nonatomic, copy, readonly, nullable) NSURL *jp_videoURL;
@@ -241,6 +243,7 @@ NS_ASSUME_NONNULL_BEGIN
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                  coverView:(UIView <JPVideoPlayerProtocol> *_Nullable)coverView
               configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**
@@ -267,6 +270,7 @@ NS_ASSUME_NONNULL_BEGIN
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                   coverView:(UIView <JPVideoPlayerProtocol> *_Nullable)coverView
                configuration:(JPPlayVideoConfiguration _Nullable)configuration;
 
 /**

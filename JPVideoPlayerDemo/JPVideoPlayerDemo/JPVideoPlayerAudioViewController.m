@@ -24,6 +24,7 @@
     [self.audioView jp_playVideoWithURL:[NSURL URLWithString:@"http://music.163.com/song/media/outer/url?id=518066666.mp3"]
                      bufferingIndicator:nil
                             controlView:nil progressView:nil
+                            coverView:nil
                           configuration:nil];
     self.audioView.jp_videoPlayerDelegate = self;
 }

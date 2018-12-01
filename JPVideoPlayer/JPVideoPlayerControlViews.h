@@ -143,6 +143,10 @@ typedef void(^JPVideoPlayerControlViewDoubleClickBlock)(void);
  * To control need automatic hide controlView when user touched.
  */
 @property (nonatomic, assign, readonly) BOOL needAutoHideControlViewWhenUserTapping;
+/**
+ * A top cover view of viedeo.
+ */
+@property (nonatomic, strong, readonly) UIView *coverContainerView;
 
 - (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping;
 

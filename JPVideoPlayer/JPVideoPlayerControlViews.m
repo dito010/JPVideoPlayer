@@ -929,6 +929,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @property (nonatomic, strong) UIView *userInteractionContainerView;
 
+@property (nonatomic, strong) UIView *coverContainerView;
+
 @property (nonatomic, strong) NSTimer *timer;
 
 @property(nonatomic, assign) BOOL isInterruptTimer;
@@ -959,6 +961,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     self.progressContainerView.frame = self.bounds;
     self.bufferingIndicatorContainerView.frame = self.bounds;
     self.userInteractionContainerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - kJPVideoPlayerControlBarHeight);
+    self.coverContainerView.frame = self.bounds;
     [self layoutContainerSubviewsWithBounds:CGRectZero center:CGPointZero  frame:frame];
     [self callLayoutMethodForContainerSubviews];
 }
@@ -977,6 +980,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
             bounds.size.width,
             bounds.size.height - kJPVideoPlayerControlBarHeight);
+    self.coverContainerView.frame = self.videoContainerView.frame;
     [self layoutContainerSubviewsWithBounds:bounds center:CGPointZero frame:CGRectZero];
     [self callLayoutMethodForContainerSubviews];
 }
@@ -995,6 +999,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
             self.userInteractionContainerView.bounds.size.width,
             self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
+    self.coverContainerView.frame = self.videoContainerView.frame;
     [self layoutContainerSubviewsWithBounds:CGRectZero center:center frame:CGRectZero];
     [self callLayoutMethodForContainerSubviews];
 }
@@ -1190,6 +1195,15 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     doubleTapGestureRecognizer.numberOfTapsRequired = 2;
     [self.userInteractionContainerView addGestureRecognizer:doubleTapGestureRecognizer];
 
+    self.coverContainerView = ({
+        UIView *view = [UIView new];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+        view.userInteractionEnabled = NO;
+        
+        view;
+    });
+    
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserStartDragNotification)
                                                name:JPVideoPlayerControlProgressViewUserDidStartDragNotification

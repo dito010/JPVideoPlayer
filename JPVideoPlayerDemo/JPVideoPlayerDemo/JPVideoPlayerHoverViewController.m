@@ -86,6 +86,7 @@
                       bufferingIndicator:nil
                              controlView:nil
                             progressView:nil
+                            coverView:nil
                            configuration:nil];
 }
 
@@ -117,6 +118,7 @@
                            bufferingIndicator:nil
                                   controlView:nil
                                  progressView:nil
+                                coverView:nil
                                 configuration:nil];
     }
     else if(!headerVisible && self.hoverView.hidden){

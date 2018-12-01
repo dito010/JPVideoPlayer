@@ -67,11 +67,16 @@
     self.playingCell.playButton.hidden = YES;
     self.playingCell.videoPlayView.jp_videoPlayerDelegate = self;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    UIView<JPVideoPlayerProtocol> *view = [UIView new];
+    view.backgroundColor = [UIColor redColor];
+    
     [self.playingCell.videoPlayView jp_playVideoWithURL:[NSURL URLWithString:self.pathStrings[indexPath.row]]
                                      bufferingIndicator:[JPVideoPlayerBufferingIndicator new]
                                             controlView:[[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil]
                                            progressView:nil
+                                            coverView:view
                                           configuration:nil];
+
 }
 
 

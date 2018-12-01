@@ -23,6 +23,8 @@
 
 @property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *controlView;
 
+@property(nonatomic, strong) UIView<JPVideoPlayerProtocol> *coverView;
+
 @property(nonatomic, strong) UIView<JPVideoPlayerBufferingProtocol> *bufferingIndicator;
 
 @property(nonatomic, weak) id<JPVideoPlayerDelegate> videoPlayerDelegate;
@@ -107,6 +109,14 @@
     return self.helper.controlView;
 }
 
+- (void)setJp_coverView:(UIView <JPVideoPlayerProtocol> *)jp_coverView {
+    self.helper.coverView = jp_coverView;
+}
+
+- (UIView <JPVideoPlayerProtocol> *)jp_coverView {
+    return self.helper.coverView;
+}
+
 - (void)setJp_bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *)jp_bufferingIndicator {
     self.helper.bufferingIndicator = jp_bufferingIndicator;
 }
@@ -148,6 +158,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
+                      coverView:nil
              needSetControlView:NO];
     [self jp_stopPlay];
     [self jp_playVideoWithURL:url
@@ -164,6 +175,7 @@
     [self setBufferingIndicator:bufferingIndicator
                     controlView:nil
                    progressView:progressView
+                    coverView:nil
              needSetControlView:NO];
     [self jp_resumePlayWithURL:url
                        options:JPVideoPlayerContinueInBackground |
@@ -176,10 +188,12 @@
          bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                 controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                  coverView:(UIView <JPVideoPlayerProtocol> *_Nullable)coverView
               configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
+                    coverView:coverView
              needSetControlView:YES];
     [self jp_stopPlay];
     [self jp_playVideoWithURL:url
@@ -192,10 +206,12 @@
           bufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                  controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                 progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                   coverView:(UIView <JPVideoPlayerProtocol> *_Nullable)coverView
                configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self setBufferingIndicator:bufferingIndicator
                     controlView:controlView
                    progressView:progressView
+                    coverView:coverView
              needSetControlView:YES];
     [self jp_resumePlayWithURL:url
                        options:JPVideoPlayerContinueInBackground |
@@ -206,6 +222,7 @@
 - (void)setBufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
+                coverView:(UIView <JPVideoPlayerProtocol> *_Nullable)coverView
               needSetControlView:(BOOL)needSetControlView {
     // should show default.
     BOOL showDefaultView = YES;
@@ -250,6 +267,10 @@
         if(controlView){
             self.jp_controlView = controlView;
         }
+    }
+    
+    if(coverView) {
+        self.jp_coverView = coverView;
     }
 }
 
@@ -314,9 +335,20 @@
             [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
             self.helper.videoPlayerView.progressContainerView.alpha = 0;
         }
+        
+        if(self.jp_coverView && !self.jp_coverView.superview){
+            self.jp_coverView.frame = self.bounds;
+            if(self.jp_coverView && [self.jp_coverView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+                [self.jp_coverView viewWillAddToSuperView:self];
+            }
+            [self.helper.videoPlayerView.coverContainerView addSubview:self.jp_coverView];
+            self.helper.videoPlayerView.coverContainerView.alpha = 1;
+        }
+        
         if(!self.helper.videoPlayerView.superview){
             [self addSubview:self.helper.videoPlayerView];
         }
+        
         self.helper.videoPlayerView.frame = self.bounds;
         self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
         if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundBeforePlaybackStart)]) {
