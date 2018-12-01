@@ -269,11 +269,11 @@
         }
     }
     
-    if(coverView && self.jp_controlView){
+    if(coverView && self.jp_coverView){
         [self.jp_coverView removeFromSuperview];
     }
     if(coverView){
-        self.jp_coverView = controlView;
+        self.jp_coverView = coverView;
     }
 }
 
