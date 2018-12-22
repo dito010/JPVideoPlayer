@@ -118,7 +118,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
- configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
+           configuration:(JPPlayVideoConfiguration)configuration {
     JPMainThreadAssert;
     if(!url || !showLayer){
         JPErrorLog(@"url and showLayer can not be nil");
@@ -162,9 +162,9 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     }
 
     // nobody retain this block.
-    configurationCompletion = ^(UIView *view, JPVideoPlayerModel *model){
-        if(configurationCompletion){
-            configurationCompletion(view, model);
+    configuration = ^(UIView *view, JPVideoPlayerModel *model){
+        if(configuration){
+            configuration(view, model);
         }
     };
 
@@ -174,7 +174,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
         [self playLocalVideoWithShowLayer:showLayer
                                       url:url
                                   options:options
-                  configurationCompletion:configurationCompletion];
+                  configurationCompletion:configuration];
         return;
     }
     else {
@@ -193,7 +193,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                 [self.videoPlayer playVideoWithURL:url
                                            options:options
                                          showLayer:showLayer
-                           configurationCompletion:configurationCompletion];
+                                     configuration:configuration];
             }
             else if (videoPath) {
                 self.managerModel.cacheType = JPVideoPlayerCacheTypeExisted;
@@ -201,7 +201,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                 [self playFragmentVideoWithURL:url
                                        options:options
                                      showLayer:showLayer
-                       configurationCompletion:configurationCompletion];
+                       configurationCompletion:configuration];
             }
             else {
                 // video not in cache and download disallowed by delegate.
@@ -221,7 +221,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 - (void)resumePlayWithURL:(NSURL *)url
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
-  configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
+            configuration:(JPPlayVideoConfiguration)configuration {
     JPMainThreadAssert;
     if(!url){
         JPErrorLog(@"url can not be nil");
@@ -241,7 +241,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
                 [self playVideoWithURL:url
                            showOnLayer:showLayer
                                options:options
-               configurationCompletion:configurationCompletion];
+                         configuration:configuration];
             }
         }
         return;
@@ -255,7 +255,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     JPDebugLog(@"Resume play now.");
     [self.videoPlayer resumePlayWithShowLayer:showLayer
                                       options:options
-                      configurationCompletion:configurationCompletion];
+                                configuration:configuration];
 
 }
 
@@ -609,7 +609,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
     JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
                                                            options:options
                                                          showLayer:showLayer
-                                           configurationCompletion:configurationCompletion];
+                                                     configuration:configurationCompletion];
     self.managerModel.fileLength = model.resourceLoader.cacheFile.fileLength;
     self.managerModel.fragmentRanges = model.resourceLoader.cacheFile.fragmentRanges;
     [self callVideoLengthDelegateMethodWithVideoLength:model.resourceLoader.cacheFile.fileLength];
@@ -639,7 +639,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                                fullVideoCachePath:path
                                           options:options
                                       showOnLayer:showLayer
-                          configurationCompletion:configurationCompletion];
+                                    configuration:configurationCompletion];
     }
     else{
         NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain

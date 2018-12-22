@@ -113,7 +113,7 @@ playFailedWithError:(NSError *)error;
  * @param url                     The video url to play.
  * @param fullVideoCachePath      The full video file path in disk.
  * @param showLayer               The layer to show the video display layer.
- * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player config finished. because initialize player is not synchronize,
  *                                 so other category method is disabled before config finished.
  *
  * @return token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
@@ -122,7 +122,7 @@ playFailedWithError:(NSError *)error;
                                       fullVideoCachePath:(NSString *)fullVideoCachePath
                                                  options:(JPVideoPlayerOptions)options
                                              showOnLayer:(CALayer *)showLayer
-                                 configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
+                                           configuration:(JPPlayVideoConfiguration)configuration;
 
 /**
  * Play the not existed video from web.
@@ -130,7 +130,7 @@ playFailedWithError:(NSError *)error;
  * @param url                     The video url to play.
  * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
  * @param showLayer               The view to show the video display layer.
- * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player config finished. because initialize player is not synchronize,
  *                                 so other category method is disabled before config finished.
  *
  * @return token (@see JPPlayVideoManagerModel) that can be passed to -stopPlayVideo: to stop play.
@@ -138,19 +138,19 @@ playFailedWithError:(NSError *)error;
 - (JPVideoPlayerModel *_Nullable)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                          configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
+                                    configuration:(JPPlayVideoConfiguration)configuration;
 
 /**
  * Call this method to resume play.
  *
  * @param showLayer               The view to show the video display layer.
  * @param options                 The options to use when downloading the video. @see JPVideoPlayerOptions for the possible values.
- * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player config finished. because initialize player is not synchronize,
  *                                 so other category method is disabled before config finished.
  */
 - (void)resumePlayWithShowLayer:(CALayer *)showLayer
                         options:(JPVideoPlayerOptions)options
-        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
+                  configuration:(JPPlayVideoConfiguration)configuration;
 
 /**
  * This method used to seek to record playback when hava record playback history.

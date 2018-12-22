@@ -211,7 +211,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
                              fullVideoCachePath:(NSString *)fullVideoCachePath
                                         options:(JPVideoPlayerOptions)options
                                     showOnLayer:(CALayer *)showLayer
-                        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
+                                  configuration:(JPPlayVideoConfiguration)configuration {
     if (!url.absoluteString.length) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
@@ -242,8 +242,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         model.player.muted = YES;
     }
     self.playerModel = model;
-    if(configurationCompletion){
-        configurationCompletion([UIView new], model);
+    if(configuration){
+        configuration([UIView new], model);
     }
     return model;
 }
@@ -251,7 +251,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (nullable JPVideoPlayerModel *)playVideoWithURL:(NSURL *)url
                                           options:(JPVideoPlayerOptions)options
                                         showLayer:(CALayer *)showLayer
-                          configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
+                                    configuration:(JPPlayVideoConfiguration)configuration {
     if (!url.absoluteString.length) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The url is disable")];
         return nil;
@@ -283,15 +283,15 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (options & JPVideoPlayerMutedPlay) {
         model.player.muted = YES;
     }
-    if(configurationCompletion){
-        configurationCompletion([UIView new], model);
+    if(configuration){
+        configuration([UIView new], model);
     }
     return model;
 }
 
 - (void)resumePlayWithShowLayer:(CALayer *)showLayer
                         options:(JPVideoPlayerOptions)options
-        configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
+                  configuration:(JPPlayVideoConfiguration)configuration {
     if (!showLayer) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return;
@@ -308,8 +308,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self setVideoGravityWithOptions:options playerModel:self.playerModel];
     [self displayVideoPicturesOnShowLayer];
 
-    if(configurationCompletion){
-        configurationCompletion([UIView new], self.playerModel);
+    if(configuration){
+        configuration([UIView new], self.playerModel);
     }
     [self callPlayerStatusDidChangeDelegateMethod];
 }

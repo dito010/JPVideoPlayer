@@ -340,14 +340,14 @@
             [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                            options:options
-                                           configurationCompletion:internalConfigFinishedBlock];
+                                                     configuration:internalConfigFinishedBlock];
             [self callOrientationDelegateWithInterfaceOrientation:self.jp_viewInterfaceOrientation];
         }
         else {
             [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
                                                         showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                             options:options
-                                            configurationCompletion:internalConfigFinishedBlock];
+                                                      configuration:internalConfigFinishedBlock];
         }
     }
     else {

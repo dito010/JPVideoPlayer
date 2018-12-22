@@ -233,13 +233,13 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
  * @param url                     The URL of video.
  * @param showLayer               The layer of video layer display on.
  * @param options                 A flag to specify options to use for this request.
- * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player config finished. because initialize player is not synchronize,
  *                                 so other category method is disabled before config finished.
  */
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
- configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
+           configuration:(JPPlayVideoConfiguration)configuration;
 
 /**
  * Resume video play for the given URL.
@@ -247,13 +247,13 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
  * @param url                     The URL of video.
  * @param showLayer               The layer of video layer display on.
  * @param options                 A flag to specify options to use for this request.
- * @param configurationCompletion The block will be call when video player config finished. because initialize player is not synchronize,
+ * @param configuration           The block will be call when video player config finished. because initialize player is not synchronize,
  *                                 so other category method is disabled before config finished.
  */
 - (void)resumePlayWithURL:(NSURL *)url
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
-  configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion;
+            configuration:(JPPlayVideoConfiguration)configuration;
 
 /**
  * Return the cache key for a given URL.
