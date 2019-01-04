@@ -1,15 +1,34 @@
 PODS:
+  - IGListKit (3.4.0):
+    - IGListKit/Default (= 3.4.0)
+  - IGListKit/Default (3.4.0):
+    - IGListKit/Diffing
+  - IGListKit/Diffing (3.4.0)
   - JPNavigationController (2.1.3)
   - Masonry (1.1.0)
+  - SDWebImage (4.4.3):
+    - SDWebImage/Core (= 4.4.3)
+  - SDWebImage/Core (4.4.3)
 
 DEPENDENCIES:
+  - IGListKit
   - JPNavigationController (~> 2.1.3)
   - Masonry
+  - SDWebImage
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - IGListKit
+    - JPNavigationController
+    - Masonry
+    - SDWebImage
 
 SPEC CHECKSUMS:
+  IGListKit: 7a5d788e9fb746bcd402baa8e8b24bc3bd2a5a07
   JPNavigationController: f174edc3572edd9cd60cc65b51a14b6d75e47e9a
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  SDWebImage: c5594f1a19c48d526d321e548902b56b479cd508
 
-PODFILE CHECKSUM: ba245dcff116910af192aa836652567e077cd9c7
+PODFILE CHECKSUM: ab14d2e0a65b14b12c68ef9fbe9353c295303299
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3
