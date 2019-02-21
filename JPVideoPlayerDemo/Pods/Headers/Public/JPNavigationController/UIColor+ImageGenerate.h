@@ -1,1 +1,0 @@
-../../../JPNavigationController/JPNavigationController/UIColor+ImageGenerate.h
