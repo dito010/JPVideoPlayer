@@ -16,6 +16,8 @@
 #import "JPVideoPlayerCacheFile.h"
 #import "JPVideoPlayerSupportUtils.h"
 
+static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes = nil;
+
 @interface JPVideoPlayerDownloader()<NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 // The session in which data tasks will run
@@ -82,6 +84,23 @@
 
 
 #pragma mark - Public
+
++ (void)registerSupportedMIMETypes:(NSArray<NSString *> *)types {
+    
+    if (!JPVideoPlayerDownloaderSupportedMIMETypes) {
+        JPVideoPlayerDownloaderSupportedMIMETypes = [NSArray array];
+    }
+    
+    NSMutableArray *mutableSupportedMIMETypes = [JPVideoPlayerDownloaderSupportedMIMETypes mutableCopy];
+    
+    [types enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (![mutableSupportedMIMETypes containsObject:obj]) {
+            [mutableSupportedMIMETypes addObject:obj];
+        }
+    }];
+    
+    JPVideoPlayerDownloaderSupportedMIMETypes = [mutableSupportedMIMETypes copy];
+}
 
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions {
@@ -169,9 +188,20 @@ didReceiveResponse:(NSURLResponse *)response
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
         NSInteger expected = MAX((NSInteger)response.expectedContentLength, 0);
         self.expectedSize = expected;
-        // Support video / audio only.
-        BOOL isSupportMIMEType = [response.MIMEType containsString:@"video"] || [response.MIMEType containsString:@"audio"];
-        if(!isSupportMIMEType){
+        
+        // there are a lot of MIMETypes represent audio and video
+        NSMutableArray *supportedMIMETypes = [JPVideoPlayerDownloaderSupportedMIMETypes mutableCopy];
+        [supportedMIMETypes addObjectsFromArray:@[@"video", @"audio"]];
+        
+        BOOL isSupportedMIMEType = NO;
+        for (NSString *type in supportedMIMETypes) {
+            if ([response.MIMEType containsString:type]) {
+                isSupportedMIMEType = YES;
+                break;
+            }
+        }
+        
+        if(!isSupportedMIMEType){
             JPErrorLog(@"Not support MIMEType: %@", response.MIMEType);
             JPDispatchSyncOnMainQueue(^{
                 [self cancel];
