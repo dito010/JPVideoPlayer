@@ -28,6 +28,7 @@
 		5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67056A1DADE88F001EBFAF /* AppDelegate.m */; };
 		5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F6705721DADE88F001EBFAF /* Assets.xcassets */; };
 		5FF7BAF11E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7BAEE1E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m */; };
+		C17C2503B08D7F7B463EFE34 /* JPMethodInjecting.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C298067C7DD5554017120 /* JPMethodInjecting.m */; };
 		C17C254465F1D316B354C913 /* JPGCDExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C2389009C59C4BB70F651 /* JPGCDExtensions.m */; };
 		C3D50D2EF7B7EB2F36B72E2D /* libPods-JPVideoPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */; };
 		CF45AA1220B8571C00E07B8E /* JPVideoPlayerAudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF45AA1020B8571C00E07B8E /* JPVideoPlayerAudioViewController.m */; };
@@ -114,6 +115,8 @@
 		8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerKit.h; sourceTree = "<group>"; };
 		C17C23205D757D2C73E7D7E2 /* JPGCDExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPGCDExtensions.h; sourceTree = "<group>"; };
 		C17C2389009C59C4BB70F651 /* JPGCDExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPGCDExtensions.m; sourceTree = "<group>"; };
+		C17C25652F7DEA4BDA84091E /* JPMethodInjecting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPMethodInjecting.h; sourceTree = "<group>"; };
+		C17C298067C7DD5554017120 /* JPMethodInjecting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPMethodInjecting.m; sourceTree = "<group>"; };
 		CF45AA0F20B8571C00E07B8E /* JPVideoPlayerAudioViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerAudioViewController.h; sourceTree = "<group>"; };
 		CF45AA1020B8571C00E07B8E /* JPVideoPlayerAudioViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerAudioViewController.m; sourceTree = "<group>"; };
 		CF45AA1120B8571C00E07B8E /* JPVideoPlayerAudioViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JPVideoPlayerAudioViewController.xib; sourceTree = "<group>"; };
@@ -346,6 +349,8 @@
 				CF5024DF207F66F300DE8E2E /* JPVideoPlayer.bundle */,
 				C17C2389009C59C4BB70F651 /* JPGCDExtensions.m */,
 				C17C23205D757D2C73E7D7E2 /* JPGCDExtensions.h */,
+				C17C298067C7DD5554017120 /* JPMethodInjecting.m */,
+				C17C25652F7DEA4BDA84091E /* JPMethodInjecting.h */,
 			);
 			name = JPVideoPlayer;
 			path = ../../JPVideoPlayer;
@@ -516,6 +521,7 @@
 				CF5024F7207F66F400DE8E2E /* UITableViewCell+WebVideoCache.m in Sources */,
 				014C824321DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m in Sources */,
 				C17C254465F1D316B354C913 /* JPGCDExtensions.m in Sources */,
+				C17C2503B08D7F7B463EFE34 /* JPMethodInjecting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
