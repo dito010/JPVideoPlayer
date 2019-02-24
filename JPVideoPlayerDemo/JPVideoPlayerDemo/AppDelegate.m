@@ -15,6 +15,7 @@
 #import "JPVideoPlayerDouyinViewController.h"
 #import "JPVPNetEasyViewController.h"
 #import "JPVideoPlayerManager.h"
+#import "QSFeedListController.h"
 #import <JPNavigationControllerKit.h>
 
 @interface AppDelegate ()
@@ -49,8 +50,14 @@
     settingNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     settingNavigationController.title = @"设置";
     
+    JPNavigationController *igListNavigationController = [[JPNavigationController alloc]initWithRootViewController:[[QSFeedListController alloc]init]];
+    igListNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    igListNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    igListNavigationController.title = @"IGListKit";
+    
+    
     UITabBarController *tabVC = [[UITabBarController alloc]init];
-    tabVC.viewControllers = @[weiboNavigationController, douyinViewController,netEasyNavigationController,settingNavigationController];
+    tabVC.viewControllers = @[weiboNavigationController, douyinViewController,netEasyNavigationController,settingNavigationController,igListNavigationController];
     tabVC.tabBar.tintColor = [UIColor blackColor];
     tabVC.tabBar.backgroundImage = [UIImage imageNamed:@"jp_videoplayer_tabbar"];
     

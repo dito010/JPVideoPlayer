@@ -1,0 +1,1 @@
+../../../IGListKit/Source/IGListTransitionDelegate.h

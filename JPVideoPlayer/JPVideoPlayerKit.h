@@ -15,3 +15,8 @@
 #import "UITableViewCell+WebVideoCache.h"
 #import "JPVideoPlayerCache.h"
 #import "JPVideoPlayerManager.h"
+
+#import "JPVideoPlayerCollectionViewHelper.h"
+#import "UICollectionViewCell+videoPlayer.h"
+#import "UICollectionView+videoPlayer.h"
+
