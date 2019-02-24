@@ -91,6 +91,17 @@ didCompleteWithError:(NSError *)error;
 
 @property (nonatomic, weak) id<JPVideoPlayerDownloaderDelegate> delegate;
 
+
+/**
+ * @brief Customize acceptable response MIMETypes.
+ * @discussion
+ * Original acceptable MIMEType is just `audio` and `video`, but there are some
+ * other kind of MIMETypes, such as `application/oct-stream` and so on.
+ * @param types
+ * The supported MIMETypes.
+ */
++ (void)registerSupportedMIMETypes:(NSArray<NSString *> *)types;
+
 /**
  * Creates an instance of a downloader with specified session configuration.
  * *Note*: `timeoutIntervalForRequest` is going to be overwritten.
