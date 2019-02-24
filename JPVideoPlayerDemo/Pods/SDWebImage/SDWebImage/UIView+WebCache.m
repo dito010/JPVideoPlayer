@@ -64,11 +64,7 @@ static char TAG_ACTIVITY_SHOW;
     [self sd_cancelImageLoadOperationWithKey:validOperationKey];
     objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    dispatch_group_t group = context[SDWebImageInternalSetImageGroupKey];
     if (!(options & SDWebImageDelayPlaceholder)) {
-        if (group) {
-            dispatch_group_enter(group);
-        }
         dispatch_main_async_safe(^{
             [self sd_setImage:placeholder imageData:nil basedOnClassOrViaCustomSetImageBlock:setImageBlock];
         });
@@ -86,8 +82,10 @@ static char TAG_ACTIVITY_SHOW;
         self.sd_imageProgress.totalUnitCount = 0;
         self.sd_imageProgress.completedUnitCount = 0;
         
-        SDWebImageManager *manager = [context objectForKey:SDWebImageExternalCustomManagerKey];
-        if (!manager) {
+        SDWebImageManager *manager;
+        if ([context valueForKey:SDWebImageExternalCustomManagerKey]) {
+            manager = (SDWebImageManager *)[context valueForKey:SDWebImageExternalCustomManagerKey];
+        } else {
             manager = [SDWebImageManager sharedManager];
         }
         
@@ -151,25 +149,12 @@ static char TAG_ACTIVITY_SHOW;
             }
 #endif
             dispatch_main_async_safe(^{
-                if (group) {
-                    dispatch_group_enter(group);
-                }
 #if SD_UIKIT || SD_MAC
                 [sself sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:transition cacheType:cacheType imageURL:imageURL];
 #else
                 [sself sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock];
 #endif
-                if (group) {
-                    // compatible code for FLAnimatedImage, because we assume completedBlock called after image was set. This will be removed in 5.x
-                    BOOL shouldUseGroup = [objc_getAssociatedObject(group, &SDWebImageInternalSetImageGroupKey) boolValue];
-                    if (shouldUseGroup) {
-                        dispatch_group_notify(group, dispatch_get_main_queue(), callCompletedBlockClojure);
-                    } else {
-                        callCompletedBlockClojure();
-                    }
-                } else {
-                    callCompletedBlockClojure();
-                }
+                callCompletedBlockClojure();
             });
         }];
         [self sd_setImageLoadOperation:operation forKey:validOperationKey];
