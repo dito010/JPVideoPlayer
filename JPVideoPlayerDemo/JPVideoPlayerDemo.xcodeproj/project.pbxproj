@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		014C824221DF4E0600A64205 /* UICollectionViewCell+videoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C823C21DF4E0600A64205 /* UICollectionViewCell+videoPlayer.m */; };
+		014C824321DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C823D21DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m */; };
+		014C824421DF4E0600A64205 /* UICollectionView+videoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C823F21DF4E0600A64205 /* UICollectionView+videoPlayer.m */; };
+		014C824A21DF4E4400A64205 /* QSFeedVideoSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C824621DF4E4300A64205 /* QSFeedVideoSectionController.m */; };
+		014C824B21DF4E4400A64205 /* QSFeedVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C824721DF4E4300A64205 /* QSFeedVideoCell.m */; };
+		014C824E21DF4F3E00A64205 /* QSFullScreenVideoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C824D21DF4F3E00A64205 /* QSFullScreenVideoController.m */; };
+		014C825121DF550600A64205 /* QSFeedListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 014C825021DF550600A64205 /* QSFeedListController.m */; };
 		258180CE6D5C789E5D2988F8 /* JPVideoPlayerHoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2581898D104FD94C5028384B /* JPVideoPlayerHoverViewController.m */; };
 		2581889C19EE76A9A5D48D80 /* JPVideoPlayerDouyinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25818C4F9FF902E2C26F116E /* JPVideoPlayerDouyinViewController.m */; };
 		258188DAB416370E7585394B /* JPVideoPlayerWeiBoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */; };
@@ -62,6 +69,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		014C823C21DF4E0600A64205 /* UICollectionViewCell+videoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UICollectionViewCell+videoPlayer.m"; sourceTree = "<group>"; };
+		014C823D21DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerCollectionViewHelper.m; sourceTree = "<group>"; };
+		014C823E21DF4E0600A64205 /* UICollectionView+videoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+videoPlayer.h"; sourceTree = "<group>"; };
+		014C823F21DF4E0600A64205 /* UICollectionView+videoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+videoPlayer.m"; sourceTree = "<group>"; };
+		014C824021DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerCollectionViewHelper.h; sourceTree = "<group>"; };
+		014C824121DF4E0600A64205 /* UICollectionViewCell+videoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionViewCell+videoPlayer.h"; sourceTree = "<group>"; };
+		014C824621DF4E4300A64205 /* QSFeedVideoSectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSFeedVideoSectionController.m; sourceTree = "<group>"; };
+		014C824721DF4E4300A64205 /* QSFeedVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSFeedVideoCell.m; sourceTree = "<group>"; };
+		014C824821DF4E4300A64205 /* QSFeedVideoSectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSFeedVideoSectionController.h; sourceTree = "<group>"; };
+		014C824921DF4E4400A64205 /* QSFeedVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSFeedVideoCell.h; sourceTree = "<group>"; };
+		014C824C21DF4F3E00A64205 /* QSFullScreenVideoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSFullScreenVideoController.h; sourceTree = "<group>"; };
+		014C824D21DF4F3E00A64205 /* QSFullScreenVideoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSFullScreenVideoController.m; sourceTree = "<group>"; };
+		014C824F21DF550600A64205 /* QSFeedListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSFeedListController.h; sourceTree = "<group>"; };
+		014C825021DF550600A64205 /* QSFeedListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSFeedListController.m; sourceTree = "<group>"; };
 		0C9A80C1EADCB50E8B8E7648 /* Pods-JPVideoPlayerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JPVideoPlayerDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JPVideoPlayerDemo/Pods-JPVideoPlayerDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		1F5F3C3412F93A0936D3FBB0 /* Pods-JPVideoPlayerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JPVideoPlayerDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-JPVideoPlayerDemo/Pods-JPVideoPlayerDemo.release.xcconfig"; sourceTree = "<group>"; };
 		258180C10C9B1D5150EDD9C5 /* JPVideoPlayerWeiBoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerWeiBoViewController.h; sourceTree = "<group>"; };
@@ -149,6 +170,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		014C824521DF4E3000A64205 /* IGList */ = {
+			isa = PBXGroup;
+			children = (
+				014C824F21DF550600A64205 /* QSFeedListController.h */,
+				014C825021DF550600A64205 /* QSFeedListController.m */,
+				014C824C21DF4F3E00A64205 /* QSFullScreenVideoController.h */,
+				014C824D21DF4F3E00A64205 /* QSFullScreenVideoController.m */,
+				014C824921DF4E4400A64205 /* QSFeedVideoCell.h */,
+				014C824721DF4E4300A64205 /* QSFeedVideoCell.m */,
+				014C824821DF4E4300A64205 /* QSFeedVideoSectionController.h */,
+				014C824621DF4E4300A64205 /* QSFeedVideoSectionController.m */,
+			);
+			name = IGList;
+			sourceTree = "<group>";
+		};
 		272BF3831ADEABFABB821412 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +267,7 @@
 				48FD326A1EB6FF4A00ACCB05 /* Setting */,
 				5F6705691DADE88F001EBFAF /* AppDelegate.h */,
 				5F67056A1DADE88F001EBFAF /* AppDelegate.m */,
+				014C824521DF4E3000A64205 /* IGList */,
 				5F6705721DADE88F001EBFAF /* Assets.xcassets */,
 				5F6705771DADE88F001EBFAF /* Info.plist */,
 				5F6705661DADE88F001EBFAF /* Supporting Files */,
@@ -270,6 +307,12 @@
 		CF5024CC207F66F300DE8E2E /* JPVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				014C824021DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.h */,
+				014C823D21DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m */,
+				014C823E21DF4E0600A64205 /* UICollectionView+videoPlayer.h */,
+				014C823F21DF4E0600A64205 /* UICollectionView+videoPlayer.m */,
+				014C824121DF4E0600A64205 /* UICollectionViewCell+videoPlayer.h */,
+				014C823C21DF4E0600A64205 /* UICollectionViewCell+videoPlayer.m */,
 				8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */,
 				CF5024D6207F66F300DE8E2E /* JPVideoPlayer.h */,
 				CF5024E6207F66F300DE8E2E /* JPVideoPlayer.m */,
@@ -351,7 +394,7 @@
 				TargetAttributes = {
 					5F6705621DADE88F001EBFAF = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = U7FB52A877;
+						DevelopmentTeam = JJ6D8L57PH;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -438,20 +481,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF5024EC207F66F400DE8E2E /* JPVideoPlayerCache.m in Sources */,
+				014C824B21DF4E4400A64205 /* QSFeedVideoCell.m in Sources */,
+				014C824A21DF4E4400A64205 /* QSFeedVideoSectionController.m in Sources */,
 				5FF7BAF11E7F8EC400912ACD /* JPVideoPlayerWeiBoListViewController.m in Sources */,
 				CF5024F8207F66F400DE8E2E /* JPVideoPlayerCachePath.m in Sources */,
 				CF533E3520773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.m in Sources */,
 				CF5024EE207F66F400DE8E2E /* JPVideoPlayerCompat.m in Sources */,
 				48EE51D01E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.m in Sources */,
 				CF5024EF207F66F400DE8E2E /* JPVideoPlayerResourceLoader.m in Sources */,
+				014C825121DF550600A64205 /* QSFeedListController.m in Sources */,
 				CF73A143209217F000F8F63E /* JPVPNetEasyTableViewCell.m in Sources */,
+				014C824221DF4E0600A64205 /* UICollectionViewCell+videoPlayer.m in Sources */,
 				CF45AA1220B8571C00E07B8E /* JPVideoPlayerAudioViewController.m in Sources */,
+				014C824E21DF4F3E00A64205 /* QSFullScreenVideoController.m in Sources */,
 				5F67056B1DADE88F001EBFAF /* AppDelegate.m in Sources */,
 				48FD32711EB701D400ACCB05 /* JPQRCodeTool.m in Sources */,
 				CF5024EB207F66F400DE8E2E /* JPVideoPlayerDownloader.m in Sources */,
 				5F6705681DADE88F001EBFAF /* main.m in Sources */,
 				488717511EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.m in Sources */,
 				481650661ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m in Sources */,
+				014C824421DF4E0600A64205 /* UICollectionView+videoPlayer.m in Sources */,
 				2581889C19EE76A9A5D48D80 /* JPVideoPlayerDouyinViewController.m in Sources */,
 				CF5024F1207F66F400DE8E2E /* JPVideoPlayerControlViews.m in Sources */,
 				CF5024F4207F66F400DE8E2E /* JPVideoPlayerManager.m in Sources */,
@@ -465,6 +514,7 @@
 				CF5024F9207F66F400DE8E2E /* JPResourceLoadingRequestTask.m in Sources */,
 				258180CE6D5C789E5D2988F8 /* JPVideoPlayerHoverViewController.m in Sources */,
 				CF5024F7207F66F400DE8E2E /* UITableViewCell+WebVideoCache.m in Sources */,
+				014C824321DF4E0600A64205 /* JPVideoPlayerCollectionViewHelper.m in Sources */,
 				C17C254465F1D316B354C913 /* JPGCDExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -581,7 +631,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = U7FB52A877;
+				DEVELOPMENT_TEAM = JJ6D8L57PH;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jpvideoplayer.www;
@@ -597,7 +647,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = U7FB52A877;
+				DEVELOPMENT_TEAM = JJ6D8L57PH;
 				INFOPLIST_FILE = JPVideoPlayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jpvideoplayer.www;

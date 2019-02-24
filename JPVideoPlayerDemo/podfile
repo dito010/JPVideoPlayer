@@ -4,5 +4,7 @@ target "JPVideoPlayerDemo" do
 
 pod 'JPNavigationController', '~> 2.1.3'
 pod 'Masonry'
+pod 'SDWebImage'
+pod 'IGListKit'
 
 end
