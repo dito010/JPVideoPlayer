@@ -54,7 +54,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (instancetype)initWithFilePath:(NSString *)filePath
                    indexFilePath:(NSString *)indexFilePath {
-    JPMainThreadAssert;
+    JPAssertMainThread;
     if (!filePath.length || !indexFilePath.length) {
         JPErrorLog(@"filePath and indexFilePath can not be nil.");
         return nil;
@@ -126,7 +126,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (void)mergeRangesIfNeed {
-    JPMainThreadAssert;
+    JPAssertMainThread;
     BOOL isMerge = NO;
     for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
         if ((i + 1) < self.internalFragmentRanges.count) {

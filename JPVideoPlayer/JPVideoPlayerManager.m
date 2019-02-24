@@ -119,7 +119,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
            configuration:(JPPlayVideoConfiguration)configuration {
-    JPMainThreadAssert;
+    JPAssertMainThread;
     if(!url || !showLayer){
         JPErrorLog(@"url and showLayer can not be nil");
         return;
@@ -222,7 +222,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
             configuration:(JPPlayVideoConfiguration)configuration {
-    JPMainThreadAssert;
+    JPAssertMainThread;
     if(!url){
         JPErrorLog(@"url can not be nil");
         return;

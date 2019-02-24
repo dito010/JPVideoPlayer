@@ -19,16 +19,6 @@ NSString *const JPVideoPlayerDownloadFinishNotification = @"www.jpvideplayer.dow
 NSString *const JPVideoPlayerErrorDomain = @"com.jpvideoplayer.error.domain.www";
 const NSRange JPInvalidRange = {NSNotFound, 0};
 
-void JPDispatchSyncOnMainQueue(dispatch_block_t block) {
-    if (!block) { return; }
-    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
-        block();
-    }
-    else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
 BOOL JPValidByteRange(NSRange range) {
     return ((range.location != NSNotFound) || (range.length > 0));
 }

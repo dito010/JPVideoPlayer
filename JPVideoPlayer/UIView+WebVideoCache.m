@@ -275,7 +275,7 @@
                      options:(JPVideoPlayerOptions)options
      configurationCompletion:(JPPlayVideoConfiguration _Nullable)configurationCompletion
                 isResume:(BOOL)isResume {
-    JPMainThreadAssert;
+    JPAssertMainThread;
     self.jp_videoURL = url;
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;

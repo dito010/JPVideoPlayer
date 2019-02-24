@@ -16,7 +16,7 @@
 #import "JPVideoPlayerCacheFile.h"
 #import "JPVideoPlayerSupportUtils.h"
 
-static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes = nil;
+static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes;
 
 @interface JPVideoPlayerDownloader()<NSURLSessionDelegate, NSURLSessionDataDelegate>
 
@@ -41,6 +41,10 @@ static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes = nil;
 @end
 
 @implementation JPVideoPlayerDownloader
+
++ (void)load {
+    JPVideoPlayerDownloaderSupportedMIMETypes = @[@"video", @"audio"];
+}
 
 + (nonnull instancetype)sharedDownloader {
     static dispatch_once_t once;
@@ -86,10 +90,8 @@ static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes = nil;
 #pragma mark - Public
 
 + (void)registerSupportedMIMETypes:(NSArray<NSString *> *)types {
-    
-    if (!JPVideoPlayerDownloaderSupportedMIMETypes) {
-        JPVideoPlayerDownloaderSupportedMIMETypes = [NSArray array];
-    }
+    JPAssertMainThread;
+    if (!types.count) return;
     
     NSMutableArray *mutableSupportedMIMETypes = [JPVideoPlayerDownloaderSupportedMIMETypes mutableCopy];
     
