@@ -37,7 +37,7 @@
 @class AppDelegate;
 
 
-@interface QSFeedVideoSectionController() <IGListScrollDelegate, JPCollectionViewPlayVideoDelegate>
+@interface QSFeedVideoSectionController() <IGListScrollDelegate, JPScrollViewPlayVideoDelegate>
 
 @property(nonatomic, copy) NSString *videoURL;
 @property(nonatomic, copy) NSString *videoThumbnail;;
@@ -115,8 +115,9 @@
     
 }
 
-#pragma mark - JPCollectionViewPlayVideoDelegate
-- (void)collectionView:(UICollectionView *)collectionView willPlayVideoOnCell:(UICollectionViewCell *)cell {
+#pragma mark - JPScrollViewPlayVideoDelegate
+
+- (void)scrollView:(UIScrollView <JPVideoPlayerScrollViewProtocol> *)scrollView willPlayVideoOnCell:(UIView <JPVideoPlayerCellProtocol> *)cell {
     [cell.jp_videoPlayView jp_resumeMutePlayWithURL:cell.jp_videoURL
                                  bufferingIndicator:nil
                                        progressView:nil

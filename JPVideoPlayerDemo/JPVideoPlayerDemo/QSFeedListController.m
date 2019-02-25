@@ -25,7 +25,7 @@
     [super viewDidLayoutSubviews];
     self.listView.frame = self.view.bounds;
     CGRect listViewFrame = self.listView.frame;
-    self.listView.jp_collectionViewVisibleFrame = listViewFrame;
+    self.listView.jp_scrollViewVisibleFrame = listViewFrame;
 }
     
 - (void)viewDidAppear:(BOOL)animated {

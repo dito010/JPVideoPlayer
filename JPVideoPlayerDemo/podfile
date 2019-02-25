@@ -6,6 +6,5 @@ pod 'JPNavigationController', '~> 2.1.3'
 pod 'Masonry'
 pod 'SDWebImage'
 pod 'IGListKit'
-pod 'JRSwizzle'
 
 end

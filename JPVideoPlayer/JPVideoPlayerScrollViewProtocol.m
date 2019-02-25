@@ -1,43 +1,32 @@
 //
-//  UICollectionView+videoPlayer.m
-//  ComponentDemo
-//
-//  Created by Xuzixiang on 2018/7/5.
-//  Copyright © 2018年 frankxzx. All rights reserved.
+// Created by NewPan on 2019-02-25.
+// Copyright (c) 2019 NewPan. All rights reserved.
 //
 
-#import "UICollectionView+videoPlayer.h"
-#import "JPVideoPlayerCompat.h"
+#import "JPVideoPlayerScrollViewProtocol.h"
+#import "JPMethodInjecting.h"
 #import "JPVideoPlayerSupportUtils.h"
-#import "JPVideoPlayerCollectionViewHelper.h"
 
-@interface UICollectionView()
+@jp_concreteprotocol(JPVideoPlayerScrollViewProtocol)
 
-@property (nonatomic) JPVideoPlayerCollectionViewHelper *helper;
-
-@end
-
-static const NSString *kJPVideoPlayerHelperKey = @"com.jpvideoplayer.scrollview.helper.www";
-@implementation UICollectionView (videoPlayer)
-
-- (void)setJp_delegate:(id <JPCollectionViewPlayVideoDelegate>)jp_delegate {
+- (void)setJp_delegate:(id <JPScrollViewPlayVideoDelegate>)jp_delegate {
     self.helper.delegate = jp_delegate;
 }
 
-- (id <JPCollectionViewPlayVideoDelegate>)jp_delegate {
+- (id <JPScrollViewPlayVideoDelegate>)jp_delegate {
     return self.helper.delegate;
 }
 
-- (UICollectionViewCell *)jp_playingVideoCell {
+- (UITableViewCell *)jp_playingVideoCell {
     return [self.helper playingVideoCell];
 }
 
-- (void)setJp_collectionViewVisibleFrame:(CGRect)jp_collectionViewVisibleFrame {
-    self.helper.collectionViewVisibleFrame = jp_collectionViewVisibleFrame;
+- (void)setJp_scrollViewVisibleFrame:(CGRect)jp_scrollViewVisibleFrame {
+    self.helper.scrollViewVisibleFrame = jp_scrollViewVisibleFrame;
 }
 
-- (CGRect)jp_collectionViewVisibleFrame {
-    return self.helper.collectionViewVisibleFrame;
+- (CGRect)jp_scrollViewVisibleFrame {
+    return self.helper.scrollViewVisibleFrame;
 }
 
 - (void)setJp_scrollPlayStrategyType:(JPScrollPlayStrategyType)jp_scrollPlayStrategyType {
@@ -52,23 +41,23 @@ static const NSString *kJPVideoPlayerHelperKey = @"com.jpvideoplayer.scrollview.
     self.helper.unreachableCellDictionary = jp_unreachableCellDictionary;
 }
 
-- (NSDictionary<NSString *, NSString *> *)jp_unreachableCellDictionary {
+- (NSDictionary<NSString *, NSNumber *> *)jp_unreachableCellDictionary {
     return self.helper.unreachableCellDictionary;
 }
 
-- (void)setJp_playVideoInVisibleCellsBlock:(JPPlayVideoInVisibleCollectionCellsBlock)jp_playVideoInVisibleCellsBlock {
+- (void)setJp_playVideoInVisibleCellsBlock:(JPPlayVideoInVisibleCellsBlock)jp_playVideoInVisibleCellsBlock {
     self.helper.playVideoInVisibleCellsBlock = jp_playVideoInVisibleCellsBlock;
 }
 
-- (JPPlayVideoInVisibleCollectionCellsBlock)jp_playVideoInVisibleCellsBlock {
+- (JPPlayVideoInVisibleCellsBlock)jp_playVideoInVisibleCellsBlock {
     return self.helper.playVideoInVisibleCellsBlock;
 }
 
-- (void)setJp_findBestCellInVisibleCellsBlock:(JPPlayVideoInVisibleCollectionCellsBlock)jp_findBestCellInVisibleCellsBlock {
+- (void)setJp_findBestCellInVisibleCellsBlock:(JPPlayVideoInVisibleCellsBlock)jp_findBestCellInVisibleCellsBlock {
     self.helper.findBestCellInVisibleCellsBlock = jp_findBestCellInVisibleCellsBlock;
 }
 
-- (JPPlayVideoInVisibleCollectionCellsBlock)jp_findBestCellInVisibleCellsBlock {
+- (JPPlayVideoInVisibleCellsBlock)jp_findBestCellInVisibleCellsBlock {
     return self.helper.findBestCellInVisibleCellsBlock;
 }
 
@@ -84,7 +73,7 @@ static const NSString *kJPVideoPlayerHelperKey = @"com.jpvideoplayer.scrollview.
     [self.helper handleCellUnreachableTypeInVisibleCellsAfterReloadData];
 }
 
-- (void)jp_handleCellUnreachableTypeForCell:(UICollectionViewCell *)cell
+- (void)jp_handleCellUnreachableTypeForCell:(UIView<JPVideoPlayerCellProtocol> *)cell
                                 atIndexPath:(NSIndexPath *)indexPath {
     [self.helper handleCellUnreachableTypeForCell:cell
                                       atIndexPath:indexPath];
@@ -109,11 +98,11 @@ static const NSString *kJPVideoPlayerHelperKey = @"com.jpvideoplayer.scrollview.
 
 #pragma mark - Private
 
-- (JPVideoPlayerCollectionViewHelper *)helper {
-    JPVideoPlayerCollectionViewHelper *_helper = objc_getAssociatedObject(self, &kJPVideoPlayerHelperKey);
+- (JPVideoPlayerScrollViewInternalObject *)helper {
+    JPVideoPlayerScrollViewInternalObject *_helper = objc_getAssociatedObject(self, _cmd);
     if(!_helper){
-        _helper = [[JPVideoPlayerCollectionViewHelper alloc] initWithCollectionView:self];
-        objc_setAssociatedObject(self, &kJPVideoPlayerHelperKey, _helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        _helper = [[JPVideoPlayerScrollViewInternalObject alloc] initWithScrollView:self];
+        objc_setAssociatedObject(self, _cmd, _helper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return _helper;
 }

@@ -1,15 +1,12 @@
 //
-//  UICollectionViewCell+videoPlayer.m
-//  ComponentDemo
-//
-//  Created by Xuzixiang on 2018/7/5.
-//  Copyright © 2018年 frankxzx. All rights reserved.
+// Created by NewPan on 2019-02-24.
+// Copyright (c) 2019 NewPan. All rights reserved.
 //
 
-#import "UICollectionViewCell+videoPlayer.h"
-#import <objc/runtime.h>
+#import "JPVideoPlayerCellProtocol.h"
+#import "JPMethodInjecting.h"
 
-@implementation UICollectionViewCell (videoPlayer)
+@jp_concreteprotocol(JPVideoPlayerCellProtocol)
 
 - (void)setJp_videoURL:(NSURL *)jp_videoURL {
     objc_setAssociatedObject(self, @selector(jp_videoURL), jp_videoURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -35,12 +32,11 @@
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
-- (BOOL)jp_isEqualToCell:(UICollectionViewCell *)cell {
+- (BOOL)jp_isEqualToCell:(UIView<JPVideoPlayerCellProtocol> *)cell {
     if(!self.jp_videoURL && !cell.jp_videoURL){
         return self == cell;
     }
     return [self.jp_videoURL.absoluteString isEqualToString:cell.jp_videoURL.absoluteString];
 }
-
 
 @end

@@ -74,7 +74,7 @@
 
     CGRect tableViewFrame = self.tableView.frame;
     tableViewFrame.size.height -= self.tabBarController.tabBar.bounds.size.height;
-    self.tableView.jp_tableViewVisibleFrame = tableViewFrame;
+    self.tableView.jp_scrollViewVisibleFrame = tableViewFrame;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

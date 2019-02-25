@@ -4,9 +4,8 @@
 //
 
 #import "JPMethodInjecting.h"
-#import "JRSwizzle.h"
 #import <pthread.h>
-#import <objc/runtime.h>
+#import "JPVideoPlayerSupportUtils.h"
 
 typedef struct JPSpecialProtocol {
     __unsafe_unretained Protocol *protocol;
@@ -257,10 +256,10 @@ void jp_loadConcreteProtocol(Protocol *protocol) {
 + (void)load {
     NSError *iError;
     NSError *cError;
-    [self jr_swizzleClassMethod:@selector(resolveInstanceMethod:)
+    [self jp_swizzleClassMethod:@selector(resolveInstanceMethod:)
                 withClassMethod:@selector(jpinjecting_resolveInstanceMethod:)
                           error:&iError];
-    [self jr_swizzleClassMethod:@selector(resolveClassMethod:)
+    [self jp_swizzleClassMethod:@selector(resolveClassMethod:)
                 withClassMethod:@selector(jpinjecting_resolveClassMethod:)
                           error:&cError];
     NSParameterAssert(!iError);

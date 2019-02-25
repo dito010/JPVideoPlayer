@@ -7,7 +7,7 @@
 //
 
 #import "JPVideoPlayerCollectionViewHelper.h"
-#import "UICollectionViewCell+videoPlayer.h"
+#import "UICollectionViewCell+WebVideoCache.h"
 #import "UIView+WebVideoCache.h"
 
 @interface JPVideoPlayerCollectionViewHelper()

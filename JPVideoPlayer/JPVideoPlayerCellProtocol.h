@@ -1,19 +1,26 @@
 //
-//  UICollectionViewCell+videoPlayer.h
-//  ComponentDemo
-//
-//  Created by Xuzixiang on 2018/7/5.
-//  Copyright © 2018年 frankxzx. All rights reserved.
+// Created by NewPan on 2019-02-24.
+// Copyright (c) 2019 NewPan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "UITableViewCell+WebVideoCache.h"
 
-@interface UICollectionViewCell (videoPlayer)/**
-                                              * The video path url.
-                                              *
-                                              * @note The url may a web url or local file url.
-                                              */
+typedef NS_ENUM(NSInteger , JPVideoPlayerUnreachableCellType) {
+    JPVideoPlayerUnreachableCellTypeNone = 0,
+    JPVideoPlayerUnreachableCellTypeTop,
+    JPVideoPlayerUnreachableCellTypeDown
+};
+
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol JPVideoPlayerCellProtocol <NSObject>
+
+@required
+/**
+ * The video path url.
+ *
+ * @note The url may a web url or local file url.
+ */
 @property (nonatomic, nullable) NSURL *jp_videoURL;
 
 /**
@@ -34,6 +41,8 @@
  *
  * @return YES if cell is equivalent to the receiver (if they have the same `jp_videoURL` comparison), otherwise NO.
  */
-- (BOOL)jp_isEqualToCell:(UICollectionViewCell *)cell;
+- (BOOL)jp_isEqualToCell:(UIView<JPVideoPlayerCellProtocol> *)cell;
 
 @end
+
+NS_ASSUME_NONNULL_END

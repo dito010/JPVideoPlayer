@@ -15,7 +15,7 @@
 #import "JPVideoPlayerDetailViewController.h"
 #import "JPVideoPlayerWeiBoUnequalHeightCell.h"
 
-@interface JPVideoPlayerWeiBoListViewController ()<JPTableViewPlayVideoDelegate>
+@interface JPVideoPlayerWeiBoListViewController ()<JPScrollViewPlayVideoDelegate>
 
 /**
  * Arrary of video paths.
@@ -53,7 +53,7 @@
 
     CGRect tableViewFrame = self.tableView.frame;
     tableViewFrame.size.height -= self.tabBarController.tabBar.bounds.size.height;
-    self.tableView.jp_tableViewVisibleFrame = tableViewFrame;
+    self.tableView.jp_scrollViewVisibleFrame = tableViewFrame;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -62,14 +62,14 @@
     [self.tableView jp_handleCellUnreachableTypeInVisibleCellsAfterReloadData];
     [self.tableView jp_playVideoInVisibleCellsIfNeed];
 
-    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
+    // 用来防止选中 cell push 到下个控制器时, scrollView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
 
-    // 用来防止选中 cell push 到下个控制器时, tableView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
+    // 用来防止选中 cell push 到下个控制器时, scrollView 再次调用 scrollViewDidScroll 方法, 造成 playingVideoCell 被置空.
     self.tableView.delegate = nil;
 }
 
@@ -138,7 +138,7 @@
 
 #pragma mark - JPTableViewPlayVideoDelegate
 
-- (void)tableView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
+- (void)scrollView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
     [cell.jp_videoPlayView jp_resumeMutePlayWithURL:cell.jp_videoURL
                                  bufferingIndicator:nil
                                        progressView:nil

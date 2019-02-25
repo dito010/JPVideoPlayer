@@ -10,12 +10,10 @@
  */
 
 #import "JPVideoPlayerSupportUtils.h"
-#import "objc/runtime.h"
 #import "JPVideoPlayer.h"
 #import "UIView+WebVideoCache.h"
-#import "JPVideoPlayerControlViews.h"
-#import "JPVideoPlayerCompat.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "JPGCDExtensions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -190,6 +188,12 @@ NS_ASSUME_NONNULL_BEGIN
 NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 @implementation NSObject (JPSwizzle)
 
+#if OBJC_API_VERSION >= 2
+#define GetClass(obj)	object_getClass(obj)
+#else
+#define GetClass(obj)	(obj ? obj->isa : Nil)
+#endif
+
 + (BOOL)jp_swizzleMethod:(SEL)origSel withMethod:(SEL)altSel error:(NSError**)error {
     Method origMethod = class_getInstanceMethod(self, origSel);
     if (!origMethod) {
@@ -218,6 +222,10 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
     method_exchangeImplementations(class_getInstanceMethod(self, origSel), class_getInstanceMethod(self, altSel));
     return YES;
+}
+
++ (BOOL)jp_swizzleClassMethod:(SEL)origSel_ withClassMethod:(SEL)altSel_ error:(NSError**)error_ {
+    return [GetClass((id)self) jp_swizzleMethod:origSel_ withMethod:altSel_ error:error_];
 }
 
 @end
@@ -393,66 +401,79 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @end
 
-@interface JPVideoPlayerTableViewHelper()
+@interface JPVideoPlayerScrollViewInternalObject()
 
-@property (nonatomic, weak) UITableViewCell *playingVideoCell;
+@property (nonatomic, weak) UIView<JPVideoPlayerCellProtocol> *playingVideoCell;
 
 @end
 
-@implementation JPVideoPlayerTableViewHelper
+@implementation JPVideoPlayerScrollViewInternalObject
+
++ (instancetype)new {
+    NSAssert(NO, @"Please use given initialize method.");
+    return nil;
+}
 
 - (instancetype)init {
     NSAssert(NO, @"Please use given initialize method.");
-    return [self initWithTableView:[UITableView new]];
+    return nil;
 };
 
-- (instancetype)initWithTableView:(UITableView *)tableView {
-    if(!tableView){
-        JPErrorLog(@"tableView can not be nil.");
+- (instancetype)initWithScrollView:(UIScrollView<JPVideoPlayerScrollViewProtocol> *)scrollView {
+    if(!scrollView){
+        JPErrorLog(@"scrollView can not be nil.");
         return nil;
     }
 
     self = [super init];
     if(self){
-        _tableView = tableView;
-        _tableViewVisibleFrame = CGRectZero;
+        _scrollView = scrollView;
+        _scrollViewVisibleFrame = CGRectZero;
     }
     return self;
 }
 
 - (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UITableView *tableView = self.tableView;
+    if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return;
+
+    JPDispatchAfterTimeIntervalInSecond(0.3f, ^{
+
+        UITableView *tableView = (UITableView *)self.scrollView;
         for(UITableViewCell *cell in tableView.visibleCells){
             [self handleCellUnreachableTypeForCell:cell atIndexPath:[tableView indexPathForCell:cell]];
         }
+
     });
 }
 
-- (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
+- (void)handleCellUnreachableTypeForCell:(UIView<JPVideoPlayerCellProtocol> *)cell
                              atIndexPath:(NSIndexPath *)indexPath {
-    UITableView *tableView = self.tableView;
+    if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return;
+
+    UITableView *tableView = (UITableView *)self.scrollView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
-    if(!visibleCells.count){
-        return;
-    }
+    if(!visibleCells.count) return;
 
     NSUInteger unreachableCellCount = [self fetchUnreachableCellCountWithVisibleCellsCount:visibleCells.count];
-    NSInteger sectionsCount = 1;
-    if(tableView.dataSource && [tableView.dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]){
-        sectionsCount = [tableView.dataSource numberOfSectionsInTableView:tableView];
+    NSInteger sectionsCount = tableView.numberOfSections;
+    NSInteger rows = 0;
+    if ([self.scrollView isKindOfClass:[UITableView class]]) {
+        rows = [tableView numberOfRowsInSection:indexPath.section];
+    }
+    else if ([self.scrollView isKindOfClass:[UICollectionView class]]) {
+        UICollectionView *collectionView = (UICollectionView *)self.scrollView;
+        rows = [collectionView numberOfItemsInSection:indexPath.section];
     }
     BOOL isFirstSectionInSections = YES;
     BOOL isLastSectionInSections = YES;
     if(sectionsCount > 1){
         if(indexPath.section != 0){
-           isFirstSectionInSections = NO;
+            isFirstSectionInSections = NO;
         }
         if(indexPath.section != (sectionsCount - 1)){
-           isLastSectionInSections = NO;
+            isLastSectionInSections = NO;
         }
     }
-    NSUInteger rows = [tableView numberOfRowsInSection:indexPath.section];
     if (unreachableCellCount > 0) {
         if (indexPath.row <= (unreachableCellCount - 1)) {
             if(isFirstSectionInSections){
@@ -474,6 +495,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (void)playVideoInVisibleCellsIfNeed {
+    if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return;
+
     if(self.playingVideoCell){
         [self playVideoWithCell:self.playingVideoCell];
         return;
@@ -481,13 +504,13 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
     // handle the first cell cannot play video when initialized.
     [self handleCellUnreachableTypeInVisibleCellsAfterReloadData];
-    
-    NSArray<UITableViewCell *> *visibleCells = [self.tableView visibleCells];
+
+    NSArray<UITableViewCell *> *visibleCells = [(UITableView *)self.scrollView visibleCells];
     // Find first cell need play video in visible cells.
-    UITableViewCell *targetCell = nil;
+    UIView<JPVideoPlayerCellProtocol> *targetCell = nil;
     if(self.playVideoInVisibleCellsBlock){
-       targetCell = self.playVideoInVisibleCellsBlock(visibleCells);
-    } 
+        targetCell = self.playVideoInVisibleCellsBlock(visibleCells);
+    }
     else {
         for (UITableViewCell *cell in visibleCells) {
             if (cell.jp_videoURL.absoluteString.length > 0) {
@@ -513,7 +536,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (void)scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate {
-    if (decelerate == NO) {
+    if (!decelerate) {
         [self handleScrollStopIfNeed];
     }
 }
@@ -530,7 +553,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 #pragma mark - Private
 
 - (BOOL)playingCellIsVisible {
-    if(CGRectIsEmpty(self.tableViewVisibleFrame)){
+    if(CGRectIsEmpty(self.scrollViewVisibleFrame)){
         return NO;
     }
     if(!self.playingVideoCell){
@@ -545,7 +568,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (BOOL)viewIsVisibleInTableViewVisibleFrame:(UIView *)view {
-    CGRect referenceRect = [self.tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
+    CGRect referenceRect = [self.scrollView.superview convertRect:self.scrollViewVisibleFrame toView:nil];
     CGPoint viewLeftTopPoint = view.frame.origin;
     viewLeftTopPoint.y += 1;
     CGPoint topCoordinatePoint = [view.superview convertPoint:viewLeftTopPoint toView:nil];
@@ -556,27 +579,23 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     CGPoint viewLeftBottomPoint = CGPointMake(viewLeftTopPoint.x, viewBottomY);
     CGPoint bottomCoordinatePoint = [view.superview convertPoint:viewLeftBottomPoint toView:nil];
     BOOL isBottomContain = CGRectContainsPoint(referenceRect, bottomCoordinatePoint);
-    if(!isTopContain && !isBottomContain){
-        return NO;
-    }
-    return YES;
+    return !(!isTopContain && !isBottomContain);
 }
 
 - (UITableViewCell *)findTheBestPlayVideoCell {
-    if(CGRectIsEmpty(self.tableViewVisibleFrame)){
-        return nil;
-    }
+    if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return nil;
+    if(CGRectIsEmpty(self.scrollViewVisibleFrame)) return nil;
 
     // To find next cell need play video.
     UITableViewCell *targetCell = nil;
-    UITableView *tableView = self.tableView;
+    UITableView *tableView = (UITableView *)self.scrollView;
     NSArray<UITableViewCell *> *visibleCells = [tableView visibleCells];
     if(self.findBestCellInVisibleCellsBlock){
         return self.findBestCellInVisibleCellsBlock(visibleCells);
     }
-    
+
     CGFloat gap = MAXFLOAT;
-    CGRect referenceRect = [tableView.superview convertRect:self.tableViewVisibleFrame toView:nil];
+    CGRect referenceRect = [tableView.superview convertRect:self.scrollViewVisibleFrame toView:nil];
 
     for (UITableViewCell *cell in visibleCells) {
         if (!(cell.jp_videoURL.absoluteString.length > 0)) {
@@ -626,10 +645,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (NSUInteger)fetchUnreachableCellCountWithVisibleCellsCount:(NSUInteger)visibleCellsCount {
-    if(![self.unreachableCellDictionary.allKeys containsObject:[NSString stringWithFormat:@"%d", (int)visibleCellsCount]]){
-        return 0;
-    }
-    return [[self.unreachableCellDictionary valueForKey:[NSString stringWithFormat:@"%d", (int)visibleCellsCount]] intValue];
+    return [self.unreachableCellDictionary[[NSString stringWithFormat:@"%d", (int)visibleCellsCount]] intValue];
 }
 
 - (NSDictionary<NSString *, NSString *> *)unreachableCellDictionary {
@@ -637,22 +653,22 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
         // The key is the number of visible cells in screen,
         // the value is the number of cells cannot stop in screen center.
         _unreachableCellDictionary = @{
-                @"4" : @"1",
-                @"3" : @"1",
-                @"2" : @"0"
+                @"4" : @1,
+                @"3" : @1,
+                @"2" : @0
         };
     }
     return _unreachableCellDictionary;
 }
 
-- (void)playVideoWithCell:(UITableViewCell *)cell {
+- (void)playVideoWithCell:(UIView<JPVideoPlayerCellProtocol> *)cell {
     if(!cell){
         return;
     }
 
     self.playingVideoCell = cell;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:willPlayVideoOnCell:)]) {
-        [self.delegate tableView:self.tableView willPlayVideoOnCell:cell];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollView:willPlayVideoOnCell:)]) {
+        [self.delegate scrollView:self.scrollView willPlayVideoOnCell:cell];
     }
 }
 

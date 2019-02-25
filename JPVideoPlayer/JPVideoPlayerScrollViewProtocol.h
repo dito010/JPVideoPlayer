@@ -1,24 +1,54 @@
 //
-//  UICollectionView+videoPlayer.h
-//  ComponentDemo
-//
-//  Created by Xuzixiang on 2018/7/5.
-//  Copyright © 2018年 frankxzx. All rights reserved.
+// Created by NewPan on 2019-02-25.
+// Copyright (c) 2019 NewPan. All rights reserved.
 //
 
-#import "UITableView+WebVideoCache.h"
-#import "JPVideoPlayerCollectionViewHelper.h"
+#import "JPVideoPlayerCellProtocol.h"
 
-@protocol JPCollectionViewPlayVideoDelegate;
+typedef NS_ENUM(NSUInteger, JPScrollPlayStrategyType) {
+    /**
+     * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of cell
+     *  to the center of `jp_tableViewVisibleFrame`, h1 on bottom picture.
+     */
+     JPScrollPlayStrategyTypeBestCell = 0,
 
-@interface UICollectionView (videoPlayer)
+    /**
+     * `JPScrollFindBestCell` strategy mean find which cell need play video by the space from the center of videoView
+     *  to the center of `jp_tableViewVisibleFrame`, h2 on bottom picture.
+     */
+    JPScrollPlayStrategyTypeBestVideoView,
+};
 
-@property (nonatomic) id<JPCollectionViewPlayVideoDelegate> jp_delegate;
+typedef UIView<JPVideoPlayerCellProtocol> *_Nullable (^JPPlayVideoInVisibleCellsBlock)(NSArray<UIView<JPVideoPlayerCellProtocol>  *> *_Nullable visibleCells);
+
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol JPVideoPlayerScrollViewProtocol;
+
+@protocol JPScrollViewPlayVideoDelegate<NSObject>
+
+@optional
+
+/**
+ * This method will be call when call `jp_playVideoInVisibleCellsIfNeed` and the find the best cell to play video when
+ * tableView or collectionView scroll end.
+ *
+ * @param tableView The tableView or collectionView.
+ * @param cell      The cell ready to play video, you can call `[cell.jp_videoPlayView jp_playVideoMuteWithURL:cell.jp_videoURL progressView:nil]`
+ *                  or other method given to play video.
+ */
+- (void)scrollView:(UIScrollView<JPVideoPlayerScrollViewProtocol> *)scrollView willPlayVideoOnCell:(UIView<JPVideoPlayerCellProtocol>  *)cell;
+
+@end
+
+@protocol JPVideoPlayerScrollViewProtocol <NSObject>
+
+@property (nonatomic) id<JPScrollViewPlayVideoDelegate> jp_delegate;
 
 /**
  * The cell is playing video.
  */
-@property(nonatomic, readonly, nullable) UICollectionViewCell *jp_playingVideoCell;
+@property(nonatomic, readonly, nullable) UIView<JPVideoPlayerCellProtocol> *jp_playingVideoCell;
 
 /**
  * The visible frame of tableView. `visible` mean when the tableView frame is {0, 0, screenWidth, screenHeight},
@@ -28,7 +58,7 @@
  *
  * @warning This value must be not empty.
  */
-@property (nonatomic) CGRect jp_collectionViewVisibleFrame;
+@property (nonatomic) CGRect jp_scrollViewVisibleFrame;
 
 /**
  * The play cell strategy when tableView stop scroll, `JPScrollFindStrategyBestCell` by default.
@@ -75,17 +105,17 @@
  *
  * @note You can custom this dictionary.
  */
-@property (nonatomic) NSDictionary<NSString *, NSString *> *jp_unreachableCellDictionary;
+@property (nonatomic) NSDictionary<NSString *, NSNumber *> *jp_unreachableCellDictionary;
 
 /**
  * Use this block to custom choosing cell process when call `jp_playVideoInVisibleCellsIfNeed`.
  */
-@property(nonatomic) JPPlayVideoInVisibleCollectionCellsBlock jp_playVideoInVisibleCellsBlock;
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock jp_playVideoInVisibleCellsBlock;
 
 /**
  * Use this block to custom finding the best cell process when scrollView did stop scroll.
  */
-@property(nonatomic) JPPlayVideoInVisibleCollectionCellsBlock jp_findBestCellInVisibleCellsBlock;
+@property(nonatomic) JPPlayVideoInVisibleCellsBlock jp_findBestCellInVisibleCellsBlock;
 
 /**
  * This method be used to find the first cell need to play video in visible cells.
@@ -107,12 +137,12 @@
 /**
  * This method must be called in `-tableView:cellForRowAtIndexPath:`, and pass cell and indexPath in.
  *
- * @param cell      A `UICollectionViewCell`.
+ * @param cell      A `UITableViewCell`.
  * @param indexPath The indexPath of cell.
  *
  * @warning This method must be call in given method.
  */
-- (void)jp_handleCellUnreachableTypeForCell:(UICollectionViewCell *)cell
+- (void)jp_handleCellUnreachableTypeForCell:(UIView<JPVideoPlayerCellProtocol> *)cell
                                 atIndexPath:(NSIndexPath *)indexPath;
 
 /**
@@ -148,3 +178,5 @@
 - (BOOL)jp_viewIsVisibleInVisibleFrameAtScrollViewDidScroll:(UIView *)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

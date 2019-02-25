@@ -11,6 +11,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JPResourceLoadingRequestTask.h"
+#import "UITableViewCell+WebVideoCache.h"
 #import "UITableView+WebVideoCache.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -70,6 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (JPSwizzle)
 
 + (BOOL)jp_swizzleMethod:(SEL)origSel withMethod:(SEL)altSel error:(NSError**)error;
+
++ (BOOL)jp_swizzleClassMethod:(SEL)origSel_ withClassMethod:(SEL)altSel_ error:(NSError**)error_;
 
 @end
 
@@ -179,15 +182,15 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @end
 
-@protocol JPTableViewPlayVideoDelegate;
+@protocol JPScrollViewPlayVideoDelegate;
 
-@interface JPVideoPlayerTableViewHelper : NSObject
+@interface JPVideoPlayerScrollViewInternalObject : NSObject
 
-@property (nonatomic, weak, readonly, nullable) UITableView *tableView;
+@property (nonatomic, weak, readonly, nullable) UIScrollView<JPVideoPlayerScrollViewProtocol> *scrollView;
 
-@property (nonatomic, weak, readonly) UITableViewCell *playingVideoCell;
+@property (nonatomic, weak, readonly, nullable) UIView<JPVideoPlayerCellProtocol> *playingVideoCell;
 
-@property (nonatomic, assign) CGRect tableViewVisibleFrame;
+@property (nonatomic, assign) CGRect scrollViewVisibleFrame;
 
 @property (nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
 
@@ -195,15 +198,19 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @property(nonatomic) JPPlayVideoInVisibleCellsBlock findBestCellInVisibleCellsBlock;
 
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *unreachableCellDictionary;
+@property (nonatomic, strong) NSDictionary<NSString *, NSNumber *> *unreachableCellDictionary;
 
-@property (nonatomic, weak) id<JPTableViewPlayVideoDelegate> delegate;
+@property (nonatomic, weak) id<JPScrollViewPlayVideoDelegate> delegate;
 
 @property (nonatomic, assign) NSUInteger playVideoSection;
 
-- (instancetype)initWithTableView:(UITableView *)tableView NS_DESIGNATED_INITIALIZER;
++ (instancetype)new NS_UNAVAILABLE;
 
-- (void)handleCellUnreachableTypeForCell:(UITableViewCell *)cell
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithScrollView:(UIScrollView<JPVideoPlayerScrollViewProtocol> *)scrollView NS_DESIGNATED_INITIALIZER;
+
+- (void)handleCellUnreachableTypeForCell:(UIView<JPVideoPlayerCellProtocol> *)cell
                              atIndexPath:(NSIndexPath *)indexPath;
 
 - (void)handleCellUnreachableTypeInVisibleCellsAfterReloadData;
