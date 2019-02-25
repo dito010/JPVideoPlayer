@@ -192,11 +192,9 @@ didReceiveResponse:(NSURLResponse *)response
         self.expectedSize = expected;
         
         // there are a lot of MIMETypes represent audio and video
-        NSMutableArray *supportedMIMETypes = [JPVideoPlayerDownloaderSupportedMIMETypes mutableCopy];
-        [supportedMIMETypes addObjectsFromArray:@[@"video", @"audio"]];
-        
         BOOL isSupportedMIMEType = NO;
-        for (NSString *type in supportedMIMETypes) {
+        
+        for (NSString *type in JPVideoPlayerDownloaderSupportedMIMETypes) {
             if ([response.MIMEType containsString:type]) {
                 isSupportedMIMEType = YES;
                 break;
