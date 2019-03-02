@@ -38,7 +38,9 @@
 
     self.collectionView.frame = self.view.bounds;
 
-    CGRect scrollViewVisibleFrame = self.collectionView.bounds;
+    CGRect scrollViewVisibleFrame = self.collectionView.frame;
+    scrollViewVisibleFrame.origin.x = 0.f;
+    scrollViewVisibleFrame.origin.y = 0.f;
     scrollViewVisibleFrame.size.height -= self.tabBarController.tabBar.bounds.size.height;
     self.collectionView.jp_scrollViewVisibleFrame = scrollViewVisibleFrame;
 }

@@ -137,7 +137,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return The prefer audio session category.
  */
-- (NSString *)preferAudioSessionCategory;
+- (AVAudioSessionCategory)preferAudioSessionCategory;
 
 /**
  * Called when play a already played video, `NO` by default, return `YES` to enable resume playback from a playback record.

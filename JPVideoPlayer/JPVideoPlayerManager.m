@@ -32,16 +32,14 @@
 @end
 
 @interface JPVideoPlayerManager()<JPVideoPlayerInternalDelegate,
-                                  JPVideoPlayerDownloaderDelegate,
-                                  JPApplicationStateMonitorDelegate>
+        JPVideoPlayerDownloaderDelegate,
+        JPApplicationStateMonitorDelegate>
 
 @property (strong, nonatomic, readwrite, nonnull) JPVideoPlayerCache *videoCache;
 
 @property (strong, nonatomic) JPVideoPlayerDownloader *videoDownloader;
 
 @property (strong, nonatomic, nonnull) NSMutableSet<NSURL *> *failedURLs;
-
-@property (nonatomic) pthread_mutex_t lock;
 
 @property(nonatomic, assign) BOOL isReturnWhenApplicationDidEnterBackground;
 
@@ -52,6 +50,8 @@
 @property (nonatomic, strong) JPVideoPlayerManagerModel *managerModel;
 
 @property (nonatomic, strong) JPVideoPlayer *videoPlayer;
+
+@property(nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -90,16 +90,13 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
         _videoCache = cache;
         _videoDownloader = downloader;
         _failedURLs = [NSMutableSet new];
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_lock, &mutexattr);
         _videoPlayer = [JPVideoPlayer new];
         _videoPlayer.delegate = self;
         _isReturnWhenApplicationDidEnterBackground = NO;
         _isReturnWhenApplicationWillResignActive = NO;
         _applicationStateMonitor = [JPApplicationStateMonitor new];
         _applicationStateMonitor.delegate = self;
+        _syncQueue = dispatch_queue_create("com.jpvideoplayer.manager.sync.queue.www", DISPATCH_QUEUE_SERIAL);
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(audioSessionInterruptionNotification:)
                                                    name:AVAudioSessionInterruptionNotification
@@ -121,7 +118,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
            configuration:(JPPlayVideoConfiguration)configuration {
     JPAssertMainThread;
     if(!url || !showLayer){
-        JPErrorLog(@"url and showLayer can not be nil");
+        JPErrorLog(@"url and showLayer can not be nil.");
         return;
     }
 
@@ -143,11 +140,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     self.managerModel.videoURL = url;
     BOOL isFailedUrl = NO;
     if (url) {
-        int lock = pthread_mutex_trylock(&_lock);
         isFailedUrl = [self.failedURLs containsObject:url];
-        if (!lock) {
-            pthread_mutex_unlock(&_lock);
-        }
     }
 
     if (url.absoluteString.length == 0 || (!(options & JPVideoPlayerRetryFailed) && isFailedUrl)) {
@@ -188,12 +181,16 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 
             if (!videoPath && (![self.delegate respondsToSelector:@selector(videoPlayerManager:shouldDownloadVideoForURL:)] || [self.delegate videoPlayerManager:self shouldDownloadVideoForURL:url])) {
                 // play web video.
-                JPDebugLog(@"Start play a web video: %@", url);
-                self.managerModel.cacheType = JPVideoPlayerCacheTypeNone;
-                [self.videoPlayer playVideoWithURL:url
-                                           options:options
-                                         showLayer:showLayer
-                                     configuration:configuration];
+                JPDispatchAsyncOnQueue(self.syncQueue, ^{
+
+                    JPDebugLog(@"Start play a web video: %@", url);
+                    self.managerModel.cacheType = JPVideoPlayerCacheTypeNone;
+                    [self.videoPlayer playVideoWithURL:url
+                                               options:options
+                                             showLayer:showLayer
+                                         configuration:configuration];
+
+                });
             }
             else if (videoPath) {
                 self.managerModel.cacheType = JPVideoPlayerCacheTypeExisted;
@@ -275,55 +272,91 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
 - (void)setRate:(float)rate {
-    [self.videoPlayer setRate:rate];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer setRate:rate];
+    });
 }
 
 - (float)rate {
-    return self.videoPlayer.rate;
+    __block float rate = 0.f;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        rate = self.videoPlayer.rate;
+    });
+    return rate;
 }
 
 - (void)setMuted:(BOOL)muted {
-    [self.videoPlayer setMuted:muted];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer setMuted:muted];
+    });
 }
 
 - (BOOL)muted {
-    return self.videoPlayer.muted;
+    __block BOOL muted;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        muted = self.videoPlayer.muted;
+    });
+    return muted;
 }
 
 - (void)setVolume:(float)volume {
-    [self.videoPlayer setVolume:volume];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer setVolume:volume];
+    });
 }
 
 - (float)volume {
-    return self.videoPlayer.volume;
+    __block float volume = 0.f;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        volume = self.videoPlayer.volume;
+    });
+    return volume;
 }
 
 - (void)seekToTime:(CMTime)time {
-    [self.videoPlayer seekToTime:time];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer seekToTime:time];
+    });
 }
 
 - (NSTimeInterval)elapsedSeconds {
-    return [self.videoPlayer elapsedSeconds];
+    __block NSTimeInterval elapsedSeconds = 0.0;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        elapsedSeconds = [self.videoPlayer elapsedSeconds];
+    });
+    return elapsedSeconds;
 }
 
 - (NSTimeInterval)totalSeconds {
-    return [self.videoPlayer totalSeconds];
+    __block NSTimeInterval totalSeconds = 0.0;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        totalSeconds = [self.videoPlayer totalSeconds];
+    });
+    return totalSeconds;
 }
 
 - (void)pause {
-    [self.videoPlayer pause];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer pause];
+    });
 }
 
 - (void)resume {
-    [self.videoPlayer resume];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [self.videoPlayer resume];
+    });
 }
 
 - (CMTime)currentTime {
-    return self.videoPlayer.currentTime;
+    __block CMTime currentTime;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        currentTime = self.videoPlayer.currentTime;
+    });
+    return currentTime;
 }
 
 - (void)stopPlay {
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
         [self.videoDownloader cancel];
         [self.videoPlayer stopPlay];
         [self reset];
@@ -430,24 +463,16 @@ didCompleteWithError:(NSError *)error {
                 && error.code != NSURLErrorDataNotAllowed
                 && error.code != NSURLErrorCannotFindHost
                 && error.code != NSURLErrorCannotConnectToHost) {
-            int lock = pthread_mutex_trylock(&_lock);
             if(self.managerModel.videoURL){
                 [self.failedURLs addObject:self.managerModel.videoURL];
-            }
-            if (!lock) {
-                pthread_mutex_unlock(&_lock);
             }
         }
         [self stopPlay];
     }
     else {
         if ((self.videoPlayer.playerModel.playerOptions & JPVideoPlayerRetryFailed)) {
-            int lock = pthread_mutex_trylock(&_lock);
             if ([self.failedURLs containsObject:self.managerModel.videoURL]) {
                 [self.failedURLs removeObject:self.managerModel.videoURL];
-            }
-            if (!lock) {
-                pthread_mutex_unlock(&_lock);
             }
         }
     }
@@ -466,7 +491,7 @@ didCompleteWithError:(NSError *)error {
         BOOL needPause = YES;
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationWillResignActiveForURL:)]) {
             needPause = [self.delegate videoPlayerManager:self
-            shouldPausePlaybackWhenApplicationWillResignActiveForURL:self.managerModel.videoURL];
+ shouldPausePlaybackWhenApplicationWillResignActiveForURL:self.managerModel.videoURL];
         }
         if(!needPause){
             self.isReturnWhenApplicationWillResignActive = YES;
@@ -486,7 +511,7 @@ didCompleteWithError:(NSError *)error {
         BOOL needPause = YES;
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:)]) {
             needPause = [self.delegate videoPlayerManager:self
-      shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:self.managerModel.videoURL];
+shouldPausePlaybackWhenApplicationDidEnterBackgroundForURL:self.managerModel.videoURL];
         }
         if(!needPause){
             return;
@@ -506,7 +531,7 @@ didCompleteWithError:(NSError *)error {
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:)]) {
         BOOL needResume = [self.delegate videoPlayerManager:self
-       shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:self.managerModel.videoURL];
+shouldResumePlaybackWhenApplicationDidBecomeActiveFromBackgroundForURL:self.managerModel.videoURL];
         if(needResume){
             [self.videoPlayer resume];
             [self activeAudioSessionIfNeed];
@@ -541,13 +566,9 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 }
 
 - (void)reset {
-    int lock = pthread_mutex_trylock(&_lock);
     self.managerModel = nil;
-    _isReturnWhenApplicationDidEnterBackground = NO;
-    _isReturnWhenApplicationWillResignActive = NO;
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
+    self.isReturnWhenApplicationDidEnterBackground = NO;
+    self.isReturnWhenApplicationWillResignActive = NO;
 }
 
 - (JPVideoPlayerDownloaderOptions)fetchDownloadOptionsWithOptions:(JPVideoPlayerOptions)options {
@@ -563,7 +584,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 }
 
 - (void)callVideoLengthDelegateMethodWithVideoLength:(NSUInteger)videoLength {
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchAsyncOnMainQueue(^{
         if([self.delegate respondsToSelector:@selector(videoPlayerManager:didFetchVideoFileLength:)]){
             [self.delegate videoPlayerManager:self
                       didFetchVideoFileLength:videoLength];
@@ -575,7 +596,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                                         expectedSize:(NSUInteger)expectedSize
                                            cacheType:(JPVideoPlayerCacheType)cacheType
                                                error:(nullable NSError *)error {
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchAsyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerDownloadProgressDidChange:cacheType:fragmentRanges:expectedSize:error:)]) {
             [self.delegate videoPlayerManagerDownloadProgressDidChange:self
                                                              cacheType:cacheType
@@ -589,7 +610,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 - (void)callPlayDelegateMethodWithElapsedSeconds:(double)elapsedSeconds
                                     totalSeconds:(double)totalSeconds
                                            error:(nullable NSError *)error {
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchAsyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerPlayProgressDidChange:elapsedSeconds:totalSeconds:error:)]) {
             [self.delegate videoPlayerManagerPlayProgressDidChange:self
                                                     elapsedSeconds:elapsedSeconds
@@ -606,57 +627,63 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
                          options:(JPVideoPlayerOptions)options
                        showLayer:(CALayer *)showLayer
          configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
-    JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
-                                                           options:options
-                                                         showLayer:showLayer
-                                                     configuration:configurationCompletion];
-    self.managerModel.fileLength = model.resourceLoader.cacheFile.fileLength;
-    self.managerModel.fragmentRanges = model.resourceLoader.cacheFile.fragmentRanges;
-    [self callVideoLengthDelegateMethodWithVideoLength:model.resourceLoader.cacheFile.fileLength];
-    [self callDownloadDelegateMethodWithFragmentRanges:model.resourceLoader.cacheFile.fragmentRanges
-                                          expectedSize:model.resourceLoader.cacheFile.fileLength
-                                             cacheType:self.managerModel.cacheType
-                                                 error:nil];
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
+        JPVideoPlayerModel *model = [self.videoPlayer playVideoWithURL:url
+                                                               options:options
+                                                             showLayer:showLayer
+                                                         configuration:configurationCompletion];
+        self.managerModel.fileLength = model.resourceLoader.cacheFile.fileLength;
+        self.managerModel.fragmentRanges = model.resourceLoader.cacheFile.fragmentRanges;
+        [self callVideoLengthDelegateMethodWithVideoLength:model.resourceLoader.cacheFile.fileLength];
+        [self callDownloadDelegateMethodWithFragmentRanges:model.resourceLoader.cacheFile.fragmentRanges
+                                              expectedSize:model.resourceLoader.cacheFile.fileLength
+                                                 cacheType:self.managerModel.cacheType
+                                                     error:nil];
+    });
 }
+
 
 - (void)playLocalVideoWithShowLayer:(CALayer *)showLayer
                                 url:(NSURL *)url
                             options:(JPVideoPlayerOptions)options
             configurationCompletion:(JPPlayVideoConfiguration)configurationCompletion {
-    JPDebugLog(@"Start play a local video: %@", url);
     // local file.
-    NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        self.managerModel.cacheType = JPVideoPlayerCacheTypeLocation;
-        self.managerModel.fileLength = (NSUInteger)[self fetchFileSizeAtPath:path];;
-        self.managerModel.fragmentRanges = @[[NSValue valueWithRange:NSMakeRange(0, self.managerModel.fileLength)]];
-        [self callVideoLengthDelegateMethodWithVideoLength:self.managerModel.fileLength];
-        [self callDownloadDelegateMethodWithFragmentRanges:self.managerModel.fragmentRanges
-                                              expectedSize:self.managerModel.fileLength
-                                                 cacheType:self.managerModel.cacheType
-                                                     error:nil];
-        [self.videoPlayer playExistedVideoWithURL:url
-                               fullVideoCachePath:path
-                                          options:options
-                                      showOnLayer:showLayer
-                                    configuration:configurationCompletion];
-    }
-    else{
-        NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
-                                             code:NSURLErrorFileDoesNotExist
-                                         userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
-        [self callDownloadDelegateMethodWithFragmentRanges:nil
-                                              expectedSize:1
-                                                 cacheType:JPVideoPlayerCacheTypeNone
-                                                     error:error];
-    }
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
+        JPDebugLog(@"Start play a local video: %@", url);
+        NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            self.managerModel.cacheType = JPVideoPlayerCacheTypeLocation;
+            self.managerModel.fileLength = (NSUInteger)[self fetchFileSizeAtPath:path];;
+            self.managerModel.fragmentRanges = @[[NSValue valueWithRange:NSMakeRange(0, self.managerModel.fileLength)]];
+            [self callVideoLengthDelegateMethodWithVideoLength:self.managerModel.fileLength];
+            [self callDownloadDelegateMethodWithFragmentRanges:self.managerModel.fragmentRanges
+                                                  expectedSize:self.managerModel.fileLength
+                                                     cacheType:self.managerModel.cacheType
+                                                         error:nil];
+            [self.videoPlayer playExistedVideoWithURL:url
+                                   fullVideoCachePath:path
+                                              options:options
+                                          showOnLayer:showLayer
+                                        configuration:configurationCompletion];
+        }
+        else{
+            NSError *error = [NSError errorWithDomain:JPVideoPlayerErrorDomain
+                                                 code:NSURLErrorFileDoesNotExist
+                                             userInfo:@{NSLocalizedDescriptionKey : @"The file of given URL not exists"}];
+            [self callDownloadDelegateMethodWithFragmentRanges:nil
+                                                  expectedSize:1
+                                                     cacheType:JPVideoPlayerCacheTypeNone
+                                                         error:error];
+        }
+
+    });
 }
 
 
 #pragma mark - AudioSession
 
 - (void)activeAudioSessionIfNeed {
-    NSString *audioSessionCategory = AVAudioSessionCategoryPlayback;
+    AVAudioSessionCategory audioSessionCategory = AVAudioSessionCategoryPlayback;
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManagerPreferAudioSessionCategory:)]) {
         audioSessionCategory = [self.delegate videoPlayerManagerPreferAudioSessionCategory:self];
     }

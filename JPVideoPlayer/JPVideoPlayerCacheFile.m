@@ -54,7 +54,6 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (instancetype)initWithFilePath:(NSString *)filePath
                    indexFilePath:(NSString *)indexFilePath {
-    JPAssertMainThread;
     if (!filePath.length || !indexFilePath.length) {
         JPErrorLog(@"filePath and indexFilePath can not be nil.");
         return nil;

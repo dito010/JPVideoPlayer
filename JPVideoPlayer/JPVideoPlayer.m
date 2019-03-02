@@ -243,7 +243,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }
     self.playerModel = model;
     if(configuration){
-        configuration([UIView new], model);
+        JPDispatchSyncOnMainQueue(^{
+
+            configuration([UIView new], model);
+
+        });
     }
     return model;
 }
@@ -286,7 +290,11 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         model.player.muted = YES;
     }
     if(configuration){
-        configuration([UIView new], model);
+        JPDispatchSyncOnMainQueue(^{
+
+            configuration([UIView new], model);
+
+        });
     }
     return model;
 }
@@ -294,6 +302,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (void)resumePlayWithShowLayer:(CALayer *)showLayer
                         options:(JPVideoPlayerOptions)options
                   configuration:(JPPlayVideoConfiguration)configuration {
+    JPAssertMainThread;
     if (!showLayer) {
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return;
@@ -346,7 +355,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (float)rate {
     if(!self.playerModel){
-        return 0;
+        return 0.f;
     }
     return self.playerModel.rate;
 }
@@ -374,7 +383,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (float)volume {
     if(!self.playerModel){
-        return 0;
+        return 0.f;
     }
     return self.playerModel.volume;
 }
@@ -507,7 +516,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
         AVPlayerItemStatus status = playerItem.status;
         switch (status) {
             case AVPlayerItemStatusUnknown:{
-                self.playerStatus = AVPlayerItemStatusUnknown;
+                self.playerStatus = JPVideoPlayerStatusUnknown;
                 [self callPlayerStatusDidChangeDelegateMethod];
             }
                 break;
@@ -765,7 +774,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
 - (void)callDelegateMethodWithError:(NSError *)error {
     JPErrorLog(@"Player abort because of error: %@", error);
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchAsyncOnMainQueue(^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:playFailedWithError:)]) {
             [self.delegate videoPlayer:self playFailedWithError:error];
         }

@@ -157,7 +157,7 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
  *
  * @return The prefer audio session category.
  */
-- (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
+- (AVAudioSessionCategory)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
 
 /**
  * Called when play a already played video.
