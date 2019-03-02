@@ -192,6 +192,8 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @property (nonatomic, assign) CGRect scrollViewVisibleFrame;
 
+@property(nonatomic, assign) BOOL debugScrollViewVisibleFrame;
+
 @property (nonatomic, assign) JPScrollPlayStrategyType scrollPlayStrategyType;
 
 @property(nonatomic) JPPlayVideoInVisibleCellsBlock playVideoInVisibleCellsBlock;

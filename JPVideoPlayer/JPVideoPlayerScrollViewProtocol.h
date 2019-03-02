@@ -61,6 +61,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGRect jp_scrollViewVisibleFrame;
 
 /**
+ * Display visible frame of the scrollView for debug, default is NO.
+ */
+@property(nonatomic, assign) BOOL jp_debugScrollViewVisibleFrame;
+
+/**
  * The play cell strategy when tableView stop scroll, `JPScrollFindStrategyBestCell` by default.
  *
  * @see `JPScrollFindStrategy`.

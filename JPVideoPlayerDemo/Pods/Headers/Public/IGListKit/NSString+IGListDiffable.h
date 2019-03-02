@@ -1,1 +1,0 @@
-../../../IGListKit/Source/Common/NSString+IGListDiffable.h

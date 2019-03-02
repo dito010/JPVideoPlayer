@@ -405,6 +405,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @property (nonatomic, weak) UIView<JPVideoPlayerCellProtocol> *playingVideoCell;
 
+@property(nonatomic, strong) CAShapeLayer *debugScrollViewVisibleFrameLayer;
+
 @end
 
 @implementation JPVideoPlayerScrollViewInternalObject
@@ -549,8 +551,47 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     return [self viewIsVisibleInTableViewVisibleFrame:view];
 }
 
+- (void)setDebugScrollViewVisibleFrame:(BOOL)debugScrollViewVisibleFrame {
+    _debugScrollViewVisibleFrame = debugScrollViewVisibleFrame;
+    [self displayScrollViewVisibleFrame:debugScrollViewVisibleFrame];
+}
+
+- (void)setScrollViewVisibleFrame:(CGRect)scrollViewVisibleFrame {
+    _scrollViewVisibleFrame = scrollViewVisibleFrame;
+    [self displayScrollViewVisibleFrame:self.debugScrollViewVisibleFrame];
+}
+
 
 #pragma mark - Private
+
+- (void)displayScrollViewVisibleFrame:(BOOL)display {
+    if (CGRectEqualToRect(self.scrollViewVisibleFrame, CGRectZero)) return;
+
+    if (self.debugScrollViewVisibleFrameLayer) {
+        [self.debugScrollViewVisibleFrameLayer removeFromSuperlayer];
+    }
+
+    if (!display) return;
+
+    self.debugScrollViewVisibleFrameLayer = ({
+        CAShapeLayer *layer = [CAShapeLayer new];
+        CGRect rect = self.scrollViewVisibleFrame;
+        layer.frame = rect;
+        rect.origin.y = 0.f;
+        rect.origin.x += 3.f;
+        rect.size.width -= 6.f;
+        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRect:rect];
+        [bezierPath moveToPoint:CGPointMake(rect.origin.x, CGRectGetMaxY(rect) * 0.5f)];
+        [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect) * 0.5f)];
+        layer.path = bezierPath.CGPath;
+        layer.lineWidth = 1.f;
+        layer.strokeColor = [UIColor redColor].CGColor;
+        layer.fillColor = [UIColor clearColor].CGColor;
+        [self.scrollView.superview.layer addSublayer:layer];
+
+        layer;
+    });
+}
 
 - (BOOL)playingCellIsVisible {
     if(CGRectIsEmpty(self.scrollViewVisibleFrame)){
@@ -582,7 +623,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     return !(!isTopContain && !isBottomContain);
 }
 
-- (UITableViewCell *)findTheBestPlayVideoCell {
+- (UIView<JPVideoPlayerCellProtocol> *)findBestCellForPlayingVideo {
     if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return nil;
     if(CGRectIsEmpty(self.scrollViewVisibleFrame)) return nil;
 
@@ -620,8 +661,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
                 }
             }
             else if (cell.jp_unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
-                CGPoint strategyViewLeftUpPoint = cell.frame.origin;
-                CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + cell.bounds.size.height;
+                CGPoint strategyViewLeftUpPoint = strategyView.frame.origin;
+                CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + strategyView.bounds.size.height;
                 CGPoint strategyViewLeftDownPoint = CGPointMake(strategyViewLeftUpPoint.x, strategyViewDownY);
                 strategyViewLeftDownPoint.y -= 1;
                 CGPoint coordinatePoint = [strategyView.superview convertPoint:strategyViewLeftDownPoint toView:nil];
@@ -684,7 +725,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (void)handleScrollStopIfNeed {
-    UITableViewCell *bestCell = [self findTheBestPlayVideoCell];
+    UITableViewCell *bestCell = [self findBestCellForPlayingVideo];
     if(!bestCell){
         return;
     }

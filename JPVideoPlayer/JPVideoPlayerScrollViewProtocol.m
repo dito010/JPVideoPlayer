@@ -29,6 +29,14 @@
     return self.helper.scrollViewVisibleFrame;
 }
 
+- (void)setJp_debugScrollViewVisibleFrame:(BOOL)jp_debugScrollViewVisibleFrame {
+    self.helper.debugScrollViewVisibleFrame = jp_debugScrollViewVisibleFrame;
+}
+
+- (BOOL)jp_debugScrollViewVisibleFrame {
+    return self.helper.debugScrollViewVisibleFrame;
+}
+
 - (void)setJp_scrollPlayStrategyType:(JPScrollPlayStrategyType)jp_scrollPlayStrategyType {
     self.helper.scrollPlayStrategyType = jp_scrollPlayStrategyType;
 }

@@ -17,10 +17,6 @@
 
 @interface JPVideoPlayerWeiBoListViewController ()<JPScrollViewPlayVideoDelegate>
 
-/**
- * Arrary of video paths.
- * 播放路径数组集合.
- */
 @property(nonatomic, strong, nonnull)NSArray *pathStrings;
 
 @end
@@ -136,9 +132,10 @@
 }
 
 
-#pragma mark - JPTableViewPlayVideoDelegate
+#pragma mark - JPScrollViewPlayVideoDelegate
 
-- (void)scrollView:(UITableView *)tableView willPlayVideoOnCell:(UITableViewCell *)cell {
+- (void)scrollView:(UIScrollView<JPVideoPlayerScrollViewProtocol> *)scrollView
+willPlayVideoOnCell:(UIView<JPVideoPlayerCellProtocol>  *)cell {
     [cell.jp_videoPlayView jp_resumeMutePlayWithURL:cell.jp_videoURL
                                  bufferingIndicator:nil
                                        progressView:nil
