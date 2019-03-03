@@ -272,91 +272,55 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 #pragma mark - JPVideoPlayerPlaybackProtocol
 
 - (void)setRate:(float)rate {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer setRate:rate];
-    });
+    [self.videoPlayer setRate:rate];
 }
 
 - (float)rate {
-    __block float rate = 0.f;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        rate = self.videoPlayer.rate;
-    });
-    return rate;
+    return self.videoPlayer.rate;
 }
 
 - (void)setMuted:(BOOL)muted {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer setMuted:muted];
-    });
+    [self.videoPlayer setMuted:muted];
 }
 
 - (BOOL)muted {
-    __block BOOL muted;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        muted = self.videoPlayer.muted;
-    });
-    return muted;
+    return self.videoPlayer.muted;
 }
 
 - (void)setVolume:(float)volume {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer setVolume:volume];
-    });
+    [self.videoPlayer setVolume:volume];
 }
 
 - (float)volume {
-    __block float volume = 0.f;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        volume = self.videoPlayer.volume;
-    });
-    return volume;
+    return self.videoPlayer.volume;
 }
 
-- (void)seekToTime:(CMTime)time {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer seekToTime:time];
-    });
+- (BOOL)seekToTime:(CMTime)time {
+    return [self.videoPlayer seekToTime:time];
 }
 
 - (NSTimeInterval)elapsedSeconds {
-    __block NSTimeInterval elapsedSeconds = 0.0;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        elapsedSeconds = [self.videoPlayer elapsedSeconds];
-    });
-    return elapsedSeconds;
+    return [self.videoPlayer elapsedSeconds];
 }
 
 - (NSTimeInterval)totalSeconds {
-    __block NSTimeInterval totalSeconds = 0.0;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        totalSeconds = [self.videoPlayer totalSeconds];
-    });
-    return totalSeconds;
+    return [self.videoPlayer totalSeconds];
 }
 
 - (void)pause {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer pause];
-    });
+    [self.videoPlayer pause];
 }
 
 - (void)resume {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        [self.videoPlayer resume];
-    });
+    [self.videoPlayer resume];
 }
 
 - (CMTime)currentTime {
-    __block CMTime currentTime;
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
-        currentTime = self.videoPlayer.currentTime;
-    });
-    return currentTime;
+    return self.videoPlayer.currentTime;
 }
 
 - (void)stopPlay {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
+    JPDispatchSyncOnMainQueue(^{
         [self.videoDownloader cancel];
         [self.videoPlayer stopPlay];
         [self reset];

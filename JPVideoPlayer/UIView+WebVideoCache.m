@@ -385,8 +385,8 @@
     return JPVideoPlayerManager.sharedManager.volume;
 }
 
-- (void)jp_seekToTime:(CMTime)time {
-    [[JPVideoPlayerManager sharedManager] seekToTime:time];
+- (BOOL)jp_seekToTime:(CMTime)time {
+    return [[JPVideoPlayerManager sharedManager] seekToTime:time];
 }
 
 - (NSTimeInterval)jp_elapsedSeconds {

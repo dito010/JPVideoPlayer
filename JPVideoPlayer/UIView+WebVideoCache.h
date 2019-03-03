@@ -322,7 +322,7 @@ NS_ASSUME_NONNULL_BEGIN
 *
 * @param time The time where seek to.
 */
-- (void)jp_seekToTime:(CMTime)time;
+- (BOOL)jp_seekToTime:(CMTime)time;
 
 /**
  * Fetch the elapsed seconds of player.

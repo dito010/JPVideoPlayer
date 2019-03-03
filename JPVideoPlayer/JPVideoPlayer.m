@@ -16,44 +16,23 @@
 
 @interface JPVideoPlayerModel()
 
-/**
- * The playing URL.
- */
 @property(nonatomic, strong, nullable)NSURL *url;
 
 /**
- * The view of the video picture will show on.
+ * The layer of the video picture will show on.
  */
 @property(nonatomic, weak, nullable)CALayer *unownedShowLayer;
 
-/**
- * options,
- */
 @property(nonatomic, assign)JPVideoPlayerOptions playerOptions;
 
-/**
- * The Player to play video.
- */
 @property(nonatomic, strong, nullable)AVPlayer *player;
 
-/**
- * The current player's layer.
- */
 @property(nonatomic, strong, nullable)AVPlayerLayer *playerLayer;
 
-/**
- * The current player's item.
- */
 @property(nonatomic, strong, nullable)AVPlayerItem *playerItem;
 
-/**
- * The current player's urlAsset.
- */
 @property(nonatomic, strong, nullable)AVURLAsset *videoURLAsset;
 
-/**
- * A flag to book is cancel play or not.
- */
 @property(nonatomic, assign, getter=isCancelled)BOOL cancelled;
 
 /**
@@ -112,8 +91,9 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     return self.player.volume;
 }
 
-- (void)seekToTime:(CMTime)time {
+- (BOOL)seekToTime:(CMTime)time {
     NSAssert(NO, @"You cannot call this method.");
+    return NO;
 }
 
 - (void)pause {
@@ -167,26 +147,17 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
  */
 @property(nonatomic, strong, nullable)JPVideoPlayerModel *playerModel;
 
-/**
- * The playing status of video player before app enter background.
- */
-@property(nonatomic, assign)JPVideoPlayerStatus playerStatus_beforeEnterBackground;
-
-/*
- * lock.
- */
-@property(nonatomic) pthread_mutex_t lock;
-
 @property (nonatomic, strong) NSTimer *checkBufferingTimer;
 
 @property(nonatomic, assign) JPVideoPlayerStatus playerStatus;
+
+@property(nonatomic, assign) BOOL seekingToTime;
 
 @end
 
 @implementation JPVideoPlayer
 
 - (void)dealloc {
-    pthread_mutex_destroy(&_lock);
     [self stopPlay];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -194,11 +165,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_lock, &mutexattr);
         _playerStatus = JPVideoPlayerStatusUnknown;
+        _seekingToTime = NO;
         [self addObserver];
     }
     return self;
@@ -374,27 +342,29 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     return self.playerModel.volume;
 }
 
-- (void)seekToTime:(CMTime)time {
-    if(!self.playerModel){
-        return;
-    }
-    if(!CMTIME_IS_VALID(time)){
-        return;
+- (BOOL)seekToTime:(CMTime)time {
+    if(!self.playerModel || !CMTIME_IS_VALID(time)) return NO;
+
+    if (self.playerStatus == JPVideoPlayerStatusUnknown || self.playerStatus == JPVideoPlayerStatusFailed || self.playerStatus == JPVideoPlayerStatusStop) {
+        return NO;
     }
 
-    // TODO: seekToTime 只有系统通知可以播放才可用, seekToTime 要把结果回调给使用者来判断是否成功 seek.
     BOOL needResume = self.playerModel.player.rate != 0;
     self.playerModel.lastTime = 0;
     [self internalPauseWithNeedCallDelegate:NO];
+    self.seekingToTime = YES;
     __weak typeof(self) wself = self;
     [self.playerModel.player seekToTime:time completionHandler:^(BOOL finished) {
 
         __strong typeof(wself) sself = wself;
+        sself.seekingToTime = NO;
         if(finished && needResume){
             [sself internalResumeWithNeedCallDelegate:NO];
         }
 
     }];
+
+    return YES;
 }
 
 - (NSTimeInterval)elapsedSeconds {
@@ -710,16 +680,17 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
         double totalSeconds = CMTimeGetSeconds(sItem.playerItem.duration);
         sself.playerModel.elapsedSeconds = elapsedSeconds;
         sself.playerModel.totalSeconds = totalSeconds;
-        if(totalSeconds == 0 || isnan(totalSeconds) || elapsedSeconds > totalSeconds){
-            return;
+        if(totalSeconds == 0 || isnan(totalSeconds) || elapsedSeconds > totalSeconds) return;
+
+        if (!sself.seekingToTime) {
+            JPDispatchSyncOnMainQueue(^{
+                if (sself.delegate && [sself.delegate respondsToSelector:@selector(videoPlayerPlayProgressDidChange:elapsedSeconds:totalSeconds:)]) {
+                    [sself.delegate videoPlayerPlayProgressDidChange:sself
+                                                      elapsedSeconds:elapsedSeconds
+                                                        totalSeconds:totalSeconds];
+                }
+            });
         }
-        JPDispatchSyncOnMainQueue(^{
-            if (sself.delegate && [sself.delegate respondsToSelector:@selector(videoPlayerPlayProgressDidChange:elapsedSeconds:totalSeconds:)]) {
-                [sself.delegate videoPlayerPlayProgressDidChange:sself
-                                                  elapsedSeconds:elapsedSeconds
-                                                    totalSeconds:totalSeconds];
-            }
-        });
 
     }];
 

@@ -166,11 +166,13 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 @property(nonatomic) float volume;
 
 /**
-* Moves the playback cursor.
-*
-* @param time The time where seek to.
+ * Moves the playback cursor.
+ *
+ * @param time The time where seek to.
+ *
+ * @return The result of Moving the playback cursor, YES means succeed, NO means failure.
 */
-- (void)seekToTime:(CMTime)time;
+- (BOOL)seekToTime:(CMTime)time;
 
 /**
  * Fetch the elapsed seconds of player.
