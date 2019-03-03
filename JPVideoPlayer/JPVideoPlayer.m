@@ -41,11 +41,6 @@
 @property(nonatomic, strong, nullable)JPVideoPlayerResourceLoader *resourceLoader;
 
 /**
- * The last play time for player.
- */
-@property(nonatomic, assign)NSTimeInterval lastTime;
-
-/**
  * The play progress observer.
  */
 @property(nonatomic, strong)id timeObserver;
@@ -121,6 +116,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
     // remove observer.
     [self.playerItem removeObserver:self.videoPlayer forKeyPath:@"status"];
+    [self.playerItem removeObserver:self.videoPlayer forKeyPath:@"playbackLikelyToKeepUp"];
+    [self.playerItem removeObserver:self.videoPlayer forKeyPath:@"playbackBufferEmpty"];
     [self.player removeTimeObserver:self.timeObserver];
     [self.player removeObserver:self.videoPlayer forKeyPath:@"rate"];
 
@@ -147,8 +144,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
  */
 @property(nonatomic, strong, nullable)JPVideoPlayerModel *playerModel;
 
-@property (nonatomic, strong) NSTimer *checkBufferingTimer;
-
 @property(nonatomic, assign) JPVideoPlayerStatus playerStatus;
 
 @property(nonatomic, assign) BOOL seekingToTime;
@@ -159,7 +154,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
 - (void)dealloc {
     [self stopPlay];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removePlayerItemDidPlayToEndObserver];
 }
 
 - (instancetype)init{
@@ -167,7 +162,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (self) {
         _playerStatus = JPVideoPlayerStatusUnknown;
         _seekingToTime = NO;
-        [self addObserver];
     }
     return self;
 }
@@ -202,6 +196,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     NSURL *videoPathURL = [NSURL fileURLWithPath:fullVideoCachePath];
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:videoPathURL options:nil];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
+    [self removePlayerItemDidPlayToEndObserver];
+    [self addPlayerItemDidPlayToEndObserver:playerItem];
     JPVideoPlayerModel *model = [self playerModelWithURL:url
                                               playerItem:playerItem
                                                  options:options
@@ -242,6 +238,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
+    [self removePlayerItemDidPlayToEndObserver];
+    [self addPlayerItemDidPlayToEndObserver:playerItem];
     JPVideoPlayerModel *model = [self playerModelWithURL:url
                                               playerItem:playerItem
                                                  options:options
@@ -350,7 +348,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     }
 
     BOOL needResume = self.playerModel.player.rate != 0;
-    self.playerModel.lastTime = 0;
     [self internalPauseWithNeedCallDelegate:NO];
     self.seekingToTime = YES;
     __weak typeof(self) wself = self;
@@ -406,8 +403,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         return;
     }
     [self.playerModel stopPlay];
-    [self stopCheckBufferingTimerIfNeed];
-    [self resetAwakeWaitingTimeInterval];
     self.playerModel = nil;
     self.playerStatus = JPVideoPlayerStatusStop;
     [self callPlayerStatusDidChangeDelegateMethod];
@@ -426,19 +421,17 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
 #pragma mark - App Observer
 
-- (void)addObserver {
+- (void)addPlayerItemDidPlayToEndObserver:(AVPlayerItem *)playerItem {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemDidPlayToEnd:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appReceivedMemoryWarning)
-                                                 name:UIApplicationDidReceiveMemoryWarningNotification
-                                               object:nil];
+                                               object:playerItem];
 }
 
-- (void)appReceivedMemoryWarning {
-    [self.playerModel stopPlay];
+- (void)removePlayerItemDidPlayToEndObserver {
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:AVPlayerItemDidPlayToEndTimeNotification
+                                                object:nil];
 }
 
 
@@ -446,13 +439,10 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
 
 - (void)playerItemDidPlayToEnd:(NSNotification *)notification {
     AVPlayerItem *playerItem = notification.object;
-    if(playerItem != self.playerModel.playerItem){
-        return;
-    }
+    if(playerItem != self.playerModel.playerItem) return;
 
     self.playerStatus = JPVideoPlayerStatusStop;
     [self callPlayerStatusDidChangeDelegateMethod];
-    [self stopCheckBufferingTimerIfNeed];
 
     // ask need automatic replay or not.
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:shouldAutoReplayVideoForURL:)]) {
@@ -467,138 +457,61 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                       ofObject:(id)object
                         change:(NSDictionary<NSString *,id> *)change
                        context:(void *)context{
-    if ([keyPath isEqualToString:@"status"]) {
-        AVPlayerItem *playerItem = (AVPlayerItem *)object;
-        AVPlayerItemStatus status = playerItem.status;
-        switch (status) {
-            case AVPlayerItemStatusUnknown:{
-                self.playerStatus = JPVideoPlayerStatusUnknown;
+    if (object == self.playerModel.player) {
+        if([keyPath isEqualToString:@"rate"]) {
+            float rate = [change[NSKeyValueChangeNewKey] floatValue];
+            if((rate != 0) && (self.playerStatus == JPVideoPlayerStatusReadyToPlay)){
+                self.playerStatus = JPVideoPlayerStatusPlaying;
                 [self callPlayerStatusDidChangeDelegateMethod];
             }
-                break;
-
-            case AVPlayerItemStatusReadyToPlay:{
-                JPDebugLog(@"AVPlayerItemStatusReadyToPlay");
-                self.playerStatus = JPVideoPlayerStatusReadyToPlay;
-                // When get ready to play note, we can go to play, and can add the video picture on show view.
-                if (!self.playerModel) return;
-                [self callPlayerStatusDidChangeDelegateMethod];
-                [self.playerModel.player play];
-                [self displayVideoPicturesOnShowLayer];
-            }
-                break;
-
-            case AVPlayerItemStatusFailed:{
-                [self stopCheckBufferingTimerIfNeed];
-                self.playerStatus = JPVideoPlayerStatusFailed;
-                [self callDelegateMethodWithError:JPErrorWithDescription(@"AVPlayerItemStatusFailed")];
-                [self callPlayerStatusDidChangeDelegateMethod];
-            }
-                break;
-
-            default:
-                break;
         }
     }
-    else if([keyPath isEqualToString:@"rate"]) {
-        float rate = [change[NSKeyValueChangeNewKey] floatValue];
-        if((rate != 0) && (self.playerStatus == JPVideoPlayerStatusReadyToPlay)){
-            self.playerStatus = JPVideoPlayerStatusPlaying;
+    else if (object == self.playerModel.playerItem) {
+        if ([keyPath isEqualToString:@"status"]) {
+            AVPlayerItem *playerItem = (AVPlayerItem *)object;
+            AVPlayerItemStatus status = playerItem.status;
+            switch (status) {
+                case AVPlayerItemStatusUnknown:{
+                    self.playerStatus = JPVideoPlayerStatusUnknown;
+                    [self callPlayerStatusDidChangeDelegateMethod];
+                }
+                    break;
+
+                case AVPlayerItemStatusReadyToPlay:{
+                    JPDebugLog(@"AVPlayerItemStatusReadyToPlay");
+                    self.playerStatus = JPVideoPlayerStatusReadyToPlay;
+                    // When get ready to play note, we can go to play, and can add the video picture on show view.
+                    if (!self.playerModel) return;
+                    [self callPlayerStatusDidChangeDelegateMethod];
+                    [self.playerModel.player play];
+                    [self displayVideoPicturesOnShowLayer];
+                }
+                    break;
+
+                case AVPlayerItemStatusFailed:{
+                    self.playerStatus = JPVideoPlayerStatusFailed;
+                    [self callDelegateMethodWithError:JPErrorWithDescription(@"AVPlayerItemStatusFailed")];
+                    [self callPlayerStatusDidChangeDelegateMethod];
+                }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
+            BOOL playbackLikelyToKeepUp = self.playerModel.playerItem.playbackLikelyToKeepUp;
+            JPDebugLog(@"%@", playbackLikelyToKeepUp ? @"buffering finished, start to play." : @"start buffer.");
+            self.playerStatus = playbackLikelyToKeepUp ? JPVideoPlayerStatusPlaying : JPVideoPlayerStatusBuffering;
             [self callPlayerStatusDidChangeDelegateMethod];
         }
-    }
-}
-
-
-#pragma mark - Timer
-
-- (void)startCheckBufferingTimer {
-    if(self.checkBufferingTimer){
-        [self stopCheckBufferingTimerIfNeed];
-    }
-    self.checkBufferingTimer = ({
-        NSTimer *timer = [NSTimer timerWithTimeInterval:0.5
-                                                 target:self
-                                               selector:@selector(checkBufferingTimeDidChange)
-                                               userInfo:nil
-                                                repeats:YES];
-        [NSRunLoop.mainRunLoop addTimer:timer forMode:NSRunLoopCommonModes];
-
-        timer;
-    });
-}
-
-- (void)stopCheckBufferingTimerIfNeed {
-    if(self.checkBufferingTimer){
-        [self.checkBufferingTimer invalidate];
-        self.checkBufferingTimer = nil;
-    }
-}
-
-- (void)checkBufferingTimeDidChange {
-    NSTimeInterval currentTime = CMTimeGetSeconds(self.playerModel.player.currentTime);
-    if (currentTime != 0 && currentTime > (self.playerModel.lastTime + 0.3)) {
-        self.playerModel.lastTime = currentTime;
-        [self endAwakeFromBuffering];
-        if(self.playerStatus == JPVideoPlayerStatusPlaying){
-            return;
-        }
-        self.playerStatus = JPVideoPlayerStatusPlaying;
-        [self callPlayerStatusDidChangeDelegateMethod];
-    }
-    else{
-        if(self.playerStatus == JPVideoPlayerStatusBuffering){
-            [self startAwakeWhenBuffering];
-            return;
-        }
-        self.playerStatus = JPVideoPlayerStatusBuffering;
-        [self callPlayerStatusDidChangeDelegateMethod];
-    }
-}
-
-
-#pragma mark - Awake When Buffering
-
-static NSTimeInterval _awakeWaitingTimeInterval = 3;
-- (void)resetAwakeWaitingTimeInterval {
-    _awakeWaitingTimeInterval = 3;
-    JPDebugLog(@"重置了播放唤醒等待时间");
-}
-
-- (void)updateAwakeWaitingTimerInterval {
-    _awakeWaitingTimeInterval += 2;
-    if(_awakeWaitingTimeInterval > 12){
-        _awakeWaitingTimeInterval = 12;
-    }
-}
-
-static BOOL _isOpenAwakeWhenBuffering = NO;
-- (void)startAwakeWhenBuffering {
-    if(!_isOpenAwakeWhenBuffering){
-        _isOpenAwakeWhenBuffering = YES;
-        JPDebugLog(@"Start awake when buffering.");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_awakeWaitingTimeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-
-            if(!_isOpenAwakeWhenBuffering){
-                [self endAwakeFromBuffering];
-                JPDebugLog(@"Player is playing when call awake buffering block.");
-                return;
+        else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
+            BOOL playbackBufferEmpty = self.playerModel.playerItem.playbackBufferEmpty;
+            if (playbackBufferEmpty) {
+                self.playerStatus = JPVideoPlayerStatusBuffering;
+                [self callPlayerStatusDidChangeDelegateMethod];
             }
-            JPDebugLog(@"Call resume in awake buffering block.");
-            _isOpenAwakeWhenBuffering = NO;
-            [self.playerModel pause];
-            [self updateAwakeWaitingTimerInterval];
-            [self.playerModel resume];
-
-        });
-    }
-}
-
-- (void)endAwakeFromBuffering {
-    if(_isOpenAwakeWhenBuffering){
-        JPDebugLog(@"End awake buffering.");
-        _isOpenAwakeWhenBuffering = NO;
-        [self resetAwakeWaitingTimeInterval];
+        }
     }
 }
 
@@ -608,14 +521,13 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 - (void)seekToHeaderThenStartPlayback {
     // Seek the start point of file data and repeat play, this handle have no memory surge.
     __weak typeof(self.playerModel) weak_Item = self.playerModel;
+    __weak typeof(self) wself = self;
     [self.playerModel.player seekToTime:CMTimeMake(0, 1) completionHandler:^(BOOL finished) {
-        __strong typeof(weak_Item) strong_Item = weak_Item;
-        if (!strong_Item) return;
 
-        self.playerModel.lastTime = 0;
+        __strong typeof(weak_Item) strong_Item = weak_Item;
+        __weak typeof(wself) sself = wself;
         [strong_Item.player play];
-        [self callPlayerStatusDidChangeDelegateMethod];
-        [self startCheckBufferingTimer];
+        [sself callPlayerStatusDidChangeDelegateMethod];
 
     }];
 }
@@ -628,9 +540,7 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
 - (void)internalPauseWithNeedCallDelegate:(BOOL)needCallDelegate {
     [self.playerModel pause];
-    [self stopCheckBufferingTimerIfNeed];
     self.playerStatus = JPVideoPlayerStatusPause;
-    [self endAwakeFromBuffering];
     if(needCallDelegate){
         [self callPlayerStatusDidChangeDelegateMethod];
     }
@@ -638,7 +548,6 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
 
 - (void)internalResumeWithNeedCallDelegate:(BOOL)needCallDelegate {
     [self.playerModel resume];
-    [self startCheckBufferingTimer];
     self.playerStatus = JPVideoPlayerStatusPlaying;
     if(needCallDelegate){
         [self callPlayerStatusDidChangeDelegateMethod];
@@ -649,13 +558,14 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
                                 playerItem:(AVPlayerItem *)playerItem
                                    options:(JPVideoPlayerOptions)options
                                showOnLayer:(CALayer *)showLayer {
-    [self resetAwakeWaitingTimeInterval];
     JPVideoPlayerModel *model = [JPVideoPlayerModel new];
     model.unownedShowLayer = showLayer;
     model.url = url;
     model.playerOptions = options;
     model.playerItem = playerItem;
     [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    [playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
 
     model.player = [AVPlayer playerWithPlayerItem:playerItem];
     [model.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
@@ -666,12 +576,11 @@ static BOOL _isOpenAwakeWhenBuffering = NO;
     [self setVideoGravityWithOptions:options playerModel:model];
     model.videoPlayer = self;
     self.playerStatus = JPVideoPlayerStatusUnknown;
-    [self startCheckBufferingTimer];
 
     // add observer for video playing progress.
     __weak typeof(model) wItem = model;
     __weak typeof(self) wself = self;
-    [model.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 10.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+    [model.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         __strong typeof(wItem) sItem = wItem;
         __strong typeof(wself) sself = wself;
         if (!sItem || !sself) return;

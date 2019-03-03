@@ -105,7 +105,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     }
     delta = MIN(1, delta);
     delta = MAX(0, delta);
-    NSLog(@"播放器值: %f", delta);
     [self.dragSlider setValue:delta animated:YES];
     self.totalSeconds = totalSeconds;
     self.elapsedSeconds = elapsedSeconds;
@@ -205,7 +204,6 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     if(!self.totalSeconds)return;
     [self updateCacheProgressViewIfNeed];
     [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1000)];
-    NSLog(@"松手值: %f", self.dragSlider.value);
 }
 
 - (void)updateCacheProgressViewIfNeed {
