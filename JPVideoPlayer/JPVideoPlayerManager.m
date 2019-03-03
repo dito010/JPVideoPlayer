@@ -162,10 +162,12 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     if (isFileURL) {
         // play file URL.
         JPDispatchAsyncOnQueue(self.syncQueue, ^{
+
             [self playLocalVideoWithShowLayer:showLayer
                                           url:url
                                       options:options
                                 configuration:configuration];
+
         });
         return;
     }
@@ -195,10 +197,12 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
             self.managerModel.cacheType = JPVideoPlayerCacheTypeExisted;
             JPDebugLog(@"Start play a existed video: %@", url);
             JPDispatchAsyncOnQueue(self.syncQueue, ^{
+
                 [self playFragmentVideoWithURL:url
                                        options:options
                                      showLayer:showLayer
                                  configuration:configuration];
+
             });
         }
         else {

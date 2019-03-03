@@ -230,16 +230,16 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @end
 
+NSString *JPLogMessage = nil;
+NSString *JPLogThreadName = nil;
+static dispatch_queue_t JPLogSyncQueue;
 @implementation JPLog
 
 + (void)initialize {
     _logLevel = JPLogLevelDebug;
+    JPLogSyncQueue = dispatch_queue_create("com.jpvideoplayer.log.sync.queue.www", DISPATCH_QUEUE_SERIAL);
 }
 
-static NSDateFormatter *JPLogDateFormatter = nil;
-NSString *JPLogMessage = nil;
-NSString *JPLogThreadName = nil;
-NSString *JPLogTimeString = nil;
 + (void)logWithFlag:(JPLogLevel)logLevel
                file:(const char *)file
            function:(const char *)function
@@ -250,41 +250,41 @@ NSString *JPLogTimeString = nil;
     va_list args;
     va_start(args, format);
 
-    JPLogMessage = [[NSString alloc] initWithFormat:format arguments:args];
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
 
-    if (JPLogMessage.length) {
-        NSString *flag;
-        switch (logLevel) {
-            case JPLogLevelDebug:
-                flag = @"DEBUG";
-                break;
+    JPDispatchAsyncOnQueue(JPLogSyncQueue, ^{
 
-            case JPLogLevelWarning:
-                flag = @"Waring";
-                break;
+        JPLogMessage = message;
+        if (JPLogMessage.length) {
+            NSString *flag;
+            switch (logLevel) {
+                case JPLogLevelDebug:
+                    flag = @"DEBUG";
+                    break;
 
-            case JPLogLevelError:
-                flag = @"Error";
-                break;
+                case JPLogLevelWarning:
+                    flag = @"Waring";
+                    break;
 
-            default:
-                break;
+                case JPLogLevelError:
+                    flag = @"Error";
+                    break;
+
+                default:
+                    break;
+            }
+
+            JPLogThreadName = [[NSThread currentThread] description];
+            JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@">"].lastObject;
+            JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@","].firstObject;
+            JPLogThreadName = [JPLogThreadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
+            // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
+            JPLogMessage = [NSString stringWithFormat:@"[%@] [Thread: %02ld] [%@]", flag, (long)[JPLogThreadName integerValue], JPLogMessage];
+            NSLog(@"%@", JPLogMessage);
         }
 
-        JPLogThreadName = [[NSThread currentThread] description];
-        JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@">"].lastObject;
-        JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@","].firstObject;
-        JPLogThreadName = [JPLogThreadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
-        // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
-        if (!JPLogDateFormatter) {
-            JPLogDateFormatter = [NSDateFormatter new];
-            JPLogDateFormatter.dateFormat = @"YYYY-MM-dd hh:mm:ss:SSS";
-        }
-        JPLogTimeString = [JPLogDateFormatter stringFromDate:[NSDate date]];
-        JPLogMessage = [NSString stringWithFormat:@"[%@] [Thread: %02ld] [%@] %@", flag, (long)[JPLogThreadName integerValue], JPLogTimeString, JPLogMessage];
-        printf("%s\n", JPLogMessage.UTF8String);
-    }
+    });
 }
 
 @end

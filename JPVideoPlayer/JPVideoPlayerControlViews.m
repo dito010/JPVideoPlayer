@@ -395,7 +395,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus
                           videoURL:(NSURL *)videoURL {
-    BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying;
+    BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying || playerStatus == JPVideoPlayerStatusReadyToPlay;
     self.playButton.selected = !isPlaying;
     [self.progressView videoPlayerStatusDidChange:playerStatus
                                          videoURL:videoURL];
@@ -842,8 +842,8 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
   interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
-    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
-            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5f,
+            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5f,
             JPVideoPlayerBufferingIndicatorWidthHeight,
             JPVideoPlayerBufferingIndicatorWidthHeight);
     self.activityIndicator.frame = self.blurBackgroundView.bounds;
@@ -852,7 +852,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 
 - (void)startAnimating{
-    if (!self.isAnimating) {
+    if (!self.isAnimating || self.hidden) {
         self.hidden = NO;
         [self.activityIndicator startAnimating];
         self.animating = YES;
@@ -860,7 +860,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)stopAnimating{
-    if (self.isAnimating) {
+    if (self.isAnimating || !self.hidden) {
         self.hidden = YES;
         [self.activityIndicator stopAnimating];
         self.animating = NO;
