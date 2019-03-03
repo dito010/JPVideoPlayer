@@ -258,7 +258,7 @@
               configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configuration
+             configuration:configuration
                   isResume:NO];
 }
 
@@ -267,13 +267,13 @@
                configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configuration
+             configuration:configuration
                   isResume:YES];
 }
 
 - (void)playVideoWithURL:(NSURL *)url
-                     options:(JPVideoPlayerOptions)options
-     configurationCompletion:(JPPlayVideoConfiguration _Nullable)configurationCompletion
+                 options:(JPVideoPlayerOptions)options
+           configuration:(JPPlayVideoConfiguration _Nullable)configuration
                 isResume:(BOOL)isResume {
     JPAssertMainThread;
     self.jp_videoURL = url;
@@ -327,27 +327,25 @@
         }
 
         // nobody retain this block.
-        JPPlayVideoConfiguration internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
-            if (!model) {
-                JPDebugLog(@"model can not be nil");
-            }
-            if(configurationCompletion){
-                configurationCompletion(self, model);
-            }
+        JPVideoPlayerConfiguration _configuration = ^(JPVideoPlayerModel *model){
+
+            if (!model) JPDebugLog(@"model can not be nil");
+            if(configuration) configuration(self, model);
+
         };
         
         if(!isResume){
             [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                            options:options
-                                                     configuration:internalConfigFinishedBlock];
+                                                     configuration:_configuration];
             [self callOrientationDelegateWithInterfaceOrientation:self.jp_viewInterfaceOrientation];
         }
         else {
             [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
                                                         showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                             options:options
-                                                      configuration:internalConfigFinishedBlock];
+                                                      configuration:_configuration];
         }
     }
     else {
