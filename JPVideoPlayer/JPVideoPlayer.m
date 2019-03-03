@@ -56,7 +56,7 @@
 
 @end
 
-static NSString *JPVideoPlayerURLScheme = @"systemCannotRecognitionScheme";
+static NSString *JPVideoPlayerURLScheme = @"com.jpvideoplayer.system.cannot.recognition.scheme.www";
 static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @implementation JPVideoPlayerModel
 
@@ -234,8 +234,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader resourceLoaderWithCustomURL:url];
     resourceLoader.delegate = self;
     
-    // url instead of `[self handleVideoURL]`, otherwise some urls can not play normally
-    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    // url instead of `[self composeFakeVideoURL]`, otherwise some urls can not play normally
+    AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self composeFakeVideoURL] options:nil];
     [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
     [self removePlayerItemDidPlayToEndObserver];
@@ -621,7 +621,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     playerModel.playerLayer.videoGravity = videoGravity;
 }
 
-- (NSURL *)handleVideoURL {
+- (NSURL *)composeFakeVideoURL {
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:[NSURL URLWithString:JPVideoPlayerURL] resolvingAgainstBaseURL:NO];
     components.scheme = JPVideoPlayerURLScheme;
     return [components URL];

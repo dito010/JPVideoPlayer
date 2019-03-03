@@ -94,10 +94,14 @@ didCompleteWithError:(NSError *)error;
 
 /**
  * @brief Customize acceptable response MIMETypes.
+ *
  * @discussion
+ *
  * Original acceptable MIMEType is just `audio` and `video`, but there are some
  * other kind of MIMETypes, such as `application/oct-stream` and so on.
+ *
  * @param types
+ *
  * The supported MIMETypes.
  */
 + (void)registerSupportedMIMETypes:(NSArray<NSString *> *)types;
