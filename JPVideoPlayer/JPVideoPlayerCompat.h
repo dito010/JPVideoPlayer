@@ -127,6 +127,7 @@ typedef NS_OPTIONS(NSUInteger, JPVideoPlayerDownloaderOptions) {
 };
 
 typedef void(^JPPlayVideoConfiguration)(UIView *_Nonnull view, JPVideoPlayerModel *_Nonnull playerModel);
+typedef void(^JPVideoPlayerConfiguration)(JPVideoPlayerModel *_Nonnull playerModel);
 
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadStartNotification;
 UIKIT_EXTERN NSString * _Nonnull const JPVideoPlayerDownloadReceiveResponseNotification;

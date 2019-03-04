@@ -42,16 +42,16 @@
 - (instancetype)initWithPlayVideoView:(UIView *)playVideoView {
     self = [super init];
     if(self){
-       _playVideoView = playVideoView;
+        _playVideoView = playVideoView;
     }
     return self;
 }
 
 - (JPVideoPlayViewInterfaceOrientation)viewInterfaceOrientation {
     if(_viewInterfaceOrientation == JPVideoPlayViewInterfaceOrientationUnknown){
-       CGSize referenceSize = self.playVideoView.window.bounds.size;
-       _viewInterfaceOrientation = referenceSize.width < referenceSize.height ? JPVideoPlayViewInterfaceOrientationPortrait :
-               JPVideoPlayViewInterfaceOrientationLandscape;
+        CGSize referenceSize = self.playVideoView.window.bounds.size;
+        _viewInterfaceOrientation = referenceSize.width < referenceSize.height ? JPVideoPlayViewInterfaceOrientationPortrait :
+                JPVideoPlayViewInterfaceOrientationLandscape;
     }
     return _viewInterfaceOrientation;
 }
@@ -206,7 +206,7 @@
 - (void)setBufferingIndicator:(UIView <JPVideoPlayerBufferingProtocol> *_Nullable)bufferingIndicator
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
-              needSetControlView:(BOOL)needSetControlView {
+           needSetControlView:(BOOL)needSetControlView {
     // should show default.
     BOOL showDefaultView = YES;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlAndIndicatorViews)]) {
@@ -258,7 +258,7 @@
               configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configuration
+             configuration:configuration
                   isResume:NO];
 }
 
@@ -267,13 +267,13 @@
                configuration:(JPPlayVideoConfiguration _Nullable)configuration {
     [self playVideoWithURL:url
                    options:options
-   configurationCompletion:configuration
+             configuration:configuration
                   isResume:YES];
 }
 
 - (void)playVideoWithURL:(NSURL *)url
-                     options:(JPVideoPlayerOptions)options
-     configurationCompletion:(JPPlayVideoConfiguration _Nullable)configurationCompletion
+                 options:(JPVideoPlayerOptions)options
+           configuration:(JPPlayVideoConfiguration _Nullable)configuration
                 isResume:(BOOL)isResume {
     JPAssertMainThread;
     self.jp_videoURL = url;
@@ -281,73 +281,85 @@
         [JPVideoPlayerManager sharedManager].delegate = self;
         self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
 
-        // handler the reuse of progressView in `UITableView`.
-        if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillPrepareToReuse)]){
-            [self.jp_progressView viewWillPrepareToReuse];
-        }
-        if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillPrepareToReuse)]){
-            [self.jp_controlView viewWillPrepareToReuse];
-        }
-        [self callFinishBufferingDelegate];
-        // Add progressView and controlView if need.
-        self.helper.videoPlayerView.hidden = NO;
-        if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
-            self.jp_bufferingIndicator.frame = self.bounds;
-            [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
-        }
-        if(self.jp_bufferingIndicator){
-            [self callStartBufferingDelegate];
+        /// handler the reuse of progressView in `UITableView`.
+        {
+            if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillPrepareToReuse)]){
+                [self.jp_progressView viewWillPrepareToReuse];
+            }
+            if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillPrepareToReuse)]){
+                [self.jp_controlView viewWillPrepareToReuse];
+            }
+            [self invokeFinishBufferingDelegateMethod];
         }
 
-        if(self.jp_progressView && !self.jp_progressView.superview){
-            self.jp_progressView.frame = self.bounds;
-            if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillAddToSuperView:)]){
-                [self.jp_progressView viewWillAddToSuperView:self];
+        /// buffering indicator.
+        {
+            if(self.jp_bufferingIndicator && !self.jp_bufferingIndicator.superview){
+                self.jp_bufferingIndicator.frame = self.bounds;
+                [self.helper.videoPlayerView.bufferingIndicatorContainerView addSubview:self.jp_bufferingIndicator];
             }
-            [self.helper.videoPlayerView.progressContainerView addSubview:self.jp_progressView];
-        }
-        if(self.jp_controlView && !self.jp_controlView.superview){
-            self.jp_controlView.frame = self.bounds;
-            if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
-                [self.jp_controlView viewWillAddToSuperView:self];
+            if(self.jp_bufferingIndicator){
+                [self invokeFinishBufferingDelegateMethod];
             }
-            [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
-            self.helper.videoPlayerView.progressContainerView.alpha = 0;
         }
-        if(!self.helper.videoPlayerView.superview){
-            [self addSubview:self.helper.videoPlayerView];
+        /// progress view.
+        {
+            if(self.jp_progressView && !self.jp_progressView.superview){
+                self.jp_progressView.frame = self.bounds;
+                if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+                    [self.jp_progressView viewWillAddToSuperView:self];
+                }
+                [self.helper.videoPlayerView.progressContainerView addSubview:self.jp_progressView];
+            }
         }
-        self.helper.videoPlayerView.frame = self.bounds;
-        self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
-        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundBeforePlaybackStart)]) {
-            BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundBeforePlaybackStart];
-            if(shouldShow){
-                self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+        /// control view.
+        {
+            if(self.jp_controlView && !self.jp_controlView.superview){
+                self.jp_controlView.frame = self.bounds;
+                if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(viewWillAddToSuperView:)]){
+                    [self.jp_controlView viewWillAddToSuperView:self];
+                }
+                [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
+                self.helper.videoPlayerView.progressContainerView.alpha = 0;
             }
         }
 
-        // nobody retain this block.
-        JPPlayVideoConfiguration internalConfigFinishedBlock = ^(UIView *view, JPVideoPlayerModel *model){
-            if (!model) {
-                JPDebugLog(@"model can not be nil");
+        /// video player view.
+        {
+            self.helper.videoPlayerView.hidden = NO;
+            if(!self.helper.videoPlayerView.superview){
+                [self addSubview:self.helper.videoPlayerView];
             }
-            if(configurationCompletion){
-                configurationCompletion(self, model);
+            self.helper.videoPlayerView.frame = self.bounds;
+            self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
+            if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundBeforePlaybackStart)]) {
+                BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundBeforePlaybackStart];
+                if(shouldShow){
+                    self.helper.videoPlayerView.backgroundColor = [UIColor blackColor];
+                }
             }
+        }
+
+        /// nobody retain this block.
+        JPVideoPlayerConfiguration _configuration = ^(JPVideoPlayerModel *model){
+
+            if (!model) JPDebugLog(@"model can not be nil");
+            if(configuration) configuration(self, model);
+
         };
-        
+
         if(!isResume){
             [[JPVideoPlayerManager sharedManager] playVideoWithURL:url
                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                            options:options
-                                                     configuration:internalConfigFinishedBlock];
+                                                     configuration:_configuration];
             [self callOrientationDelegateWithInterfaceOrientation:self.jp_viewInterfaceOrientation];
         }
         else {
             [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
                                                         showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                             options:options
-                                                      configuration:internalConfigFinishedBlock];
+                                                      configuration:_configuration];
         }
     }
     else {
@@ -387,8 +399,8 @@
     return JPVideoPlayerManager.sharedManager.volume;
 }
 
-- (void)jp_seekToTime:(CMTime)time {
-    [[JPVideoPlayerManager sharedManager] seekToTime:time];
+- (BOOL)jp_seekToTime:(CMTime)time {
+    return [[JPVideoPlayerManager sharedManager] seekToTime:time];
 }
 
 - (NSTimeInterval)jp_elapsedSeconds {
@@ -415,7 +427,7 @@
     [[JPVideoPlayerManager sharedManager] stopPlay];
     self.helper.videoPlayerView.hidden = YES;
     self.helper.videoPlayerView.backgroundColor = [UIColor clearColor];
-    [self callFinishBufferingDelegate];
+    [self invokeFinishBufferingDelegateMethod];
 }
 
 
@@ -537,13 +549,13 @@
     }
 }
 
-- (void)callStartBufferingDelegate {
+- (void)invokeStartBufferingDelegateMethod {
     if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didStartBufferingVideoURL:)]){
         [self.jp_bufferingIndicator didStartBufferingVideoURL:self.jp_videoURL];
     }
 }
 
-- (void)callFinishBufferingDelegate {
+- (void)invokeFinishBufferingDelegateMethod {
     if(self.jp_bufferingIndicator && [self.jp_bufferingIndicator respondsToSelector:@selector(didFinishBufferingVideoURL:)]){
         [self.jp_bufferingIndicator didFinishBufferingVideoURL:self.jp_videoURL];
     }
@@ -632,7 +644,7 @@
             playerStatus == JPVideoPlayerStatusBuffering ||
                     playerStatus == JPVideoPlayerStatusUnknown ||
                     playerStatus == JPVideoPlayerStatusFailed;
-    needDisplayBufferingIndicator ? [self callStartBufferingDelegate] : [self callFinishBufferingDelegate];
+    needDisplayBufferingIndicator ? [self invokeStartBufferingDelegateMethod] : [self invokeFinishBufferingDelegateMethod];
     if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerStatusDidChange:videoURL:)]){
         [self.jp_controlView videoPlayerStatusDidChange:playerStatus videoURL:self.jp_videoURL];
     }
@@ -752,7 +764,7 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
     return YES;
 }
 
-- (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager {
+- (AVAudioSessionCategory)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager {
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(preferAudioSessionCategory)]) {
         return [self.jp_videoPlayerDelegate preferAudioSessionCategory];
     }
@@ -761,11 +773,11 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
 
 - (BOOL)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
-            elapsedSeconds:(NSTimeInterval)elapsedSeconds {
+        elapsedSeconds:(NSTimeInterval)elapsedSeconds {
     BOOL shouldResume = NO;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldResumePlaybackFromPlaybackRecordForURL:elapsedSeconds:)]) {
         shouldResume = [self.jp_videoPlayerDelegate shouldResumePlaybackFromPlaybackRecordForURL:videoURL
-                                                                   elapsedSeconds:elapsedSeconds];
+                                                                                  elapsedSeconds:elapsedSeconds];
     }
     return shouldResume;
 }

@@ -15,7 +15,7 @@
 #import "JPVideoPlayerDouyinViewController.h"
 #import "JPVPNetEasyViewController.h"
 #import "JPVideoPlayerManager.h"
-#import "QSFeedListController.h"
+#import "JPVideoPlayerCollectionViewController.h"
 #import <JPNavigationControllerKit.h>
 
 @interface AppDelegate ()
@@ -44,20 +44,20 @@
     netEasyNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_netease"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     netEasyNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_netease_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     netEasyNavigationController.title = @"网易云音乐";
+
+    JPNavigationController *collectionViewNavigationController = [[JPNavigationController alloc]initWithRootViewController:[[JPVideoPlayerCollectionViewController alloc]init]];
+    collectionViewNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_collectionview"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    collectionViewNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_collectionview_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    collectionViewNavigationController.title = @"CollectionView";
     
     JPNavigationController *settingNavigationController = [[JPNavigationController alloc]initWithRootViewController:[JPVideoPlayerSettingViewController new]];
     settingNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     settingNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     settingNavigationController.title = @"设置";
     
-    JPNavigationController *igListNavigationController = [[JPNavigationController alloc]initWithRootViewController:[[QSFeedListController alloc]init]];
-    igListNavigationController.tabBarItem.image = [[UIImage imageNamed:@"jp_videoplayer_setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    igListNavigationController.tabBarItem.selectedImage = [[UIImage imageNamed:@"jp_videoplayer_setting_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    igListNavigationController.title = @"IGListKit";
-    
     
     UITabBarController *tabVC = [[UITabBarController alloc]init];
-    tabVC.viewControllers = @[weiboNavigationController, douyinViewController,netEasyNavigationController,settingNavigationController,igListNavigationController];
+    tabVC.viewControllers = @[weiboNavigationController, douyinViewController, netEasyNavigationController, collectionViewNavigationController, settingNavigationController];
     tabVC.tabBar.tintColor = [UIColor blackColor];
     tabVC.tabBar.backgroundImage = [UIImage imageNamed:@"jp_videoplayer_tabbar"];
     

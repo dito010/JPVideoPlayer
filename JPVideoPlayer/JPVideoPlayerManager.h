@@ -157,7 +157,7 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
  *
  * @return The prefer audio session category.
  */
-- (NSString *)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
+- (AVAudioSessionCategory)videoPlayerManagerPreferAudioSessionCategory:(JPVideoPlayerManager *)videoPlayerManager;
 
 /**
  * Called when play a already played video.
@@ -239,7 +239,7 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
 - (void)playVideoWithURL:(NSURL *)url
              showOnLayer:(CALayer *)showLayer
                  options:(JPVideoPlayerOptions)options
-           configuration:(JPPlayVideoConfiguration)configuration;
+           configuration:(JPVideoPlayerConfiguration)configuration;
 
 /**
  * Resume video play for the given URL.
@@ -253,7 +253,7 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
 - (void)resumePlayWithURL:(NSURL *)url
               showOnLayer:(CALayer *)showLayer
                   options:(JPVideoPlayerOptions)options
-            configuration:(JPPlayVideoConfiguration)configuration;
+            configuration:(JPVideoPlayerConfiguration)configuration;
 
 /**
  * Return the cache key for a given URL.

@@ -230,10 +230,14 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @end
 
+NSString *JPLogMessage = nil;
+NSString *JPLogThreadName = nil;
+static dispatch_queue_t JPLogSyncQueue;
 @implementation JPLog
 
 + (void)initialize {
     _logLevel = JPLogLevelDebug;
+    JPLogSyncQueue = dispatch_queue_create("com.jpvideoplayer.log.sync.queue.www", DISPATCH_QUEUE_SERIAL);
 }
 
 + (void)logWithFlag:(JPLogLevel)logLevel
@@ -241,13 +245,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
            function:(const char *)function
                line:(NSUInteger)line
              format:(NSString *)format, ... {
-    if (logLevel > _logLevel) {
-        return;
-    }
-    if (!format) {
-        return;
-    }
-
+    if (logLevel > _logLevel || !format) return;
 
     va_list args;
     va_start(args, format);
@@ -255,33 +253,38 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
 
-    if (message.length) {
-        NSString *flag;
-        switch (logLevel) {
-            case JPLogLevelDebug:
-                flag = @"DEBUG";
-                break;
+    JPDispatchAsyncOnQueue(JPLogSyncQueue, ^{
 
-            case JPLogLevelWarning:
-                flag = @"Waring";
-                break;
+        JPLogMessage = message;
+        if (JPLogMessage.length) {
+            NSString *flag;
+            switch (logLevel) {
+                case JPLogLevelDebug:
+                    flag = @"DEBUG";
+                    break;
 
-            case JPLogLevelError:
-                flag = @"Error";
-                break;
+                case JPLogLevelWarning:
+                    flag = @"Waring";
+                    break;
 
-            default:
-                break;
+                case JPLogLevelError:
+                    flag = @"Error";
+                    break;
+
+                default:
+                    break;
+            }
+
+            JPLogThreadName = [[NSThread currentThread] description];
+            JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@">"].lastObject;
+            JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@","].firstObject;
+            JPLogThreadName = [JPLogThreadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
+            // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
+            JPLogMessage = [NSString stringWithFormat:@"[%@] [Thread: %02ld] [%@]", flag, (long)[JPLogThreadName integerValue], JPLogMessage];
+            NSLog(@"%@", JPLogMessage);
         }
 
-        NSString *threadName = [[NSThread currentThread] description];
-        threadName = [threadName componentsSeparatedByString:@">"].lastObject;
-        threadName = [threadName componentsSeparatedByString:@","].firstObject;
-        threadName = [threadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
-        // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
-        message = [NSString stringWithFormat:@"[%@] [Thread: %02ld] %@", flag, (long)[threadName integerValue], message];
-        printf("%s\n", message.UTF8String);
-    }
+    });
 }
 
 @end
@@ -404,6 +407,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 @interface JPVideoPlayerScrollViewInternalObject()
 
 @property (nonatomic, weak) UIView<JPVideoPlayerCellProtocol> *playingVideoCell;
+
+@property(nonatomic, strong) CAShapeLayer *debugScrollViewVisibleFrameLayer;
 
 @end
 
@@ -549,8 +554,47 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     return [self viewIsVisibleInTableViewVisibleFrame:view];
 }
 
+- (void)setDebugScrollViewVisibleFrame:(BOOL)debugScrollViewVisibleFrame {
+    _debugScrollViewVisibleFrame = debugScrollViewVisibleFrame;
+    [self displayScrollViewVisibleFrame:debugScrollViewVisibleFrame];
+}
+
+- (void)setScrollViewVisibleFrame:(CGRect)scrollViewVisibleFrame {
+    _scrollViewVisibleFrame = scrollViewVisibleFrame;
+    [self displayScrollViewVisibleFrame:self.debugScrollViewVisibleFrame];
+}
+
 
 #pragma mark - Private
+
+- (void)displayScrollViewVisibleFrame:(BOOL)display {
+    if (CGRectEqualToRect(self.scrollViewVisibleFrame, CGRectZero)) return;
+
+    if (self.debugScrollViewVisibleFrameLayer) {
+        [self.debugScrollViewVisibleFrameLayer removeFromSuperlayer];
+    }
+
+    if (!display) return;
+
+    self.debugScrollViewVisibleFrameLayer = ({
+        CAShapeLayer *layer = [CAShapeLayer new];
+        CGRect rect = self.scrollViewVisibleFrame;
+        layer.frame = rect;
+        rect.origin.y = 0.f;
+        rect.origin.x += 3.f;
+        rect.size.width -= 6.f;
+        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRect:rect];
+        [bezierPath moveToPoint:CGPointMake(rect.origin.x, CGRectGetMaxY(rect) * 0.5f)];
+        [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect) * 0.5f)];
+        layer.path = bezierPath.CGPath;
+        layer.lineWidth = 1.f;
+        layer.strokeColor = [UIColor redColor].CGColor;
+        layer.fillColor = [UIColor clearColor].CGColor;
+        [self.scrollView.superview.layer addSublayer:layer];
+
+        layer;
+    });
+}
 
 - (BOOL)playingCellIsVisible {
     if(CGRectIsEmpty(self.scrollViewVisibleFrame)){
@@ -582,7 +626,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
     return !(!isTopContain && !isBottomContain);
 }
 
-- (UITableViewCell *)findTheBestPlayVideoCell {
+- (UIView<JPVideoPlayerCellProtocol> *)findBestCellForPlayingVideo {
     if (!self.scrollView || ![self.scrollView isKindOfClass:[UITableView class]] && ![self.scrollView isKindOfClass:[UICollectionView class]]) return nil;
     if(CGRectIsEmpty(self.scrollViewVisibleFrame)) return nil;
 
@@ -620,8 +664,8 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
                 }
             }
             else if (cell.jp_unreachableCellType == JPVideoPlayerUnreachableCellTypeDown){
-                CGPoint strategyViewLeftUpPoint = cell.frame.origin;
-                CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + cell.bounds.size.height;
+                CGPoint strategyViewLeftUpPoint = strategyView.frame.origin;
+                CGFloat strategyViewDownY = strategyViewLeftUpPoint.y + strategyView.bounds.size.height;
                 CGPoint strategyViewLeftDownPoint = CGPointMake(strategyViewLeftUpPoint.x, strategyViewDownY);
                 strategyViewLeftDownPoint.y -= 1;
                 CGPoint coordinatePoint = [strategyView.superview convertPoint:strategyViewLeftDownPoint toView:nil];
@@ -684,7 +728,7 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 }
 
 - (void)handleScrollStopIfNeed {
-    UITableViewCell *bestCell = [self findTheBestPlayVideoCell];
+    UITableViewCell *bestCell = [self findBestCellForPlayingVideo];
     if(!bestCell){
         return;
     }

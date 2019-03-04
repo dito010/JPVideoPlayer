@@ -58,7 +58,6 @@
     else {
         viewController = [JPVideoPlayerAudioViewController new];
     }
-    viewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

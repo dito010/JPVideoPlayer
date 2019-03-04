@@ -74,6 +74,12 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.playerView = view;
 }
 
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+    playerStatusDidChanged:(JPVideoPlayerStatus)playerStatus {
+    BOOL userInteractionEnabled = playerStatus != JPVideoPlayerStatusUnknown && playerStatus != JPVideoPlayerStatusFailed && playerStatus != JPVideoPlayerStatusStop;
+    self.dragSlider.userInteractionEnabled = userInteractionEnabled;
+}
+
 - (void)viewWillPrepareToReuse {
     [self cacheRangeDidChange:@[] videoURL:[NSURL new]];
     [self playProgressDidChangeElapsedSeconds:0
@@ -90,15 +96,10 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds
                                    videoURL:(NSURL *)videoURL {
-    if(self.userDragging){
-        return;
-    }
+    if(self.userDragging) return;
+    if(totalSeconds == 0) totalSeconds = 1;
 
-    if(totalSeconds == 0){
-        totalSeconds = 1;
-    }
-
-    float delta = elapsedSeconds / totalSeconds;
+    float delta = (float)(elapsedSeconds / totalSeconds);
     if (delta < 0 || delta > 1) {
         JPErrorLog(@"delta must between [0, 1]");
     }
@@ -112,6 +113,16 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 - (void)didFetchVideoFileLength:(NSUInteger)videoLength
                        videoURL:(NSURL *)videoURL {
     self.fileLength = videoLength;
+}
+
+- (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus
+                          videoURL:(NSURL *)videoURL {
+    BOOL userInteractionEnabled = playerStatus != JPVideoPlayerStatusUnknown && playerStatus != JPVideoPlayerStatusFailed && playerStatus != JPVideoPlayerStatusStop;
+    self.dragSlider.userInteractionEnabled = userInteractionEnabled;
+}
+
+- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation
+                                        videoURL:(NSURL *)videoURL {
 }
 
 - (void)setUserDragging:(BOOL)userDragging {
@@ -167,6 +178,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         [view addTarget:self action:@selector(dragSliderDidDrag:) forControlEvents:UIControlEventValueChanged];
         [view addTarget:self action:@selector(dragSliderDidStart:) forControlEvents:UIControlEventTouchDown];
         [view addTarget:self action:@selector(dragSliderDidEnd:) forControlEvents:UIControlEventTouchUpInside];
+        view.userInteractionEnabled = NO;
         [self addSubview:view];
 
         view;
@@ -189,9 +201,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)userDidFinishDrag {
-    if(!self.totalSeconds){
-        return;
-    }
+    if(!self.totalSeconds)return;
     [self updateCacheProgressViewIfNeed];
     [self.playerView jp_seekToTime:CMTimeMakeWithSeconds([self fetchElapsedTimeInterval], 1000)];
 }
@@ -385,13 +395,17 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)videoPlayerStatusDidChange:(JPVideoPlayerStatus)playerStatus
                           videoURL:(NSURL *)videoURL {
-    BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying;
+    BOOL isPlaying = playerStatus == JPVideoPlayerStatusBuffering || playerStatus == JPVideoPlayerStatusPlaying || playerStatus == JPVideoPlayerStatusReadyToPlay;
     self.playButton.selected = !isPlaying;
+    [self.progressView videoPlayerStatusDidChange:playerStatus
+                                         videoURL:videoURL];
 }
 
 - (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation
                                         videoURL:(NSURL *)videoURL {
     self.landscapeButton.selected = interfaceOrientation == JPVideoPlayViewInterfaceOrientationLandscape;
+    [self.progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation
+                                                       videoURL:videoURL];
 }
 
 
@@ -828,8 +842,8 @@ CGFloat const JPVideoPlayerBufferingIndicatorWidthHeight = 46;
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
   interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
     CGSize referenceSize = constrainedRect.size;
-    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
-            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5,
+    self.blurBackgroundView.frame = CGRectMake((referenceSize.width - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5f,
+            (referenceSize.height - JPVideoPlayerBufferingIndicatorWidthHeight) * 0.5f,
             JPVideoPlayerBufferingIndicatorWidthHeight,
             JPVideoPlayerBufferingIndicatorWidthHeight);
     self.activityIndicator.frame = self.blurBackgroundView.bounds;
@@ -838,7 +852,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 
 - (void)startAnimating{
-    if (!self.isAnimating) {
+    if (!self.isAnimating || self.hidden) {
         self.hidden = NO;
         [self.activityIndicator startAnimating];
         self.animating = YES;
@@ -846,7 +860,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)stopAnimating{
-    if (self.isAnimating) {
+    if (self.isAnimating || !self.hidden) {
         self.hidden = YES;
         [self.activityIndicator stopAnimating];
         self.animating = NO;
@@ -899,6 +913,36 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
     self.animating = NO;
 }
 
+@end
+
+@interface _JPVideoPlayerPlaceholderView : UIView
+@end
+@implementation _JPVideoPlayerPlaceholderView
+@end
+
+@interface _JPVideoPlayerVideoContainerView : UIView
+@end
+@implementation _JPVideoPlayerVideoContainerView
+@end
+
+@interface _JPVideoPlayerControlContainerView : UIView
+@end
+@implementation _JPVideoPlayerControlContainerView
+@end
+
+@interface _JPVideoPlayerProgressContainerView : UIView
+@end
+@implementation _JPVideoPlayerProgressContainerView
+@end
+
+@interface _JPVideoPlayerBufferingIndicatorContainerView : UIView
+@end
+@implementation _JPVideoPlayerBufferingIndicatorContainerView
+@end
+
+@interface _JPVideoPlayerUserInteractionContainerView : UIView
+@end
+@implementation _JPVideoPlayerUserInteractionContainerView
 @end
 
 @interface JPVideoPlayerView()
@@ -1110,7 +1154,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)_setup {
     self.placeholderView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerPlaceholderView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
 
@@ -1118,7 +1162,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     });
 
     self.videoContainerView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerVideoContainerView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
         view.userInteractionEnabled = NO;
@@ -1127,7 +1171,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     });
 
     self.bufferingIndicatorContainerView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerBufferingIndicatorContainerView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
         view.userInteractionEnabled = NO;
@@ -1136,7 +1180,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     });
 
     self.progressContainerView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerProgressContainerView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
 
@@ -1144,7 +1188,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     });
 
     self.controlContainerView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerControlContainerView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
 
@@ -1152,7 +1196,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     });
 
     self.userInteractionContainerView = ({
-        UIView *view = [UIView new];
+        UIView *view = [_JPVideoPlayerUserInteractionContainerView new];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];
 

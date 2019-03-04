@@ -7,529 +7,166 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0047B69646A0B7E027359D34AC57E327 /* UIButton+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = B69C1D954CA417451F08AF77C492812E /* UIButton+WebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		012393CEBEFCF738B6E2C3F8A5D94D56 /* JPWarpNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3522738E84F93CF22361B086BD321BB8 /* JPWarpNavigationController.m */; };
-		0237CF19EA7B50455653CCEA96398EF0 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC16005A62A48714935755D0A2C72B9 /* SDImageCache.m */; };
-		02F22DDE7160C43E789F40AC621A74FD /* SDWebImageFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 17FB5134A2C500A7066FE4E202163FAF /* SDWebImageFrame.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		04864C7CCCD33CDC3AE4728645C445B9 /* JPNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7879EAB72A54B964C42A82AD95AF025D /* JPNavigationController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		04924E0D081653DAF13709493A8C5B3B /* UICollectionViewLayout+InteractiveReordering.m in Sources */ = {isa = PBXBuildFile; fileRef = BDED2D3CBE45EBFA2ED562E5B0F04E8F /* UICollectionViewLayout+InteractiveReordering.m */; };
-		049B460E1DDF110E868627655CE0ADEA /* MASViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 58512AFD693C64A4276859F1D9F92936 /* MASViewAttribute.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		089CB3BDD8153A140268920C44C8D047 /* IGListExperiments.h in Headers */ = {isa = PBXBuildFile; fileRef = 1819F6FCDDA4A05BF22D36E8DC2C96E5 /* IGListExperiments.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		08E10B718E25A8C2FF4274C6EAFD5054 /* NSString+IGListDiffable.h in Headers */ = {isa = PBXBuildFile; fileRef = 0167AA0340E1A33DCBCBFFFE14AF88D5 /* NSString+IGListDiffable.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		0BED362262BF36B8F775BC5810DD7EDE /* NSArray+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0DB69E69795F7D045D327913D85DDC /* NSArray+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		0C01ED126D5CB907CC83C65F1D17DED8 /* NSButton+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D54B573B0B1E9D393E3EBAA1ED4313BA /* NSButton+WebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		0E50CB06E4914211A4436BBBCBF0B23C /* IGListMoveIndexPath.h in Headers */ = {isa = PBXBuildFile; fileRef = 56BA444BC39B476CCA166F1A93397F65 /* IGListMoveIndexPath.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		0FCB662BA893B35A36A83E84ED694A8B /* Pods-JPVideoPlayerDemo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6584CA31774F976F43B71D2CA06F00D6 /* Pods-JPVideoPlayerDemo-dummy.m */; };
-		11458C6A049F40189B219212EF5A9C8D /* IGListBindingSectionController+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 73EE26360ADE6533CACB6160FA9819DC /* IGListBindingSectionController+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		12B1110786810911F8F4D419021CF630 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE7292F38E935658DB543E434F0FD28 /* MASConstraintMaker.m */; };
-		13DCBEC285B3C563493A34C07B5C41F8 /* IGListIndexPathResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF3234E5734B101B3843335981319FF /* IGListIndexPathResult.m */; };
-		13FE08F0362D25B955A08358C787D523 /* SDWebImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = F63403C50E777D90F1AE78CBE67889AE /* SDWebImageDownloader.m */; };
-		14212D02BF19BE7CD258E592FD35F2AC /* IGListAdapterUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 02654395363657C13DB5DC67645AAE2C /* IGListAdapterUpdater.m */; };
-		152A87F3FB0450975932CF5C4CC7C78A /* JPBaseAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 113ABE011CA44F4CB68078C06F2315AD /* JPBaseAnimationTransition.m */; };
-		16D51F86685837B69C8162A950FE8A63 /* SDImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = AC0CF9F132EC83C6282C0F214DA64307 /* SDImageCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		18BAD8398B6961E1134766FC0726C8C7 /* UIColor+ImageGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 65E9B7273D50CCF620387156BC95D91F /* UIColor+ImageGenerate.m */; };
-		1B3176B0AFB532AF3C97580C7B0B1B86 /* IGListCollectionViewDelegateLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E74234B47EC1A0422864C83DF0372C9 /* IGListCollectionViewDelegateLayout.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		1BB0311984CF801F8A3C7B34942FE777 /* IGListBatchUpdateData.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE722D0232B95D123374DACAB7A48E0 /* IGListBatchUpdateData.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		1D552E655E72FA5BBAA1451E3A6AD3B3 /* IGListBatchUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D38182025488054F219A1D9B3015F6 /* IGListBatchUpdates.m */; };
-		1D78E256E636FCCB7DB7C39C673E6570 /* JPPushAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = FBAA5D64FE9E6313E5E325D8C257617D /* JPPushAnimationTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		1EC8595D0E176DB06815789B6F7E35C1 /* MASConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 87B3AFAEB2AE2C94C50C41960A96D5B5 /* MASConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		1EDBBF4485ED681658BDF4530EA3334E /* SDWebImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCE3C3AFB2432DE6F3C728AEE90A72EE /* SDWebImageCoder.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		20B4B1840E6D52EC017ECCB7535138E4 /* SDWebImagePrefetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB9160BAB15D0C46180E437A2FE1430 /* SDWebImagePrefetcher.m */; };
-		219280B4F86BA38CEFFF56734B675E63 /* IGListDebuggingUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D971EA8A90437EDC7CF93A5BAF65792 /* IGListDebuggingUtilities.m */; };
-		24DF19E8414E48E3A862AABB46FB703D /* UIScrollView+IGListKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B73ACE3B8BEA6B4D078D831A7FEB27FF /* UIScrollView+IGListKit.m */; };
-		265227CE26BBB43E14F366D91C688472 /* UIView+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E1521D9E4A05367A7A19162C7174BBA /* UIView+WebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		27AD65257898F68516506C70781BC53A /* IGListSingleSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D72EF5606EE18116B1EAE85F70AF2B9 /* IGListSingleSectionController.m */; };
-		28928711323B2B6CF698249E726B5F8D /* IGListStackedSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87CCC40337499652799A28C031794E9E /* IGListStackedSectionController.m */; };
-		28ABFC7ED01AF3F1D944C0DC9733BCCD /* IGListBatchUpdateData.mm in Sources */ = {isa = PBXBuildFile; fileRef = F502EFE17F25B57936E56BFAD30C4620 /* IGListBatchUpdateData.mm */; };
-		2A6EEFDF3EE2BBBF63F6063C3F6747A1 /* View+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 570CE0CD10814D9C5E25E3DE42488D92 /* View+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		2AA96CCE86AD4D0A202903877A9EA158 /* SDWebImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A62E921F7E3E7C95B639BFD2CCC58B15 /* SDWebImageManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		2AF8E8005BF2A4EBAC866F0A1AF5975C /* NSLayoutConstraint+MASDebugAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = ED047B77428315687019D70DFADB789E /* NSLayoutConstraint+MASDebugAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		2BBA747A4E46FFA08C5AFE5D3F6E9D7C /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5081B46980248A3C32A349CCCB7B91E6 /* NSArray+MASAdditions.m */; };
-		2D24971D3AAA9E31B0115309F392D8FB /* NSImage+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = F817CE23908D9D36C39BCBA7E2298698 /* NSImage+WebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		2DB1482621AAFA2AB983782278A7EA1A /* IGListBatchContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 52D85917EAC0E16EAA174B0BF7922E00 /* IGListBatchContext.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		3162D4698FB3295EDF661DFD166E2B26 /* JPNavigationControllerGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = A43D8B6B3635E371A98268037181BD9C /* JPNavigationControllerGestureRecognizer.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		328EBCDBD86AD8754A363927AC7A86B2 /* IGListTransitionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F29D436E54B4FBAD79D8F6A7EE157CB /* IGListTransitionDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		32BF54B1575B5CA7937FFFF093487C1B /* IGListDiff.mm in Sources */ = {isa = PBXBuildFile; fileRef = 818A54240B718C31F2AFF303A5D826E0 /* IGListDiff.mm */; };
-		33B5B14B94687051ACB97052D2339E33 /* IGListSectionMap.m in Sources */ = {isa = PBXBuildFile; fileRef = EE0EAA8E41C17B64570FC13761BBEBCC /* IGListSectionMap.m */; };
-		353FAD8D1C92E6E267E1B52B014A117D /* UIView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F86E78B75B2766A6789CCB85E924077 /* UIView+WebCache.m */; };
-		37BA4ED4EFC405D9A96EF6D483EC656A /* IGListIndexPathResultInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = BDCBBFDE687C68BFDB821530065CBC9F /* IGListIndexPathResultInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		38952A28635710B3B10BA2F6918F967F /* UIView+ScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D7E87C69E01038D72DAED85835BCB /* UIView+ScreenCapture.m */; };
-		38F3D784FFAE8F683F094CA4676DCF7B /* JPNavigationControllerGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C92824B6EB6911DFB0285F42B0C0A03B /* JPNavigationControllerGestureRecognizer.m */; };
-		3E0F390A0EF36EB29B8A8056E3A15136 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F32F146F9B581EF5D330EDB83C87E5 /* SDWebImageCompat.m */; };
-		4091E120214FD94972D67BCE3000C49B /* SDImageCacheConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = C0E54229028B3DF5339A240612684092 /* SDImageCacheConfig.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		41792C973B611165CBA8DE42FA5E501E /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4179A9EA206056428C0C5AC09BFD6C6A /* ImageIO.framework */; };
-		418BA71FF0CA977116A8A0F1291FBFE8 /* JPWarpViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B860DEAD9736EB50576DED2C00B6DF33 /* JPWarpViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		435876824ADD1254FBA284CC699D6F71 /* IGListCollectionViewLayoutInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 344C49F674E033B481AF13DCFA304021 /* IGListCollectionViewLayoutInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		436214D385F49B6D635625A7BA9B11CA /* UIImage+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA819FC883254B69A4ADA0D1C3255C8 /* UIImage+GIF.m */; };
-		44081CCF462AE437F36222476DDA9816 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E56E4CBBDABDE781DDBEDA953D2230 /* UIKit.framework */; };
-		4491BB5B8CF3013AF230325DBC7CCB47 /* IGListAdapterUpdaterDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = F31A893B4CC8895F9A016A3AA9DF8900 /* IGListAdapterUpdaterDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		44F51BC1A5D2BD0899FD45EAB00E96D0 /* IGListDebuggingUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 29440F0F21D24E5B5F80DA20E0B09C9B /* IGListDebuggingUtilities.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		45ADD7AF2BB409A436E7BE5EEF8722C3 /* UIImage+ForceDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = B088EA0E55F8AED8AD166E595232A19D /* UIImage+ForceDecode.m */; };
-		472773548BFA529CECAD19F55438F8D1 /* IGListSupplementaryViewSource.h in Headers */ = {isa = PBXBuildFile; fileRef = F754059EAFD95929EF8B698345EE7856 /* IGListSupplementaryViewSource.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		49F6D93ADA0790F1D4F36C14E9E51AB7 /* IGListWorkingRangeDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D9520D38C98BE0556C85A4AD4A12C61C /* IGListWorkingRangeDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		4ACEA7FB9F869FF099F16C64880FBA04 /* IGListAdapterMoveDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FEF22EB28E01085267ED6F7DB713A2D0 /* IGListAdapterMoveDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		4AFAADDA1DE5B8F9E0FDBED3809FE1FC /* SDWebImageCoderHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E797D4944DFFB473903FE52B697D2B4D /* SDWebImageCoderHelper.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		4E198554203EB1FF3C95C0ADABABB511 /* IGListGenericSectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = F417DFC75F4570FEC91C4C079F0DFA88 /* IGListGenericSectionController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		4F86DD92549267325D2997C5B43150E3 /* IGListDisplayHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FF977BD17FC9ECFE84281A36ACA43A8 /* IGListDisplayHandler.m */; };
-		506081DA28100AD417178D4739B28818 /* IGListDiffKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 83EF5ECFE7299B04EF3583F12F43670C /* IGListDiffKit.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		54D867CCE0CAD11072FCE40F4BF32996 /* IGListSectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 92021493A54C2006008982BE4AFD9973 /* IGListSectionController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5581D770F241A8AE0204CFA9918869D1 /* IGListSingleSectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = B471551791E9388A16039E1590FC70CA /* IGListSingleSectionController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		579278D8E1F9656ACED20350DE32848F /* UINavigationBar+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AED799170161B0D7157E99BCE10E90EC /* UINavigationBar+HitTest.m */; };
-		59727D3288DB3475DED6018004612AD5 /* NSNumber+IGListDiffable.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE3D99B3B56E4FBC60361D302368FC2 /* NSNumber+IGListDiffable.m */; };
-		59E460AA853038A50B89ED33CC615FB4 /* MASLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CF8FAC7D7EF6C81134DAE88260C11CFC /* MASLayoutConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5B6EF55A9A00EE515830EFF5D7E67900 /* IGListAdapterUpdater+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 2937674C849251399BA6A65EEEC8B721 /* IGListAdapterUpdater+DebugDescription.m */; };
-		5E80B52181D7DE46B803128E1343233A /* IGListScrollDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 79E84F1B31B3323B062F3598613ECCCE /* IGListScrollDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5F5357CD0BB616F1422FF60D65BA804F /* NSNumber+IGListDiffable.h in Headers */ = {isa = PBXBuildFile; fileRef = 81C2D86F1ACBB746DDEE8E0AA3A4F45F /* NSNumber+IGListDiffable.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		602B84E3F09A78687197C220921751AA /* JPWarpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 248667D02521818E88C984F51FADE7A6 /* JPWarpViewController.m */; };
-		6133D4416359A441948608B123B7E918 /* JPBaseAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E02189DCBC8211D1BFD43AF0C2D0C82 /* JPBaseAnimationTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		61D1F63ADCF31D1A9788FE494A6C2486 /* IGListAdapter+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D57AE61BF23A9C393C497B76EAAE8CC /* IGListAdapter+DebugDescription.m */; };
-		62094268E635553FAD36A6B15FF02CD3 /* IGListIndexSetResultInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F5D5AD7464827D872CBCF37072312 /* IGListIndexSetResultInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		62D4BB566600AF2CA6FA7B6353E85A11 /* JPNavigationControllerTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 99AD848FB5D56C25C87F5E09CDD2BB36 /* JPNavigationControllerTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		62FD750B8552DAFEC10F0B369CF7C6FF /* IGListAdapter+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BA74C3A82EE4D243D391F2A2B060B19 /* IGListAdapter+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		63D0C53C23386CF56823BA8DAE151F17 /* IGListBindingSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 337E1EF65BD45D00CA664F1C067F1551 /* IGListBindingSectionController.m */; };
-		63D9E4A31BD106B5721BAA531A257275 /* JPTransitionShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8079FC59D1FF2F963A4EBD91D601B218 /* JPTransitionShadowView.m */; };
-		64A5ABEE81381B3CEA9E037A64063B29 /* IGListBindingSectionControllerDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F0465466C86BC3148C0C7CEE166970B /* IGListBindingSectionControllerDataSource.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6740D83964C4720549C7E6A8E8EBD9C8 /* IGListBindingSectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BC4CD3AAAD7DA09A847016FC1C0707 /* IGListBindingSectionController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6862B53AFB8D59F998B466F18F460436 /* SDAnimatedImageRep.h in Headers */ = {isa = PBXBuildFile; fileRef = 095EF889D1CD5A05BFC4071D10465233 /* SDAnimatedImageRep.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		699096520CABA15A0196609EAA54D366 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 511B4C0EDC384F0B076B83C01B16A64A /* Foundation.framework */; };
-		6A8C6C904B9B4E2F3A1D52256E119112 /* IGListDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EDACA2C761E8DABF961401007D7D7AA /* IGListDebugger.m */; };
-		6CBD4AF790DA4CD7776AE04633525464 /* SDWebImageTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BDADB88D0F82C3617442D2EBADFDD0 /* SDWebImageTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6D22A1A9E3FF651035A59485DAA09511 /* IGListWorkingRangeHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 590B1BC58CBD8F32C3B6ED3BCBAF72F4 /* IGListWorkingRangeHandler.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6D7C337E1275849F7DB3BBA22B85A8F7 /* IGListReloadIndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 3290AE4ECBECA1D24F7BD2206A9AB4C3 /* IGListReloadIndexPath.m */; };
-		6DC299A1994FC9DC90930FDC5310813F /* IGListBatchUpdateState.h in Headers */ = {isa = PBXBuildFile; fileRef = BB36F0FC25D5374BA7319B17B0BDE6AF /* IGListBatchUpdateState.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6E2E31A482ED0A2A5C18717D9B3187A0 /* IGListAdapterProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 20479DC645FDEC7D1991F0548B69346F /* IGListAdapterProxy.m */; };
-		704D10A192BB3B0E5726B2A7147B11CE /* IGListSectionMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 39AD39DA2AA9D521369D2C34A4AE8595 /* IGListSectionMap.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7157D66DCE09397047A7ECF10F15DCBF /* MASCompositeConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CF9FF955F30A91D407535976E67FBAFE /* MASCompositeConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		727C772F6B4A540561BDEACD87CC4021 /* UINavigationBar+HitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A7E07EAC1AD228514DB42A10F51423D /* UINavigationBar+HitTest.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		74C52B2D66B8BC6F85B9CB175BC6AD12 /* SDImageCacheConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 283E736DD98912FA2A2D23A53FA4F2E9 /* SDImageCacheConfig.m */; };
-		7A5111FD06CD2522C6D61DB4E8A44250 /* IGListIndexPathResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D797A4D8C1AF497BEECEDCBDA494FD84 /* IGListIndexPathResult.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7BED6B5C022C9C1C5B2EC32522783766 /* IGListDiffable.h in Headers */ = {isa = PBXBuildFile; fileRef = 52D8DF289A07D17651C61475D8E5EEA7 /* IGListDiffable.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7C7BE6C0C80E34604F948D8D8491C39E /* UIImage+GIF.h in Headers */ = {isa = PBXBuildFile; fileRef = AF083C4EA228319F10B0AD38D0C6F03B /* UIImage+GIF.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7D48232AE62FD0A1E4C4EEC4AE858209 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A9CE74153FD5A08E26505287AEDA93 /* MASCompositeConstraint.m */; };
-		7DAE4940AFCB8C0CC3287B171CE61E38 /* UIViewController+ViewControllers.h in Headers */ = {isa = PBXBuildFile; fileRef = 00789427B9177C1A901A98206F15A0CC /* UIViewController+ViewControllers.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7F8EBDFF8E5B579EB08B311D5DD68562 /* IGListMoveIndexInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 496B20F1F6AED1CA3A6096A543C2C636 /* IGListMoveIndexInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7FE1C36A12C885ECCD858E05C3685AF5 /* MASViewConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 89F95AD005FA52272414B11D5069DE19 /* MASViewConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		80168118387EDB797864E124C50B7C9A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E56E4CBBDABDE781DDBEDA953D2230 /* UIKit.framework */; };
-		801B2A4545BCF09A9DA8E7F966C57B4B /* NSString+IGListDiffable.m in Sources */ = {isa = PBXBuildFile; fileRef = 55138DE373EE64C9B5AD8A7417085AB7 /* NSString+IGListDiffable.m */; };
-		811D92C3417CE51213F766A6B7A95625 /* IGListIndexSetResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E74D24F22C8C4DFA2D9E3AAA29A06B2 /* IGListIndexSetResult.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		83721F32247360A9E90393B3C569D487 /* IGListBatchUpdates.h in Headers */ = {isa = PBXBuildFile; fileRef = 33D41811290BE233EA2B60A405ABFEA1 /* IGListBatchUpdates.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		839CE29187A65B73ADB12E06D22564FE /* IGListMoveIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 6967D4EF1809F11C9044C3C7869117C0 /* IGListMoveIndex.m */; };
-		843D4ECB5589962ED5FA484711A12C72 /* IGListAdapterProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C963FFF58BB66668D171D01DAE62EB69 /* IGListAdapterProxy.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		84974B74EDB97C48BD53EE0908A05F15 /* IGListReloadIndexPath.h in Headers */ = {isa = PBXBuildFile; fileRef = BF037495BC9D3029659EA5B93758B9A9 /* IGListReloadIndexPath.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		853290B0A5DAB340DD166FCB257F81A8 /* SDWebImageCodersManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50EC939EEC5493DCA901745593512D4B /* SDWebImageCodersManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		896215A7FCF5A198E8D845B8DE95397D /* IGListAdapter+UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5ACCB1F8AFDDFC9377CFCEC59DF0FE4A /* IGListAdapter+UICollectionView.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		8B085A3B1FFA9D491030B48CA9662EA4 /* SDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F4418B9036247F47546A3E7163A3AC4 /* SDWebImageManager.m */; };
-		8C836DFB68D508EC75FC77A94549C951 /* SDWebImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B1CFE3EAEA8DEF80BC160D6FBE6B314F /* SDWebImageCoder.m */; };
-		8DCB087661E17ACB98C89FA4E69744F7 /* IGListCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2E83AB2A6D3A6D14F23EB931F322A1 /* IGListCollectionView.m */; };
-		8E969A0D0769F879D97A3F0251388021 /* IGListStackedSectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5CFB406AF0303EA8B906EA7E2F7A1B07 /* IGListStackedSectionController.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		8FC982D1A372C956E5485056B3F20246 /* JPNavigationControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = AD9166CF357532125DF771EA4C80DEF6 /* JPNavigationControllerProtocol.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		909B55D5F66FD418383D96AD739E8C45 /* SDWebImageCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = D2F84EC705DA4C68C12EDDD6C22001D4 /* SDWebImageCompat.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		91B71F6EADF73AD7AB32380F5C4CD988 /* UIImage+MultiFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = DD4E8454DA301FD95CCE6ED6C786500C /* UIImage+MultiFormat.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		91BEFCA99AED2127184DEE584255FBFE /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D19ED4AD78F1DE9729D4A039CA55240 /* MASViewAttribute.m */; };
-		92F74EC9521F8CC41A35ED4DD7C666AA /* UIButton+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6A51FA917F2262B8DF21D864B2374D /* UIButton+WebCache.m */; };
-		93B45794735DD04292CA06A991B209AB /* IGListKit.h in Headers */ = {isa = PBXBuildFile; fileRef = D0395F32982D6CB40C8A276814AD6BE8 /* IGListKit.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		93D3F6DF97BE0E68AF3DBD80DB28DCAB /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A415D71FF1F378AFA8C8B8BD13AB87D7 /* UIImageView+WebCache.m */; };
-		94041EDCBFFE91E1EB71C19BC10A6D3F /* IGListSectionControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2007351DD2C92AB75459EFAF91FF5E6B /* IGListSectionControllerInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		95589532EA2E237CD55B2F9B69AFFB84 /* IGListWorkingRangeHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = F2013CFB40D53C0DD990EBF0FCB22E66 /* IGListWorkingRangeHandler.mm */; };
-		95D922F3DCE3F7942136FE11E84EDED0 /* SDWebImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA92CCE930A00AF241E79BADBDAFE1C /* SDWebImageTransition.m */; };
-		964B365CC1AF836B4757AEC9C251DCE3 /* IGListSectionMap+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C3A044F86542CBB301299D2947B012 /* IGListSectionMap+DebugDescription.m */; };
-		9826591D1A31763DDD98E0159E75BC14 /* SDWebImageImageIOCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D69752AA49B50489D8B32C673C1639 /* SDWebImageImageIOCoder.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		984313E6945E20ECF653F093D870CCE1 /* JPNavigationControllerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B04F889774A1BDAFD94766607558831 /* JPNavigationControllerCompat.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		99258ABF887AACCA544B29AB85F12BC8 /* IGListDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E4DF9D98CEFD37750FFA7A198313A16 /* IGListDiff.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9B516D75F9DF65D98006419FC66BD29E /* IGListAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784EE7559D73FC5CF05833B1D1EFD6B0 /* IGListAdapter.m */; };
-		9B5D721633B82BF8FE44D1A435434DF9 /* ViewController+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = CA629095FBF380002ACCE9A70950D045 /* ViewController+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9B6D5C4C4531F98C37009676D4E44127 /* IGListBindingSectionControllerSelectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BB8FDFF4977F6A6EE21771DAB9AE9F /* IGListBindingSectionControllerSelectionDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9BD6656CB7523BB3F40FA6BB07149B6C /* UICollectionView+IGListBatchUpdateData.h in Headers */ = {isa = PBXBuildFile; fileRef = B41EE626A214D435DCEF75D68840981B /* UICollectionView+IGListBatchUpdateData.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9CA936012F9B7D8344228DAC3D3B0AE7 /* SDWebImagePrefetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBE4D2066289E975029C8A1B3FDA5D6 /* SDWebImagePrefetcher.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9DEB9ABC6B9ABD2939AB8D3DD5812CDC /* IGListDisplayHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 950D8F65D225F6906E7ECB8566E11507 /* IGListDisplayHandler.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9E81B8BB74A9300B99227209982606A8 /* IGListBatchUpdateData+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = A98E4BA6FADEA4392B28726032930D16 /* IGListBatchUpdateData+DebugDescription.m */; };
-		9FD2FB144A530D0AB5A82A99CB4ED088 /* Masonry-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 87DAC371E824AC03072C487D7CFA022B /* Masonry-dummy.m */; };
-		9FFB136A73785357DB71040EE98D64E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 511B4C0EDC384F0B076B83C01B16A64A /* Foundation.framework */; };
-		A01927C148F885622A68695D0C9A5B97 /* IGListDisplayDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 08EAE76E166E2E56D92A0DF1B5280E4D /* IGListDisplayDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A08A21B9333F68D5066060ACD379DCDF /* UINavigationController+FulllScreenPopPush.h in Headers */ = {isa = PBXBuildFile; fileRef = 00A68000D9F6B00CBDD5C15A2FCF4D29 /* UINavigationController+FulllScreenPopPush.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A2793323FF3AA398757FE16F65AAF2A5 /* SDWebImageGIFCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFF392D69C9E7AD61540BCD2D2DE317 /* SDWebImageGIFCoder.m */; };
-		A2839EE1C3CFDBC573DF28B3EAAFF1B5 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3AC00B3DDCC6A46F4A104F947E6BE3 /* MASConstraint.m */; };
-		A2A196068E8B3E6FB5CBCDDE538D8BF4 /* SDWebImageFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = E25574AB4863AFBF2B736CAC94A9C925 /* SDWebImageFrame.m */; };
-		A2D217BB071C7A0E9A2B3ED53AB7CE31 /* IGListMoveIndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = D2004179FCF7918F29C88FE17E81E749 /* IGListMoveIndexPath.m */; };
-		A39BF5099A0CF2832D8DC71BDEA02B80 /* SDWebImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A3826364A5D234681A892E5E119978B9 /* SDWebImage-dummy.m */; };
-		A3FFDA82A80FBC0A02F3B2EB1E7A05C7 /* IGListCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4170EDC6D788FD3D5885DF18B037ABD3 /* IGListCollectionView.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A57E0251087FEC146EFF1CBEC43A5D50 /* IGListAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E81AF6701AF3B28DC20E8F750706168 /* IGListAdapter.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A7432887981E56283875A6A9DD592A84 /* SDWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B7C54790FA2F6A7ACDF0BD86238B18B /* SDWebImageOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A762D13B622FE61FE7E75A475D608D36 /* SDWebImageGIFCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A72359EBA2C4ECA7BD80EBB79653A3 /* SDWebImageGIFCoder.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A7F8E0BA3DA46639D58B43094D518BBB /* IGListAdapterInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F07733E5823B1CAB5CDBE4E338B73F0 /* IGListAdapterInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A833673E80DD712FA8A715DD63F95639 /* IGListMoveIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = E96B84B99E6916D5923239CFB741756A /* IGListMoveIndex.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A88F7A5AA5E7E46F52127A61A53A2C6B /* SDWebImageDownloaderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = F0DC14BB5BF29E281478BFCBDB0FFD4D /* SDWebImageDownloaderOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		ABEEA0AC036C1C01EF5D88843AC59BDC /* IGListAdapterDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D1545AED1E5E17C10FBEBA2548D3CD6A /* IGListAdapterDataSource.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		ADB022A853D74C0A9F48BC16D4EA59CF /* View+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F67559D5B188E1D009020F315F66806 /* View+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		AE86F18C29D2A37A639BCD77D15F932A /* IGListAdapterUpdaterInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = A71CA3A7D73B89EB26DE0D8F52E97ABB /* IGListAdapterUpdaterInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		AFE7EE10DE3E3183C523164702D2D9EE /* IGListArrayUtilsInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = AD2F06D51DCA12E45982B207C5ACB468 /* IGListArrayUtilsInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B032EAC4803380A07D99C2188D5DEA7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E56E4CBBDABDE781DDBEDA953D2230 /* UIKit.framework */; };
-		B069BB1B13A6B34ABE18178FE344421B /* UICollectionView+IGListBatchUpdateData.m in Sources */ = {isa = PBXBuildFile; fileRef = D34292BC3BCE7BF272B9CAAED605983D /* UICollectionView+IGListBatchUpdateData.m */; };
-		B0C1629F73E3EF4A8DEA59BEAEBD317C /* NSData+ImageContentType.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FFAFE3FB22AD14C765854E3B4FCBF3 /* NSData+ImageContentType.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B3CC23D82287775775B646BAD77E20BD /* IGListAdapter+UICollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = F918E3EA592B6CFE534D0449CB2933C6 /* IGListAdapter+UICollectionView.m */; };
-		B3EC61E017E340D953CE518FCE0E890B /* IGListReloadDataUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 583BB6EAA27C072FAF7021C2D28C7610 /* IGListReloadDataUpdater.m */; };
-		B4BEBC36B586556BFDEDDB9F6D669239 /* Masonry.h in Headers */ = {isa = PBXBuildFile; fileRef = 938E7D2D8EF7ABED6B084981C11E1111 /* Masonry.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B5139C0ECD6FEBD4C42328E0523D5CB0 /* IGListBatchUpdateData+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = BD953C17BA9035505A0A820D4F0032C9 /* IGListBatchUpdateData+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B5BE571A0725C4506001C206FB69C2F7 /* MASConstraint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 81648DD9346BFD41B88B8CD1621E934B /* MASConstraint+Private.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B9D1B9FADF2C0780C2886E3AD858E7EE /* UIImage+MultiFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8CDAC5DCA344133AF7EE901451351 /* UIImage+MultiFormat.m */; };
-		BA25631CA67EFDC96DFDEF29CCC4173E /* UICollectionView+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD585D5E0EED1EAEA6C86739D8E4EB /* UICollectionView+DebugDescription.m */; };
-		BBA43B4EC00E2BB88B132A16187DF296 /* UICollectionView+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = EEBB0B1B6B7B193BC372BDA05EE9F690 /* UICollectionView+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		BC4BB4FAA82D4C4C439CE83F0C004392 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F937E1F850EDA43C8591902D3B3F90BA /* NSLayoutConstraint+MASDebugAdditions.m */; };
-		BD166B2A597D2694431D89259D2A1D6C /* IGListCollectionViewLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDCE3340EFFE60C4CF70A2C51D271D39 /* IGListCollectionViewLayout.mm */; };
-		BE0EA90779BEE3C6D58DF21B0CCD0773 /* IGListReloadDataUpdater.h in Headers */ = {isa = PBXBuildFile; fileRef = 764123547EB7726DE639A03AF8517390 /* IGListReloadDataUpdater.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		BF313794CA77B6EE2484204C76760B8E /* SDWebImageImageIOCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6491B3F688B6BE69B9C5F729AC9DD79 /* SDWebImageImageIOCoder.m */; };
-		C0953168C5916BF83D7C7BDE01A2A300 /* NSArray+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EDB77C90AD214B421FB1F0DA3F5FC4FB /* NSArray+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		C1303CEB6117D6F4D6B2F63C69149B8E /* UIView+ScreenCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 69BE11479A3E8196DD1260635E78ACD5 /* UIView+ScreenCapture.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		C3E9576CE3AF87C9A8117C9EFCB71831 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = BD956999F2DE8012E8DF6E927B81B74E /* NSData+ImageContentType.m */; };
-		C505B8272926DDACF48813D861B44F53 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C0243BB9EA30ACE21B6AB539B2AB27 /* UIView+WebCacheOperation.m */; };
-		C6074AEE7605822456EA1DA41295F9AF /* UIColor+ImageGenerate.h in Headers */ = {isa = PBXBuildFile; fileRef = BE8BA1D540A7A5FF64C08080366C9729 /* UIColor+ImageGenerate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		C6577BF4D6A3AA31576312989D3ECD09 /* UIView+WebCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB0C0A22082155A0702B7F0CDCE0ED0 /* UIView+WebCacheOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		C684FC1D749D482ACE25FAFE9E497B64 /* IGListBindable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F724B3815DF00C25B02C34629BA7996 /* IGListBindable.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		CE523F88E410C2942E1A54E391229AEB /* JPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A2D1A93969BED8A17F9CF29DC71486 /* JPNavigationController.m */; };
-		CE91C7012504A8FFBD272C0B6F5D07F7 /* IGListUpdatingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6536EDE23E5AB3D7293963CF74B80B3A /* IGListUpdatingDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D018F45382F2D08C637AD372A7FD6B4B /* IGListAdapterUpdater.h in Headers */ = {isa = PBXBuildFile; fileRef = CD01C4AB843DCC915562839EFB6BD93E /* IGListAdapterUpdater.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D0450E7530583A97F4A38F1C9D23754B /* IGListMoveIndexPathInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA8202F41E7DE703CA9E104530E103 /* IGListMoveIndexPathInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D458D1BDE59172F80FB0D62B6B731509 /* IGListDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 846FA7BD9F419A622AF1011A7479F3FE /* IGListDebugger.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D4B6F42301594B4330A78645E1D5538B /* UIScrollView+IGListKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C623BB6413F6CA6D1A62B4447EDDB3E /* UIScrollView+IGListKit.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D52FD4D38F7D8083174D03819CF5F559 /* UIViewController+ViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5169E407A100C93D9062B4101648A3 /* UIViewController+ViewControllers.m */; };
-		D69414EC55C9A49A3F7F1377DBFD2C24 /* JPPushAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ECC4CEFDE36E23653D7DDB8DDE7A652 /* JPPushAnimationTransition.m */; };
-		D86ADAFB21A5AE3ECA08C65302D4055D /* IGListAdapterUpdateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 41E9E033C7265C29A80F446A1CA0DBFC /* IGListAdapterUpdateListener.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D8729BC154C9F8AAF4323BB3BE254DC9 /* NSImage+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 205199965C92ED4A8EF70403F6B09747 /* NSImage+WebCache.m */; };
-		D8FAC5302424AFFF3B8CCBC5809C103B /* UIImageView+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC5797CD7177A175CFB78ACD0D41DFA /* UIImageView+WebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		D92E938F6E350E47BAEA6AFF47D3C40E /* UIImageView+HighlightedWebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E1A1DDCF7D745BCAA0A0D32DA99220C /* UIImageView+HighlightedWebCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		DB69FAD6D999B13BF9F64860542720D3 /* JPTransitionShadowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 51FD0E9202A734ADB99102C289CD78C0 /* JPTransitionShadowView.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		DC0246CB46A03D97F22FB9D61DB85F99 /* SDWebImageCoderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635D7CB9F43852C569CE3E6B7A41047 /* SDWebImageCoderHelper.m */; };
-		DD5B7CEE532912D713A9F28FCB407CF8 /* IGListAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = F93569D65AE0BB407512E505104216A3 /* IGListAssert.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E2D7DF342F84E448869EAB3F5F640525 /* IGListAdapterDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CD405C0E87223BE51D34795B80F8B9E /* IGListAdapterDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E3312A275C1003F02C7386349FBE4195 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A20C764FADC968372422A57B1D3C8B0 /* View+MASAdditions.m */; };
-		E385A08CD10C4AC61014F60783A1B947 /* JPNavigationControllerKit.h in Headers */ = {isa = PBXBuildFile; fileRef = AC82093CF42DC3C0EA3A2C9BBF1ED8E7 /* JPNavigationControllerKit.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E42A7B9AE7FEEC62DDD63BD3414E2670 /* IGListAdapterUpdater+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F31348779288011F05A8985BB18CB9D /* IGListAdapterUpdater+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E610483A7C7A42434385F4372F8D00DC /* IGListSectionMap+DebugDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 294764A5129E73977C25A3A5ABD0B6CA /* IGListSectionMap+DebugDescription.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E728DE1AFCBC00C300F7D92797FAC0A4 /* UICollectionViewLayout+InteractiveReordering.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FC07605D521A3A4C0EC6C57E1BD190D /* UICollectionViewLayout+InteractiveReordering.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E88F2B545510E531C518C2B9AA3ACCFD /* JPNavigationControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 88CAF1336AE7A9493E8D81ECBC9EBF0A /* JPNavigationControllerTransition.m */; };
-		E8D2B06760AD270146CF0C5CB07E2043 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D4D63C1612366665529F73481DF1081 /* MASUtilities.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		EF5867D47EA68D5791435C143260DB67 /* IGListCollectionViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 261F3346CD459F514B7BF03EDBB1BF09 /* IGListCollectionViewLayout.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		EFEFD57FAA5D7DBBC5F6FF0AC604BADE /* IGListBindingSectionController+DebugDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F777A4E1EF223F4ADE5D69DB054EF11F /* IGListBindingSectionController+DebugDescription.m */; };
-		EFF12AFC0CDA9A38140368BB24EC075B /* IGListCollectionContext.h in Headers */ = {isa = PBXBuildFile; fileRef = AC25BB3B57C6733561FE4B646C9C14B6 /* IGListCollectionContext.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		F20230A6D714A6176A523D76343CBACF /* IGListCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 7060988F67E12C0C9C859775737B0464 /* IGListCompatibility.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		F319E95FAAE49A1F1D979A45403AE906 /* JPNavigationController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED570B1E9BD041163A4627879D67D99D /* JPNavigationController-dummy.m */; };
-		F334A63620B98348D7E22277E6FE0B28 /* SDAnimatedImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 22223FDE917594EA799A85581B4FDEB8 /* SDAnimatedImageRep.m */; };
-		F39B6137ED280D6B6F507B0759D55BC8 /* SDWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301B79B73FA0D413B2E39B0537631FF /* SDWebImageDownloaderOperation.m */; };
-		F44D0D3A892FD14B0CD29152A05850AD /* SDWebImageCodersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5741F5407F37BD218FC2CA79324A5278 /* SDWebImageCodersManager.m */; };
-		F455DC07E39DA3B572688F78991C5833 /* UIImage+ForceDecode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B3C38ABFFBDC50292CEE3213921CCC5 /* UIImage+ForceDecode.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		F57F3C8BF466FA98523222E68B41B77D /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DA66F791310A5E3626E6DA2AA67B5C /* MASViewConstraint.m */; };
-		F6FCDB8385D380A13B3303853DDEEDAB /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A3FB53350A4971F5B97CD24AE0CBBB /* ViewController+MASAdditions.m */; };
-		F7DA51E371005F28805B7C696C326EF4 /* IGListGenericSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1ECACB536292955806166433CE92D30 /* IGListGenericSectionController.m */; };
-		F810A5B55AF5A67A25157CC2F290ABAF /* IGListMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = F497C79931217C6C35E982B21406754E /* IGListMacros.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		F83DEC2ABB2669D8355B1B9830F072BC /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BCC6218C5E2DE169C94CCBE0F0113DE /* UIImageView+HighlightedWebCache.m */; };
-		F8D2E6DF99C453EAA213FF93D4272321 /* IGListSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343E970290D38871D19810B75DD392BF /* IGListSectionController.m */; };
-		FB7E9DA06EB26AC24D8752640822C0F5 /* IGListIndexSetResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBBA05D58004EE30D6E9FC44A7DACCC /* IGListIndexSetResult.m */; };
-		FC2959986CFDEBB4308E36CF89A325B6 /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 796A5ED5C7CD484A6EE5284E833DA523 /* MASLayoutConstraint.m */; };
-		FCC6F888B901041AE1E92892C0A69996 /* SDWebImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = FCD629343481C98EBE57FC2D743EA9A2 /* SDWebImageDownloader.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		FCD64586536B2C1974F92ACAF8447ACD /* MASConstraintMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D7B69F1366656641B4EF26594433885 /* MASConstraintMaker.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		FD50A4376A682467286A849CCE2F7E94 /* IGListStackedSectionControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 61838F1B695362E0160284E6BED8ED8F /* IGListStackedSectionControllerInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		FE46A93A6C6630BFD859A9A11ACBCDF4 /* IGListKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FBE60D8C32725445BB53582375683 /* IGListKit-dummy.m */; };
-		FE6ACBC60E3C51BDD9732BD5DA7F0941 /* NSButton+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BB28F4B7E15EB1A327981389271027C4 /* NSButton+WebCache.m */; };
-		FFD1A76172058DCAC371A2DC71985872 /* JPWarpNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = B2389BD47D9BC927186A64BD9BF5B88C /* JPWarpNavigationController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		012393CEBEFCF738B6E2C3F8A5D94D56 /* JPWarpNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9157DC47F6AE732702D4FBB306EA7C3C /* JPWarpNavigationController.m */; };
+		04864C7CCCD33CDC3AE4728645C445B9 /* JPNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = F24D3CDC4992D1029D590EB817584E67 /* JPNavigationController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		049B460E1DDF110E868627655CE0ADEA /* MASViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 588A906AC93B6997CD26D800578F4C0D /* MASViewAttribute.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		0BED362262BF36B8F775BC5810DD7EDE /* NSArray+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = B29D056B6A45CDE0319DFAD59D3819E4 /* NSArray+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		12B1110786810911F8F4D419021CF630 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 095596FBA1A435C7341BFD7F672854D2 /* MASConstraintMaker.m */; };
+		152A87F3FB0450975932CF5C4CC7C78A /* JPBaseAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9FF79AFFF6F1F52EBB4B2500E9CF4F /* JPBaseAnimationTransition.m */; };
+		18BAD8398B6961E1134766FC0726C8C7 /* UIColor+ImageGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 43772C8B434B7F4DE99A7D568609A500 /* UIColor+ImageGenerate.m */; };
+		1D78E256E636FCCB7DB7C39C673E6570 /* JPPushAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = B9ACE5D4EAA7B73E091E167B7DFC4E88 /* JPPushAnimationTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1EC8595D0E176DB06815789B6F7E35C1 /* MASConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 567871E3D05DB6F04BB805F59A7A437F /* MASConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2264F70BC14704D38058B909461A95AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */; };
+		2510E154CD2E0ADA5FDAF6E67FCD9D88 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E404AA6957590324067E330E0EC533 /* UIKit.framework */; };
+		265ED3616AD8DC0516A45DE5473133DD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */; };
+		2A6EEFDF3EE2BBBF63F6063C3F6747A1 /* View+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = A5F5F0C65B5867965EE4BEE98EFC8E5A /* View+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2AF8E8005BF2A4EBAC866F0A1AF5975C /* NSLayoutConstraint+MASDebugAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 19C3854E70F47B4144B79C48E43D7A79 /* NSLayoutConstraint+MASDebugAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2BBA747A4E46FFA08C5AFE5D3F6E9D7C /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAAD8752041CE3A7B851AC613B0174 /* NSArray+MASAdditions.m */; };
+		3162D4698FB3295EDF661DFD166E2B26 /* JPNavigationControllerGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CD97D0918324550F4CB50F1E4B0085 /* JPNavigationControllerGestureRecognizer.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		349A7678AD638D5FE26743AAF165A54A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E404AA6957590324067E330E0EC533 /* UIKit.framework */; };
+		38952A28635710B3B10BA2F6918F967F /* UIView+ScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = F18A38B84D5AB81B0B21FC73BF8B3656 /* UIView+ScreenCapture.m */; };
+		38F3D784FFAE8F683F094CA4676DCF7B /* JPNavigationControllerGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 26072E14E188B77FFFD2FDE3020C99B4 /* JPNavigationControllerGestureRecognizer.m */; };
+		418BA71FF0CA977116A8A0F1291FBFE8 /* JPWarpViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EA288FC60D38511EEF13C6ADE975B21 /* JPWarpViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		579278D8E1F9656ACED20350DE32848F /* UINavigationBar+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D013299BF5961E35883E5F8FAC02A71C /* UINavigationBar+HitTest.m */; };
+		59E460AA853038A50B89ED33CC615FB4 /* MASLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 4228AEC9CD48FC52DD30376F6AB83679 /* MASLayoutConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		602B84E3F09A78687197C220921751AA /* JPWarpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7E58583895F09891E1C1269FBA860C /* JPWarpViewController.m */; };
+		6133D4416359A441948608B123B7E918 /* JPBaseAnimationTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DC5C0C9DFC51D6B2DCE42D674A3E78 /* JPBaseAnimationTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		62D4BB566600AF2CA6FA7B6353E85A11 /* JPNavigationControllerTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 61299DBA6C5F8531F7015A95D6B05942 /* JPNavigationControllerTransition.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		63D9E4A31BD106B5721BAA531A257275 /* JPTransitionShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42341542F0CC64E55D832F3116751944 /* JPTransitionShadowView.m */; };
+		7157D66DCE09397047A7ECF10F15DCBF /* MASCompositeConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = EDAA265AE6826C029E4CEC27792AAE9A /* MASCompositeConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		727C772F6B4A540561BDEACD87CC4021 /* UINavigationBar+HitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 629E2397777B3FD8CF6B674797015E69 /* UINavigationBar+HitTest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7D48232AE62FD0A1E4C4EEC4AE858209 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ADC386259B9332A133DB4DC91CA4EF2 /* MASCompositeConstraint.m */; };
+		7DAE4940AFCB8C0CC3287B171CE61E38 /* UIViewController+ViewControllers.h in Headers */ = {isa = PBXBuildFile; fileRef = BC33FE0A9D1A6FE658399712AAFDC5A4 /* UIViewController+ViewControllers.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7FE1C36A12C885ECCD858E05C3685AF5 /* MASViewConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE820770DB5A00F83016E759DE9E574 /* MASViewConstraint.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8FC982D1A372C956E5485056B3F20246 /* JPNavigationControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = B829FC45FDD9762218DC8B921E23F80F /* JPNavigationControllerProtocol.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		91BEFCA99AED2127184DEE584255FBFE /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9F922D9C424B122805DA6FA5D6A92D /* MASViewAttribute.m */; };
+		984313E6945E20ECF653F093D870CCE1 /* JPNavigationControllerCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 15009A35E7C7721978828BE8AB63A61E /* JPNavigationControllerCompat.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9B5D721633B82BF8FE44D1A435434DF9 /* ViewController+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = D1A074720A075F1118A136D1335EF101 /* ViewController+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9FD2FB144A530D0AB5A82A99CB4ED088 /* Masonry-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A42DE00CB6822CB064834AC217BF1220 /* Masonry-dummy.m */; };
+		A08A21B9333F68D5066060ACD379DCDF /* UINavigationController+FulllScreenPopPush.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FBC4C17FE0B9CB32384AAD0192A4109 /* UINavigationController+FulllScreenPopPush.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		A2839EE1C3CFDBC573DF28B3EAAFF1B5 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5935DCB949DE2117073D5BE5824FDA /* MASConstraint.m */; };
+		ADB022A853D74C0A9F48BC16D4EA59CF /* View+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B35C43566C22C0369CEDE32DAB7730 /* View+MASAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B4BEBC36B586556BFDEDDB9F6D669239 /* Masonry.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C279B898ACAB2D356EEE709F4EC4AAE /* Masonry.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B5BE571A0725C4506001C206FB69C2F7 /* MASConstraint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB5C9B6566B70C177C5233D1790095F /* MASConstraint+Private.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BC4BB4FAA82D4C4C439CE83F0C004392 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77270315B4D2037ADF28025013DA6521 /* NSLayoutConstraint+MASDebugAdditions.m */; };
+		C0953168C5916BF83D7C7BDE01A2A300 /* NSArray+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 33AE654F39CC4B25E03926B9D2212781 /* NSArray+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C1303CEB6117D6F4D6B2F63C69149B8E /* UIView+ScreenCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B1823B851AA1D2D702744304C5C7E64 /* UIView+ScreenCapture.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C16C13212FB04830D89E4913D41BFC6A /* Pods-JPVideoPlayerDemo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6584CA31774F976F43B71D2CA06F00D6 /* Pods-JPVideoPlayerDemo-dummy.m */; };
+		C6074AEE7605822456EA1DA41295F9AF /* UIColor+ImageGenerate.h in Headers */ = {isa = PBXBuildFile; fileRef = 756258683A639C16EF2EDAEEAD02FDCD /* UIColor+ImageGenerate.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CE523F88E410C2942E1A54E391229AEB /* JPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F56FF8D55872A48B4B71E974AF685F4 /* JPNavigationController.m */; };
+		D52FD4D38F7D8083174D03819CF5F559 /* UIViewController+ViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = C66CE8ECABC2A6C9914DEA6D6F607CDB /* UIViewController+ViewControllers.m */; };
+		D69414EC55C9A49A3F7F1377DBFD2C24 /* JPPushAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7417009D080ED048F1277F8D17BB1331 /* JPPushAnimationTransition.m */; };
+		DB69FAD6D999B13BF9F64860542720D3 /* JPTransitionShadowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 01D0029C8A08F53DFE8BA2BE8742DDC5 /* JPTransitionShadowView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E3312A275C1003F02C7386349FBE4195 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6F243513AB9D49725772E203ADADDB /* View+MASAdditions.m */; };
+		E385A08CD10C4AC61014F60783A1B947 /* JPNavigationControllerKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 12F7738B5374ED3CBA3E9D0F45BC5388 /* JPNavigationControllerKit.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E88F2B545510E531C518C2B9AA3ACCFD /* JPNavigationControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CA28A683FBDDB4B35338E13E2AB17F /* JPNavigationControllerTransition.m */; };
+		E8D2B06760AD270146CF0C5CB07E2043 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = E5DEEA1B55FCD2A423C1B7FCF5265B22 /* MASUtilities.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F319E95FAAE49A1F1D979A45403AE906 /* JPNavigationController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA32F98F620FAEF16F01E0588A55581 /* JPNavigationController-dummy.m */; };
+		F57F3C8BF466FA98523222E68B41B77D /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = F55BCC3BE5B8F8E17E4F9BB62FCAC482 /* MASViewConstraint.m */; };
+		F6FCDB8385D380A13B3303853DDEEDAB /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 124625635F68FEA607E2D1191B7432D7 /* ViewController+MASAdditions.m */; };
+		FC2959986CFDEBB4308E36CF89A325B6 /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = D37EE54EF49A94F61D59112EFD170541 /* MASLayoutConstraint.m */; };
+		FCD64586536B2C1974F92ACAF8447ACD /* MASConstraintMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = EACB4237997F4951703FF587382D3198 /* MASConstraintMaker.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FFD1A76172058DCAC371A2DC71985872 /* JPWarpNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = B81B33DFC99F15D59E1E1A65F3CD83D7 /* JPWarpNavigationController.h */; settings = {ATTRIBUTES = (Project, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3796C763723E2123CD23C10137AAC28E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18588AE8AF45A0ADFBEA7B122830B63A;
-			remoteInfo = IGListKit;
-		};
-		858083B9A6FE32C9AE3D7184B18CC5A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 40A42EA465E764DD959C829C51404C08;
-			remoteInfo = Masonry;
-		};
-		CAB6AAD931592E291EAA8C837E8298B3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EC648B223D93726E624BDC119CF185CA;
-			remoteInfo = SDWebImage;
-		};
-		E61AD936D2D29B7D19EF660EF7085859 /* PBXContainerItemProxy */ = {
+		09BE64446B33A3E82901D780BAF07C50 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C36F900B8ED706C8175130D7B4D79F83;
 			remoteInfo = JPNavigationController;
 		};
+		D22B132F72D09562E5B95E47FE97DB47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 40A42EA465E764DD959C829C51404C08;
+			remoteInfo = Masonry;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00789427B9177C1A901A98206F15A0CC /* UIViewController+ViewControllers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ViewControllers.h"; path = "JPNavigationController/UIViewController+ViewControllers.h"; sourceTree = "<group>"; };
-		00A68000D9F6B00CBDD5C15A2FCF4D29 /* UINavigationController+FulllScreenPopPush.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FulllScreenPopPush.h"; path = "JPNavigationController/UINavigationController+FulllScreenPopPush.h"; sourceTree = "<group>"; };
-		0167AA0340E1A33DCBCBFFFE14AF88D5 /* NSString+IGListDiffable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+IGListDiffable.h"; path = "Source/Common/NSString+IGListDiffable.h"; sourceTree = "<group>"; };
-		02654395363657C13DB5DC67645AAE2C /* IGListAdapterUpdater.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListAdapterUpdater.m; path = Source/IGListAdapterUpdater.m; sourceTree = "<group>"; };
-		02D2EDF145C735EEC6AEC3CB9941F6C2 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-JPVideoPlayerDemo.a"; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		03C3A044F86542CBB301299D2947B012 /* IGListSectionMap+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListSectionMap+DebugDescription.m"; path = "Source/Internal/IGListSectionMap+DebugDescription.m"; sourceTree = "<group>"; };
-		08EAE76E166E2E56D92A0DF1B5280E4D /* IGListDisplayDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDisplayDelegate.h; path = Source/IGListDisplayDelegate.h; sourceTree = "<group>"; };
-		095EF889D1CD5A05BFC4071D10465233 /* SDAnimatedImageRep.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDAnimatedImageRep.h; path = SDWebImage/SDAnimatedImageRep.h; sourceTree = "<group>"; };
-		0A5169E407A100C93D9062B4101648A3 /* UIViewController+ViewControllers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ViewControllers.m"; path = "JPNavigationController/UIViewController+ViewControllers.m"; sourceTree = "<group>"; };
-		0B7C54790FA2F6A7ACDF0BD86238B18B /* SDWebImageOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageOperation.h; path = SDWebImage/SDWebImageOperation.h; sourceTree = "<group>"; };
-		0D57AE61BF23A9C393C497B76EAAE8CC /* IGListAdapter+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListAdapter+DebugDescription.m"; path = "Source/Internal/IGListAdapter+DebugDescription.m"; sourceTree = "<group>"; };
-		0D72EF5606EE18116B1EAE85F70AF2B9 /* IGListSingleSectionController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListSingleSectionController.m; path = Source/IGListSingleSectionController.m; sourceTree = "<group>"; };
-		0DB9160BAB15D0C46180E437A2FE1430 /* SDWebImagePrefetcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImagePrefetcher.m; path = SDWebImage/SDWebImagePrefetcher.m; sourceTree = "<group>"; };
-		113ABE011CA44F4CB68078C06F2315AD /* JPBaseAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPBaseAnimationTransition.m; path = JPNavigationController/JPBaseAnimationTransition.m; sourceTree = "<group>"; };
-		14E56E4CBBDABDE781DDBEDA953D2230 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		17FB5134A2C500A7066FE4E202163FAF /* SDWebImageFrame.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageFrame.h; path = SDWebImage/SDWebImageFrame.h; sourceTree = "<group>"; };
-		1819F6FCDDA4A05BF22D36E8DC2C96E5 /* IGListExperiments.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListExperiments.h; path = Source/Common/IGListExperiments.h; sourceTree = "<group>"; };
-		1C623BB6413F6CA6D1A62B4447EDDB3E /* UIScrollView+IGListKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+IGListKit.h"; path = "Source/Internal/UIScrollView+IGListKit.h"; sourceTree = "<group>"; };
-		1D971EA8A90437EDC7CF93A5BAF65792 /* IGListDebuggingUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListDebuggingUtilities.m; path = Source/Internal/IGListDebuggingUtilities.m; sourceTree = "<group>"; };
-		1E74D24F22C8C4DFA2D9E3AAA29A06B2 /* IGListIndexSetResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListIndexSetResult.h; path = Source/Common/IGListIndexSetResult.h; sourceTree = "<group>"; };
-		1F29D436E54B4FBAD79D8F6A7EE157CB /* IGListTransitionDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListTransitionDelegate.h; path = Source/IGListTransitionDelegate.h; sourceTree = "<group>"; };
-		1F67559D5B188E1D009020F315F66806 /* View+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASAdditions.h"; path = "Masonry/View+MASAdditions.h"; sourceTree = "<group>"; };
-		1F724B3815DF00C25B02C34629BA7996 /* IGListBindable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBindable.h; path = Source/IGListBindable.h; sourceTree = "<group>"; };
-		2007351DD2C92AB75459EFAF91FF5E6B /* IGListSectionControllerInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListSectionControllerInternal.h; path = Source/Internal/IGListSectionControllerInternal.h; sourceTree = "<group>"; };
-		20479DC645FDEC7D1991F0548B69346F /* IGListAdapterProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListAdapterProxy.m; path = Source/Internal/IGListAdapterProxy.m; sourceTree = "<group>"; };
-		205199965C92ED4A8EF70403F6B09747 /* NSImage+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSImage+WebCache.m"; path = "SDWebImage/NSImage+WebCache.m"; sourceTree = "<group>"; };
-		22223FDE917594EA799A85581B4FDEB8 /* SDAnimatedImageRep.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAnimatedImageRep.m; path = SDWebImage/SDAnimatedImageRep.m; sourceTree = "<group>"; };
-		248667D02521818E88C984F51FADE7A6 /* JPWarpViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpViewController.m; path = JPNavigationController/JPWarpViewController.m; sourceTree = "<group>"; };
-		261F3346CD459F514B7BF03EDBB1BF09 /* IGListCollectionViewLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCollectionViewLayout.h; path = Source/IGListCollectionViewLayout.h; sourceTree = "<group>"; };
-		283E736DD98912FA2A2D23A53FA4F2E9 /* SDImageCacheConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCacheConfig.m; path = SDWebImage/SDImageCacheConfig.m; sourceTree = "<group>"; };
-		2937674C849251399BA6A65EEEC8B721 /* IGListAdapterUpdater+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListAdapterUpdater+DebugDescription.m"; path = "Source/Internal/IGListAdapterUpdater+DebugDescription.m"; sourceTree = "<group>"; };
-		29440F0F21D24E5B5F80DA20E0B09C9B /* IGListDebuggingUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDebuggingUtilities.h; path = Source/Internal/IGListDebuggingUtilities.h; sourceTree = "<group>"; };
-		294764A5129E73977C25A3A5ABD0B6CA /* IGListSectionMap+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListSectionMap+DebugDescription.h"; path = "Source/Internal/IGListSectionMap+DebugDescription.h"; sourceTree = "<group>"; };
-		2AE7292F38E935658DB543E434F0FD28 /* MASConstraintMaker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraintMaker.m; path = Masonry/MASConstraintMaker.m; sourceTree = "<group>"; };
-		2B3C38ABFFBDC50292CEE3213921CCC5 /* UIImage+ForceDecode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+ForceDecode.h"; path = "SDWebImage/UIImage+ForceDecode.h"; sourceTree = "<group>"; };
-		2D4D63C1612366665529F73481DF1081 /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
-		2DA819FC883254B69A4ADA0D1C3255C8 /* UIImage+GIF.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+GIF.m"; path = "SDWebImage/UIImage+GIF.m"; sourceTree = "<group>"; };
-		2DCA8202F41E7DE703CA9E104530E103 /* IGListMoveIndexPathInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListMoveIndexPathInternal.h; path = Source/Common/Internal/IGListMoveIndexPathInternal.h; sourceTree = "<group>"; };
+		0053DC90A4F7A50307E5F006ABF6CB7E /* libJPNavigationController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libJPNavigationController.a; path = libJPNavigationController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		01D0029C8A08F53DFE8BA2BE8742DDC5 /* JPTransitionShadowView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPTransitionShadowView.h; path = JPNavigationController/JPTransitionShadowView.h; sourceTree = "<group>"; };
+		08200AE5ACF6E3FF07A21A8A8D4D1236 /* JPNavigationController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPNavigationController.xcconfig; sourceTree = "<group>"; };
+		095596FBA1A435C7341BFD7F672854D2 /* MASConstraintMaker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraintMaker.m; path = Masonry/MASConstraintMaker.m; sourceTree = "<group>"; };
+		124625635F68FEA607E2D1191B7432D7 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ViewController+MASAdditions.m"; path = "Masonry/ViewController+MASAdditions.m"; sourceTree = "<group>"; };
+		12F7738B5374ED3CBA3E9D0F45BC5388 /* JPNavigationControllerKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerKit.h; path = JPNavigationController/JPNavigationControllerKit.h; sourceTree = "<group>"; };
+		15009A35E7C7721978828BE8AB63A61E /* JPNavigationControllerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerCompat.h; path = JPNavigationController/JPNavigationControllerCompat.h; sourceTree = "<group>"; };
+		19C3854E70F47B4144B79C48E43D7A79 /* NSLayoutConstraint+MASDebugAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSLayoutConstraint+MASDebugAdditions.h"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.h"; sourceTree = "<group>"; };
+		26072E14E188B77FFFD2FDE3020C99B4 /* JPNavigationControllerGestureRecognizer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerGestureRecognizer.m; path = JPNavigationController/JPNavigationControllerGestureRecognizer.m; sourceTree = "<group>"; };
 		2DDF841AEE7E7A3151FB43D1085E7F06 /* Pods-JPVideoPlayerDemo-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JPVideoPlayerDemo-acknowledgements.plist"; sourceTree = "<group>"; };
-		2EDACA2C761E8DABF961401007D7D7AA /* IGListDebugger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListDebugger.m; path = Source/Internal/IGListDebugger.m; sourceTree = "<group>"; };
-		2F07733E5823B1CAB5CDBE4E338B73F0 /* IGListAdapterInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterInternal.h; path = Source/Internal/IGListAdapterInternal.h; sourceTree = "<group>"; };
-		30D38182025488054F219A1D9B3015F6 /* IGListBatchUpdates.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListBatchUpdates.m; path = Source/Internal/IGListBatchUpdates.m; sourceTree = "<group>"; };
-		3290AE4ECBECA1D24F7BD2206A9AB4C3 /* IGListReloadIndexPath.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListReloadIndexPath.m; path = Source/Internal/IGListReloadIndexPath.m; sourceTree = "<group>"; };
-		337E1EF65BD45D00CA664F1C067F1551 /* IGListBindingSectionController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListBindingSectionController.m; path = Source/IGListBindingSectionController.m; sourceTree = "<group>"; };
-		33D41811290BE233EA2B60A405ABFEA1 /* IGListBatchUpdates.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBatchUpdates.h; path = Source/Internal/IGListBatchUpdates.h; sourceTree = "<group>"; };
-		343E970290D38871D19810B75DD392BF /* IGListSectionController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListSectionController.m; path = Source/IGListSectionController.m; sourceTree = "<group>"; };
-		344C49F674E033B481AF13DCFA304021 /* IGListCollectionViewLayoutInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCollectionViewLayoutInternal.h; path = Source/Internal/IGListCollectionViewLayoutInternal.h; sourceTree = "<group>"; };
-		34624100E5BB0666F33AC92D9B60EF3A /* IGListKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "IGListKit-prefix.pch"; sourceTree = "<group>"; };
-		3522738E84F93CF22361B086BD321BB8 /* JPWarpNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpNavigationController.m; path = JPNavigationController/JPWarpNavigationController.m; sourceTree = "<group>"; };
-		39AD39DA2AA9D521369D2C34A4AE8595 /* IGListSectionMap.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListSectionMap.h; path = Source/Internal/IGListSectionMap.h; sourceTree = "<group>"; };
-		3AC9671E1D3A2BA0A59A312180A306D9 /* libJPNavigationController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libJPNavigationController.a; path = libJPNavigationController.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E02189DCBC8211D1BFD43AF0C2D0C82 /* JPBaseAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPBaseAnimationTransition.h; path = JPNavigationController/JPBaseAnimationTransition.h; sourceTree = "<group>"; };
-		3E1A1DDCF7D745BCAA0A0D32DA99220C /* UIImageView+HighlightedWebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+HighlightedWebCache.h"; path = "SDWebImage/UIImageView+HighlightedWebCache.h"; sourceTree = "<group>"; };
-		3E81AF6701AF3B28DC20E8F750706168 /* IGListAdapter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapter.h; path = Source/IGListAdapter.h; sourceTree = "<group>"; };
-		3ECC4CEFDE36E23653D7DDB8DDE7A652 /* JPPushAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPPushAnimationTransition.m; path = JPNavigationController/JPPushAnimationTransition.m; sourceTree = "<group>"; };
-		4170EDC6D788FD3D5885DF18B037ABD3 /* IGListCollectionView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCollectionView.h; path = Source/IGListCollectionView.h; sourceTree = "<group>"; };
-		4179A9EA206056428C0C5AC09BFD6C6A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/ImageIO.framework; sourceTree = DEVELOPER_DIR; };
-		41E9E033C7265C29A80F446A1CA0DBFC /* IGListAdapterUpdateListener.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterUpdateListener.h; path = Source/IGListAdapterUpdateListener.h; sourceTree = "<group>"; };
-		48A2D1A93969BED8A17F9CF29DC71486 /* JPNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationController.m; path = JPNavigationController/JPNavigationController.m; sourceTree = "<group>"; };
-		496B20F1F6AED1CA3A6096A543C2C636 /* IGListMoveIndexInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListMoveIndexInternal.h; path = Source/Common/Internal/IGListMoveIndexInternal.h; sourceTree = "<group>"; };
-		4CBE4D2066289E975029C8A1B3FDA5D6 /* SDWebImagePrefetcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImagePrefetcher.h; path = SDWebImage/SDWebImagePrefetcher.h; sourceTree = "<group>"; };
-		4E74234B47EC1A0422864C83DF0372C9 /* IGListCollectionViewDelegateLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCollectionViewDelegateLayout.h; path = Source/IGListCollectionViewDelegateLayout.h; sourceTree = "<group>"; };
-		5081B46980248A3C32A349CCCB7B91E6 /* NSArray+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+MASAdditions.m"; path = "Masonry/NSArray+MASAdditions.m"; sourceTree = "<group>"; };
-		50EC939EEC5493DCA901745593512D4B /* SDWebImageCodersManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCodersManager.h; path = SDWebImage/SDWebImageCodersManager.h; sourceTree = "<group>"; };
-		511B4C0EDC384F0B076B83C01B16A64A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		51FD0E9202A734ADB99102C289CD78C0 /* JPTransitionShadowView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPTransitionShadowView.h; path = JPNavigationController/JPTransitionShadowView.h; sourceTree = "<group>"; };
-		52D85917EAC0E16EAA174B0BF7922E00 /* IGListBatchContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBatchContext.h; path = Source/IGListBatchContext.h; sourceTree = "<group>"; };
-		52D8DF289A07D17651C61475D8E5EEA7 /* IGListDiffable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDiffable.h; path = Source/Common/IGListDiffable.h; sourceTree = "<group>"; };
-		55138DE373EE64C9B5AD8A7417085AB7 /* NSString+IGListDiffable.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+IGListDiffable.m"; path = "Source/Common/NSString+IGListDiffable.m"; sourceTree = "<group>"; };
-		56BA444BC39B476CCA166F1A93397F65 /* IGListMoveIndexPath.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListMoveIndexPath.h; path = Source/Common/IGListMoveIndexPath.h; sourceTree = "<group>"; };
-		570CE0CD10814D9C5E25E3DE42488D92 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASShorthandAdditions.h"; path = "Masonry/View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
-		5741F5407F37BD218FC2CA79324A5278 /* SDWebImageCodersManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCodersManager.m; path = SDWebImage/SDWebImageCodersManager.m; sourceTree = "<group>"; };
-		5791B91DE860ABA512708D8CC9D1ADD0 /* libIGListKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libIGListKit.a; path = libIGListKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		583BB6EAA27C072FAF7021C2D28C7610 /* IGListReloadDataUpdater.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListReloadDataUpdater.m; path = Source/IGListReloadDataUpdater.m; sourceTree = "<group>"; };
-		58512AFD693C64A4276859F1D9F92936 /* MASViewAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewAttribute.h; path = Masonry/MASViewAttribute.h; sourceTree = "<group>"; };
-		590B1BC58CBD8F32C3B6ED3BCBAF72F4 /* IGListWorkingRangeHandler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListWorkingRangeHandler.h; path = Source/Internal/IGListWorkingRangeHandler.h; sourceTree = "<group>"; };
-		5ACCB1F8AFDDFC9377CFCEC59DF0FE4A /* IGListAdapter+UICollectionView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListAdapter+UICollectionView.h"; path = "Source/Internal/IGListAdapter+UICollectionView.h"; sourceTree = "<group>"; };
-		5BCC6218C5E2DE169C94CCBE0F0113DE /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "SDWebImage/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
-		5CFB406AF0303EA8B906EA7E2F7A1B07 /* IGListStackedSectionController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListStackedSectionController.h; path = Source/IGListStackedSectionController.h; sourceTree = "<group>"; };
-		601F5D5AD7464827D872CBCF37072312 /* IGListIndexSetResultInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListIndexSetResultInternal.h; path = Source/Common/Internal/IGListIndexSetResultInternal.h; sourceTree = "<group>"; };
-		61838F1B695362E0160284E6BED8ED8F /* IGListStackedSectionControllerInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListStackedSectionControllerInternal.h; path = Source/Internal/IGListStackedSectionControllerInternal.h; sourceTree = "<group>"; };
-		6301B79B73FA0D413B2E39B0537631FF /* SDWebImageDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderOperation.m; path = SDWebImage/SDWebImageDownloaderOperation.m; sourceTree = "<group>"; };
-		63BDADB88D0F82C3617442D2EBADFDD0 /* SDWebImageTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageTransition.h; path = SDWebImage/SDWebImageTransition.h; sourceTree = "<group>"; };
-		6536EDE23E5AB3D7293963CF74B80B3A /* IGListUpdatingDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListUpdatingDelegate.h; path = Source/IGListUpdatingDelegate.h; sourceTree = "<group>"; };
+		2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		33AE654F39CC4B25E03926B9D2212781 /* NSArray+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASShorthandAdditions.h"; path = "Masonry/NSArray+MASShorthandAdditions.h"; sourceTree = "<group>"; };
+		3B1823B851AA1D2D702744304C5C7E64 /* UIView+ScreenCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ScreenCapture.h"; path = "JPNavigationController/UIView+ScreenCapture.h"; sourceTree = "<group>"; };
+		3F56FF8D55872A48B4B71E974AF685F4 /* JPNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationController.m; path = JPNavigationController/JPNavigationController.m; sourceTree = "<group>"; };
+		3FBC4C17FE0B9CB32384AAD0192A4109 /* UINavigationController+FulllScreenPopPush.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FulllScreenPopPush.h"; path = "JPNavigationController/UINavigationController+FulllScreenPopPush.h"; sourceTree = "<group>"; };
+		4228AEC9CD48FC52DD30376F6AB83679 /* MASLayoutConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASLayoutConstraint.h; path = Masonry/MASLayoutConstraint.h; sourceTree = "<group>"; };
+		42341542F0CC64E55D832F3116751944 /* JPTransitionShadowView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPTransitionShadowView.m; path = JPNavigationController/JPTransitionShadowView.m; sourceTree = "<group>"; };
+		43772C8B434B7F4DE99A7D568609A500 /* UIColor+ImageGenerate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ImageGenerate.m"; path = "JPNavigationController/UIColor+ImageGenerate.m"; sourceTree = "<group>"; };
+		45B6775173752E384A8E158567B1AF71 /* JPNavigationController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-prefix.pch"; sourceTree = "<group>"; };
+		4BE820770DB5A00F83016E759DE9E574 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
+		4C9F922D9C424B122805DA6FA5D6A92D /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
+		50CD97D0918324550F4CB50F1E4B0085 /* JPNavigationControllerGestureRecognizer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerGestureRecognizer.h; path = JPNavigationController/JPNavigationControllerGestureRecognizer.h; sourceTree = "<group>"; };
+		567871E3D05DB6F04BB805F59A7A437F /* MASConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraint.h; path = Masonry/MASConstraint.h; sourceTree = "<group>"; };
+		588A906AC93B6997CD26D800578F4C0D /* MASViewAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewAttribute.h; path = Masonry/MASViewAttribute.h; sourceTree = "<group>"; };
+		5AA32F98F620FAEF16F01E0588A55581 /* JPNavigationController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPNavigationController-dummy.m"; sourceTree = "<group>"; };
+		61299DBA6C5F8531F7015A95D6B05942 /* JPNavigationControllerTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerTransition.h; path = JPNavigationController/JPNavigationControllerTransition.h; sourceTree = "<group>"; };
+		629E2397777B3FD8CF6B674797015E69 /* UINavigationBar+HitTest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+HitTest.h"; path = "JPNavigationController/UINavigationBar+HitTest.h"; sourceTree = "<group>"; };
 		6584CA31774F976F43B71D2CA06F00D6 /* Pods-JPVideoPlayerDemo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JPVideoPlayerDemo-dummy.m"; sourceTree = "<group>"; };
-		65E9B7273D50CCF620387156BC95D91F /* UIColor+ImageGenerate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ImageGenerate.m"; path = "JPNavigationController/UIColor+ImageGenerate.m"; sourceTree = "<group>"; };
-		6635D7CB9F43852C569CE3E6B7A41047 /* SDWebImageCoderHelper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCoderHelper.m; path = SDWebImage/SDWebImageCoderHelper.m; sourceTree = "<group>"; };
-		6967D4EF1809F11C9044C3C7869117C0 /* IGListMoveIndex.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListMoveIndex.m; path = Source/Common/IGListMoveIndex.m; sourceTree = "<group>"; };
-		69BE11479A3E8196DD1260635E78ACD5 /* UIView+ScreenCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ScreenCapture.h"; path = "JPNavigationController/UIView+ScreenCapture.h"; sourceTree = "<group>"; };
-		6A2E83AB2A6D3A6D14F23EB931F322A1 /* IGListCollectionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListCollectionView.m; path = Source/IGListCollectionView.m; sourceTree = "<group>"; };
-		6BA74C3A82EE4D243D391F2A2B060B19 /* IGListAdapter+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListAdapter+DebugDescription.h"; path = "Source/Internal/IGListAdapter+DebugDescription.h"; sourceTree = "<group>"; };
-		6BA8CDAC5DCA344133AF7EE901451351 /* UIImage+MultiFormat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MultiFormat.m"; path = "SDWebImage/UIImage+MultiFormat.m"; sourceTree = "<group>"; };
-		6BA92CCE930A00AF241E79BADBDAFE1C /* SDWebImageTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageTransition.m; path = SDWebImage/SDWebImageTransition.m; sourceTree = "<group>"; };
-		6CD405C0E87223BE51D34795B80F8B9E /* IGListAdapterDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterDelegate.h; path = Source/IGListAdapterDelegate.h; sourceTree = "<group>"; };
-		6F31348779288011F05A8985BB18CB9D /* IGListAdapterUpdater+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListAdapterUpdater+DebugDescription.h"; path = "Source/Internal/IGListAdapterUpdater+DebugDescription.h"; sourceTree = "<group>"; };
-		6F4418B9036247F47546A3E7163A3AC4 /* SDWebImageManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = SDWebImage/SDWebImageManager.m; sourceTree = "<group>"; };
-		6FAD585D5E0EED1EAEA6C86739D8E4EB /* UICollectionView+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UICollectionView+DebugDescription.m"; path = "Source/Internal/UICollectionView+DebugDescription.m"; sourceTree = "<group>"; };
-		6FC5797CD7177A175CFB78ACD0D41DFA /* UIImageView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "SDWebImage/UIImageView+WebCache.h"; sourceTree = "<group>"; };
-		7060988F67E12C0C9C859775737B0464 /* IGListCompatibility.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCompatibility.h; path = Source/Common/IGListCompatibility.h; sourceTree = "<group>"; };
-		7115B30E9810228B9E86FCFD21E793B7 /* JPNavigationController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JPNavigationController.xcconfig; sourceTree = "<group>"; };
-		73A72359EBA2C4ECA7BD80EBB79653A3 /* SDWebImageGIFCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageGIFCoder.h; path = SDWebImage/SDWebImageGIFCoder.h; sourceTree = "<group>"; };
-		73EE26360ADE6533CACB6160FA9819DC /* IGListBindingSectionController+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListBindingSectionController+DebugDescription.h"; path = "Source/Internal/IGListBindingSectionController+DebugDescription.h"; sourceTree = "<group>"; };
-		764123547EB7726DE639A03AF8517390 /* IGListReloadDataUpdater.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListReloadDataUpdater.h; path = Source/IGListReloadDataUpdater.h; sourceTree = "<group>"; };
-		784EE7559D73FC5CF05833B1D1EFD6B0 /* IGListAdapter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListAdapter.m; path = Source/IGListAdapter.m; sourceTree = "<group>"; };
-		7879EAB72A54B964C42A82AD95AF025D /* JPNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationController.h; path = JPNavigationController/JPNavigationController.h; sourceTree = "<group>"; };
-		796A5ED5C7CD484A6EE5284E833DA523 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASLayoutConstraint.m; path = Masonry/MASLayoutConstraint.m; sourceTree = "<group>"; };
-		79A3FB53350A4971F5B97CD24AE0CBBB /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ViewController+MASAdditions.m"; path = "Masonry/ViewController+MASAdditions.m"; sourceTree = "<group>"; };
-		79E84F1B31B3323B062F3598613ECCCE /* IGListScrollDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListScrollDelegate.h; path = Source/IGListScrollDelegate.h; sourceTree = "<group>"; };
-		7B04F889774A1BDAFD94766607558831 /* JPNavigationControllerCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerCompat.h; path = JPNavigationController/JPNavigationControllerCompat.h; sourceTree = "<group>"; };
+		6A7441121B7A652B52627DAA56D7A915 /* Masonry-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-prefix.pch"; sourceTree = "<group>"; };
+		6C279B898ACAB2D356EEE709F4EC4AAE /* Masonry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Masonry.h; path = Masonry/Masonry.h; sourceTree = "<group>"; };
+		6FFAAD8752041CE3A7B851AC613B0174 /* NSArray+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+MASAdditions.m"; path = "Masonry/NSArray+MASAdditions.m"; sourceTree = "<group>"; };
+		7417009D080ED048F1277F8D17BB1331 /* JPPushAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPPushAnimationTransition.m; path = JPNavigationController/JPPushAnimationTransition.m; sourceTree = "<group>"; };
+		74E404AA6957590324067E330E0EC533 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		756258683A639C16EF2EDAEEAD02FDCD /* UIColor+ImageGenerate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ImageGenerate.h"; path = "JPNavigationController/UIColor+ImageGenerate.h"; sourceTree = "<group>"; };
+		77270315B4D2037ADF28025013DA6521 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSLayoutConstraint+MASDebugAdditions.m"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
+		7ADC386259B9332A133DB4DC91CA4EF2 /* MASCompositeConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASCompositeConstraint.m; path = Masonry/MASCompositeConstraint.m; sourceTree = "<group>"; };
 		7BBB3D4B8215F5151BEF46AAE2F2B330 /* Pods-JPVideoPlayerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo.release.xcconfig"; sourceTree = "<group>"; };
-		7F86E78B75B2766A6789CCB85E924077 /* UIView+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCache.m"; path = "SDWebImage/UIView+WebCache.m"; sourceTree = "<group>"; };
-		8079FC59D1FF2F963A4EBD91D601B218 /* JPTransitionShadowView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPTransitionShadowView.m; path = JPNavigationController/JPTransitionShadowView.m; sourceTree = "<group>"; };
-		81648DD9346BFD41B88B8CD1621E934B /* MASConstraint+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MASConstraint+Private.h"; path = "Masonry/MASConstraint+Private.h"; sourceTree = "<group>"; };
-		818A54240B718C31F2AFF303A5D826E0 /* IGListDiff.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = IGListDiff.mm; path = Source/Common/IGListDiff.mm; sourceTree = "<group>"; };
-		81C2D86F1ACBB746DDEE8E0AA3A4F45F /* NSNumber+IGListDiffable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSNumber+IGListDiffable.h"; path = "Source/Common/NSNumber+IGListDiffable.h"; sourceTree = "<group>"; };
-		83EF5ECFE7299B04EF3583F12F43670C /* IGListDiffKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDiffKit.h; path = Source/Common/IGListDiffKit.h; sourceTree = "<group>"; };
-		846FA7BD9F419A622AF1011A7479F3FE /* IGListDebugger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDebugger.h; path = Source/Internal/IGListDebugger.h; sourceTree = "<group>"; };
-		87B3AFAEB2AE2C94C50C41960A96D5B5 /* MASConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraint.h; path = Masonry/MASConstraint.h; sourceTree = "<group>"; };
-		87CCC40337499652799A28C031794E9E /* IGListStackedSectionController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListStackedSectionController.m; path = Source/IGListStackedSectionController.m; sourceTree = "<group>"; };
-		87DAC371E824AC03072C487D7CFA022B /* Masonry-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Masonry-dummy.m"; sourceTree = "<group>"; };
-		88CAF1336AE7A9493E8D81ECBC9EBF0A /* JPNavigationControllerTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerTransition.m; path = JPNavigationController/JPNavigationControllerTransition.m; sourceTree = "<group>"; };
-		89F95AD005FA52272414B11D5069DE19 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
-		8A20C764FADC968372422A57B1D3C8B0 /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
-		8A7E07EAC1AD228514DB42A10F51423D /* UINavigationBar+HitTest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+HitTest.h"; path = "JPNavigationController/UINavigationBar+HitTest.h"; sourceTree = "<group>"; };
-		8FF977BD17FC9ECFE84281A36ACA43A8 /* IGListDisplayHandler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListDisplayHandler.m; path = Source/Internal/IGListDisplayHandler.m; sourceTree = "<group>"; };
-		92021493A54C2006008982BE4AFD9973 /* IGListSectionController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListSectionController.h; path = Source/IGListSectionController.h; sourceTree = "<group>"; };
-		92D69752AA49B50489D8B32C673C1639 /* SDWebImageImageIOCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageImageIOCoder.h; path = SDWebImage/SDWebImageImageIOCoder.h; sourceTree = "<group>"; };
+		7C6F243513AB9D49725772E203ADADDB /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
+		7EA288FC60D38511EEF13C6ADE975B21 /* JPWarpViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpViewController.h; path = JPNavigationController/JPWarpViewController.h; sourceTree = "<group>"; };
+		9157DC47F6AE732702D4FBB306EA7C3C /* JPWarpNavigationController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpNavigationController.m; path = JPNavigationController/JPWarpNavigationController.m; sourceTree = "<group>"; };
 		938C6819ED29F581BA50870024B1DBF0 /* Pods-JPVideoPlayerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JPVideoPlayerDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		938E7D2D8EF7ABED6B084981C11E1111 /* Masonry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Masonry.h; path = Masonry/Masonry.h; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		950D8F65D225F6906E7ECB8566E11507 /* IGListDisplayHandler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDisplayHandler.h; path = Source/Internal/IGListDisplayHandler.h; sourceTree = "<group>"; };
-		97FFAFE3FB22AD14C765854E3B4FCBF3 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "SDWebImage/NSData+ImageContentType.h"; sourceTree = "<group>"; };
-		9909806112C67B6DB3A4E4333FBB8881 /* JPNavigationController.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = JPNavigationController.bundle; path = JPNavigationController/JPNavigationController.bundle; sourceTree = "<group>"; };
-		99AD848FB5D56C25C87F5E09CDD2BB36 /* JPNavigationControllerTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerTransition.h; path = JPNavigationController/JPNavigationControllerTransition.h; sourceTree = "<group>"; };
-		9BE3D99B3B56E4FBC60361D302368FC2 /* NSNumber+IGListDiffable.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSNumber+IGListDiffable.m"; path = "Source/Common/NSNumber+IGListDiffable.m"; sourceTree = "<group>"; };
-		9CBBA05D58004EE30D6E9FC44A7DACCC /* IGListIndexSetResult.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListIndexSetResult.m; path = Source/Common/IGListIndexSetResult.m; sourceTree = "<group>"; };
-		9D19ED4AD78F1DE9729D4A039CA55240 /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
-		9D7B69F1366656641B4EF26594433885 /* MASConstraintMaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraintMaker.h; path = Masonry/MASConstraintMaker.h; sourceTree = "<group>"; };
-		9E1521D9E4A05367A7A19162C7174BBA /* UIView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCache.h"; path = "SDWebImage/UIView+WebCache.h"; sourceTree = "<group>"; };
-		9E4DF9D98CEFD37750FFA7A198313A16 /* IGListDiff.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListDiff.h; path = Source/Common/IGListDiff.h; sourceTree = "<group>"; };
-		9F0465466C86BC3148C0C7CEE166970B /* IGListBindingSectionControllerDataSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBindingSectionControllerDataSource.h; path = Source/IGListBindingSectionControllerDataSource.h; sourceTree = "<group>"; };
-		9FC07605D521A3A4C0EC6C57E1BD190D /* UICollectionViewLayout+InteractiveReordering.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UICollectionViewLayout+InteractiveReordering.h"; path = "Source/Internal/UICollectionViewLayout+InteractiveReordering.h"; sourceTree = "<group>"; };
-		A1453255BE326B242E78DD9BF28ED0D2 /* SDWebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SDWebImage.xcconfig; sourceTree = "<group>"; };
-		A2A9CE74153FD5A08E26505287AEDA93 /* MASCompositeConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASCompositeConstraint.m; path = Masonry/MASCompositeConstraint.m; sourceTree = "<group>"; };
-		A3826364A5D234681A892E5E119978B9 /* SDWebImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SDWebImage-dummy.m"; sourceTree = "<group>"; };
-		A415D71FF1F378AFA8C8B8BD13AB87D7 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
-		A43D8B6B3635E371A98268037181BD9C /* JPNavigationControllerGestureRecognizer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerGestureRecognizer.h; path = JPNavigationController/JPNavigationControllerGestureRecognizer.h; sourceTree = "<group>"; };
-		A62E921F7E3E7C95B639BFD2CCC58B15 /* SDWebImageManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageManager.h; path = SDWebImage/SDWebImageManager.h; sourceTree = "<group>"; };
-		A71CA3A7D73B89EB26DE0D8F52E97ABB /* IGListAdapterUpdaterInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterUpdaterInternal.h; path = Source/Internal/IGListAdapterUpdaterInternal.h; sourceTree = "<group>"; };
-		A9549D4311CF91ED791AD639E127F7E7 /* JPNavigationController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JPNavigationController-prefix.pch"; sourceTree = "<group>"; };
-		A98E4BA6FADEA4392B28726032930D16 /* IGListBatchUpdateData+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListBatchUpdateData+DebugDescription.m"; path = "Source/Internal/IGListBatchUpdateData+DebugDescription.m"; sourceTree = "<group>"; };
-		AA6A51FA917F2262B8DF21D864B2374D /* UIButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+WebCache.m"; path = "SDWebImage/UIButton+WebCache.m"; sourceTree = "<group>"; };
-		AC0CF9F132EC83C6282C0F214DA64307 /* SDImageCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCache.h; path = SDWebImage/SDImageCache.h; sourceTree = "<group>"; };
-		AC25BB3B57C6733561FE4B646C9C14B6 /* IGListCollectionContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListCollectionContext.h; path = Source/IGListCollectionContext.h; sourceTree = "<group>"; };
-		AC82093CF42DC3C0EA3A2C9BBF1ED8E7 /* JPNavigationControllerKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerKit.h; path = JPNavigationController/JPNavigationControllerKit.h; sourceTree = "<group>"; };
-		AD2F06D51DCA12E45982B207C5ACB468 /* IGListArrayUtilsInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListArrayUtilsInternal.h; path = Source/Common/Internal/IGListArrayUtilsInternal.h; sourceTree = "<group>"; };
+		A42DE00CB6822CB064834AC217BF1220 /* Masonry-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Masonry-dummy.m"; sourceTree = "<group>"; };
+		A4B35C43566C22C0369CEDE32DAB7730 /* View+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASAdditions.h"; path = "Masonry/View+MASAdditions.h"; sourceTree = "<group>"; };
+		A5F5F0C65B5867965EE4BEE98EFC8E5A /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASShorthandAdditions.h"; path = "Masonry/View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		AD7F5A3300762A7C3B41C1803E8D7B98 /* Pods-JPVideoPlayerDemo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JPVideoPlayerDemo-acknowledgements.markdown"; sourceTree = "<group>"; };
-		AD9166CF357532125DF771EA4C80DEF6 /* JPNavigationControllerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerProtocol.h; path = JPNavigationController/JPNavigationControllerProtocol.h; sourceTree = "<group>"; };
-		AED799170161B0D7157E99BCE10E90EC /* UINavigationBar+HitTest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+HitTest.m"; path = "JPNavigationController/UINavigationBar+HitTest.m"; sourceTree = "<group>"; };
-		AF083C4EA228319F10B0AD38D0C6F03B /* UIImage+GIF.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "SDWebImage/UIImage+GIF.h"; sourceTree = "<group>"; };
-		B088EA0E55F8AED8AD166E595232A19D /* UIImage+ForceDecode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ForceDecode.m"; path = "SDWebImage/UIImage+ForceDecode.m"; sourceTree = "<group>"; };
-		B0BC4CD3AAAD7DA09A847016FC1C0707 /* IGListBindingSectionController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBindingSectionController.h; path = Source/IGListBindingSectionController.h; sourceTree = "<group>"; };
-		B1CFE3EAEA8DEF80BC160D6FBE6B314F /* SDWebImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCoder.m; path = SDWebImage/SDWebImageCoder.m; sourceTree = "<group>"; };
-		B2389BD47D9BC927186A64BD9BF5B88C /* JPWarpNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpNavigationController.h; path = JPNavigationController/JPWarpNavigationController.h; sourceTree = "<group>"; };
-		B41EE626A214D435DCEF75D68840981B /* UICollectionView+IGListBatchUpdateData.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UICollectionView+IGListBatchUpdateData.h"; path = "Source/Internal/UICollectionView+IGListBatchUpdateData.h"; sourceTree = "<group>"; };
-		B471551791E9388A16039E1590FC70CA /* IGListSingleSectionController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListSingleSectionController.h; path = Source/IGListSingleSectionController.h; sourceTree = "<group>"; };
-		B4B5ACF2F2F49DD12F31486879D7BECB /* libMasonry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMasonry.a; path = libMasonry.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B69C1D954CA417451F08AF77C492812E /* UIButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
-		B73ACE3B8BEA6B4D078D831A7FEB27FF /* UIScrollView+IGListKit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIScrollView+IGListKit.m"; path = "Source/Internal/UIScrollView+IGListKit.m"; sourceTree = "<group>"; };
-		B860DEAD9736EB50576DED2C00B6DF33 /* JPWarpViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpViewController.h; path = JPNavigationController/JPWarpViewController.h; sourceTree = "<group>"; };
-		BB28F4B7E15EB1A327981389271027C4 /* NSButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSButton+WebCache.m"; path = "SDWebImage/NSButton+WebCache.m"; sourceTree = "<group>"; };
-		BB36F0FC25D5374BA7319B17B0BDE6AF /* IGListBatchUpdateState.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBatchUpdateState.h; path = Source/Internal/IGListBatchUpdateState.h; sourceTree = "<group>"; };
-		BD953C17BA9035505A0A820D4F0032C9 /* IGListBatchUpdateData+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IGListBatchUpdateData+DebugDescription.h"; path = "Source/Internal/IGListBatchUpdateData+DebugDescription.h"; sourceTree = "<group>"; };
-		BD956999F2DE8012E8DF6E927B81B74E /* NSData+ImageContentType.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "SDWebImage/NSData+ImageContentType.m"; sourceTree = "<group>"; };
-		BDCBBFDE687C68BFDB821530065CBC9F /* IGListIndexPathResultInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListIndexPathResultInternal.h; path = Source/Common/Internal/IGListIndexPathResultInternal.h; sourceTree = "<group>"; };
-		BDED2D3CBE45EBFA2ED562E5B0F04E8F /* UICollectionViewLayout+InteractiveReordering.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UICollectionViewLayout+InteractiveReordering.m"; path = "Source/Internal/UICollectionViewLayout+InteractiveReordering.m"; sourceTree = "<group>"; };
-		BE0DB69E69795F7D045D327913D85DDC /* NSArray+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASAdditions.h"; path = "Masonry/NSArray+MASAdditions.h"; sourceTree = "<group>"; };
-		BE8BA1D540A7A5FF64C08080366C9729 /* UIColor+ImageGenerate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ImageGenerate.h"; path = "JPNavigationController/UIColor+ImageGenerate.h"; sourceTree = "<group>"; };
-		BEB0C0A22082155A0702B7F0CDCE0ED0 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
+		AFD713762BF7F114F4A22D2A64D2B7DB /* Masonry.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.xcconfig; sourceTree = "<group>"; };
+		B29D056B6A45CDE0319DFAD59D3819E4 /* NSArray+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASAdditions.h"; path = "Masonry/NSArray+MASAdditions.h"; sourceTree = "<group>"; };
+		B6DC5C0C9DFC51D6B2DCE42D674A3E78 /* JPBaseAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPBaseAnimationTransition.h; path = JPNavigationController/JPBaseAnimationTransition.h; sourceTree = "<group>"; };
+		B81B33DFC99F15D59E1E1A65F3CD83D7 /* JPWarpNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPWarpNavigationController.h; path = JPNavigationController/JPWarpNavigationController.h; sourceTree = "<group>"; };
+		B829FC45FDD9762218DC8B921E23F80F /* JPNavigationControllerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationControllerProtocol.h; path = JPNavigationController/JPNavigationControllerProtocol.h; sourceTree = "<group>"; };
+		B9ACE5D4EAA7B73E091E167B7DFC4E88 /* JPPushAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPPushAnimationTransition.h; path = JPNavigationController/JPPushAnimationTransition.h; sourceTree = "<group>"; };
+		BC33FE0A9D1A6FE658399712AAFDC5A4 /* UIViewController+ViewControllers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ViewControllers.h"; path = "JPNavigationController/UIViewController+ViewControllers.h"; sourceTree = "<group>"; };
 		BEDC75A0628C04B4E64BD822E20BED12 /* Pods-JPVideoPlayerDemo-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo-frameworks.sh"; sourceTree = "<group>"; };
-		BF037495BC9D3029659EA5B93758B9A9 /* IGListReloadIndexPath.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListReloadIndexPath.h; path = Source/Internal/IGListReloadIndexPath.h; sourceTree = "<group>"; };
-		C0E54229028B3DF5339A240612684092 /* SDImageCacheConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCacheConfig.h; path = SDWebImage/SDImageCacheConfig.h; sourceTree = "<group>"; };
-		C1CF9C3A6B25339FD7000C29906C2674 /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSDWebImage.a; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6DA66F791310A5E3626E6DA2AA67B5C /* MASViewConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewConstraint.m; path = Masonry/MASViewConstraint.m; sourceTree = "<group>"; };
-		C92824B6EB6911DFB0285F42B0C0A03B /* JPNavigationControllerGestureRecognizer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerGestureRecognizer.m; path = JPNavigationController/JPNavigationControllerGestureRecognizer.m; sourceTree = "<group>"; };
-		C963FFF58BB66668D171D01DAE62EB69 /* IGListAdapterProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterProxy.h; path = Source/Internal/IGListAdapterProxy.h; sourceTree = "<group>"; };
-		CA629095FBF380002ACCE9A70950D045 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ViewController+MASAdditions.h"; path = "Masonry/ViewController+MASAdditions.h"; sourceTree = "<group>"; };
-		CCD8B7AAE9D99444F6E47007BE949F23 /* IGListKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = IGListKit.xcconfig; sourceTree = "<group>"; };
-		CD01C4AB843DCC915562839EFB6BD93E /* IGListAdapterUpdater.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterUpdater.h; path = Source/IGListAdapterUpdater.h; sourceTree = "<group>"; };
-		CE3AC00B3DDCC6A46F4A104F947E6BE3 /* MASConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraint.m; path = Masonry/MASConstraint.m; sourceTree = "<group>"; };
-		CF8FAC7D7EF6C81134DAE88260C11CFC /* MASLayoutConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASLayoutConstraint.h; path = Masonry/MASLayoutConstraint.h; sourceTree = "<group>"; };
-		CF9FF955F30A91D407535976E67FBAFE /* MASCompositeConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASCompositeConstraint.h; path = Masonry/MASCompositeConstraint.h; sourceTree = "<group>"; };
-		D0395F32982D6CB40C8A276814AD6BE8 /* IGListKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListKit.h; path = Source/IGListKit.h; sourceTree = "<group>"; };
-		D1545AED1E5E17C10FBEBA2548D3CD6A /* IGListAdapterDataSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterDataSource.h; path = Source/IGListAdapterDataSource.h; sourceTree = "<group>"; };
-		D1829034CD7B1BE7BB06389E22984189 /* SDWebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SDWebImage-prefix.pch"; sourceTree = "<group>"; };
-		D1ECACB536292955806166433CE92D30 /* IGListGenericSectionController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListGenericSectionController.m; path = Source/IGListGenericSectionController.m; sourceTree = "<group>"; };
-		D2004179FCF7918F29C88FE17E81E749 /* IGListMoveIndexPath.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListMoveIndexPath.m; path = Source/Common/IGListMoveIndexPath.m; sourceTree = "<group>"; };
-		D2F84EC705DA4C68C12EDDD6C22001D4 /* SDWebImageCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = SDWebImage/SDWebImageCompat.h; sourceTree = "<group>"; };
-		D34292BC3BCE7BF272B9CAAED605983D /* UICollectionView+IGListBatchUpdateData.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UICollectionView+IGListBatchUpdateData.m"; path = "Source/Internal/UICollectionView+IGListBatchUpdateData.m"; sourceTree = "<group>"; };
-		D54B573B0B1E9D393E3EBAA1ED4313BA /* NSButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSButton+WebCache.h"; path = "SDWebImage/NSButton+WebCache.h"; sourceTree = "<group>"; };
-		D797A4D8C1AF497BEECEDCBDA494FD84 /* IGListIndexPathResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListIndexPathResult.h; path = Source/Common/IGListIndexPathResult.h; sourceTree = "<group>"; };
-		D9520D38C98BE0556C85A4AD4A12C61C /* IGListWorkingRangeDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListWorkingRangeDelegate.h; path = Source/IGListWorkingRangeDelegate.h; sourceTree = "<group>"; };
-		D9BB8FDFF4977F6A6EE21771DAB9AE9F /* IGListBindingSectionControllerSelectionDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBindingSectionControllerSelectionDelegate.h; path = Source/IGListBindingSectionControllerSelectionDelegate.h; sourceTree = "<group>"; };
-		DCE3C3AFB2432DE6F3C728AEE90A72EE /* SDWebImageCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCoder.h; path = SDWebImage/SDWebImageCoder.h; sourceTree = "<group>"; };
-		DD4E8454DA301FD95CCE6ED6C786500C /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "SDWebImage/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
-		E21FBE60D8C32725445BB53582375683 /* IGListKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "IGListKit-dummy.m"; sourceTree = "<group>"; };
-		E25574AB4863AFBF2B736CAC94A9C925 /* SDWebImageFrame.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageFrame.m; path = SDWebImage/SDWebImageFrame.m; sourceTree = "<group>"; };
-		E6F32F146F9B581EF5D330EDB83C87E5 /* SDWebImageCompat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCompat.m; path = SDWebImage/SDWebImageCompat.m; sourceTree = "<group>"; };
-		E797D4944DFFB473903FE52B697D2B4D /* SDWebImageCoderHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCoderHelper.h; path = SDWebImage/SDWebImageCoderHelper.h; sourceTree = "<group>"; };
-		E96B84B99E6916D5923239CFB741756A /* IGListMoveIndex.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListMoveIndex.h; path = Source/Common/IGListMoveIndex.h; sourceTree = "<group>"; };
-		ED047B77428315687019D70DFADB789E /* NSLayoutConstraint+MASDebugAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSLayoutConstraint+MASDebugAdditions.h"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.h"; sourceTree = "<group>"; };
-		ED570B1E9BD041163A4627879D67D99D /* JPNavigationController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JPNavigationController-dummy.m"; sourceTree = "<group>"; };
-		EDB77C90AD214B421FB1F0DA3F5FC4FB /* NSArray+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASShorthandAdditions.h"; path = "Masonry/NSArray+MASShorthandAdditions.h"; sourceTree = "<group>"; };
-		EDCE3340EFFE60C4CF70A2C51D271D39 /* IGListCollectionViewLayout.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = IGListCollectionViewLayout.mm; path = Source/IGListCollectionViewLayout.mm; sourceTree = "<group>"; };
-		EE0EAA8E41C17B64570FC13761BBEBCC /* IGListSectionMap.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListSectionMap.m; path = Source/Internal/IGListSectionMap.m; sourceTree = "<group>"; };
-		EEBB0B1B6B7B193BC372BDA05EE9F690 /* UICollectionView+DebugDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UICollectionView+DebugDescription.h"; path = "Source/Internal/UICollectionView+DebugDescription.h"; sourceTree = "<group>"; };
-		F0DC14BB5BF29E281478BFCBDB0FFD4D /* SDWebImageDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderOperation.h; path = SDWebImage/SDWebImageDownloaderOperation.h; sourceTree = "<group>"; };
-		F2013CFB40D53C0DD990EBF0FCB22E66 /* IGListWorkingRangeHandler.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = IGListWorkingRangeHandler.mm; path = Source/Internal/IGListWorkingRangeHandler.mm; sourceTree = "<group>"; };
+		BFB5C9B6566B70C177C5233D1790095F /* MASConstraint+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MASConstraint+Private.h"; path = "Masonry/MASConstraint+Private.h"; sourceTree = "<group>"; };
+		C5116D54DF09E9274DF13434B7D468C4 /* libMasonry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMasonry.a; path = libMasonry.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5B5D3FDFD7C678D1BBC46C1F5ADD660 /* JPNavigationController.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = JPNavigationController.bundle; path = JPNavigationController/JPNavigationController.bundle; sourceTree = "<group>"; };
+		C66CE8ECABC2A6C9914DEA6D6F607CDB /* UIViewController+ViewControllers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ViewControllers.m"; path = "JPNavigationController/UIViewController+ViewControllers.m"; sourceTree = "<group>"; };
+		D013299BF5961E35883E5F8FAC02A71C /* UINavigationBar+HitTest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+HitTest.m"; path = "JPNavigationController/UINavigationBar+HitTest.m"; sourceTree = "<group>"; };
+		D1A074720A075F1118A136D1335EF101 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ViewController+MASAdditions.h"; path = "Masonry/ViewController+MASAdditions.h"; sourceTree = "<group>"; };
+		D37EE54EF49A94F61D59112EFD170541 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASLayoutConstraint.m; path = Masonry/MASLayoutConstraint.m; sourceTree = "<group>"; };
+		DA7E58583895F09891E1C1269FBA860C /* JPWarpViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPWarpViewController.m; path = JPNavigationController/JPWarpViewController.m; sourceTree = "<group>"; };
+		DF9FF79AFFF6F1F52EBB4B2500E9CF4F /* JPBaseAnimationTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPBaseAnimationTransition.m; path = JPNavigationController/JPBaseAnimationTransition.m; sourceTree = "<group>"; };
+		E5DEEA1B55FCD2A423C1B7FCF5265B22 /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
+		EACB4237997F4951703FF587382D3198 /* MASConstraintMaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraintMaker.h; path = Masonry/MASConstraintMaker.h; sourceTree = "<group>"; };
+		EC5935DCB949DE2117073D5BE5824FDA /* MASConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraint.m; path = Masonry/MASConstraint.m; sourceTree = "<group>"; };
+		EDAA265AE6826C029E4CEC27792AAE9A /* MASCompositeConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASCompositeConstraint.h; path = Masonry/MASCompositeConstraint.h; sourceTree = "<group>"; };
+		F12C93C585F861DB703DFA07B51F5471 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-JPVideoPlayerDemo.a"; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F18A38B84D5AB81B0B21FC73BF8B3656 /* UIView+ScreenCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ScreenCapture.m"; path = "JPNavigationController/UIView+ScreenCapture.m"; sourceTree = "<group>"; };
+		F1CA28A683FBDDB4B35338E13E2AB17F /* JPNavigationControllerTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JPNavigationControllerTransition.m; path = JPNavigationController/JPNavigationControllerTransition.m; sourceTree = "<group>"; };
+		F24D3CDC4992D1029D590EB817584E67 /* JPNavigationController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPNavigationController.h; path = JPNavigationController/JPNavigationController.h; sourceTree = "<group>"; };
 		F290204D8D9AA506BFE9B7B1F76271EE /* Pods-JPVideoPlayerDemo-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JPVideoPlayerDemo-resources.sh"; sourceTree = "<group>"; };
-		F31A893B4CC8895F9A016A3AA9DF8900 /* IGListAdapterUpdaterDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterUpdaterDelegate.h; path = Source/IGListAdapterUpdaterDelegate.h; sourceTree = "<group>"; };
-		F417DFC75F4570FEC91C4C079F0DFA88 /* IGListGenericSectionController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListGenericSectionController.h; path = Source/IGListGenericSectionController.h; sourceTree = "<group>"; };
-		F497C79931217C6C35E982B21406754E /* IGListMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListMacros.h; path = Source/Common/IGListMacros.h; sourceTree = "<group>"; };
-		F502EFE17F25B57936E56BFAD30C4620 /* IGListBatchUpdateData.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = IGListBatchUpdateData.mm; path = Source/Common/IGListBatchUpdateData.mm; sourceTree = "<group>"; };
-		F52D7E87C69E01038D72DAED85835BCB /* UIView+ScreenCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ScreenCapture.m"; path = "JPNavigationController/UIView+ScreenCapture.m"; sourceTree = "<group>"; };
-		F63403C50E777D90F1AE78CBE67889AE /* SDWebImageDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloader.m; path = SDWebImage/SDWebImageDownloader.m; sourceTree = "<group>"; };
-		F6491B3F688B6BE69B9C5F729AC9DD79 /* SDWebImageImageIOCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageImageIOCoder.m; path = SDWebImage/SDWebImageImageIOCoder.m; sourceTree = "<group>"; };
-		F6C0243BB9EA30ACE21B6AB539B2AB27 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		F754059EAFD95929EF8B698345EE7856 /* IGListSupplementaryViewSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListSupplementaryViewSource.h; path = Source/IGListSupplementaryViewSource.h; sourceTree = "<group>"; };
-		F777A4E1EF223F4ADE5D69DB054EF11F /* IGListBindingSectionController+DebugDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListBindingSectionController+DebugDescription.m"; path = "Source/Internal/IGListBindingSectionController+DebugDescription.m"; sourceTree = "<group>"; };
-		F7E817C2CB093993E67CB49ADF1F3AF7 /* Masonry-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-prefix.pch"; sourceTree = "<group>"; };
-		F817CE23908D9D36C39BCBA7E2298698 /* NSImage+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSImage+WebCache.h"; path = "SDWebImage/NSImage+WebCache.h"; sourceTree = "<group>"; };
-		F918E3EA592B6CFE534D0449CB2933C6 /* IGListAdapter+UICollectionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IGListAdapter+UICollectionView.m"; path = "Source/Internal/IGListAdapter+UICollectionView.m"; sourceTree = "<group>"; };
-		F93569D65AE0BB407512E505104216A3 /* IGListAssert.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAssert.h; path = Source/Common/IGListAssert.h; sourceTree = "<group>"; };
-		F937E1F850EDA43C8591902D3B3F90BA /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSLayoutConstraint+MASDebugAdditions.m"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
-		F95A1A0E9B09F0C4B615B2F2283C21DD /* Masonry.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.xcconfig; sourceTree = "<group>"; };
-		FAE722D0232B95D123374DACAB7A48E0 /* IGListBatchUpdateData.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListBatchUpdateData.h; path = Source/Common/IGListBatchUpdateData.h; sourceTree = "<group>"; };
-		FAFF392D69C9E7AD61540BCD2D2DE317 /* SDWebImageGIFCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageGIFCoder.m; path = SDWebImage/SDWebImageGIFCoder.m; sourceTree = "<group>"; };
-		FBAA5D64FE9E6313E5E325D8C257617D /* JPPushAnimationTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JPPushAnimationTransition.h; path = JPNavigationController/JPPushAnimationTransition.h; sourceTree = "<group>"; };
-		FBF3234E5734B101B3843335981319FF /* IGListIndexPathResult.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IGListIndexPathResult.m; path = Source/Common/IGListIndexPathResult.m; sourceTree = "<group>"; };
-		FCC16005A62A48714935755D0A2C72B9 /* SDImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCache.m; path = SDWebImage/SDImageCache.m; sourceTree = "<group>"; };
-		FCD629343481C98EBE57FC2D743EA9A2 /* SDWebImageDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloader.h; path = SDWebImage/SDWebImageDownloader.h; sourceTree = "<group>"; };
-		FEF22EB28E01085267ED6F7DB713A2D0 /* IGListAdapterMoveDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IGListAdapterMoveDelegate.h; path = Source/IGListAdapterMoveDelegate.h; sourceTree = "<group>"; };
+		F55BCC3BE5B8F8E17E4F9BB62FCAC482 /* MASViewConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewConstraint.m; path = Masonry/MASViewConstraint.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0324033007AFBC44C3D0A5E98E451768 /* Frameworks */ = {
+		98A5B6E315008B77DFA8DEF9BB111D0B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		14B4068682780D92D56104E82A25A7FF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B032EAC4803380A07D99C2188D5DEA7C /* UIKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7DFC9F9AFBE8F1E5274110D320A059F4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41792C973B611165CBA8DE42FA5E501E /* ImageIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,8 +174,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				699096520CABA15A0196609EAA54D366 /* Foundation.framework in Frameworks */,
-				44081CCF462AE437F36222476DDA9816 /* UIKit.framework in Frameworks */,
+				265ED3616AD8DC0516A45DE5473133DD /* Foundation.framework in Frameworks */,
+				349A7678AD638D5FE26743AAF165A54A /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,201 +183,43 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FFB136A73785357DB71040EE98D64E8 /* Foundation.framework in Frameworks */,
-				80168118387EDB797864E124C50B7C9A /* UIKit.framework in Frameworks */,
+				2264F70BC14704D38058B909461A95AA /* Foundation.framework in Frameworks */,
+				2510E154CD2E0ADA5FDAF6E67FCD9D88 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		076733C0F720837191C7C8BA80E22CC1 /* Masonry */ = {
+		0426B97666421B783528D0F263DE2A3D /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				CF9FF955F30A91D407535976E67FBAFE /* MASCompositeConstraint.h */,
-				A2A9CE74153FD5A08E26505287AEDA93 /* MASCompositeConstraint.m */,
-				87B3AFAEB2AE2C94C50C41960A96D5B5 /* MASConstraint.h */,
-				CE3AC00B3DDCC6A46F4A104F947E6BE3 /* MASConstraint.m */,
-				81648DD9346BFD41B88B8CD1621E934B /* MASConstraint+Private.h */,
-				9D7B69F1366656641B4EF26594433885 /* MASConstraintMaker.h */,
-				2AE7292F38E935658DB543E434F0FD28 /* MASConstraintMaker.m */,
-				CF8FAC7D7EF6C81134DAE88260C11CFC /* MASLayoutConstraint.h */,
-				796A5ED5C7CD484A6EE5284E833DA523 /* MASLayoutConstraint.m */,
-				938E7D2D8EF7ABED6B084981C11E1111 /* Masonry.h */,
-				2D4D63C1612366665529F73481DF1081 /* MASUtilities.h */,
-				58512AFD693C64A4276859F1D9F92936 /* MASViewAttribute.h */,
-				9D19ED4AD78F1DE9729D4A039CA55240 /* MASViewAttribute.m */,
-				89F95AD005FA52272414B11D5069DE19 /* MASViewConstraint.h */,
-				C6DA66F791310A5E3626E6DA2AA67B5C /* MASViewConstraint.m */,
-				BE0DB69E69795F7D045D327913D85DDC /* NSArray+MASAdditions.h */,
-				5081B46980248A3C32A349CCCB7B91E6 /* NSArray+MASAdditions.m */,
-				EDB77C90AD214B421FB1F0DA3F5FC4FB /* NSArray+MASShorthandAdditions.h */,
-				ED047B77428315687019D70DFADB789E /* NSLayoutConstraint+MASDebugAdditions.h */,
-				F937E1F850EDA43C8591902D3B3F90BA /* NSLayoutConstraint+MASDebugAdditions.m */,
-				1F67559D5B188E1D009020F315F66806 /* View+MASAdditions.h */,
-				8A20C764FADC968372422A57B1D3C8B0 /* View+MASAdditions.m */,
-				570CE0CD10814D9C5E25E3DE42488D92 /* View+MASShorthandAdditions.h */,
-				CA629095FBF380002ACCE9A70950D045 /* ViewController+MASAdditions.h */,
-				79A3FB53350A4971F5B97CD24AE0CBBB /* ViewController+MASAdditions.m */,
-				D3A57C2E5D0A11FC9CAF0372194C11E3 /* Support Files */,
-			);
-			name = Masonry;
-			path = Masonry;
-			sourceTree = "<group>";
-		};
-		122DA2E5084A4393C29BE363C764795C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				64498B6C068A7D05E7858530681FDF2F /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		1C787A6AEF52AB29F6BCD33713C5F3AB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3715BBEE047EAFB3BD3FE376F9DF661A /* IGListKit */,
-				510BAF8A16D28703E1865D2F01B21449 /* JPNavigationController */,
-				076733C0F720837191C7C8BA80E22CC1 /* Masonry */,
-				DD74160280238B8BD1E0D6FF239956BE /* SDWebImage */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		33BC50EE6718E3A7825F3F41AFE56143 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				7115B30E9810228B9E86FCFD21E793B7 /* JPNavigationController.xcconfig */,
-				ED570B1E9BD041163A4627879D67D99D /* JPNavigationController-dummy.m */,
-				A9549D4311CF91ED791AD639E127F7E7 /* JPNavigationController-prefix.pch */,
+				08200AE5ACF6E3FF07A21A8A8D4D1236 /* JPNavigationController.xcconfig */,
+				5AA32F98F620FAEF16F01E0588A55581 /* JPNavigationController-dummy.m */,
+				45B6775173752E384A8E158567B1AF71 /* JPNavigationController-prefix.pch */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/JPNavigationController";
 			sourceTree = "<group>";
 		};
-		3715BBEE047EAFB3BD3FE376F9DF661A /* IGListKit */ = {
+		06CDD10DE71306278CF89108B3036DFD /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				386DC93C9755641502FB81FFE26F558B /* Default */,
-				E74FA4571DC5AFC5C14C29116C1F339A /* Diffing */,
-				F3640B42E1B132B7642224E84B13415B /* Support Files */,
+				2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */,
+				74E404AA6957590324067E330E0EC533 /* UIKit.framework */,
 			);
-			name = IGListKit;
-			path = IGListKit;
+			name = iOS;
 			sourceTree = "<group>";
 		};
-		386DC93C9755641502FB81FFE26F558B /* Default */ = {
+		1F895048C0660E48F4370E94061F6308 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E81AF6701AF3B28DC20E8F750706168 /* IGListAdapter.h */,
-				784EE7559D73FC5CF05833B1D1EFD6B0 /* IGListAdapter.m */,
-				6BA74C3A82EE4D243D391F2A2B060B19 /* IGListAdapter+DebugDescription.h */,
-				0D57AE61BF23A9C393C497B76EAAE8CC /* IGListAdapter+DebugDescription.m */,
-				5ACCB1F8AFDDFC9377CFCEC59DF0FE4A /* IGListAdapter+UICollectionView.h */,
-				F918E3EA592B6CFE534D0449CB2933C6 /* IGListAdapter+UICollectionView.m */,
-				D1545AED1E5E17C10FBEBA2548D3CD6A /* IGListAdapterDataSource.h */,
-				6CD405C0E87223BE51D34795B80F8B9E /* IGListAdapterDelegate.h */,
-				2F07733E5823B1CAB5CDBE4E338B73F0 /* IGListAdapterInternal.h */,
-				FEF22EB28E01085267ED6F7DB713A2D0 /* IGListAdapterMoveDelegate.h */,
-				C963FFF58BB66668D171D01DAE62EB69 /* IGListAdapterProxy.h */,
-				20479DC645FDEC7D1991F0548B69346F /* IGListAdapterProxy.m */,
-				41E9E033C7265C29A80F446A1CA0DBFC /* IGListAdapterUpdateListener.h */,
-				CD01C4AB843DCC915562839EFB6BD93E /* IGListAdapterUpdater.h */,
-				02654395363657C13DB5DC67645AAE2C /* IGListAdapterUpdater.m */,
-				6F31348779288011F05A8985BB18CB9D /* IGListAdapterUpdater+DebugDescription.h */,
-				2937674C849251399BA6A65EEEC8B721 /* IGListAdapterUpdater+DebugDescription.m */,
-				F31A893B4CC8895F9A016A3AA9DF8900 /* IGListAdapterUpdaterDelegate.h */,
-				A71CA3A7D73B89EB26DE0D8F52E97ABB /* IGListAdapterUpdaterInternal.h */,
-				AD2F06D51DCA12E45982B207C5ACB468 /* IGListArrayUtilsInternal.h */,
-				F93569D65AE0BB407512E505104216A3 /* IGListAssert.h */,
-				52D85917EAC0E16EAA174B0BF7922E00 /* IGListBatchContext.h */,
-				FAE722D0232B95D123374DACAB7A48E0 /* IGListBatchUpdateData.h */,
-				F502EFE17F25B57936E56BFAD30C4620 /* IGListBatchUpdateData.mm */,
-				BD953C17BA9035505A0A820D4F0032C9 /* IGListBatchUpdateData+DebugDescription.h */,
-				A98E4BA6FADEA4392B28726032930D16 /* IGListBatchUpdateData+DebugDescription.m */,
-				33D41811290BE233EA2B60A405ABFEA1 /* IGListBatchUpdates.h */,
-				30D38182025488054F219A1D9B3015F6 /* IGListBatchUpdates.m */,
-				BB36F0FC25D5374BA7319B17B0BDE6AF /* IGListBatchUpdateState.h */,
-				1F724B3815DF00C25B02C34629BA7996 /* IGListBindable.h */,
-				B0BC4CD3AAAD7DA09A847016FC1C0707 /* IGListBindingSectionController.h */,
-				337E1EF65BD45D00CA664F1C067F1551 /* IGListBindingSectionController.m */,
-				73EE26360ADE6533CACB6160FA9819DC /* IGListBindingSectionController+DebugDescription.h */,
-				F777A4E1EF223F4ADE5D69DB054EF11F /* IGListBindingSectionController+DebugDescription.m */,
-				9F0465466C86BC3148C0C7CEE166970B /* IGListBindingSectionControllerDataSource.h */,
-				D9BB8FDFF4977F6A6EE21771DAB9AE9F /* IGListBindingSectionControllerSelectionDelegate.h */,
-				AC25BB3B57C6733561FE4B646C9C14B6 /* IGListCollectionContext.h */,
-				4170EDC6D788FD3D5885DF18B037ABD3 /* IGListCollectionView.h */,
-				6A2E83AB2A6D3A6D14F23EB931F322A1 /* IGListCollectionView.m */,
-				4E74234B47EC1A0422864C83DF0372C9 /* IGListCollectionViewDelegateLayout.h */,
-				261F3346CD459F514B7BF03EDBB1BF09 /* IGListCollectionViewLayout.h */,
-				EDCE3340EFFE60C4CF70A2C51D271D39 /* IGListCollectionViewLayout.mm */,
-				344C49F674E033B481AF13DCFA304021 /* IGListCollectionViewLayoutInternal.h */,
-				7060988F67E12C0C9C859775737B0464 /* IGListCompatibility.h */,
-				846FA7BD9F419A622AF1011A7479F3FE /* IGListDebugger.h */,
-				2EDACA2C761E8DABF961401007D7D7AA /* IGListDebugger.m */,
-				29440F0F21D24E5B5F80DA20E0B09C9B /* IGListDebuggingUtilities.h */,
-				1D971EA8A90437EDC7CF93A5BAF65792 /* IGListDebuggingUtilities.m */,
-				9E4DF9D98CEFD37750FFA7A198313A16 /* IGListDiff.h */,
-				818A54240B718C31F2AFF303A5D826E0 /* IGListDiff.mm */,
-				52D8DF289A07D17651C61475D8E5EEA7 /* IGListDiffable.h */,
-				83EF5ECFE7299B04EF3583F12F43670C /* IGListDiffKit.h */,
-				08EAE76E166E2E56D92A0DF1B5280E4D /* IGListDisplayDelegate.h */,
-				950D8F65D225F6906E7ECB8566E11507 /* IGListDisplayHandler.h */,
-				8FF977BD17FC9ECFE84281A36ACA43A8 /* IGListDisplayHandler.m */,
-				1819F6FCDDA4A05BF22D36E8DC2C96E5 /* IGListExperiments.h */,
-				F417DFC75F4570FEC91C4C079F0DFA88 /* IGListGenericSectionController.h */,
-				D1ECACB536292955806166433CE92D30 /* IGListGenericSectionController.m */,
-				D797A4D8C1AF497BEECEDCBDA494FD84 /* IGListIndexPathResult.h */,
-				FBF3234E5734B101B3843335981319FF /* IGListIndexPathResult.m */,
-				BDCBBFDE687C68BFDB821530065CBC9F /* IGListIndexPathResultInternal.h */,
-				1E74D24F22C8C4DFA2D9E3AAA29A06B2 /* IGListIndexSetResult.h */,
-				9CBBA05D58004EE30D6E9FC44A7DACCC /* IGListIndexSetResult.m */,
-				601F5D5AD7464827D872CBCF37072312 /* IGListIndexSetResultInternal.h */,
-				D0395F32982D6CB40C8A276814AD6BE8 /* IGListKit.h */,
-				F497C79931217C6C35E982B21406754E /* IGListMacros.h */,
-				E96B84B99E6916D5923239CFB741756A /* IGListMoveIndex.h */,
-				6967D4EF1809F11C9044C3C7869117C0 /* IGListMoveIndex.m */,
-				496B20F1F6AED1CA3A6096A543C2C636 /* IGListMoveIndexInternal.h */,
-				56BA444BC39B476CCA166F1A93397F65 /* IGListMoveIndexPath.h */,
-				D2004179FCF7918F29C88FE17E81E749 /* IGListMoveIndexPath.m */,
-				2DCA8202F41E7DE703CA9E104530E103 /* IGListMoveIndexPathInternal.h */,
-				764123547EB7726DE639A03AF8517390 /* IGListReloadDataUpdater.h */,
-				583BB6EAA27C072FAF7021C2D28C7610 /* IGListReloadDataUpdater.m */,
-				BF037495BC9D3029659EA5B93758B9A9 /* IGListReloadIndexPath.h */,
-				3290AE4ECBECA1D24F7BD2206A9AB4C3 /* IGListReloadIndexPath.m */,
-				79E84F1B31B3323B062F3598613ECCCE /* IGListScrollDelegate.h */,
-				92021493A54C2006008982BE4AFD9973 /* IGListSectionController.h */,
-				343E970290D38871D19810B75DD392BF /* IGListSectionController.m */,
-				2007351DD2C92AB75459EFAF91FF5E6B /* IGListSectionControllerInternal.h */,
-				39AD39DA2AA9D521369D2C34A4AE8595 /* IGListSectionMap.h */,
-				EE0EAA8E41C17B64570FC13761BBEBCC /* IGListSectionMap.m */,
-				294764A5129E73977C25A3A5ABD0B6CA /* IGListSectionMap+DebugDescription.h */,
-				03C3A044F86542CBB301299D2947B012 /* IGListSectionMap+DebugDescription.m */,
-				B471551791E9388A16039E1590FC70CA /* IGListSingleSectionController.h */,
-				0D72EF5606EE18116B1EAE85F70AF2B9 /* IGListSingleSectionController.m */,
-				5CFB406AF0303EA8B906EA7E2F7A1B07 /* IGListStackedSectionController.h */,
-				87CCC40337499652799A28C031794E9E /* IGListStackedSectionController.m */,
-				61838F1B695362E0160284E6BED8ED8F /* IGListStackedSectionControllerInternal.h */,
-				F754059EAFD95929EF8B698345EE7856 /* IGListSupplementaryViewSource.h */,
-				1F29D436E54B4FBAD79D8F6A7EE157CB /* IGListTransitionDelegate.h */,
-				6536EDE23E5AB3D7293963CF74B80B3A /* IGListUpdatingDelegate.h */,
-				D9520D38C98BE0556C85A4AD4A12C61C /* IGListWorkingRangeDelegate.h */,
-				590B1BC58CBD8F32C3B6ED3BCBAF72F4 /* IGListWorkingRangeHandler.h */,
-				F2013CFB40D53C0DD990EBF0FCB22E66 /* IGListWorkingRangeHandler.mm */,
-				81C2D86F1ACBB746DDEE8E0AA3A4F45F /* NSNumber+IGListDiffable.h */,
-				9BE3D99B3B56E4FBC60361D302368FC2 /* NSNumber+IGListDiffable.m */,
-				0167AA0340E1A33DCBCBFFFE14AF88D5 /* NSString+IGListDiffable.h */,
-				55138DE373EE64C9B5AD8A7417085AB7 /* NSString+IGListDiffable.m */,
-				EEBB0B1B6B7B193BC372BDA05EE9F690 /* UICollectionView+DebugDescription.h */,
-				6FAD585D5E0EED1EAEA6C86739D8E4EB /* UICollectionView+DebugDescription.m */,
-				B41EE626A214D435DCEF75D68840981B /* UICollectionView+IGListBatchUpdateData.h */,
-				D34292BC3BCE7BF272B9CAAED605983D /* UICollectionView+IGListBatchUpdateData.m */,
-				9FC07605D521A3A4C0EC6C57E1BD190D /* UICollectionViewLayout+InteractiveReordering.h */,
-				BDED2D3CBE45EBFA2ED562E5B0F04E8F /* UICollectionViewLayout+InteractiveReordering.m */,
-				1C623BB6413F6CA6D1A62B4447EDDB3E /* UIScrollView+IGListKit.h */,
-				B73ACE3B8BEA6B4D078D831A7FEB27FF /* UIScrollView+IGListKit.m */,
+				AFD713762BF7F114F4A22D2A64D2B7DB /* Masonry.xcconfig */,
+				A42DE00CB6822CB064834AC217BF1220 /* Masonry-dummy.m */,
+				6A7441121B7A652B52627DAA56D7A915 /* Masonry-prefix.pch */,
 			);
-			name = Default;
+			name = "Support Files";
+			path = "../Target Support Files/Masonry";
 			sourceTree = "<group>";
 		};
 		43011770183568EE73763B9DDCBFDCF4 /* Targets Support Files */ = {
@@ -751,134 +230,50 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		510BAF8A16D28703E1865D2F01B21449 /* JPNavigationController */ = {
+		433CD3331B6C3787F473C941B61FC68F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3E02189DCBC8211D1BFD43AF0C2D0C82 /* JPBaseAnimationTransition.h */,
-				113ABE011CA44F4CB68078C06F2315AD /* JPBaseAnimationTransition.m */,
-				7879EAB72A54B964C42A82AD95AF025D /* JPNavigationController.h */,
-				48A2D1A93969BED8A17F9CF29DC71486 /* JPNavigationController.m */,
-				7B04F889774A1BDAFD94766607558831 /* JPNavigationControllerCompat.h */,
-				A43D8B6B3635E371A98268037181BD9C /* JPNavigationControllerGestureRecognizer.h */,
-				C92824B6EB6911DFB0285F42B0C0A03B /* JPNavigationControllerGestureRecognizer.m */,
-				AC82093CF42DC3C0EA3A2C9BBF1ED8E7 /* JPNavigationControllerKit.h */,
-				AD9166CF357532125DF771EA4C80DEF6 /* JPNavigationControllerProtocol.h */,
-				99AD848FB5D56C25C87F5E09CDD2BB36 /* JPNavigationControllerTransition.h */,
-				88CAF1336AE7A9493E8D81ECBC9EBF0A /* JPNavigationControllerTransition.m */,
-				FBAA5D64FE9E6313E5E325D8C257617D /* JPPushAnimationTransition.h */,
-				3ECC4CEFDE36E23653D7DDB8DDE7A652 /* JPPushAnimationTransition.m */,
-				51FD0E9202A734ADB99102C289CD78C0 /* JPTransitionShadowView.h */,
-				8079FC59D1FF2F963A4EBD91D601B218 /* JPTransitionShadowView.m */,
-				B2389BD47D9BC927186A64BD9BF5B88C /* JPWarpNavigationController.h */,
-				3522738E84F93CF22361B086BD321BB8 /* JPWarpNavigationController.m */,
-				B860DEAD9736EB50576DED2C00B6DF33 /* JPWarpViewController.h */,
-				248667D02521818E88C984F51FADE7A6 /* JPWarpViewController.m */,
-				BE8BA1D540A7A5FF64C08080366C9729 /* UIColor+ImageGenerate.h */,
-				65E9B7273D50CCF620387156BC95D91F /* UIColor+ImageGenerate.m */,
-				8A7E07EAC1AD228514DB42A10F51423D /* UINavigationBar+HitTest.h */,
-				AED799170161B0D7157E99BCE10E90EC /* UINavigationBar+HitTest.m */,
-				00A68000D9F6B00CBDD5C15A2FCF4D29 /* UINavigationController+FulllScreenPopPush.h */,
-				69BE11479A3E8196DD1260635E78ACD5 /* UIView+ScreenCapture.h */,
-				F52D7E87C69E01038D72DAED85835BCB /* UIView+ScreenCapture.m */,
-				00789427B9177C1A901A98206F15A0CC /* UIViewController+ViewControllers.h */,
-				0A5169E407A100C93D9062B4101648A3 /* UIViewController+ViewControllers.m */,
-				B0EA3C08A3A86B59536AB044525BF345 /* Resources */,
-				33BC50EE6718E3A7825F3F41AFE56143 /* Support Files */,
+				06CDD10DE71306278CF89108B3036DFD /* iOS */,
 			);
-			name = JPNavigationController;
-			path = JPNavigationController;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		64498B6C068A7D05E7858530681FDF2F /* iOS */ = {
+		4ECA0B35873C1319F3C819757D46E709 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				511B4C0EDC384F0B076B83C01B16A64A /* Foundation.framework */,
-				4179A9EA206056428C0C5AC09BFD6C6A /* ImageIO.framework */,
-				14E56E4CBBDABDE781DDBEDA953D2230 /* UIKit.framework */,
+				C5B5D3FDFD7C678D1BBC46C1F5ADD660 /* JPNavigationController.bundle */,
 			);
-			name = iOS;
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		4ED73E9A38598BEEC79AE142A0E9E375 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0053DC90A4F7A50307E5F006ABF6CB7E /* libJPNavigationController.a */,
+				C5116D54DF09E9274DF13434B7D468C4 /* libMasonry.a */,
+				F12C93C585F861DB703DFA07B51F5471 /* libPods-JPVideoPlayerDemo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		79DA455E43616A842B19AB364278EEC9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B23D2C134925E83DC9F847D072B20532 /* JPNavigationController */,
+				FDC17917E815518E5F7E077484E614C1 /* Masonry */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				122DA2E5084A4393C29BE363C764795C /* Frameworks */,
-				1C787A6AEF52AB29F6BCD33713C5F3AB /* Pods */,
-				C36234D070B81C8CF14F2197ECB6A655 /* Products */,
+				433CD3331B6C3787F473C941B61FC68F /* Frameworks */,
+				79DA455E43616A842B19AB364278EEC9 /* Pods */,
+				4ED73E9A38598BEEC79AE142A0E9E375 /* Products */,
 				43011770183568EE73763B9DDCBFDCF4 /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		8F7A3CBA999C4F1B070C220C9E24D9C8 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				A1453255BE326B242E78DD9BF28ED0D2 /* SDWebImage.xcconfig */,
-				A3826364A5D234681A892E5E119978B9 /* SDWebImage-dummy.m */,
-				D1829034CD7B1BE7BB06389E22984189 /* SDWebImage-prefix.pch */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/SDWebImage";
-			sourceTree = "<group>";
-		};
-		91D523F0C4B4BEE04FB05CA762C5EE2B /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				D54B573B0B1E9D393E3EBAA1ED4313BA /* NSButton+WebCache.h */,
-				BB28F4B7E15EB1A327981389271027C4 /* NSButton+WebCache.m */,
-				97FFAFE3FB22AD14C765854E3B4FCBF3 /* NSData+ImageContentType.h */,
-				BD956999F2DE8012E8DF6E927B81B74E /* NSData+ImageContentType.m */,
-				F817CE23908D9D36C39BCBA7E2298698 /* NSImage+WebCache.h */,
-				205199965C92ED4A8EF70403F6B09747 /* NSImage+WebCache.m */,
-				095EF889D1CD5A05BFC4071D10465233 /* SDAnimatedImageRep.h */,
-				22223FDE917594EA799A85581B4FDEB8 /* SDAnimatedImageRep.m */,
-				AC0CF9F132EC83C6282C0F214DA64307 /* SDImageCache.h */,
-				FCC16005A62A48714935755D0A2C72B9 /* SDImageCache.m */,
-				C0E54229028B3DF5339A240612684092 /* SDImageCacheConfig.h */,
-				283E736DD98912FA2A2D23A53FA4F2E9 /* SDImageCacheConfig.m */,
-				DCE3C3AFB2432DE6F3C728AEE90A72EE /* SDWebImageCoder.h */,
-				B1CFE3EAEA8DEF80BC160D6FBE6B314F /* SDWebImageCoder.m */,
-				E797D4944DFFB473903FE52B697D2B4D /* SDWebImageCoderHelper.h */,
-				6635D7CB9F43852C569CE3E6B7A41047 /* SDWebImageCoderHelper.m */,
-				50EC939EEC5493DCA901745593512D4B /* SDWebImageCodersManager.h */,
-				5741F5407F37BD218FC2CA79324A5278 /* SDWebImageCodersManager.m */,
-				D2F84EC705DA4C68C12EDDD6C22001D4 /* SDWebImageCompat.h */,
-				E6F32F146F9B581EF5D330EDB83C87E5 /* SDWebImageCompat.m */,
-				FCD629343481C98EBE57FC2D743EA9A2 /* SDWebImageDownloader.h */,
-				F63403C50E777D90F1AE78CBE67889AE /* SDWebImageDownloader.m */,
-				F0DC14BB5BF29E281478BFCBDB0FFD4D /* SDWebImageDownloaderOperation.h */,
-				6301B79B73FA0D413B2E39B0537631FF /* SDWebImageDownloaderOperation.m */,
-				17FB5134A2C500A7066FE4E202163FAF /* SDWebImageFrame.h */,
-				E25574AB4863AFBF2B736CAC94A9C925 /* SDWebImageFrame.m */,
-				73A72359EBA2C4ECA7BD80EBB79653A3 /* SDWebImageGIFCoder.h */,
-				FAFF392D69C9E7AD61540BCD2D2DE317 /* SDWebImageGIFCoder.m */,
-				92D69752AA49B50489D8B32C673C1639 /* SDWebImageImageIOCoder.h */,
-				F6491B3F688B6BE69B9C5F729AC9DD79 /* SDWebImageImageIOCoder.m */,
-				A62E921F7E3E7C95B639BFD2CCC58B15 /* SDWebImageManager.h */,
-				6F4418B9036247F47546A3E7163A3AC4 /* SDWebImageManager.m */,
-				0B7C54790FA2F6A7ACDF0BD86238B18B /* SDWebImageOperation.h */,
-				4CBE4D2066289E975029C8A1B3FDA5D6 /* SDWebImagePrefetcher.h */,
-				0DB9160BAB15D0C46180E437A2FE1430 /* SDWebImagePrefetcher.m */,
-				63BDADB88D0F82C3617442D2EBADFDD0 /* SDWebImageTransition.h */,
-				6BA92CCE930A00AF241E79BADBDAFE1C /* SDWebImageTransition.m */,
-				B69C1D954CA417451F08AF77C492812E /* UIButton+WebCache.h */,
-				AA6A51FA917F2262B8DF21D864B2374D /* UIButton+WebCache.m */,
-				2B3C38ABFFBDC50292CEE3213921CCC5 /* UIImage+ForceDecode.h */,
-				B088EA0E55F8AED8AD166E595232A19D /* UIImage+ForceDecode.m */,
-				AF083C4EA228319F10B0AD38D0C6F03B /* UIImage+GIF.h */,
-				2DA819FC883254B69A4ADA0D1C3255C8 /* UIImage+GIF.m */,
-				DD4E8454DA301FD95CCE6ED6C786500C /* UIImage+MultiFormat.h */,
-				6BA8CDAC5DCA344133AF7EE901451351 /* UIImage+MultiFormat.m */,
-				3E1A1DDCF7D745BCAA0A0D32DA99220C /* UIImageView+HighlightedWebCache.h */,
-				5BCC6218C5E2DE169C94CCBE0F0113DE /* UIImageView+HighlightedWebCache.m */,
-				6FC5797CD7177A175CFB78ACD0D41DFA /* UIImageView+WebCache.h */,
-				A415D71FF1F378AFA8C8B8BD13AB87D7 /* UIImageView+WebCache.m */,
-				9E1521D9E4A05367A7A19162C7174BBA /* UIView+WebCache.h */,
-				7F86E78B75B2766A6789CCB85E924077 /* UIView+WebCache.m */,
-				BEB0C0A22082155A0702B7F0CDCE0ED0 /* UIView+WebCacheOperation.h */,
-				F6C0243BB9EA30ACE21B6AB539B2AB27 /* UIView+WebCacheOperation.m */,
-			);
-			name = Core;
 			sourceTree = "<group>";
 		};
 		9864A9E74A1520152ACB7FCE0332A099 /* Pods-JPVideoPlayerDemo */ = {
@@ -896,147 +291,82 @@
 			path = "Target Support Files/Pods-JPVideoPlayerDemo";
 			sourceTree = "<group>";
 		};
-		B0EA3C08A3A86B59536AB044525BF345 /* Resources */ = {
+		B23D2C134925E83DC9F847D072B20532 /* JPNavigationController */ = {
 			isa = PBXGroup;
 			children = (
-				9909806112C67B6DB3A4E4333FBB8881 /* JPNavigationController.bundle */,
+				B6DC5C0C9DFC51D6B2DCE42D674A3E78 /* JPBaseAnimationTransition.h */,
+				DF9FF79AFFF6F1F52EBB4B2500E9CF4F /* JPBaseAnimationTransition.m */,
+				F24D3CDC4992D1029D590EB817584E67 /* JPNavigationController.h */,
+				3F56FF8D55872A48B4B71E974AF685F4 /* JPNavigationController.m */,
+				15009A35E7C7721978828BE8AB63A61E /* JPNavigationControllerCompat.h */,
+				50CD97D0918324550F4CB50F1E4B0085 /* JPNavigationControllerGestureRecognizer.h */,
+				26072E14E188B77FFFD2FDE3020C99B4 /* JPNavigationControllerGestureRecognizer.m */,
+				12F7738B5374ED3CBA3E9D0F45BC5388 /* JPNavigationControllerKit.h */,
+				B829FC45FDD9762218DC8B921E23F80F /* JPNavigationControllerProtocol.h */,
+				61299DBA6C5F8531F7015A95D6B05942 /* JPNavigationControllerTransition.h */,
+				F1CA28A683FBDDB4B35338E13E2AB17F /* JPNavigationControllerTransition.m */,
+				B9ACE5D4EAA7B73E091E167B7DFC4E88 /* JPPushAnimationTransition.h */,
+				7417009D080ED048F1277F8D17BB1331 /* JPPushAnimationTransition.m */,
+				01D0029C8A08F53DFE8BA2BE8742DDC5 /* JPTransitionShadowView.h */,
+				42341542F0CC64E55D832F3116751944 /* JPTransitionShadowView.m */,
+				B81B33DFC99F15D59E1E1A65F3CD83D7 /* JPWarpNavigationController.h */,
+				9157DC47F6AE732702D4FBB306EA7C3C /* JPWarpNavigationController.m */,
+				7EA288FC60D38511EEF13C6ADE975B21 /* JPWarpViewController.h */,
+				DA7E58583895F09891E1C1269FBA860C /* JPWarpViewController.m */,
+				756258683A639C16EF2EDAEEAD02FDCD /* UIColor+ImageGenerate.h */,
+				43772C8B434B7F4DE99A7D568609A500 /* UIColor+ImageGenerate.m */,
+				629E2397777B3FD8CF6B674797015E69 /* UINavigationBar+HitTest.h */,
+				D013299BF5961E35883E5F8FAC02A71C /* UINavigationBar+HitTest.m */,
+				3FBC4C17FE0B9CB32384AAD0192A4109 /* UINavigationController+FulllScreenPopPush.h */,
+				3B1823B851AA1D2D702744304C5C7E64 /* UIView+ScreenCapture.h */,
+				F18A38B84D5AB81B0B21FC73BF8B3656 /* UIView+ScreenCapture.m */,
+				BC33FE0A9D1A6FE658399712AAFDC5A4 /* UIViewController+ViewControllers.h */,
+				C66CE8ECABC2A6C9914DEA6D6F607CDB /* UIViewController+ViewControllers.m */,
+				4ECA0B35873C1319F3C819757D46E709 /* Resources */,
+				0426B97666421B783528D0F263DE2A3D /* Support Files */,
 			);
-			name = Resources;
+			name = JPNavigationController;
+			path = JPNavigationController;
 			sourceTree = "<group>";
 		};
-		C36234D070B81C8CF14F2197ECB6A655 /* Products */ = {
+		FDC17917E815518E5F7E077484E614C1 /* Masonry */ = {
 			isa = PBXGroup;
 			children = (
-				5791B91DE860ABA512708D8CC9D1ADD0 /* libIGListKit.a */,
-				3AC9671E1D3A2BA0A59A312180A306D9 /* libJPNavigationController.a */,
-				B4B5ACF2F2F49DD12F31486879D7BECB /* libMasonry.a */,
-				02D2EDF145C735EEC6AEC3CB9941F6C2 /* libPods-JPVideoPlayerDemo.a */,
-				C1CF9C3A6B25339FD7000C29906C2674 /* libSDWebImage.a */,
+				EDAA265AE6826C029E4CEC27792AAE9A /* MASCompositeConstraint.h */,
+				7ADC386259B9332A133DB4DC91CA4EF2 /* MASCompositeConstraint.m */,
+				567871E3D05DB6F04BB805F59A7A437F /* MASConstraint.h */,
+				EC5935DCB949DE2117073D5BE5824FDA /* MASConstraint.m */,
+				BFB5C9B6566B70C177C5233D1790095F /* MASConstraint+Private.h */,
+				EACB4237997F4951703FF587382D3198 /* MASConstraintMaker.h */,
+				095596FBA1A435C7341BFD7F672854D2 /* MASConstraintMaker.m */,
+				4228AEC9CD48FC52DD30376F6AB83679 /* MASLayoutConstraint.h */,
+				D37EE54EF49A94F61D59112EFD170541 /* MASLayoutConstraint.m */,
+				6C279B898ACAB2D356EEE709F4EC4AAE /* Masonry.h */,
+				E5DEEA1B55FCD2A423C1B7FCF5265B22 /* MASUtilities.h */,
+				588A906AC93B6997CD26D800578F4C0D /* MASViewAttribute.h */,
+				4C9F922D9C424B122805DA6FA5D6A92D /* MASViewAttribute.m */,
+				4BE820770DB5A00F83016E759DE9E574 /* MASViewConstraint.h */,
+				F55BCC3BE5B8F8E17E4F9BB62FCAC482 /* MASViewConstraint.m */,
+				B29D056B6A45CDE0319DFAD59D3819E4 /* NSArray+MASAdditions.h */,
+				6FFAAD8752041CE3A7B851AC613B0174 /* NSArray+MASAdditions.m */,
+				33AE654F39CC4B25E03926B9D2212781 /* NSArray+MASShorthandAdditions.h */,
+				19C3854E70F47B4144B79C48E43D7A79 /* NSLayoutConstraint+MASDebugAdditions.h */,
+				77270315B4D2037ADF28025013DA6521 /* NSLayoutConstraint+MASDebugAdditions.m */,
+				A4B35C43566C22C0369CEDE32DAB7730 /* View+MASAdditions.h */,
+				7C6F243513AB9D49725772E203ADADDB /* View+MASAdditions.m */,
+				A5F5F0C65B5867965EE4BEE98EFC8E5A /* View+MASShorthandAdditions.h */,
+				D1A074720A075F1118A136D1335EF101 /* ViewController+MASAdditions.h */,
+				124625635F68FEA607E2D1191B7432D7 /* ViewController+MASAdditions.m */,
+				1F895048C0660E48F4370E94061F6308 /* Support Files */,
 			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D3A57C2E5D0A11FC9CAF0372194C11E3 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				F95A1A0E9B09F0C4B615B2F2283C21DD /* Masonry.xcconfig */,
-				87DAC371E824AC03072C487D7CFA022B /* Masonry-dummy.m */,
-				F7E817C2CB093993E67CB49ADF1F3AF7 /* Masonry-prefix.pch */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/Masonry";
-			sourceTree = "<group>";
-		};
-		DD74160280238B8BD1E0D6FF239956BE /* SDWebImage */ = {
-			isa = PBXGroup;
-			children = (
-				91D523F0C4B4BEE04FB05CA762C5EE2B /* Core */,
-				8F7A3CBA999C4F1B070C220C9E24D9C8 /* Support Files */,
-			);
-			name = SDWebImage;
-			path = SDWebImage;
-			sourceTree = "<group>";
-		};
-		E74FA4571DC5AFC5C14C29116C1F339A /* Diffing */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Diffing;
-			sourceTree = "<group>";
-		};
-		F3640B42E1B132B7642224E84B13415B /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				CCD8B7AAE9D99444F6E47007BE949F23 /* IGListKit.xcconfig */,
-				E21FBE60D8C32725445BB53582375683 /* IGListKit-dummy.m */,
-				34624100E5BB0666F33AC92D9B60EF3A /* IGListKit-prefix.pch */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/IGListKit";
+			name = Masonry;
+			path = Masonry;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		437F45C7C936ECF435D12B8453C795F6 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				62FD750B8552DAFEC10F0B369CF7C6FF /* IGListAdapter+DebugDescription.h in Headers */,
-				896215A7FCF5A198E8D845B8DE95397D /* IGListAdapter+UICollectionView.h in Headers */,
-				A57E0251087FEC146EFF1CBEC43A5D50 /* IGListAdapter.h in Headers */,
-				ABEEA0AC036C1C01EF5D88843AC59BDC /* IGListAdapterDataSource.h in Headers */,
-				E2D7DF342F84E448869EAB3F5F640525 /* IGListAdapterDelegate.h in Headers */,
-				A7F8E0BA3DA46639D58B43094D518BBB /* IGListAdapterInternal.h in Headers */,
-				4ACEA7FB9F869FF099F16C64880FBA04 /* IGListAdapterMoveDelegate.h in Headers */,
-				843D4ECB5589962ED5FA484711A12C72 /* IGListAdapterProxy.h in Headers */,
-				D86ADAFB21A5AE3ECA08C65302D4055D /* IGListAdapterUpdateListener.h in Headers */,
-				E42A7B9AE7FEEC62DDD63BD3414E2670 /* IGListAdapterUpdater+DebugDescription.h in Headers */,
-				D018F45382F2D08C637AD372A7FD6B4B /* IGListAdapterUpdater.h in Headers */,
-				4491BB5B8CF3013AF230325DBC7CCB47 /* IGListAdapterUpdaterDelegate.h in Headers */,
-				AE86F18C29D2A37A639BCD77D15F932A /* IGListAdapterUpdaterInternal.h in Headers */,
-				AFE7EE10DE3E3183C523164702D2D9EE /* IGListArrayUtilsInternal.h in Headers */,
-				DD5B7CEE532912D713A9F28FCB407CF8 /* IGListAssert.h in Headers */,
-				2DB1482621AAFA2AB983782278A7EA1A /* IGListBatchContext.h in Headers */,
-				B5139C0ECD6FEBD4C42328E0523D5CB0 /* IGListBatchUpdateData+DebugDescription.h in Headers */,
-				1BB0311984CF801F8A3C7B34942FE777 /* IGListBatchUpdateData.h in Headers */,
-				83721F32247360A9E90393B3C569D487 /* IGListBatchUpdates.h in Headers */,
-				6DC299A1994FC9DC90930FDC5310813F /* IGListBatchUpdateState.h in Headers */,
-				C684FC1D749D482ACE25FAFE9E497B64 /* IGListBindable.h in Headers */,
-				11458C6A049F40189B219212EF5A9C8D /* IGListBindingSectionController+DebugDescription.h in Headers */,
-				6740D83964C4720549C7E6A8E8EBD9C8 /* IGListBindingSectionController.h in Headers */,
-				64A5ABEE81381B3CEA9E037A64063B29 /* IGListBindingSectionControllerDataSource.h in Headers */,
-				9B6D5C4C4531F98C37009676D4E44127 /* IGListBindingSectionControllerSelectionDelegate.h in Headers */,
-				EFF12AFC0CDA9A38140368BB24EC075B /* IGListCollectionContext.h in Headers */,
-				A3FFDA82A80FBC0A02F3B2EB1E7A05C7 /* IGListCollectionView.h in Headers */,
-				1B3176B0AFB532AF3C97580C7B0B1B86 /* IGListCollectionViewDelegateLayout.h in Headers */,
-				EF5867D47EA68D5791435C143260DB67 /* IGListCollectionViewLayout.h in Headers */,
-				435876824ADD1254FBA284CC699D6F71 /* IGListCollectionViewLayoutInternal.h in Headers */,
-				F20230A6D714A6176A523D76343CBACF /* IGListCompatibility.h in Headers */,
-				D458D1BDE59172F80FB0D62B6B731509 /* IGListDebugger.h in Headers */,
-				44F51BC1A5D2BD0899FD45EAB00E96D0 /* IGListDebuggingUtilities.h in Headers */,
-				99258ABF887AACCA544B29AB85F12BC8 /* IGListDiff.h in Headers */,
-				7BED6B5C022C9C1C5B2EC32522783766 /* IGListDiffable.h in Headers */,
-				506081DA28100AD417178D4739B28818 /* IGListDiffKit.h in Headers */,
-				A01927C148F885622A68695D0C9A5B97 /* IGListDisplayDelegate.h in Headers */,
-				9DEB9ABC6B9ABD2939AB8D3DD5812CDC /* IGListDisplayHandler.h in Headers */,
-				089CB3BDD8153A140268920C44C8D047 /* IGListExperiments.h in Headers */,
-				4E198554203EB1FF3C95C0ADABABB511 /* IGListGenericSectionController.h in Headers */,
-				7A5111FD06CD2522C6D61DB4E8A44250 /* IGListIndexPathResult.h in Headers */,
-				37BA4ED4EFC405D9A96EF6D483EC656A /* IGListIndexPathResultInternal.h in Headers */,
-				811D92C3417CE51213F766A6B7A95625 /* IGListIndexSetResult.h in Headers */,
-				62094268E635553FAD36A6B15FF02CD3 /* IGListIndexSetResultInternal.h in Headers */,
-				93B45794735DD04292CA06A991B209AB /* IGListKit.h in Headers */,
-				F810A5B55AF5A67A25157CC2F290ABAF /* IGListMacros.h in Headers */,
-				A833673E80DD712FA8A715DD63F95639 /* IGListMoveIndex.h in Headers */,
-				7F8EBDFF8E5B579EB08B311D5DD68562 /* IGListMoveIndexInternal.h in Headers */,
-				0E50CB06E4914211A4436BBBCBF0B23C /* IGListMoveIndexPath.h in Headers */,
-				D0450E7530583A97F4A38F1C9D23754B /* IGListMoveIndexPathInternal.h in Headers */,
-				BE0EA90779BEE3C6D58DF21B0CCD0773 /* IGListReloadDataUpdater.h in Headers */,
-				84974B74EDB97C48BD53EE0908A05F15 /* IGListReloadIndexPath.h in Headers */,
-				5E80B52181D7DE46B803128E1343233A /* IGListScrollDelegate.h in Headers */,
-				54D867CCE0CAD11072FCE40F4BF32996 /* IGListSectionController.h in Headers */,
-				94041EDCBFFE91E1EB71C19BC10A6D3F /* IGListSectionControllerInternal.h in Headers */,
-				E610483A7C7A42434385F4372F8D00DC /* IGListSectionMap+DebugDescription.h in Headers */,
-				704D10A192BB3B0E5726B2A7147B11CE /* IGListSectionMap.h in Headers */,
-				5581D770F241A8AE0204CFA9918869D1 /* IGListSingleSectionController.h in Headers */,
-				8E969A0D0769F879D97A3F0251388021 /* IGListStackedSectionController.h in Headers */,
-				FD50A4376A682467286A849CCE2F7E94 /* IGListStackedSectionControllerInternal.h in Headers */,
-				472773548BFA529CECAD19F55438F8D1 /* IGListSupplementaryViewSource.h in Headers */,
-				328EBCDBD86AD8754A363927AC7A86B2 /* IGListTransitionDelegate.h in Headers */,
-				CE91C7012504A8FFBD272C0B6F5D07F7 /* IGListUpdatingDelegate.h in Headers */,
-				49F6D93ADA0790F1D4F36C14E9E51AB7 /* IGListWorkingRangeDelegate.h in Headers */,
-				6D22A1A9E3FF651035A59485DAA09511 /* IGListWorkingRangeHandler.h in Headers */,
-				5F5357CD0BB616F1422FF60D65BA804F /* NSNumber+IGListDiffable.h in Headers */,
-				08E10B718E25A8C2FF4274C6EAFD5054 /* NSString+IGListDiffable.h in Headers */,
-				BBA43B4EC00E2BB88B132A16187DF296 /* UICollectionView+DebugDescription.h in Headers */,
-				9BD6656CB7523BB3F40FA6BB07149B6C /* UICollectionView+IGListBatchUpdateData.h in Headers */,
-				E728DE1AFCBC00C300F7D92797FAC0A4 /* UICollectionViewLayout+InteractiveReordering.h in Headers */,
-				D4B6F42301594B4330A78645E1D5538B /* UIScrollView+IGListKit.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		88E49F711CDB21A6800D18E43769AFF2 /* Headers */ = {
+		543777CFE5E87F8D74E7B6A7E372F6A2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1062,40 +392,6 @@
 				ADB022A853D74C0A9F48BC16D4EA59CF /* View+MASAdditions.h in Headers */,
 				2A6EEFDF3EE2BBBF63F6063C3F6747A1 /* View+MASShorthandAdditions.h in Headers */,
 				9B5D721633B82BF8FE44D1A435434DF9 /* ViewController+MASAdditions.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		89D7E694C524389B10D9B8E4350598E9 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0C01ED126D5CB907CC83C65F1D17DED8 /* NSButton+WebCache.h in Headers */,
-				B0C1629F73E3EF4A8DEA59BEAEBD317C /* NSData+ImageContentType.h in Headers */,
-				2D24971D3AAA9E31B0115309F392D8FB /* NSImage+WebCache.h in Headers */,
-				6862B53AFB8D59F998B466F18F460436 /* SDAnimatedImageRep.h in Headers */,
-				16D51F86685837B69C8162A950FE8A63 /* SDImageCache.h in Headers */,
-				4091E120214FD94972D67BCE3000C49B /* SDImageCacheConfig.h in Headers */,
-				1EDBBF4485ED681658BDF4530EA3334E /* SDWebImageCoder.h in Headers */,
-				4AFAADDA1DE5B8F9E0FDBED3809FE1FC /* SDWebImageCoderHelper.h in Headers */,
-				853290B0A5DAB340DD166FCB257F81A8 /* SDWebImageCodersManager.h in Headers */,
-				909B55D5F66FD418383D96AD739E8C45 /* SDWebImageCompat.h in Headers */,
-				FCC6F888B901041AE1E92892C0A69996 /* SDWebImageDownloader.h in Headers */,
-				A88F7A5AA5E7E46F52127A61A53A2C6B /* SDWebImageDownloaderOperation.h in Headers */,
-				02F22DDE7160C43E789F40AC621A74FD /* SDWebImageFrame.h in Headers */,
-				A762D13B622FE61FE7E75A475D608D36 /* SDWebImageGIFCoder.h in Headers */,
-				9826591D1A31763DDD98E0159E75BC14 /* SDWebImageImageIOCoder.h in Headers */,
-				2AA96CCE86AD4D0A202903877A9EA158 /* SDWebImageManager.h in Headers */,
-				A7432887981E56283875A6A9DD592A84 /* SDWebImageOperation.h in Headers */,
-				9CA936012F9B7D8344228DAC3D3B0AE7 /* SDWebImagePrefetcher.h in Headers */,
-				6CBD4AF790DA4CD7776AE04633525464 /* SDWebImageTransition.h in Headers */,
-				0047B69646A0B7E027359D34AC57E327 /* UIButton+WebCache.h in Headers */,
-				F455DC07E39DA3B572688F78991C5833 /* UIImage+ForceDecode.h in Headers */,
-				7C7BE6C0C80E34604F948D8D8491C39E /* UIImage+GIF.h in Headers */,
-				91B71F6EADF73AD7AB32380F5C4CD988 /* UIImage+MultiFormat.h in Headers */,
-				D92E938F6E350E47BAEA6AFF47D3C40E /* UIImageView+HighlightedWebCache.h in Headers */,
-				D8FAC5302424AFFF3B8CCBC5809C103B /* UIImageView+WebCache.h in Headers */,
-				265227CE26BBB43E14F366D91C688472 /* UIView+WebCache.h in Headers */,
-				C6577BF4D6A3AA31576312989D3ECD09 /* UIView+WebCacheOperation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1125,23 +421,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		18588AE8AF45A0ADFBEA7B122830B63A /* IGListKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 52EDEB8F88EC2CF3C5FA9BBB35307AEB /* Build configuration list for PBXNativeTarget "IGListKit" */;
-			buildPhases = (
-				437F45C7C936ECF435D12B8453C795F6 /* Headers */,
-				5D6A82B4373D1AA31F8FA3A8AD2A626D /* Sources */,
-				14B4068682780D92D56104E82A25A7FF /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = IGListKit;
-			productName = IGListKit;
-			productReference = 5791B91DE860ABA512708D8CC9D1ADD0 /* libIGListKit.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		40A42EA465E764DD959C829C51404C08 /* Masonry */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFB00DFDEF804FAD5E3E20BC782ADAB8 /* Build configuration list for PBXNativeTarget "Masonry" */;
@@ -1156,28 +435,26 @@
 			);
 			name = Masonry;
 			productName = Masonry;
-			productReference = B4B5ACF2F2F49DD12F31486879D7BECB /* libMasonry.a */;
+			productReference = C5116D54DF09E9274DF13434B7D468C4 /* libMasonry.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		656CB94F7CBD74FC4736219F27CA945B /* Pods-JPVideoPlayerDemo */ = {
+		5E538C769A0E0EC063F8818DAE7550B7 /* Pods-JPVideoPlayerDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7BBA2C5A872134EBA086A295CF41EF3F /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo" */;
+			buildConfigurationList = 366F9229BAC521E3891FB80B3C657794 /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo" */;
 			buildPhases = (
-				88E49F711CDB21A6800D18E43769AFF2 /* Headers */,
-				4C36B61B8BBEBC3B0FC2EBA2B21A3836 /* Sources */,
-				0324033007AFBC44C3D0A5E98E451768 /* Frameworks */,
+				543777CFE5E87F8D74E7B6A7E372F6A2 /* Headers */,
+				885B641807C089027DBAEAE09AE9CD6D /* Sources */,
+				98A5B6E315008B77DFA8DEF9BB111D0B /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5C388AA78AA3E49D63748D8DCF1BAC56 /* PBXTargetDependency */,
-				33B3694390E1A04F4223C0C9C7FBB053 /* PBXTargetDependency */,
-				5423E29C0C21DE368EB2CC2C8F2C7292 /* PBXTargetDependency */,
-				D1DE17498231C2D732551F443C41344D /* PBXTargetDependency */,
+				79EBD4B8295B272FC6CA092F1F756EC4 /* PBXTargetDependency */,
+				F05F326665F9B227A3F3D8346C421ACD /* PBXTargetDependency */,
 			);
 			name = "Pods-JPVideoPlayerDemo";
 			productName = "Pods-JPVideoPlayerDemo";
-			productReference = 02D2EDF145C735EEC6AEC3CB9941F6C2 /* libPods-JPVideoPlayerDemo.a */;
+			productReference = F12C93C585F861DB703DFA07B51F5471 /* libPods-JPVideoPlayerDemo.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		C36F900B8ED706C8175130D7B4D79F83 /* JPNavigationController */ = {
@@ -1194,24 +471,7 @@
 			);
 			name = JPNavigationController;
 			productName = JPNavigationController;
-			productReference = 3AC9671E1D3A2BA0A59A312180A306D9 /* libJPNavigationController.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		EC648B223D93726E624BDC119CF185CA /* SDWebImage */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 267D18C0C08617210F91D067B135A183 /* Build configuration list for PBXNativeTarget "SDWebImage" */;
-			buildPhases = (
-				89D7E694C524389B10D9B8E4350598E9 /* Headers */,
-				5E6336B78608282A3D2BCAAE3307F826 /* Sources */,
-				7DFC9F9AFBE8F1E5274110D320A059F4 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SDWebImage;
-			productName = SDWebImage;
-			productReference = C1CF9C3A6B25339FD7000C29906C2674 /* libSDWebImage.a */;
+			productReference = 0053DC90A4F7A50307E5F006ABF6CB7E /* libJPNavigationController.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -1231,103 +491,23 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = C36234D070B81C8CF14F2197ECB6A655 /* Products */;
+			productRefGroup = 4ED73E9A38598BEEC79AE142A0E9E375 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				18588AE8AF45A0ADFBEA7B122830B63A /* IGListKit */,
 				C36F900B8ED706C8175130D7B4D79F83 /* JPNavigationController */,
 				40A42EA465E764DD959C829C51404C08 /* Masonry */,
-				656CB94F7CBD74FC4736219F27CA945B /* Pods-JPVideoPlayerDemo */,
-				EC648B223D93726E624BDC119CF185CA /* SDWebImage */,
+				5E538C769A0E0EC063F8818DAE7550B7 /* Pods-JPVideoPlayerDemo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4C36B61B8BBEBC3B0FC2EBA2B21A3836 /* Sources */ = {
+		885B641807C089027DBAEAE09AE9CD6D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FCB662BA893B35A36A83E84ED694A8B /* Pods-JPVideoPlayerDemo-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5D6A82B4373D1AA31F8FA3A8AD2A626D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				61D1F63ADCF31D1A9788FE494A6C2486 /* IGListAdapter+DebugDescription.m in Sources */,
-				B3CC23D82287775775B646BAD77E20BD /* IGListAdapter+UICollectionView.m in Sources */,
-				9B516D75F9DF65D98006419FC66BD29E /* IGListAdapter.m in Sources */,
-				6E2E31A482ED0A2A5C18717D9B3187A0 /* IGListAdapterProxy.m in Sources */,
-				5B6EF55A9A00EE515830EFF5D7E67900 /* IGListAdapterUpdater+DebugDescription.m in Sources */,
-				14212D02BF19BE7CD258E592FD35F2AC /* IGListAdapterUpdater.m in Sources */,
-				9E81B8BB74A9300B99227209982606A8 /* IGListBatchUpdateData+DebugDescription.m in Sources */,
-				28ABFC7ED01AF3F1D944C0DC9733BCCD /* IGListBatchUpdateData.mm in Sources */,
-				1D552E655E72FA5BBAA1451E3A6AD3B3 /* IGListBatchUpdates.m in Sources */,
-				EFEFD57FAA5D7DBBC5F6FF0AC604BADE /* IGListBindingSectionController+DebugDescription.m in Sources */,
-				63D0C53C23386CF56823BA8DAE151F17 /* IGListBindingSectionController.m in Sources */,
-				8DCB087661E17ACB98C89FA4E69744F7 /* IGListCollectionView.m in Sources */,
-				BD166B2A597D2694431D89259D2A1D6C /* IGListCollectionViewLayout.mm in Sources */,
-				6A8C6C904B9B4E2F3A1D52256E119112 /* IGListDebugger.m in Sources */,
-				219280B4F86BA38CEFFF56734B675E63 /* IGListDebuggingUtilities.m in Sources */,
-				32BF54B1575B5CA7937FFFF093487C1B /* IGListDiff.mm in Sources */,
-				4F86DD92549267325D2997C5B43150E3 /* IGListDisplayHandler.m in Sources */,
-				F7DA51E371005F28805B7C696C326EF4 /* IGListGenericSectionController.m in Sources */,
-				13DCBEC285B3C563493A34C07B5C41F8 /* IGListIndexPathResult.m in Sources */,
-				FB7E9DA06EB26AC24D8752640822C0F5 /* IGListIndexSetResult.m in Sources */,
-				FE46A93A6C6630BFD859A9A11ACBCDF4 /* IGListKit-dummy.m in Sources */,
-				839CE29187A65B73ADB12E06D22564FE /* IGListMoveIndex.m in Sources */,
-				A2D217BB071C7A0E9A2B3ED53AB7CE31 /* IGListMoveIndexPath.m in Sources */,
-				B3EC61E017E340D953CE518FCE0E890B /* IGListReloadDataUpdater.m in Sources */,
-				6D7C337E1275849F7DB3BBA22B85A8F7 /* IGListReloadIndexPath.m in Sources */,
-				F8D2E6DF99C453EAA213FF93D4272321 /* IGListSectionController.m in Sources */,
-				964B365CC1AF836B4757AEC9C251DCE3 /* IGListSectionMap+DebugDescription.m in Sources */,
-				33B5B14B94687051ACB97052D2339E33 /* IGListSectionMap.m in Sources */,
-				27AD65257898F68516506C70781BC53A /* IGListSingleSectionController.m in Sources */,
-				28928711323B2B6CF698249E726B5F8D /* IGListStackedSectionController.m in Sources */,
-				95589532EA2E237CD55B2F9B69AFFB84 /* IGListWorkingRangeHandler.mm in Sources */,
-				59727D3288DB3475DED6018004612AD5 /* NSNumber+IGListDiffable.m in Sources */,
-				801B2A4545BCF09A9DA8E7F966C57B4B /* NSString+IGListDiffable.m in Sources */,
-				BA25631CA67EFDC96DFDEF29CCC4173E /* UICollectionView+DebugDescription.m in Sources */,
-				B069BB1B13A6B34ABE18178FE344421B /* UICollectionView+IGListBatchUpdateData.m in Sources */,
-				04924E0D081653DAF13709493A8C5B3B /* UICollectionViewLayout+InteractiveReordering.m in Sources */,
-				24DF19E8414E48E3A862AABB46FB703D /* UIScrollView+IGListKit.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E6336B78608282A3D2BCAAE3307F826 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FE6ACBC60E3C51BDD9732BD5DA7F0941 /* NSButton+WebCache.m in Sources */,
-				C3E9576CE3AF87C9A8117C9EFCB71831 /* NSData+ImageContentType.m in Sources */,
-				D8729BC154C9F8AAF4323BB3BE254DC9 /* NSImage+WebCache.m in Sources */,
-				F334A63620B98348D7E22277E6FE0B28 /* SDAnimatedImageRep.m in Sources */,
-				0237CF19EA7B50455653CCEA96398EF0 /* SDImageCache.m in Sources */,
-				74C52B2D66B8BC6F85B9CB175BC6AD12 /* SDImageCacheConfig.m in Sources */,
-				A39BF5099A0CF2832D8DC71BDEA02B80 /* SDWebImage-dummy.m in Sources */,
-				8C836DFB68D508EC75FC77A94549C951 /* SDWebImageCoder.m in Sources */,
-				DC0246CB46A03D97F22FB9D61DB85F99 /* SDWebImageCoderHelper.m in Sources */,
-				F44D0D3A892FD14B0CD29152A05850AD /* SDWebImageCodersManager.m in Sources */,
-				3E0F390A0EF36EB29B8A8056E3A15136 /* SDWebImageCompat.m in Sources */,
-				13FE08F0362D25B955A08358C787D523 /* SDWebImageDownloader.m in Sources */,
-				F39B6137ED280D6B6F507B0759D55BC8 /* SDWebImageDownloaderOperation.m in Sources */,
-				A2A196068E8B3E6FB5CBCDDE538D8BF4 /* SDWebImageFrame.m in Sources */,
-				A2793323FF3AA398757FE16F65AAF2A5 /* SDWebImageGIFCoder.m in Sources */,
-				BF313794CA77B6EE2484204C76760B8E /* SDWebImageImageIOCoder.m in Sources */,
-				8B085A3B1FFA9D491030B48CA9662EA4 /* SDWebImageManager.m in Sources */,
-				20B4B1840E6D52EC017ECCB7535138E4 /* SDWebImagePrefetcher.m in Sources */,
-				95D922F3DCE3F7942136FE11E84EDED0 /* SDWebImageTransition.m in Sources */,
-				92F74EC9521F8CC41A35ED4DD7C666AA /* UIButton+WebCache.m in Sources */,
-				45ADD7AF2BB409A436E7BE5EEF8722C3 /* UIImage+ForceDecode.m in Sources */,
-				436214D385F49B6D635625A7BA9B11CA /* UIImage+GIF.m in Sources */,
-				B9D1B9FADF2C0780C2886E3AD858E7EE /* UIImage+MultiFormat.m in Sources */,
-				F83DEC2ABB2669D8355B1B9830F072BC /* UIImageView+HighlightedWebCache.m in Sources */,
-				93D3F6DF97BE0E68AF3DBD80DB28DCAB /* UIImageView+WebCache.m in Sources */,
-				353FAD8D1C92E6E267E1B52B014A117D /* UIView+WebCache.m in Sources */,
-				C505B8272926DDACF48813D861B44F53 /* UIView+WebCacheOperation.m in Sources */,
+				C16C13212FB04830D89E4913D41BFC6A /* Pods-JPVideoPlayerDemo-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1372,82 +552,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		33B3694390E1A04F4223C0C9C7FBB053 /* PBXTargetDependency */ = {
+		79EBD4B8295B272FC6CA092F1F756EC4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = JPNavigationController;
 			target = C36F900B8ED706C8175130D7B4D79F83 /* JPNavigationController */;
-			targetProxy = E61AD936D2D29B7D19EF660EF7085859 /* PBXContainerItemProxy */;
+			targetProxy = 09BE64446B33A3E82901D780BAF07C50 /* PBXContainerItemProxy */;
 		};
-		5423E29C0C21DE368EB2CC2C8F2C7292 /* PBXTargetDependency */ = {
+		F05F326665F9B227A3F3D8346C421ACD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Masonry;
 			target = 40A42EA465E764DD959C829C51404C08 /* Masonry */;
-			targetProxy = 858083B9A6FE32C9AE3D7184B18CC5A3 /* PBXContainerItemProxy */;
-		};
-		5C388AA78AA3E49D63748D8DCF1BAC56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = IGListKit;
-			target = 18588AE8AF45A0ADFBEA7B122830B63A /* IGListKit */;
-			targetProxy = 3796C763723E2123CD23C10137AAC28E /* PBXContainerItemProxy */;
-		};
-		D1DE17498231C2D732551F443C41344D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SDWebImage;
-			target = EC648B223D93726E624BDC119CF185CA /* SDWebImage */;
-			targetProxy = CAB6AAD931592E291EAA8C837E8298B3 /* PBXContainerItemProxy */;
+			targetProxy = D22B132F72D09562E5B95E47FE97DB47 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0F5DD5E196A52B49BC4FE5E68DF3934B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A1453255BE326B242E78DD9BF28ED0D2 /* SDWebImage.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/SDWebImage/SDWebImage-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = SDWebImage;
-				PRODUCT_NAME = SDWebImage;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		160986E4FF86BF41E2D428804DC87151 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CCD8B7AAE9D99444F6E47007BE949F23 /* IGListKit.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/IGListKit/IGListKit-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = IGListKit;
-				PRODUCT_NAME = IGListKit;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		1D3F48869EA6A0024D621535B6BC77C9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F95A1A0E9B09F0C4B615B2F2283C21DD /* Masonry.xcconfig */;
+			baseConfigurationReference = AFD713762BF7F114F4A22D2A64D2B7DB /* Masonry.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1470,7 +592,7 @@
 		};
 		2651ED985672A17FBA68FDBBE3E32312 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7115B30E9810228B9E86FCFD21E793B7 /* JPNavigationController.xcconfig */;
+			baseConfigurationReference = 08200AE5ACF6E3FF07A21A8A8D4D1236 /* JPNavigationController.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1494,7 +616,7 @@
 		};
 		27B0AB8B3F2C508FAE95B978A9AE0607 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7115B30E9810228B9E86FCFD21E793B7 /* JPNavigationController.xcconfig */;
+			baseConfigurationReference = 08200AE5ACF6E3FF07A21A8A8D4D1236 /* JPNavigationController.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1515,28 +637,7 @@
 			};
 			name = Debug;
 		};
-		7E433754B4FF348D308E5F224E527DC4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 938C6819ED29F581BA50870024B1DBF0 /* Pods-JPVideoPlayerDemo.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		96434B6C8FF320C976A10DAD7174A4BB /* Release */ = {
+		85B95B1234E227C814CCC2C7902D0916 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1591,13 +692,16 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
 		};
 		A254A1D5CAE40ABC54B15E5215496D62 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F95A1A0E9B09F0C4B615B2F2283C21DD /* Masonry.xcconfig */;
+			baseConfigurationReference = AFD713762BF7F114F4A22D2A64D2B7DB /* Masonry.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1619,55 +723,7 @@
 			};
 			name = Release;
 		};
-		A762FC00F95125B25658360B98D5548E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CCD8B7AAE9D99444F6E47007BE949F23 /* IGListKit.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/IGListKit/IGListKit-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = IGListKit;
-				PRODUCT_NAME = IGListKit;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		AFB0F7A6A9226712B2059A193AF71E61 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A1453255BE326B242E78DD9BF28ED0D2 /* SDWebImage.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/SDWebImage/SDWebImage-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = SDWebImage;
-				PRODUCT_NAME = SDWebImage;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		D11C82AF2204B41B80412B8DC9C1D652 /* Debug */ = {
+		A73625DEBD810B78234FA1958C191C8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1727,11 +783,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
 		};
-		DD35C0EC9DC64175F771F2FAAE9AFA97 /* Release */ = {
+		B94B484B31B512A9283B8C02B4099F52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7BBB3D4B8215F5151BEF46AAE2F2B330 /* Pods-JPVideoPlayerDemo.release.xcconfig */;
 			buildSettings = {
@@ -1753,32 +811,44 @@
 			};
 			name = Release;
 		};
+		D903CB998E2F6C9B4A224F42157AC4E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 938C6819ED29F581BA50870024B1DBF0 /* Pods-JPVideoPlayerDemo.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		267D18C0C08617210F91D067B135A183 /* Build configuration list for PBXNativeTarget "SDWebImage" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0F5DD5E196A52B49BC4FE5E68DF3934B /* Debug */,
-				AFB0F7A6A9226712B2059A193AF71E61 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D11C82AF2204B41B80412B8DC9C1D652 /* Debug */,
-				96434B6C8FF320C976A10DAD7174A4BB /* Release */,
+				A73625DEBD810B78234FA1958C191C8C /* Debug */,
+				85B95B1234E227C814CCC2C7902D0916 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52EDEB8F88EC2CF3C5FA9BBB35307AEB /* Build configuration list for PBXNativeTarget "IGListKit" */ = {
+		366F9229BAC521E3891FB80B3C657794 /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				160986E4FF86BF41E2D428804DC87151 /* Debug */,
-				A762FC00F95125B25658360B98D5548E /* Release */,
+				D903CB998E2F6C9B4A224F42157AC4E6 /* Debug */,
+				B94B484B31B512A9283B8C02B4099F52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1788,15 +858,6 @@
 			buildConfigurations = (
 				27B0AB8B3F2C508FAE95B978A9AE0607 /* Debug */,
 				2651ED985672A17FBA68FDBBE3E32312 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7BBA2C5A872134EBA086A295CF41EF3F /* Build configuration list for PBXNativeTarget "Pods-JPVideoPlayerDemo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7E433754B4FF348D308E5F224E527DC4 /* Debug */,
-				DD35C0EC9DC64175F771F2FAAE9AFA97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
