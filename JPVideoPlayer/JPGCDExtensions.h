@@ -29,7 +29,7 @@ UIKIT_EXTERN void JPDispatchAfterTimeIntervalInSecond(NSTimeInterval timeInterva
  * @param count benchmark 次数.
  * @param block benchmark 代码.
  */
-UIKIT_EXTERN int64_t jp_dispatch_benchmark(size_t count, void (^block)(void));
+UIKIT_EXTERN int64_t jpdispatch_benchmark(size_t count, void (^block)(void));
 
 #define JPAssertMainThread NSAssert([NSThread isMainThread], @"代码应该在主线程调用.")
 

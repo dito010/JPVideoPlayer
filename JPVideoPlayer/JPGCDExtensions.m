@@ -64,6 +64,6 @@ void JPDispatchAfterTimeIntervalInSecond(NSTimeInterval timeInterval, void (^blo
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), block);
 }
 
-int64_t jp_dispatch_benchmark(size_t count, void (^block)(void)) {
+int64_t jpdispatch_benchmark(size_t count, void (^block)(void)) {
     return dispatch_benchmark(count, block);
 }
