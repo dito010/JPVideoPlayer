@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JPVideoPlayerCustomizedVideoViewController">
+            <connections>
+                <outlet property="videoURLTextField" destination="vjg-Z1-bgH" id="7v7-aM-hll"/>
+                <outlet property="videoView" destination="RT0-qg-QDD" id="sJo-fc-IUt"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mkM-ku-fYl">
+                    <rect key="frame" x="325" y="281" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="L2x-AO-MBY"/>
+                        <constraint firstAttribute="height" constant="30" id="SRa-93-4uL"/>
+                    </constraints>
+                    <state key="normal" title="play"/>
+                    <connections>
+                        <action selector="playButtonDidClick:" destination="-1" eventType="touchUpInside" id="3dQ-bN-wRI"/>
+                    </connections>
+                </button>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://vfx.mtime.cn/Video/2017/03/31/mp4/170331093811717750.mp4" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vjg-Z1-bgH">
+                    <rect key="frame" x="20" y="281" width="287" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RT0-qg-QDD">
+                    <rect key="frame" x="0.0" y="44" width="375" height="211"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Layer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DSd-NJ-iaS">
+                            <rect key="frame" x="129.5" y="92" width="116" height="26.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="DSd-NJ-iaS" firstAttribute="centerX" secondItem="RT0-qg-QDD" secondAttribute="centerX" id="BED-Tw-T0W"/>
+                        <constraint firstItem="DSd-NJ-iaS" firstAttribute="centerY" secondItem="RT0-qg-QDD" secondAttribute="centerY" id="dIp-gV-9q6"/>
+                        <constraint firstAttribute="width" secondItem="RT0-qg-QDD" secondAttribute="height" multiplier="16:9" id="gK3-Eg-A6s"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="RT0-qg-QDD" secondAttribute="trailing" id="Fx5-5c-jYg"/>
+                <constraint firstItem="mkM-ku-fYl" firstAttribute="centerY" secondItem="vjg-Z1-bgH" secondAttribute="centerY" id="Jx5-Db-865"/>
+                <constraint firstAttribute="trailing" secondItem="mkM-ku-fYl" secondAttribute="trailing" constant="20" id="KUL-nx-oiZ"/>
+                <constraint firstItem="RT0-qg-QDD" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="44" id="NQe-iS-HdL"/>
+                <constraint firstItem="mkM-ku-fYl" firstAttribute="leading" secondItem="vjg-Z1-bgH" secondAttribute="trailing" constant="18" id="QgX-Co-u0T"/>
+                <constraint firstItem="RT0-qg-QDD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="c5U-xZ-wec"/>
+                <constraint firstItem="vjg-Z1-bgH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="rCV-gf-cFr"/>
+                <constraint firstItem="vjg-Z1-bgH" firstAttribute="top" secondItem="RT0-qg-QDD" secondAttribute="bottom" constant="26" id="yxX-An-8nx"/>
+            </constraints>
+            <point key="canvasLocation" x="50.399999999999999" y="93.103448275862078"/>
+        </view>
+    </objects>
+</document>

@@ -13,6 +13,7 @@
 #import "JPVideoPlayerWeiBoListViewController.h"
 #import "JPVideoPlayerHoverViewController.h"
 #import "JPVideoPlayerAudioViewController.h"
+#import "JPVideoPlayerCustomizedVideoViewController.h"
 
 @interface JPVideoPlayerWeiBoViewController()
 
@@ -25,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"微博";
+    self.title = @"仿微博";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
@@ -55,15 +56,18 @@
     else if(indexPath.row == 2) {
         viewController = [JPVideoPlayerHoverViewController new];
     }
-    else {
+    else if(indexPath.row == 3) {
         viewController = [JPVideoPlayerAudioViewController new];
+    }
+    else if(indexPath.row == 4) {
+        viewController = [JPVideoPlayerCustomizedVideoViewController new];
     }
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (NSArray<NSString *> *)cellTypeStrings {
     if(!_cellTypeStrings){
-       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放", @"悬停播放", @"音频播放"];
+       _cellTypeStrings = @[@"不等高 Cell 自动播放", @"等高 Cell 自动播放", @"悬停播放", @"音频播放", @"自定义视频地址"];
     }
     return _cellTypeStrings;
 }
