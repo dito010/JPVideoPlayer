@@ -15,7 +15,7 @@
 
 @interface JPVideoPlayerControlProgressView()
 
-@property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
+@property (nonatomic, strong) NSArray<NSValue *> *rangeValues;
 
 @property(nonatomic, assign) NSUInteger fileLength;
 
@@ -89,7 +89,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
                    videoURL:(NSURL *)videoURL {
-    _rangesValue = cacheRanges;
+    _rangeValues = cacheRanges;
     [self updateCacheProgressViewIfNeed];
 }
 
@@ -97,7 +97,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
                                totalSeconds:(NSTimeInterval)totalSeconds
                                    videoURL:(NSURL *)videoURL {
     if(self.userDragging) return;
-    if(totalSeconds == 0) totalSeconds = 1;
+    if(totalSeconds < 1e-3) totalSeconds = 1.0;
 
     float delta = (float)(elapsedSeconds / totalSeconds);
     if (delta < 0 || delta > 1) {
@@ -217,31 +217,33 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)displayCacheProgressViewIfNeed {
-    if(self.userDragging || !self.rangesValue.count){
+    if(self.userDragging || !self.rangeValues.count){
         return;
     }
 
     [self removeCacheProgressViewIfNeed];
     NSRange targetRange = JPInvalidRange;
     NSUInteger dragStartLocation = [self fetchDragStartLocation];
-    if(self.rangesValue.count == 1){
-        if(JPValidFileRange([self.rangesValue.firstObject rangeValue])){
-            targetRange = [self.rangesValue.firstObject rangeValue];
+    if(self.rangeValues.count == 1){
+        if(JPValidFileRange([self.rangeValues.firstObject rangeValue])){
+            targetRange = [self.rangeValues.firstObject rangeValue];
         }
     }
     else {
         // find the range that the closest to dragStartLocation.
-        for(NSValue *value in self.rangesValue){
-            NSRange range = [value rangeValue];
-            NSUInteger distance = NSUIntegerMax;
+        NSRange range;
+        NSUInteger distance = NSUIntegerMax;
+        int deltaDistance;
+        for(NSValue *value in self.rangeValues){
+            range = [value rangeValue];
             if(JPValidFileRange(range)){
                 if(NSLocationInRange(dragStartLocation, range)){
                     targetRange = range;
                     break;
                 }
                 else {
-                    int deltaDistance = abs((int)(range.location - dragStartLocation));
-                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ?: deltaDistance;
+                    deltaDistance = abs((int)(range.location - dragStartLocation));
+                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ? (NSMaxRange(range) - dragStartLocation) : deltaDistance;
                     if(deltaDistance < distance){
                         distance = deltaDistance;
                         targetRange = range;
@@ -251,12 +253,9 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         }
     }
 
-    if(!JPValidFileRange(targetRange)){
-        return;
-    }
-    if(self.fileLength == 0){
-        return;
-    }
+    if(!JPValidFileRange(targetRange)) return;
+    if(!self.fileLength) return;
+
     CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
     CGFloat cacheProgressViewWidth = targetRange.length * self.trackProgressView.bounds.size.width / self.fileLength;
     self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.trackProgressView.bounds.size.height);
@@ -264,7 +263,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (NSUInteger)fetchDragStartLocation {
-    return self.fileLength * self.dragSlider.value;
+    return (NSUInteger)(self.fileLength * self.dragSlider.value);
 }
 
 - (NSTimeInterval)fetchElapsedTimeInterval {
@@ -648,7 +647,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @property (nonatomic, strong) UIProgressView *elapsedProgressView;
 
-@property (nonatomic, strong) NSArray<NSValue *> *rangesValue;
+@property (nonatomic, strong) NSArray<NSValue *> *rangeValues;
 
 @property(nonatomic, assign) NSUInteger fileLength;
 
@@ -726,15 +725,15 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)cacheRangeDidChange:(NSArray<NSValue *> *)cacheRanges
                    videoURL:(NSURL *)videoURL {
-    _rangesValue = cacheRanges;
+    _rangeValues = cacheRanges;
     [self displayCacheProgressViewIfNeed];
 }
 
 - (void)playProgressDidChangeElapsedSeconds:(NSTimeInterval)elapsedSeconds
                                totalSeconds:(NSTimeInterval)totalSeconds
                                    videoURL:(NSURL *)videoURL {
-    if((NSInteger)totalSeconds == 0){
-        totalSeconds = 1;
+    if((NSInteger)totalSeconds < 1e-3){
+        totalSeconds = 1.0;
     }
 
     float delta = (float)(elapsedSeconds / totalSeconds);
@@ -754,31 +753,33 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 }
 
 - (void)displayCacheProgressViewIfNeed {
-    if(!self.rangesValue.count){
+    if(!self.rangeValues.count){
         return;
     }
 
     [self removeCacheProgressViewIfNeed];
     NSRange targetRange = JPInvalidRange;
     NSUInteger dragStartLocation = [self fetchDragStartLocation];
-    if(self.rangesValue.count == 1){
-        if(JPValidFileRange([self.rangesValue.firstObject rangeValue])){
-            targetRange = [self.rangesValue.firstObject rangeValue];
+    if(self.rangeValues.count == 1){
+        if(JPValidFileRange([self.rangeValues.firstObject rangeValue])){
+            targetRange = [self.rangeValues.firstObject rangeValue];
         }
     }
     else {
         // find the range that the closest to dragStartLocation.
-        for(NSValue *value in self.rangesValue){
-            NSRange range = [value rangeValue];
-            NSUInteger distance = NSUIntegerMax;
+        NSRange range;
+        NSUInteger distance = NSUIntegerMax;
+        int deltaDistance;
+        for(NSValue *value in self.rangeValues){
+            range = [value rangeValue];
             if(JPValidFileRange(range)){
                 if(NSLocationInRange(dragStartLocation, range)){
                     targetRange = range;
                     break;
                 }
                 else {
-                    int deltaDistance = abs((int)(range.location - dragStartLocation));
-                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ?: deltaDistance;
+                    deltaDistance = abs((int)(range.location - dragStartLocation));
+                    deltaDistance = abs((int)(NSMaxRange(range) - dragStartLocation)) < deltaDistance ? (NSMaxRange(range) - dragStartLocation) : deltaDistance;
                     if(deltaDistance < distance){
                         distance = deltaDistance;
                         targetRange = range;
@@ -788,12 +789,9 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
         }
     }
 
-    if(!JPValidFileRange(targetRange)){
-        return;
-    }
-    if(self.fileLength == 0){
-        return;
-    }
+    if(!JPValidFileRange(targetRange)) return;
+    if(!self.fileLength) return;
+
     CGFloat cacheProgressViewOriginX = targetRange.location * self.trackProgressView.bounds.size.width / self.fileLength;
     CGFloat cacheProgressViewWidth = targetRange.length * self.trackProgressView.bounds.size.width / self.fileLength;
     self.cachedProgressView.frame = CGRectMake(cacheProgressViewOriginX, 0, cacheProgressViewWidth, self.trackProgressView.bounds.size.height);
@@ -1038,14 +1036,14 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         if(self.controlContainerView.alpha == 0){
-                             self.controlContainerView.alpha = 1;
-                             self.progressContainerView.alpha = 0;
+                         if(self.controlContainerView.alpha < 1e-3){
+                             self.controlContainerView.alpha = 1.f;
+                             self.progressContainerView.alpha = 0.f;
                              [self startTimer];
                          }
                          else {
-                             self.controlContainerView.alpha = 0;
-                             self.progressContainerView.alpha = 1;
+                             self.controlContainerView.alpha = 0.f;
+                             self.progressContainerView.alpha = 1.f;
                              [self endTimer];
                          }
 

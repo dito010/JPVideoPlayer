@@ -20,7 +20,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidStartDragNotificat
 UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotification;
 @interface JPVideoPlayerControlProgressView : UIView<JPVideoPlayerControlProgressProtocol>
 
-@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
+@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangeValues;
 
 @property (nonatomic, assign, readonly) NSUInteger fileLength;
 
@@ -74,7 +74,7 @@ UIKIT_EXTERN NSString *JPVideoPlayerControlProgressViewUserDidEndDragNotificatio
 UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 @interface JPVideoPlayerProgressView : UIView<JPVideoPlayerProtocol>
 
-@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangesValue;
+@property (nonatomic, strong, readonly) NSArray<NSValue *> *rangeValues;
 
 @property (nonatomic, assign, readonly) NSUInteger fileLength;
 
