@@ -97,6 +97,8 @@
 }
 
 
+
+
 #pragma mark - Click Events
 
 - (IBAction)muteSwitch:(UISwitch *)sw {
@@ -105,6 +107,16 @@
 
 - (IBAction)closeBtnClick:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)resumePlayDidClick:(id)sender {
+    [self.videoContainer jp_resumePlayWithURL:[NSURL URLWithString:self.videoPath]
+                           bufferingIndicator:nil
+                                  controlView:[[JPVideoPlayerDetailControlView alloc] initWithControlBar:nil blurImage:nil]
+                                 progressView:nil
+                                configuration:^(UIView *view, JPVideoPlayerModel *playerModel) {
+                                    self.muteSwitch.on = ![self.videoContainer jp_muted];
+                                }];
 }
 
 

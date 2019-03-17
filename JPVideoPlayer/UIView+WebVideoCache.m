@@ -320,7 +320,9 @@
                     [self.jp_controlView viewWillAddToSuperView:self];
                 }
                 [self.helper.videoPlayerView.controlContainerView addSubview:self.jp_controlView];
-                self.helper.videoPlayerView.progressContainerView.alpha = 0;
+                if ([self jp_playerStatus] == JPVideoPlayerStatusUnknown) {
+                    self.helper.videoPlayerView.progressContainerView.alpha = 0.f;
+                }
             }
         }
 
