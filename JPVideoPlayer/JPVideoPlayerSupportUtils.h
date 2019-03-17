@@ -245,4 +245,24 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @end
 
+@class JPDeviceInterfaceOrientationMonitor;
+
+@protocol JPDeviceInterfaceOrientationMonitorObserver<NSObject>
+
+@optional
+- (void)interfaceOrientationMonitor:(JPDeviceInterfaceOrientationMonitor *)monitor
+      interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation;
+
+@end
+
+@interface JPDeviceInterfaceOrientationMonitor : NSObject
+
++ (instancetype)shared;
+
+- (void)addObserver:(id<JPDeviceInterfaceOrientationMonitorObserver>)observer;
+
+- (void)removeObserver:(id<JPDeviceInterfaceOrientationMonitorObserver>)observer;
+
+@end
+
 NS_ASSUME_NONNULL_END

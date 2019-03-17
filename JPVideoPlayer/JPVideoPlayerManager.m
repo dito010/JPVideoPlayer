@@ -33,7 +33,8 @@
 
 @interface JPVideoPlayerManager()<JPVideoPlayerInternalDelegate,
         JPVideoPlayerDownloaderDelegate,
-        JPApplicationStateMonitorDelegate>
+        JPApplicationStateMonitorDelegate,
+        JPDeviceInterfaceOrientationMonitorObserver>
 
 @property (strong, nonatomic, readwrite, nonnull) JPVideoPlayerCache *videoCache;
 
@@ -68,6 +69,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
         jpVideoPlayerManagerInstance = [self new];
         [[NSUserDefaults standardUserDefaults] setObject:@"3.1.1" forKey:JPVideoPlayerSDKVersionKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [[JPDeviceInterfaceOrientationMonitor shared] addObserver:jpVideoPlayerManagerInstance];
         [JPMigration migrateToSDKVersion:@"3.1.1" block:^{
 
             [jpVideoPlayerManagerInstance.videoCache clearDiskOnCompletion:nil];
@@ -713,6 +715,17 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
         elapsedSeconds == 0 ? [dictionary removeObjectForKey:[self cacheKeyForURL:videoURL]] : [dictionary setObject:@(elapsedSeconds) forKey:[self cacheKeyForURL:videoURL]];
         [dictionary writeToFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath] atomically:YES];
     });
+}
+
+
+#pragma mark - JPDeviceInterfaceOrientationMoniterObserver
+
+- (void)interfaceOrientationMonitor:(JPDeviceInterfaceOrientationMonitor *)monitor
+      interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:interfaceOrientationDidChange:)]) {
+        [self.delegate videoPlayerManager:self
+            interfaceOrientationDidChange:interfaceOrientation];
+    }
 }
 
 @end

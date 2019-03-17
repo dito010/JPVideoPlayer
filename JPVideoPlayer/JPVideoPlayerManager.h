@@ -170,6 +170,15 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:(NSURL 
 shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
             elapsedSeconds:(NSTimeInterval)elapsedSeconds;
 
+/**
+ * Invoked when interface orientation did change.
+ *
+ * @param videoPlayerManager    The current `JPVideoPlayerManager`.
+ * @param interfaceOrientation  The current `UIDeviceOrientation`.
+ */
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+        interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation;
+
 @end
 
 @interface JPVideoPlayerManagerModel : NSObject

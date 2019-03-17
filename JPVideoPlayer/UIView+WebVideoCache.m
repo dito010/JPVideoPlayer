@@ -784,4 +784,16 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
     return shouldResume;
 }
 
+- (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
+interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation {
+    BOOL shouldAutoChangeVideoLayerInterfaceOrientation = YES;
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldGotoLandscapeWhenInterfaceOrientationDidChange:)]) {
+        shouldAutoChangeVideoLayerInterfaceOrientation = [self.jp_videoPlayerDelegate shouldGotoLandscapeWhenInterfaceOrientationDidChange:interfaceOrientation];
+    }
+
+    if (shouldAutoChangeVideoLayerInterfaceOrientation) {
+        [self jp_gotoLandscape];
+    }
+}
+
 @end

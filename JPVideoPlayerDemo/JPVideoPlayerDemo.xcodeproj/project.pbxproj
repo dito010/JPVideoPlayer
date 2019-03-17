@@ -17,7 +17,6 @@
 		258188DAB416370E7585394B /* JPVideoPlayerWeiBoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258185FC55A71807B8167322 /* JPVideoPlayerWeiBoViewController.m */; };
 		481650661ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */; };
 		481650671ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */; };
-		483CF5DC223E73DF006B5695 /* 中文名.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 483CF5DB223E73DF006B5695 /* 中文名.mp4 */; };
 		488717511EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4887174F1EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.m */; };
 		488717521EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488717501EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.xib */; };
 		48C3346C223E6189001E5A88 /* JPVideoPlayerCustomizedVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C3346A223E6189001E5A88 /* JPVideoPlayerCustomizedVideoViewController.m */; };
@@ -94,7 +93,6 @@
 		481650631ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerDetailViewController.h; sourceTree = "<group>"; };
 		481650641ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerDetailViewController.m; sourceTree = "<group>"; };
 		481650651ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerDetailViewController.xib; sourceTree = "<group>"; };
-		483CF5DB223E73DF006B5695 /* 中文名.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "中文名.mp4"; sourceTree = "<group>"; };
 		4887174E1EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerSettingViewController.h; sourceTree = "<group>"; };
 		4887174F1EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerSettingViewController.m; sourceTree = "<group>"; };
 		488717501EB63CBA00300CA6 /* JPVideoPlayerSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JPVideoPlayerSettingViewController.xib; sourceTree = "<group>"; };
@@ -289,7 +287,6 @@
 		5F6705661DADE88F001EBFAF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				483CF5DB223E73DF006B5695 /* 中文名.mp4 */,
 				CF5438702067AE3300AC4391 /* designedByAppleInCalifornia.mp4 */,
 				5F6705671DADE88F001EBFAF /* main.m */,
 			);
@@ -441,7 +438,6 @@
 				CF533E3620773C6500075063 /* JPVideoPlayerWeiBoUnequalHeightCell.xib in Resources */,
 				CF73A144209217F000F8F63E /* JPVPNetEasyTableViewCell.xib in Resources */,
 				481650671ED1AA7B00A18412 /* JPVideoPlayerDetailViewController.xib in Resources */,
-				483CF5DC223E73DF006B5695 /* 中文名.mp4 in Resources */,
 				48EE51D11E6C069900BA602D /* JPVideoPlayerWeiBoEqualHeightCell.xib in Resources */,
 				CF5024F2207F66F400DE8E2E /* JPVideoPlayer.bundle in Resources */,
 				5F6705731DADE88F001EBFAF /* Assets.xcassets in Resources */,

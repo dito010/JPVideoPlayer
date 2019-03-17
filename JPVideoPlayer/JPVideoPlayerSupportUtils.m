@@ -14,6 +14,7 @@
 #import "UIView+WebVideoCache.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPGCDExtensions.h"
+#import <CoreMotion/CoreMotion.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -765,6 +766,106 @@ static NSString * const JPMigrationLastSDKVersionKey = @"com.jpvideoplayer.last.
 + (void)setLastMigrationVersion:(NSString *)version {
     [[NSUserDefaults standardUserDefaults] setValue:version forKey:JPMigrationLastSDKVersionKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+@end
+
+@interface JPDeviceInterfaceOrientationMonitor ()
+
+@property(nonatomic, strong) NSHashTable<id<JPDeviceInterfaceOrientationMonitorObserver>> *observers;
+
+@end
+
+@implementation JPDeviceInterfaceOrientationMonitor
+
++ (void)load {
+    JPDispatchAfterTimeIntervalInSecond(0.1, ^{
+        [self shared];
+    });
+}
+
+- (instancetype)init {
+    @throw [NSException exceptionWithName:@"JPDeviceInterfaceOrientationMonitor init error" reason:@"Use 'shared' to get instance." userInfo:nil];
+    return [super init];
+}
+
++ (instancetype)shared {
+    static dispatch_once_t once;
+    static JPDeviceInterfaceOrientationMonitor *_instance;
+    dispatch_once(&once, ^{
+        _instance = [[self alloc] _init];
+    });
+    return _instance;
+}
+
+- (instancetype)_init {
+    self = [super init];
+    if (self) {
+        _observers = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory|NSPointerFunctionsObjectPointerPersonality capacity:0];
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(deviceInterfaceOrientationDidChange)
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:nil];
+    }
+    return self;
+}
+
+- (void)addObserver:(id <JPDeviceInterfaceOrientationMonitorObserver>)observer {
+    if (!observer) return;
+    [self.observers addObject:observer];
+}
+
+- (void)removeObserver:(id <JPDeviceInterfaceOrientationMonitorObserver>)observer {
+    if (!observer) return;
+    [self.observers removeObject:observer];
+}
+
+- (void)deviceInterfaceOrientationDidChange {
+    UIDevice *device = [UIDevice currentDevice];
+    switch (device.orientation) {
+        case UIDeviceOrientationFaceUp:
+            JPDebugLog(@"屏幕朝上平躺");
+            break;
+
+        case UIDeviceOrientationFaceDown:
+            JPDebugLog(@"屏幕朝下平躺");
+            break;
+
+            //系統無法判斷目前Device的方向，有可能是斜置
+        case UIDeviceOrientationUnknown:
+            JPDebugLog(@"未知方向");
+            break;
+
+        case UIDeviceOrientationLandscapeLeft:
+            JPDebugLog(@"屏幕向左横置");
+            break;
+
+        case UIDeviceOrientationLandscapeRight:
+            JPDebugLog(@"屏幕向右橫置");
+            break;
+
+        case UIDeviceOrientationPortrait:
+            JPDebugLog(@"屏幕直立");
+            break;
+
+        case UIDeviceOrientationPortraitUpsideDown:
+            JPDebugLog(@"屏幕直立，上下顛倒");
+            break;
+
+        default:
+            JPDebugLog(@"无法辨识");
+            break;
+    }
+    if (!self.observers.count) return;
+
+    [[self.observers allObjects] enumerateObjectsUsingBlock:^(id <JPDeviceInterfaceOrientationMonitorObserver> obj, NSUInteger idx, BOOL *stop) {
+
+        if ([obj respondsToSelector:@selector(interfaceOrientationMonitor:interfaceOrientationDidChange:)]) {
+            [obj interfaceOrientationMonitor:self interfaceOrientationDidChange:device.orientation];
+        }
+
+    }];
 }
 
 @end

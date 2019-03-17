@@ -148,6 +148,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
                                       elapsedSeconds:(NSTimeInterval)elapsedSeconds;
 
+/**
+ * Invoked when interface orientation did change.
+ *
+ * @param interfaceOrientation The current `UIDeviceOrientation`.
+ *
+ * @return `YES` means auto change the video layer interface orientation when interface orientation changed. `NO` means keep current video layer interface orientation. `NO` by default.
+ */
+- (BOOL)shouldGotoLandscapeWhenInterfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation;
+
 @end
 
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
