@@ -21,6 +21,7 @@
 
 @end
 
+// https://www.jianshu.com/p/5fab7968f76a
 @implementation JPVideoPlayerWeiBoViewController
 
 - (void)viewDidLoad {

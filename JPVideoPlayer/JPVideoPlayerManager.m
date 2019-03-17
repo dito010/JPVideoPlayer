@@ -616,6 +616,7 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
     // local file.
     JPDebugLog(@"Start play a local video: %@", url);
     NSString *path = [url.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    path = [path stringByRemovingPercentEncoding];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         self.managerModel.cacheType = JPVideoPlayerCacheTypeLocation;
         self.managerModel.fileLength = (NSUInteger)[self fetchFileSizeAtPath:path];;

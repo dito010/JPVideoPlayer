@@ -9,7 +9,7 @@
 #import "JPVideoPlayerCustomizedVideoViewController.h"
 #import "JPVideoPlayerKit.h"
 
-@interface JPVideoPlayerCustomizedVideoViewController ()
+@interface JPVideoPlayerCustomizedVideoViewController ()<JPVideoPlayerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *videoURLTextField;
 
@@ -22,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"自定义视频播放";
+    self.videoView.jp_videoPlayerDelegate = self;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -41,6 +42,13 @@
                              controlView:nil
                             progressView:nil
                            configuration:nil];
+}
+
+
+#pragma mark - JPVideoPlayerDelegate
+
+- (void)playVideoFailWithError:(NSError *)error videoURL:(NSURL *)videoURL {
+    NSLog(@"%@", error);
 }
 
 @end
