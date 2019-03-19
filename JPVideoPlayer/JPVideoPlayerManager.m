@@ -61,6 +61,10 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 @synthesize volume;
 @synthesize muted;
 @synthesize rate;
+// TODO: 使用 reusablePool 来优化 task 性能.
+// TODO: 控制进度条全屏后不能出现 bug.
+// TODO: 全屏回到竖屏或相反过程同事出现进度和控制播放条 bug.
+// TODO: 全屏适配 iPhone X.
 
 + (nonnull instancetype)sharedManager {
     static dispatch_once_t once;

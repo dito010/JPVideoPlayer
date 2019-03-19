@@ -24,11 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param constrainedRect       The bounds of superview.
  * @param nearestViewController The nearest `UIViewController` of view in view tree,
  *                               it be use to fetch `safeAreaInsets` to help layout subviews.
- * @param interfaceOrientation  The current interface orientation of view.
+ * @param orientation           The current interface orientation of view.
  */
 - (void)layoutThatFits:(CGRect)constrainedRect
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
-        interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation;
+        orientation:(JPVideoPlayerOrientation)orientation;
 
 @end
 
@@ -94,11 +94,11 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 /**
  * This method will be called when the interfaceOrientation of player was changed.
  *
- * @param interfaceOrientation The interfaceOrientation of player.
+ * @param orientation The interfaceOrientation of player.
  * @param videoURL             The URL of video.
  */
-- (void)videoPlayerInterfaceOrientationDidChange:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation
-                                        videoURL:(NSURL *)videoURL;
+- (void)videoPlayerOrientationDidChange:(JPVideoPlayerOrientation)orientation
+                               videoURL:(NSURL *)videoURL;
 
 @end
 

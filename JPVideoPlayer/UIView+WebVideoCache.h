@@ -151,11 +151,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Invoked when interface orientation did change.
  *
- * @param interfaceOrientation The current `UIDeviceOrientation`.
+ * @param deviceOrientation The current `UIDeviceOrientation`.
  *
  * @return `YES` means auto change the video layer interface orientation when interface orientation changed. `NO` means keep current video layer interface orientation. `NO` by default.
  */
-- (BOOL)shouldGotoLandscapeWhenInterfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation;
+- (BOOL)shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:(UIDeviceOrientation)deviceOrientation;
 
 @end
 
@@ -165,7 +165,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable) id<JPVideoPlayerDelegate> jp_videoPlayerDelegate;
 
-@property (nonatomic, readonly) JPVideoPlayViewInterfaceOrientation jp_viewInterfaceOrientation;
+@property (nonatomic, readonly) JPVideoPlayerOrientation jp_orientation;
 
 @property (nonatomic, readonly) JPVideoPlayerStatus jp_playerStatus;
 
@@ -392,6 +392,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)jp_gotoPortraitAnimated:(BOOL)flag
                      completion:(dispatch_block_t _Nullable)completion;
+
+//- (void)jp_videoLayerSizeToFitOrientation:()
 
 @end
 

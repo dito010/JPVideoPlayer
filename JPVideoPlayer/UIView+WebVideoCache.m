@@ -27,7 +27,7 @@
 
 @property(nonatomic, weak) id<JPVideoPlayerDelegate> videoPlayerDelegate;
 
-@property(nonatomic, assign) JPVideoPlayViewInterfaceOrientation viewInterfaceOrientation;
+@property(nonatomic, assign) JPVideoPlayerOrientation orientation;
 
 @property(nonatomic, assign)JPVideoPlayerStatus playerStatus;
 
@@ -43,17 +43,9 @@
     self = [super init];
     if(self){
         _playVideoView = playVideoView;
+        _orientation = JPVideoPlayerOrientationUnknown;
     }
     return self;
-}
-
-- (JPVideoPlayViewInterfaceOrientation)viewInterfaceOrientation {
-    if(_viewInterfaceOrientation == JPVideoPlayViewInterfaceOrientationUnknown){
-        CGSize referenceSize = self.playVideoView.window.bounds.size;
-        _viewInterfaceOrientation = referenceSize.width < referenceSize.height ? JPVideoPlayViewInterfaceOrientationPortrait :
-                JPVideoPlayViewInterfaceOrientationLandscape;
-    }
-    return _viewInterfaceOrientation;
 }
 
 - (JPVideoPlayerView *)videoPlayerView {
@@ -79,8 +71,8 @@
 
 #pragma mark - Properties
 
-- (JPVideoPlayViewInterfaceOrientation)jp_viewInterfaceOrientation {
-    return self.helper.viewInterfaceOrientation;
+- (JPVideoPlayerOrientation)jp_orientation {
+    return self.helper.orientation;
 }
 
 - (JPVideoPlayerStatus)jp_playerStatus {
@@ -279,7 +271,7 @@
     self.jp_videoURL = url;
     if (url) {
         [JPVideoPlayerManager sharedManager].delegate = self;
-        self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
+        self.helper.orientation = JPVideoPlayerOrientationPortrait;
 
         /// handler the reuse of progressView in `UITableView`.
         {
@@ -355,7 +347,7 @@
                                                        showOnLayer:self.helper.videoPlayerView.videoContainerLayer
                                                            options:options
                                                      configuration:_configuration];
-            [self callOrientationDelegateWithInterfaceOrientation:self.jp_viewInterfaceOrientation];
+            [self callOrientationDelegateWithOrientation:self.jp_orientation];
         }
         else {
             [[JPVideoPlayerManager sharedManager] resumePlayWithURL:url
@@ -442,11 +434,11 @@
 
 - (void)jp_gotoLandscapeAnimated:(BOOL)flag
                       completion:(dispatch_block_t)completion {
-    if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationPortrait) {
+    if (self.jp_orientation != JPVideoPlayerOrientationPortrait) {
         return;
     }
 
-    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationLandscape;
+    self.helper.orientation = JPVideoPlayerOrientationLandscapeRight;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
 
@@ -487,7 +479,7 @@
         }];
     }
     [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
-    [self callOrientationDelegateWithInterfaceOrientation:JPVideoPlayViewInterfaceOrientationLandscape];
+    [self callOrientationDelegateWithOrientation:self.helper.orientation];
 }
 
 - (void)jp_gotoPortrait {
@@ -497,11 +489,11 @@
 
 - (void)jp_gotoPortraitAnimated:(BOOL)flag
                      completion:(dispatch_block_t)completion{
-    if (self.jp_viewInterfaceOrientation != JPVideoPlayViewInterfaceOrientationLandscape) {
+    if (self.jp_orientation != JPVideoPlayerOrientationLandscapeRight) {
         return;
     }
 
-    self.helper.viewInterfaceOrientation = JPVideoPlayViewInterfaceOrientationPortrait;
+    self.helper.orientation = JPVideoPlayerOrientationPortrait;
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     videoPlayerView.backgroundColor = [UIColor blackColor];
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
@@ -536,18 +528,18 @@
         }
     }
     [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
-    [self callOrientationDelegateWithInterfaceOrientation:JPVideoPlayViewInterfaceOrientationPortrait];
+    [self callOrientationDelegateWithOrientation:self.helper.orientation];
 }
 
 
 #pragma mark - Private
 
-- (void)callOrientationDelegateWithInterfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
-    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
-        [self.jp_controlView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
+- (void)callOrientationDelegateWithOrientation:(JPVideoPlayerOrientation)orientation {
+    if(self.jp_controlView && [self.jp_controlView respondsToSelector:@selector(videoPlayerOrientationDidChange:videoURL:)]){
+        [self.jp_controlView videoPlayerOrientationDidChange:orientation videoURL:self.jp_videoURL];
     }
-    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerInterfaceOrientationDidChange:videoURL:)]){
-        [self.jp_progressView videoPlayerInterfaceOrientationDidChange:interfaceOrientation videoURL:self.jp_videoURL];
+    if(self.jp_progressView && [self.jp_progressView respondsToSelector:@selector(videoPlayerOrientationDidChange:videoURL:)]){
+        [self.jp_progressView videoPlayerOrientationDidChange:orientation videoURL:self.jp_videoURL];
     }
 }
 
@@ -787,8 +779,8 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
 interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation {
     BOOL shouldAutoChangeVideoLayerInterfaceOrientation = YES;
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldGotoLandscapeWhenInterfaceOrientationDidChange:)]) {
-        shouldAutoChangeVideoLayerInterfaceOrientation = [self.jp_videoPlayerDelegate shouldGotoLandscapeWhenInterfaceOrientationDidChange:interfaceOrientation];
+    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:)]) {
+        shouldAutoChangeVideoLayerInterfaceOrientation = [self.jp_videoPlayerDelegate shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:interfaceOrientation];
     }
 
     if (shouldAutoChangeVideoLayerInterfaceOrientation) {

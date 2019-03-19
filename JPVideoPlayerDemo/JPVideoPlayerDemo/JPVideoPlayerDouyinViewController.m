@@ -20,10 +20,10 @@
 
 - (void)layoutThatFits:(CGRect)constrainedRect
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
-  interfaceOrientation:(JPVideoPlayViewInterfaceOrientation)interfaceOrientation {
-    [super layoutThatFits:constrainedRect
+        orientation:(JPVideoPlayerOrientation)orientation {
+    [super       layoutThatFits:constrainedRect
 nearestViewControllerInViewTree:nearestViewController
-            interfaceOrientation:interfaceOrientation];
+                    orientation:orientation];
 
     self.trackProgressView.frame = CGRectMake(0,
             constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight - nearestViewController.tabBarController.tabBar.bounds.size.height,
