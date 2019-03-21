@@ -61,6 +61,35 @@
 
 @end
 
+@interface _JPVideoPlayerVideoViewResizingObject : NSObject
+
+@property(nonatomic, assign, readonly) BOOL fromPortraitToLandscape;
+
+@property(nonatomic, assign, readonly) BOOL fromLandscapeToPortrait;
+
+@property(nonatomic, assign, readonly) BOOL fromLandscapeToLandscape;
+
+@end
+
+@implementation _JPVideoPlayerVideoViewResizingObject
+
+- (instancetype)initWithFromOrientation:(JPVideoPlayerOrientation)fromOrientation
+                          toOrientation:(JPVideoPlayerOrientation)toOrientation {
+    self = [super init];
+    if (self) {
+        /// from portrait to landscape.
+        _fromPortraitToLandscape = (fromOrientation == JPVideoPlayerOrientationPortrait || fromOrientation == JPVideoPlayerOrientationUnknown) &&
+                (toOrientation == JPVideoPlayerOrientationLandscapeLeft || toOrientation == JPVideoPlayerOrientationLandscapeRight);
+        _fromLandscapeToPortrait = (fromOrientation == JPVideoPlayerOrientationLandscapeLeft || fromOrientation == JPVideoPlayerOrientationLandscapeRight) &&
+                (toOrientation == JPVideoPlayerOrientationPortrait);
+        _fromLandscapeToLandscape = (fromOrientation == JPVideoPlayerOrientationLandscapeLeft || fromOrientation == JPVideoPlayerOrientationLandscapeRight) &&
+                (toOrientation == JPVideoPlayerOrientationLandscapeLeft || toOrientation == JPVideoPlayerOrientationLandscapeRight);
+    }
+    return self;
+}
+
+@end
+
 @interface UIView()
 
 @property(nonatomic, readonly)JPVideoPlayerHelper *helper;
@@ -428,107 +457,102 @@
 #pragma mark - Landscape & Portrait Control
 
 - (void)jp_gotoLandscape {
-    [self jp_gotoLandscapeAnimated:YES
-                        completion:nil];
+    [self jp_gotoLandscapeAnimated:YES completion:nil];
 }
 
-- (void)jp_gotoLandscapeAnimated:(BOOL)flag
-                      completion:(dispatch_block_t)completion {
-    if (self.jp_orientation != JPVideoPlayerOrientationPortrait) {
-        return;
-    }
-
-    self.helper.orientation = JPVideoPlayerOrientationLandscapeRight;
-    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
-    videoPlayerView.backgroundColor = [UIColor blackColor];
-
-    CGRect videoPlayerViewFrameInWindow = [self convertRect:videoPlayerView.frame toView:nil];
-    [videoPlayerView removeFromSuperview];
-    [[UIApplication sharedApplication].keyWindow addSubview:videoPlayerView];
-    videoPlayerView.frame = videoPlayerViewFrameInWindow;
-    videoPlayerView.controlContainerView.alpha = 0;
-
-    if (flag) {
-        [UIView animateWithDuration:0.35
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             [self executeLandscape];
-                         }
-                         completion:^(BOOL finished) {
-                             if (completion) {
-                                 completion();
-                             }
-                             [UIView animateWithDuration:0.5 animations:^{
-                                 videoPlayerView.controlContainerView.alpha = 1;
-                             }];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                             // hide status bar.
-                             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-#pragma clang diagnostic pop
-                         }];
-    }
-    else{
-        [self executeLandscape];
-        if (completion) {
-            completion();
-        }
-        [UIView animateWithDuration:0.5 animations:^{
-            videoPlayerView.controlContainerView.alpha = 0;
-        }];
-    }
-    [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
-    [self callOrientationDelegateWithOrientation:self.helper.orientation];
+- (void)jp_gotoLandscapeAnimated:(BOOL)flag completion:(dispatch_block_t)completion {
+    if (self.jp_orientation == JPVideoPlayerOrientationLandscapeRight) return;
+    [self jp_resizeVideoViewToFitOrientation:JPVideoPlayerOrientationLandscapeLeft
+                                    animated:flag
+                                  completion:completion];
 }
 
 - (void)jp_gotoPortrait {
-    [self jp_gotoPortraitAnimated:YES
-                       completion:nil];
+    [self jp_gotoPortraitAnimated:YES completion:nil];
 }
 
-- (void)jp_gotoPortraitAnimated:(BOOL)flag
-                     completion:(dispatch_block_t)completion{
-    if (self.jp_orientation != JPVideoPlayerOrientationLandscapeRight) {
-        return;
+- (void)jp_gotoPortraitAnimated:(BOOL)flag completion:(dispatch_block_t)completion{
+    if (self.jp_orientation == JPVideoPlayerOrientationPortrait) return;
+    [self jp_resizeVideoViewToFitOrientation:JPVideoPlayerOrientationPortrait
+                                    animated:flag
+                                  completion:completion];
+}
+
+- (void)jp_resizeVideoViewToFitOrientation:(JPVideoPlayerOrientation)orientation
+                                  animated:(BOOL)animated
+                                completion:(dispatch_block_t _Nullable)completion {
+    if (self.jp_orientation == orientation || orientation == JPVideoPlayerOrientationUnknown) return;
+
+    _JPVideoPlayerVideoViewResizingObject *resizingObject = [[_JPVideoPlayerVideoViewResizingObject alloc] initWithFromOrientation:self.jp_orientation toOrientation:orientation];
+    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
+
+    /// from portrait to landscape.
+    if (resizingObject.fromPortraitToLandscape) {
+        CGRect videoPlayerViewFrameInWindow = [self convertRect:videoPlayerView.frame toView:nil];
+        [videoPlayerView removeFromSuperview];
+        UIWindow *userWindow = [UIApplication.sharedApplication delegate].window;
+        [userWindow addSubview:videoPlayerView];
+        videoPlayerView.frame = videoPlayerViewFrameInWindow;
+        videoPlayerView.controlContainerView.alpha = 0;
+        videoPlayerView.backgroundColor = [UIColor blackColor];
+    }
+        /// from landscape to portrait.
+    else if (resizingObject.fromLandscapeToPortrait) {
+        videoPlayerView.backgroundColor = [UIColor blackColor];
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
+            BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundWhenPlaybackStart];
+            videoPlayerView.backgroundColor = shouldShow ? [UIColor blackColor] : [UIColor clearColor];
+        }
     }
 
-    self.helper.orientation = JPVideoPlayerOrientationPortrait;
-    JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
-    videoPlayerView.backgroundColor = [UIColor blackColor];
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowBlackBackgroundWhenPlaybackStart)]) {
-        BOOL shouldShow = [self.jp_videoPlayerDelegate shouldShowBlackBackgroundWhenPlaybackStart];
-        videoPlayerView.backgroundColor = shouldShow ? [UIColor blackColor] : [UIColor clearColor];
-    }
-#pragma clang diagnostic push
+    /// from landscape to landscape.
+    self.helper.orientation = orientation;
+
+    /// handle status bar display or hide.
+    BOOL needHideStatusBar = !(resizingObject.fromLandscapeToPortrait);
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // display status bar.
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+#pragma clang diagnostic push
+    if (needHideStatusBar != UIApplication.sharedApplication.statusBarHidden) {
+        /// change status bar status.
+        [[UIApplication sharedApplication] setStatusBarHidden:needHideStatusBar withAnimation:UIStatusBarAnimationFade];
+    }
 #pragma clang diagnostic pop
-    videoPlayerView.controlContainerView.alpha = 0;
-    if (flag) {
+
+    videoPlayerView.controlContainerView.alpha = 0.f;
+    if (animated) {
         [UIView animateWithDuration:0.35
                               delay:0
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
-                             [self executePortrait];
+
+                             if (resizingObject.fromLandscapeToPortrait) {
+                                 [self executeGotoPortrait];
+                             }
+                             else if(resizingObject.fromPortraitToLandscape || resizingObject.fromLandscapeToLandscape) {
+                                 [self executeLandscapeWithOrientation:self.jp_orientation];
+                             }
+
                          }
                          completion:^(BOOL finished) {
-                             [self finishPortrait];
-                             if (completion) {
-                                 completion();
-                             }
+
+                             if (resizingObject.fromLandscapeToPortrait) [self finishGotoPortrait];
+                             if (completion) completion();
+
                          }];
     }
-    else{
-        [self executePortrait];
-        [self finishPortrait];
-        if (completion) {
-            completion();
+    else {
+        if (resizingObject.fromLandscapeToPortrait) {
+            [self executeGotoPortrait];
         }
+        else if(resizingObject.fromPortraitToLandscape || resizingObject.fromLandscapeToLandscape) {
+            [self executeLandscapeWithOrientation:self.jp_orientation];
+        }
+        if (resizingObject.fromLandscapeToPortrait) [self finishGotoPortrait];
+        if (completion) completion();
     }
-    [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
-    [self callOrientationDelegateWithOrientation:self.helper.orientation];
+
+    [self refreshStatusBarOrientation:orientation];
+    [self callOrientationDelegateWithOrientation:orientation];
 }
 
 
@@ -555,7 +579,7 @@
     }
 }
 
-- (void)finishPortrait {
+- (void)finishGotoPortrait {
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
@@ -566,7 +590,7 @@
     }];
 }
 
-- (void)executePortrait {
+- (void)executeGotoPortrait {
     UIView *videoPlayerView = self.helper.videoPlayerView;
     CGRect frame = [self.superview convertRect:self.frame toView:nil];
     videoPlayerView.transform = CGAffineTransformIdentity;
@@ -574,18 +598,42 @@
     [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
 }
 
-- (void)executeLandscape {
+- (void)executeLandscapeWithOrientation:(JPVideoPlayerOrientation)orientation {
+    NSParameterAssert(orientation == JPVideoPlayerOrientationLandscapeRight || orientation == JPVideoPlayerOrientationLandscapeLeft);
+    if (orientation != JPVideoPlayerOrientationLandscapeRight && orientation != JPVideoPlayerOrientationLandscapeLeft) return;
     UIView *videoPlayerView = self.helper.videoPlayerView;
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGRect bounds = CGRectMake(0, 0, CGRectGetHeight(screenBounds), CGRectGetWidth(screenBounds));
     CGPoint center = CGPointMake(CGRectGetMidX(screenBounds), CGRectGetMidY(screenBounds));
     videoPlayerView.bounds = bounds;
     videoPlayerView.center = center;
-    videoPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    double rotation = M_PI_2;
+    if (orientation == JPVideoPlayerOrientationLandscapeRight) rotation *= 3.0;
+    videoPlayerView.transform = CGAffineTransformMakeRotation(rotation);
     [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = bounds;
 }
 
-- (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (void)refreshStatusBarOrientation:(JPVideoPlayerOrientation)orientation {
+    UIInterfaceOrientation interfaceOrientation = UIInterfaceOrientationUnknown;
+    switch (orientation) {
+        case JPVideoPlayerOrientationPortrait: {
+            interfaceOrientation = UIInterfaceOrientationPortrait;
+            break;
+        }
+
+        case JPVideoPlayerOrientationLandscapeLeft: {
+            interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
+            break;
+        }
+
+        case JPVideoPlayerOrientationLandscapeRight: {
+            interfaceOrientation = UIInterfaceOrientationLandscapeRight;
+            break;
+        }
+
+        default:
+            break;
+    }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:YES];
@@ -777,14 +825,36 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
 }
 
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
-interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation {
-    BOOL shouldAutoChangeVideoLayerInterfaceOrientation = YES;
+interfaceOrientationDidChange:(UIDeviceOrientation)deviceOrientation {
+    BOOL shouldAutoChangeVideoLayerInterfaceOrientation = NO;
     if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:)]) {
-        shouldAutoChangeVideoLayerInterfaceOrientation = [self.jp_videoPlayerDelegate shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:interfaceOrientation];
+        shouldAutoChangeVideoLayerInterfaceOrientation = [self.jp_videoPlayerDelegate shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:deviceOrientation];
     }
 
     if (shouldAutoChangeVideoLayerInterfaceOrientation) {
-        [self jp_gotoLandscape];
+        JPVideoPlayerOrientation orientation = JPVideoPlayerOrientationUnknown;
+        switch (deviceOrientation) {
+            case UIDeviceOrientationPortrait: {
+                orientation = JPVideoPlayerOrientationPortrait;
+                break;
+            }
+
+            case UIDeviceOrientationLandscapeLeft: {
+                orientation = JPVideoPlayerOrientationLandscapeLeft;
+                break;
+            }
+
+            case UIDeviceOrientationLandscapeRight: {
+                orientation = JPVideoPlayerOrientationLandscapeRight;
+                break;
+            }
+
+            default:
+                break;
+        }
+        if (orientation != JPVideoPlayerOrientationUnknown) {
+            [self jp_resizeVideoViewToFitOrientation:orientation animated:YES completion:nil];
+        }
     }
 }
 

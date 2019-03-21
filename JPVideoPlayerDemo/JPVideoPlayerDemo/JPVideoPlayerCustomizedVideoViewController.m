@@ -51,4 +51,8 @@
     NSLog(@"%@", error);
 }
 
+- (BOOL)shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:(UIDeviceOrientation)deviceOrientation {
+    return YES;
+}
+
 @end

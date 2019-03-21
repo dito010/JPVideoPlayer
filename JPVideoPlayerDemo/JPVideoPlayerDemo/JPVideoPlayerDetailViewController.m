@@ -126,4 +126,8 @@
     return self.autoReplaySwitch.on;
 }
 
+- (BOOL)shouldVideoViewResizeToFitWhenDeviceOrientationDidChange:(UIDeviceOrientation)deviceOrientation {
+    return YES;
+}
+
 @end

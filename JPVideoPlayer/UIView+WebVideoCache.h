@@ -393,7 +393,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jp_gotoPortraitAnimated:(BOOL)flag
                      completion:(dispatch_block_t _Nullable)completion;
 
-//- (void)jp_videoLayerSizeToFitOrientation:()
+/**
+ * Invoke this method to make video view size fit landscape or portrait interface orientation.
+ *
+ * @param orientation The orientation will change on video view.
+ * @param animated    Animation or not.
+ * @param completion  Completion handler invoke on changing finished.
+ */
+- (void)jp_resizeVideoViewToFitOrientation:(JPVideoPlayerOrientation)orientation
+                                  animated:(BOOL)animated
+                                completion:(dispatch_block_t _Nullable)completion;
 
 @end
 

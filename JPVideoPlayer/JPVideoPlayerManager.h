@@ -174,10 +174,10 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
  * Invoked when interface orientation did change.
  *
  * @param videoPlayerManager    The current `JPVideoPlayerManager`.
- * @param interfaceOrientation  The current `UIDeviceOrientation`.
+ * @param deviceOrientation     The current `UIDeviceOrientation`.
  */
 - (void)videoPlayerManager:(JPVideoPlayerManager *)videoPlayerManager
-        interfaceOrientationDidChange:(UIDeviceOrientation)interfaceOrientation;
+        interfaceOrientationDidChange:(UIDeviceOrientation)deviceOrientation;
 
 @end
 

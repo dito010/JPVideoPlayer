@@ -402,7 +402,7 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 - (void)videoPlayerOrientationDidChange:(JPVideoPlayerOrientation)orientation
                                videoURL:(NSURL *)videoURL {
-    self.landscapeButton.selected = orientation == JPVideoPlayerOrientationLandscapeRight;
+    self.landscapeButton.selected = (orientation == JPVideoPlayerOrientationLandscapeRight || orientation == JPVideoPlayerOrientationLandscapeLeft);
     [self.progressView videoPlayerOrientationDidChange:orientation
                                               videoURL:videoURL];
 }
