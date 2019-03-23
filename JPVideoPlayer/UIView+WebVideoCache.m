@@ -59,6 +59,11 @@
     return _videoPlayerView;
 }
 
+- (void)setOrientation:(JPVideoPlayerOrientation)orientation {
+    _orientation = orientation;
+    self.videoPlayerView.orientation = orientation;
+}
+
 @end
 
 @interface _JPVideoPlayerVideoViewResizingObject : NSObject
@@ -486,13 +491,16 @@
     _JPVideoPlayerVideoViewResizingObject *resizingObject = [[_JPVideoPlayerVideoViewResizingObject alloc] initWithFromOrientation:self.jp_orientation toOrientation:orientation];
     JPVideoPlayerView *videoPlayerView = self.helper.videoPlayerView;
 
+    /// from landscape to landscape.
+    self.helper.orientation = orientation;
+
     /// from portrait to landscape.
     if (resizingObject.fromPortraitToLandscape) {
         CGRect videoPlayerViewFrameInWindow = [self convertRect:videoPlayerView.frame toView:nil];
+        videoPlayerView.frame = videoPlayerViewFrameInWindow;
         [videoPlayerView removeFromSuperview];
         UIWindow *userWindow = [UIApplication.sharedApplication delegate].window;
         [userWindow addSubview:videoPlayerView];
-        videoPlayerView.frame = videoPlayerViewFrameInWindow;
         videoPlayerView.controlContainerView.alpha = 0;
         videoPlayerView.backgroundColor = [UIColor blackColor];
     }
@@ -504,9 +512,6 @@
             videoPlayerView.backgroundColor = shouldShow ? [UIColor blackColor] : [UIColor clearColor];
         }
     }
-
-    /// from landscape to landscape.
-    self.helper.orientation = orientation;
 
     /// handle status bar display or hide.
     BOOL needHideStatusBar = !(resizingObject.fromLandscapeToPortrait);

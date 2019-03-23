@@ -328,12 +328,16 @@ static const CGFloat kJPVideoPlayerControlBarTimeLabelWidth = 68;
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
         orientation:(JPVideoPlayerOrientation)orientation {
     CGSize referenceSize = constrainedRect.size;
-    CGFloat elementOriginY = (referenceSize.height - kJPVideoPlayerControlBarButtonWidthHeight) * 0.5;
-    self.playButton.frame = CGRectMake(kJPVideoPlayerControlBarElementGap,
+    CGFloat elementOriginY = (referenceSize.height - kJPVideoPlayerControlBarButtonWidthHeight) * 0.5f;
+    UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    if ((orientation == JPVideoPlayerOrientationLandscapeLeft || orientation == JPVideoPlayerOrientationLandscapeRight) && [self.window respondsToSelector:@selector(safeAreaInsets)]) {
+        safeAreaInsets = self.window.safeAreaInsets;
+    }
+    self.playButton.frame = CGRectMake(kJPVideoPlayerControlBarElementGap + safeAreaInsets.top,
             elementOriginY,
             kJPVideoPlayerControlBarButtonWidthHeight,
             kJPVideoPlayerControlBarButtonWidthHeight);
-    self.landscapeButton.frame = CGRectMake(referenceSize.width - kJPVideoPlayerControlBarElementGap - kJPVideoPlayerControlBarButtonWidthHeight,
+    self.landscapeButton.frame = CGRectMake(referenceSize.width - kJPVideoPlayerControlBarElementGap - kJPVideoPlayerControlBarButtonWidthHeight - safeAreaInsets.bottom,
             elementOriginY,
             kJPVideoPlayerControlBarButtonWidthHeight,
             kJPVideoPlayerControlBarButtonWidthHeight);
@@ -703,9 +707,13 @@ const CGFloat JPVideoPlayerProgressViewElementHeight = 2;
 - (void)layoutThatFits:(CGRect)constrainedRect
 nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewController
         orientation:(JPVideoPlayerOrientation)orientation {
-    self.trackProgressView.frame = CGRectMake(0,
+    UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    if ((orientation == JPVideoPlayerOrientationLandscapeLeft || orientation == JPVideoPlayerOrientationLandscapeRight) && [self.window respondsToSelector:@selector(safeAreaInsets)]) {
+        safeAreaInsets = self.window.safeAreaInsets;
+    }
+    self.trackProgressView.frame = CGRectMake(safeAreaInsets.top,
             constrainedRect.size.height - JPVideoPlayerProgressViewElementHeight,
-            constrainedRect.size.width,
+            constrainedRect.size.width - safeAreaInsets.top - safeAreaInsets.bottom,
             JPVideoPlayerProgressViewElementHeight);
     self.cachedProgressView.frame = self.trackProgressView.bounds;
     self.elapsedProgressView.frame = self.trackProgressView.frame;
@@ -994,16 +1002,16 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)setBounds:(CGRect)bounds {
     [super setBounds:bounds];
-    self.videoContainerView.frame = CGRectMake(self.videoContainerView.center.x - bounds.size.width * 0.5,
-            self.videoContainerView.center.y - bounds.size.height * 0.5,
+    self.videoContainerView.frame = CGRectMake(self.videoContainerView.center.x - bounds.size.width * 0.5f,
+            self.videoContainerView.center.y - bounds.size.height * 0.5f,
             bounds.size.width,
             bounds.size.height);
     self.placeholderView.frame = self.videoContainerView.frame;
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
     self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
-    self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5,
-            self.userInteractionContainerView.center.y - bounds.size.height * 0.5,
+    self.userInteractionContainerView.frame = CGRectMake(self.userInteractionContainerView.center.x - bounds.size.width * 0.5f,
+            self.userInteractionContainerView.center.y - bounds.size.height * 0.5f,
             bounds.size.width,
             bounds.size.height - kJPVideoPlayerControlBarHeight);
     [self layoutContainerSubviewsWithBounds:bounds center:CGPointZero frame:CGRectZero];
@@ -1012,16 +1020,16 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 
 - (void)setCenter:(CGPoint)center {
     [super setCenter:center];
-    self.videoContainerView.frame = CGRectMake(center.y - self.videoContainerView.bounds.size.width * 0.5,
-            center.x - self.videoContainerView.bounds.size.height * 0.5,
+    self.videoContainerView.frame = CGRectMake(center.y - self.videoContainerView.bounds.size.width * 0.5f,
+            center.x - self.videoContainerView.bounds.size.height * 0.5f,
             self.videoContainerView.bounds.size.width,
             self.videoContainerView.bounds.size.height);
     self.placeholderView.frame = self.videoContainerView.frame;
     self.controlContainerView.frame = self.videoContainerView.frame;
     self.progressContainerView.frame = self.videoContainerView.frame;
     self.bufferingIndicatorContainerView.frame = self.videoContainerView.frame;
-    self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5,
-            center.x -  self.userInteractionContainerView.bounds.size.height * 0.5,
+    self.userInteractionContainerView.frame = CGRectMake(center.y -  self.userInteractionContainerView.bounds.size.width * 0.5f,
+            center.x -  self.userInteractionContainerView.bounds.size.height * 0.5f,
             self.userInteractionContainerView.bounds.size.width,
             self.userInteractionContainerView.bounds.size.height - kJPVideoPlayerControlBarHeight);
     [self layoutContainerSubviewsWithBounds:CGRectZero center:center frame:CGRectZero];
@@ -1066,8 +1074,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             if(CGPointEqualToPoint(center, CGPointZero)){
                 center = view.center;
             }
-            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
-                    center.x - bounds.size.height * 0.5,
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5f,
+                    center.x - bounds.size.height * 0.5f,
                     bounds.size.width,
                     bounds.size.height);
         }
@@ -1083,8 +1091,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             if(CGPointEqualToPoint(center, CGPointZero)){
                 center = view.center;
             }
-            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
-                    center.x - bounds.size.height * 0.5,
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5f,
+                    center.x - bounds.size.height * 0.5f,
                     bounds.size.width,
                     bounds.size.height);
         }
@@ -1100,8 +1108,8 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
             if(CGPointEqualToPoint(center, CGPointZero)){
                 center = view.center;
             }
-            view.frame = CGRectMake(center.y - bounds.size.width * 0.5,
-                    center.x - bounds.size.height * 0.5,
+            view.frame = CGRectMake(center.y - bounds.size.width * 0.5f,
+                    center.x - bounds.size.height * 0.5f,
                     bounds.size.width,
                     bounds.size.height);
         }
@@ -1114,27 +1122,23 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
         if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:orientation:)]){
             [view layoutThatFits:self.bounds
  nearestViewControllerInViewTree:nearestViewController
-                     orientation:[self fetchCurrentOrientation]];
+                     orientation:self.orientation];
         }
     }
     for(UIView<JPVideoPlayerProtocol> *view in self.progressContainerView.subviews){
         if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:orientation:)]){
             [view layoutThatFits:self.bounds
  nearestViewControllerInViewTree:nearestViewController
-                     orientation:[self fetchCurrentOrientation]];
+                     orientation:self.orientation];
         }
     }
     for(UIView<JPVideoPlayerProtocol> *view in self.bufferingIndicatorContainerView.subviews){
         if([view respondsToSelector:@selector(layoutThatFits:nearestViewControllerInViewTree:orientation:)]){
             [view layoutThatFits:self.bounds
  nearestViewControllerInViewTree:nearestViewController
-                     orientation:[self fetchCurrentOrientation]];
+                     orientation:self.orientation];
         }
     }
-}
-
-- (JPVideoPlayerOrientation)fetchCurrentOrientation {
-    return self.superview.jp_orientation;
 }
 
 - (UIViewController *)findNearestViewControllerForView:(UIView *)view {
