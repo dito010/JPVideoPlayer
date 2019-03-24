@@ -159,6 +159,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// Posted when device orientation has changed and user prefer resize video view to fit it.
+UIKIT_EXTERN NSString *const JPVideoPlayerWillResizeVideoViewToFitDeviceOrientationNotification;
+/// Posted when resize video view has finished.
+UIKIT_EXTERN NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotification;
 @interface UIView (WebVideoCache)<JPVideoPlayerManagerDelegate>
 
 #pragma mark - Property
@@ -311,19 +315,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Playback Control
 
-/**
- * The current playback rate.
- */
+/// The current playback rate.
 @property (nonatomic) float jp_rate;
 
-/**
- * A Boolean value that indicates whether the audio output of the player is muted.
- */
+/// A Boolean value that indicates whether the audio output of the player is muted.
 @property (nonatomic) BOOL jp_muted;
 
-/**
- * The audio playback volume for the player, ranging from 0.0 through 1.0 on a linear scale.
- */
+/// The audio playback volume for the player, ranging from 0.0 through 1.0 on a linear scale.
 @property (nonatomic) float jp_volume;
 
 /**
@@ -333,41 +331,31 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (BOOL)jp_seekToTime:(CMTime)time;
 
-/**
- * Fetch the elapsed seconds of player.
- */
+/// Fetch the elapsed seconds of player.
 - (NSTimeInterval)jp_elapsedSeconds;
 
-/**
- * Fetch the total seconds of player.
- */
+/// Fetch the total seconds of player.
 - (NSTimeInterval)jp_totalSeconds;
 
-/**
- *  Call this method to pause playback.
- */
+/// Call this method to pause playback.
 - (void)jp_pause;
 
-/**
- *  Call this method to resume playback.
- */
+///  Call this method to resume playback.
 - (void)jp_resume;
 
-/**
- * @return Returns the current time of the current player item.
- */
+/// @return Returns the current time of the current player item.
 - (CMTime)jp_currentTime;
 
-/**
- * Call this method to stop play video.
- */
+/// Call this method to stop play video.
 - (void)jp_stopPlay;
+
 
 #pragma mark - Landscape Or Portrait Control
 
-/**
- * Call this method to enter full screen.
- */
+/// The resize video view animation time interval, 0.25 by default.
+@property (nonatomic) NSTimeInterval jp_resizeVideoViewAnimationTimeInterval;
+
+/// Call this method to enter full screen.
 - (void)jp_gotoLandscape;
 
 /**
@@ -379,9 +367,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jp_gotoLandscapeAnimated:(BOOL)flag
                       completion:(dispatch_block_t _Nullable)completion;
 
-/**
- * Call this method to exit full screen.
- */
+/// Call this method to exit full screen.
 - (void)jp_gotoPortrait;
 
 /**

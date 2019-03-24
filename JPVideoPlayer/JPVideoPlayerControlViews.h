@@ -124,9 +124,16 @@ UIKIT_EXTERN const CGFloat JPVideoPlayerProgressViewElementHeight;
 @property (nonatomic, assign, readonly) BOOL needAutoHideControlViewWhenUserTapping;
 
 /// The current orientation.
-@property(nonatomic, assign) JPVideoPlayerOrientation orientation;
+@property (nonatomic, assign, readonly) JPVideoPlayerOrientation orientation;
 
-- (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping;
+/// The time interval auto hide control view, 5.0 by default.
+@property (nonatomic, assign) NSTimeInterval controlViewAutoHiddenTimeInterval;
+
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+
+- (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping NS_DESIGNATED_INITIALIZER;
 
 @end
 

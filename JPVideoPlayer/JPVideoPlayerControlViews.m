@@ -970,6 +970,8 @@ nearestViewControllerInViewTree:(UIViewController *_Nullable)nearestViewControll
 
 @property(nonatomic, assign) BOOL isInterruptTimer;
 
+@property(nonatomic, assign) JPVideoPlayerOrientation orientation;
+
 @end
 
 static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
@@ -979,10 +981,21 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
++ (instancetype)new {
+    NSAssert(NO, @"This initializer invalid");
+    return nil;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    NSAssert(NO, @"This initializer invalid");
+    return nil;
+}
+
 - (instancetype)initWithNeedAutoHideControlViewWhenUserTapping:(BOOL)needAutoHideControlViewWhenUserTapping {
-    self = [super init];
+    self = [super initWithFrame:CGRectZero];
     if(self){
         _needAutoHideControlViewWhenUserTapping = needAutoHideControlViewWhenUserTapping;
+        _controlViewAutoHiddenTimeInterval = kJPControlViewAutoHiddenTimeInterval;
         [self _setup];
     }
     return self;
@@ -1048,12 +1061,12 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                          if(self.controlContainerView.alpha < 1e-3){
                              self.controlContainerView.alpha = 1.f;
                              self.progressContainerView.alpha = 0.f;
-                             [self startTimer];
+                             [self startTimerIfNeed];
                          }
                          else {
                              self.controlContainerView.alpha = 0.f;
                              self.progressContainerView.alpha = 1.f;
-                             [self endTimer];
+                             [self endTimerIfNeed];
                          }
 
                      }
@@ -1142,16 +1155,12 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
 }
 
 - (UIViewController *)findNearestViewControllerForView:(UIView *)view {
-    if(!view){
-        return nil;
-    }
-
+    if(!view) return nil;
     BOOL isFind = [[view nextResponder] isKindOfClass:[UIViewController class]] && CGRectEqualToRect(view.bounds, [UIScreen mainScreen].bounds);
-    if(isFind){
-        return (UIViewController *)[view nextResponder];
-    }
+    if(isFind) return (UIViewController *)[view nextResponder];
     return [self findNearestViewControllerForView:view.superview];
 }
+
 
 #pragma mark - Setup
 
@@ -1209,7 +1218,7 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
     if (self.needAutoHideControlViewWhenUserTapping) {
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureDidTap)];
         [self.userInteractionContainerView addGestureRecognizer:tapGestureRecognizer];
-        [self startTimer];
+        [self startTimerIfNeed];
     }
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(didReceiveUserStartDragNotification)
@@ -1219,43 +1228,58 @@ static const NSTimeInterval kJPControlViewAutoHiddenTimeInterval = 5;
                                            selector:@selector(didReceiveUserEndDragNotification)
                                                name:JPVideoPlayerControlProgressViewUserDidEndDragNotification
                                              object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiverWillResizeVideoViewToFitDeviceOrientationNotification)
+                                               name:JPVideoPlayerWillResizeVideoViewToFitDeviceOrientationNotification
+                                             object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiverDidResizeVideoViewToFitDeviceOrientationNotification)
+                                               name:JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotification
+                                             object:nil];
+}
+
+- (void)didReceiverWillResizeVideoViewToFitDeviceOrientationNotification {
+    [self endTimerIfNeed];
+}
+
+- (void)didReceiverDidResizeVideoViewToFitDeviceOrientationNotification {
+    [self startTimerIfNeed];
 }
 
 - (void)didReceiveUserStartDragNotification {
     if(self.timer){
         self.isInterruptTimer = YES;
-        [self endTimer];
+        [self endTimerIfNeed];
     }
 }
 
 - (void)didReceiveUserEndDragNotification {
     if(self.isInterruptTimer){
-        [self startTimer];
+        [self startTimerIfNeed];
     }
 }
 
-- (void)startTimer {
-    if(!self.timer){
-        self.timer = [NSTimer timerWithTimeInterval:kJPControlViewAutoHiddenTimeInterval
-                                             target:self
-                                           selector:@selector(timeDidChange:)
-                                           userInfo:nil
-                                            repeats:NO];
-        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
-    }
-
+- (void)startTimerIfNeed {
+    if(self.timer) return;
+    NSParameterAssert(self.controlViewAutoHiddenTimeInterval > 0.0);
+    if (self.controlViewAutoHiddenTimeInterval <= 0) return;
+    self.timer = [NSTimer timerWithTimeInterval:self.controlViewAutoHiddenTimeInterval
+                                         target:self
+                                       selector:@selector(timeDidChange:)
+                                       userInfo:nil
+                                        repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)endTimer {
-    if(self.timer){
-        [self.timer invalidate];
-        self.timer = nil;
-    }
+- (void)endTimerIfNeed {
+    if(!self.timer) return;
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 - (void)timeDidChange:(NSTimer *)timer {
     [self tapGestureDidTap];
-    [self endTimer];
+    [self endTimerIfNeed];
 }
 
 @end
