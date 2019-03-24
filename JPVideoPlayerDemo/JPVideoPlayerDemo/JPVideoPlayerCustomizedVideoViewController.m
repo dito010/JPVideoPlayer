@@ -54,4 +54,8 @@
     return YES;
 }
 
+- (BOOL)shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL elapsedSeconds:(NSTimeInterval)elapsedSeconds {
+    return YES;
+}
+
 @end

@@ -62,13 +62,14 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 @synthesize muted;
 @synthesize rate;
 // TODO: 使用 reusablePool 来优化 task 性能.
+// TODO: 弱网缓冲完加载指示器不消失.
 
 + (nonnull instancetype)sharedManager {
     static dispatch_once_t once;
     static JPVideoPlayerManager *jpVideoPlayerManagerInstance;
     dispatch_once(&once, ^{
         jpVideoPlayerManagerInstance = [self new];
-        [[NSUserDefaults standardUserDefaults] setObject:@"3.1.1" forKey:JPVideoPlayerSDKVersionKey];
+        [[NSUserDefaults standardUserDefaults] setObject:@"3.2.0" forKey:JPVideoPlayerSDKVersionKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [[JPDeviceInterfaceOrientationMonitor shared] addObserver:jpVideoPlayerManagerInstance];
         [JPMigration migrateToSDKVersion:@"3.1.1" block:^{
@@ -271,6 +272,14 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 - (NSString *)SDKVersion {
     NSString *res = [[NSUserDefaults standardUserDefaults] valueForKey:JPVideoPlayerSDKVersionKey];
     return (res ? res : @"");
+}
+
+- (void)setPeriodicTimeObserverInterval:(CMTime)periodicTimeObserverInterval {
+    self.videoPlayer.periodicTimeObserverInterval = periodicTimeObserverInterval;
+}
+
+- (CMTime)periodicTimeObserverInterval {
+    return self.videoPlayer.periodicTimeObserverInterval;
 }
 
 
@@ -662,13 +671,10 @@ shouldResumePlaybackWhenApplicationDidBecomeActiveFromResignActiveForURL:self.ma
 - (void)audioSessionInterruptionNotification:(NSNotification *)note {
     AVPlayer *player = note.object;
     // the player is self player, return.
-    if(player == self.videoPlayer.playerModel.player){
-        return;
-    }
+    if(player == self.videoPlayer.player) return;
+
     // self not playing.
-    if(!self.videoPlayer.playerModel){
-        return;
-    }
+    if(!self.videoPlayer.playerModel) return;
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:)]) {
         BOOL shouldPause = [self.delegate videoPlayerManager:self
@@ -690,13 +696,9 @@ shouldPausePlaybackWhenReceiveAudioSessionInterruptionNotificationForURL:self.ma
         return 0;
     }
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[JPVideoPlayerCachePath videoPlaybackRecordFilePath]];
-    if(!dictionary){
-        return 0;
-    }
+    if(!dictionary) return 0;
     NSNumber *number = [dictionary valueForKey:[self cacheKeyForURL:videoURL]];
-    if(number){
-        return [number doubleValue];
-    }
+    if(number) return [number doubleValue];
     return 0;
 }
 

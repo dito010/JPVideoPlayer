@@ -75,27 +75,15 @@ playFailedWithError:(NSError *)error;
 
 @end
 
-@interface JPVideoPlayerModel : NSObject<JPVideoPlayerPlaybackProtocol>
+@interface JPVideoPlayerModel : NSObject
 
-/**
- * The current player's layer.
- */
-@property (nonatomic, strong, readonly, nullable) AVPlayerLayer *playerLayer;
-
-/**
- * The player to play video.
- */
-@property (nonatomic, strong, readonly, nullable) AVPlayer *player;
-
-/**
- * The resourceLoader for the videoPlayer.
- */
+/// The resourceLoader for the videoPlayer.
 @property (nonatomic, strong, readonly, nullable) JPVideoPlayerResourceLoader *resourceLoader;
 
-/**
- * options
- */
+/// options
 @property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
+
+@property(nonatomic, assign) BOOL onUsing;
 
 @end
 
@@ -106,6 +94,15 @@ playFailedWithError:(NSError *)error;
 @property (nonatomic, strong, readonly, nullable) JPVideoPlayerModel *playerModel;
 
 @property (nonatomic, assign, readonly) JPVideoPlayerStatus playerStatus;
+
+/// The player to play video.
+@property (nonatomic, strong, readonly, nullable) AVPlayer *player;
+
+/// The current player's layer.
+@property (nonatomic, strong, readonly, nullable) AVPlayerLayer *playerLayer;
+
+/// The interval of invocation of the block during normal playback, according to progress of the current time of the player, CMTimeMake(1, 10) by default.
+@property(nonatomic, assign) CMTime periodicTimeObserverInterval;
 
 /**
  * Play the existed video file in disk.
@@ -152,9 +149,7 @@ playFailedWithError:(NSError *)error;
                         options:(JPVideoPlayerOptions)options
                   configuration:(JPVideoPlayerConfiguration)configuration;
 
-/**
- * This method used to seek to record playback when hava record playback history.
- */
+/// This method used to seek to record playback when have record playback history.
 - (void)seekToTimeWhenRecordPlayback:(CMTime)time;
 
 @end

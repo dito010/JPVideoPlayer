@@ -208,6 +208,9 @@ shouldResumePlaybackFromPlaybackRecordForURL:(NSURL *)videoURL
 
 @property (nonatomic, strong, readonly) JPVideoPlayer *videoPlayer;
 
+/// The interval of invocation of the block during normal playback, according to progress of the current time of the player, CMTimeMake(1, 10) by default.
+@property(nonatomic, assign) CMTime periodicTimeObserverInterval;
+
 #pragma mark - Singleton and Initialization
 
 /**

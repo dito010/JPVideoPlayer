@@ -168,6 +168,16 @@ NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotificatio
     self.jpVideoPlayerHelper.videoURL = jp_videoURL.copy;
 }
 
+- (void)setJp_periodicTimeObserverInterval:(CMTime)jp_periodicTimeObserverInterval {
+    NSParameterAssert(CMTIME_IS_VALID(jp_periodicTimeObserverInterval));
+    if (!CMTIME_IS_VALID(jp_periodicTimeObserverInterval)) return;
+    JPVideoPlayerManager.sharedManager.periodicTimeObserverInterval = jp_periodicTimeObserverInterval;
+}
+
+- (CMTime)jp_periodicTimeObserverInterval {
+    return JPVideoPlayerManager.sharedManager.periodicTimeObserverInterval;
+}
+
 
 #pragma mark - Play Video Methods
 
@@ -622,7 +632,7 @@ NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotificatio
     [videoPlayerView removeFromSuperview];
     [self addSubview:videoPlayerView];
     videoPlayerView.frame = self.bounds;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerLayer.frame = self.bounds;
 }
 
 - (void)_hideAttachmentViewsAnimated:(BOOL)animated completion:(void (^ __nullable)(BOOL finished))completion {
@@ -673,7 +683,7 @@ NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotificatio
     CGRect frame = [self.superview convertRect:self.frame toView:nil];
     videoPlayerView.transform = CGAffineTransformIdentity;
     videoPlayerView.frame = frame;
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = self.bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerLayer.frame = self.bounds;
 }
 
 - (void)executeLandscapeWithOrientation:(JPVideoPlayerOrientation)orientation {
@@ -688,7 +698,7 @@ NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotificatio
     double rotation = M_PI_2;
     if (orientation == JPVideoPlayerOrientationLandscapeRight) rotation *= 3.0;
     videoPlayerView.transform = CGAffineTransformMakeRotation((CGFloat)rotation);
-    [[JPVideoPlayerManager sharedManager] videoPlayer].playerModel.playerLayer.frame = bounds;
+    [[JPVideoPlayerManager sharedManager] videoPlayer].playerLayer.frame = bounds;
 }
 
 - (void)refreshStatusBarOrientation:(JPVideoPlayerOrientation)orientation {

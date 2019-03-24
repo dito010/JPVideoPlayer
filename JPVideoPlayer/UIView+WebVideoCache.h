@@ -181,7 +181,10 @@ UIKIT_EXTERN NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientati
 
 @property (nonatomic, readonly, nullable) UIView<JPVideoPlayerBufferingProtocol> *jp_bufferingIndicator;
 
-@property(nonatomic, copy, readonly, nullable) NSURL *jp_videoURL;
+@property (nonatomic, strong, readonly, nullable) NSURL *jp_videoURL;
+
+/// The interval of invocation of the block during normal playback, according to progress of the current time of the player, CMTimeMake(1, 10) by default.
+@property (nonatomic, assign) CMTime jp_periodicTimeObserverInterval;
 
 #pragma mark - Play Video Methods
 
