@@ -35,8 +35,7 @@
     NSString *videoURLPath = self.videoURLTextField.text;
     if (!videoURLPath.length) videoURLPath = self.videoURLTextField.placeholder;
     if (!videoURLPath.length) return;
-    
-    [self.videoView jp_stopPlay];
+
     [self.videoView jp_resumePlayWithURL:[NSURL URLWithString:videoURLPath]
                       bufferingIndicator:nil
                              controlView:nil

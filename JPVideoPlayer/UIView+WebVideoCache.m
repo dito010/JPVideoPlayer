@@ -244,48 +244,50 @@ NSString *const JPVideoPlayerDidResizeVideoViewToFitDeviceOrientationNotificatio
                   controlView:(UIView <JPVideoPlayerProtocol> *_Nullable)controlView
                  progressView:(UIView <JPVideoPlayerProtocol> *_Nullable)progressView
            needSetControlView:(BOOL)needSetControlView {
-    // should show default.
-    BOOL showDefaultView = YES;
-    if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlAndIndicatorViews)]) {
-        showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlAndIndicatorViews];
-    }
-    // user update progressView.
-    if(progressView && self.jp_progressView){
-        [self.jp_progressView removeFromSuperview];
-    }
-    if(showDefaultView && !progressView && !self.jp_progressView){
-        // Use default `JPVideoPlayerProgressView` if no progressView.
-        progressView = [JPVideoPlayerProgressView new];
-    }
-    if(progressView){
-        self.jp_progressView = progressView;
-    }
-
-    // user update bufferingIndicator.
-    if(bufferingIndicator && self.jp_bufferingIndicator){
-        [self.jp_bufferingIndicator removeFromSuperview];
-    }
-    if(showDefaultView && !bufferingIndicator && !self.jp_bufferingIndicator){
-        // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
-        bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
-    }
-    if(bufferingIndicator){
-        self.jp_bufferingIndicator = bufferingIndicator;
-    }
-
-    if(needSetControlView){
-        //before setting controllerView userInteractionEnabled should be enabled.
-        self.userInteractionEnabled = YES;
-        // user update controlView.
-        if(controlView && self.jp_controlView){
-            [self.jp_controlView removeFromSuperview];
+    @autoreleasepool {
+        // should show default.
+        BOOL showDefaultView = YES;
+        if (self.jp_videoPlayerDelegate && [self.jp_videoPlayerDelegate respondsToSelector:@selector(shouldShowDefaultControlAndIndicatorViews)]) {
+            showDefaultView = [self.jp_videoPlayerDelegate shouldShowDefaultControlAndIndicatorViews];
         }
-        if(showDefaultView && !controlView && !self.jp_controlView){
-            // Use default `JPVideoPlayerControlView` if no controlView.
-            controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
+        // user update progressView.
+        if(progressView && self.jp_progressView){
+            [self.jp_progressView removeFromSuperview];
         }
-        if(controlView){
-            self.jp_controlView = controlView;
+        if(showDefaultView && !progressView && !self.jp_progressView){
+            // Use default `JPVideoPlayerProgressView` if no progressView.
+            progressView = [JPVideoPlayerProgressView new];
+        }
+        if(progressView){
+            self.jp_progressView = progressView;
+        }
+
+        // user update bufferingIndicator.
+        if(bufferingIndicator && self.jp_bufferingIndicator){
+            [self.jp_bufferingIndicator removeFromSuperview];
+        }
+        if(showDefaultView && !bufferingIndicator && !self.jp_bufferingIndicator){
+            // Use default `JPVideoPlayerBufferingIndicator` if no bufferingIndicator.
+            bufferingIndicator = [JPVideoPlayerBufferingIndicator new];
+        }
+        if(bufferingIndicator){
+            self.jp_bufferingIndicator = bufferingIndicator;
+        }
+
+        if(needSetControlView){
+            //before setting controllerView userInteractionEnabled should be enabled.
+            self.userInteractionEnabled = YES;
+            // user update controlView.
+            if(controlView && self.jp_controlView){
+                [self.jp_controlView removeFromSuperview];
+            }
+            if(showDefaultView && !controlView && !self.jp_controlView){
+                // Use default `JPVideoPlayerControlView` if no controlView.
+                controlView = [[JPVideoPlayerControlView alloc] initWithControlBar:nil blurImage:nil];
+            }
+            if(controlView){
+                self.jp_controlView = controlView;
+            }
         }
     }
 }

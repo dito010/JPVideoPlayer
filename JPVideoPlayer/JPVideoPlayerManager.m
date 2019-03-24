@@ -121,7 +121,8 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
            configuration:(JPVideoPlayerConfiguration)configuration {
     JPAssertMainThread;
     if (self.managerModel && [self.managerModel.videoURL.absoluteString isEqualToString:url.absoluteString]) {
-
+        JPDebugLog(@"Please use resumePlayWithURL: method when play a playing url: %@", url);
+        return;
     }
 
     if(!url || !showLayer){
@@ -233,14 +234,11 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     }
     [self activeAudioSessionIfNeed];
 
-    BOOL canResumePlaying = self.managerModel &&
-            [self.managerModel.videoURL.absoluteString isEqualToString:url.absoluteString] &&
-            self.videoPlayer;
+    BOOL canResumePlaying = self.managerModel && [self.managerModel.videoURL.absoluteString isEqualToString:url.absoluteString] && self.videoPlayer;
     if(!canResumePlaying){
         JPDebugLog(@"Called resume play, but can not resume play, translate to normal play if need.");
         if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerManager:shouldTranslateIntoPlayVideoFromResumePlayForURL:)]) {
-            BOOL preferSwitch = [self.delegate videoPlayerManager:self
-                 shouldTranslateIntoPlayVideoFromResumePlayForURL:url];
+            BOOL preferSwitch = [self.delegate videoPlayerManager:self shouldTranslateIntoPlayVideoFromResumePlayForURL:url];
             if(preferSwitch){
                 [self playVideoWithURL:url
                            showOnLayer:showLayer

@@ -263,8 +263,12 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         [self callDelegateMethodWithError:JPErrorWithDescription(@"The layer to display video layer is nil")];
         return;
     }
-    [self.playerModel.playerLayer removeFromSuperlayer];
-    self.playerModel.unownedShowLayer = showLayer;
+    if (self.playerModel.unownedShowLayer != showLayer) {
+        [self.playerModel.playerLayer removeFromSuperlayer];
+        self.playerModel.unownedShowLayer = showLayer;
+        [self setVideoGravityWithOptions:options playerModel:self.playerModel];
+        [self displayVideoPicturesOnShowLayer];
+    }
 
     if (options & JPVideoPlayerMutedPlay) {
         self.playerModel.player.muted = YES;
@@ -272,8 +276,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     else {
         self.playerModel.player.muted = NO;
     }
-    [self setVideoGravityWithOptions:options playerModel:self.playerModel];
-    [self displayVideoPicturesOnShowLayer];
 
     if(configuration) configuration(self.playerModel);
     [self invokePlayerStatusDidChangeDelegateMethod];
