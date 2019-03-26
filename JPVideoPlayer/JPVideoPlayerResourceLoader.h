@@ -35,7 +35,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask;
 
 @interface JPVideoPlayerResourceLoader : NSObject<AVAssetResourceLoaderDelegate>
 
-@property (nonatomic, weak) id<JPVideoPlayerResourceLoaderDelegate> delegate;
+@property (nonatomic, weak, nullable) id<JPVideoPlayerResourceLoaderDelegate> delegate;
 
 /**
  * The url custom passed in.
