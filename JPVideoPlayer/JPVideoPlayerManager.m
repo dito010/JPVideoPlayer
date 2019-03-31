@@ -100,7 +100,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
         _isReturnWhenApplicationWillResignActive = NO;
         _applicationStateMonitor = [JPApplicationStateMonitor new];
         _applicationStateMonitor.delegate = self;
-        _syncQueue = dispatch_queue_create("com.jpvideoplayer.manager.sync.queue.www", DISPATCH_QUEUE_SERIAL);
+        _syncQueue = JPNewSyncQueue("com.jpvideoplayer.manager.sync.queue.www");
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(audioSessionInterruptionNotification:)
                                                    name:AVAudioSessionInterruptionNotification

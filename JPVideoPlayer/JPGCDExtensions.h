@@ -11,6 +11,12 @@
 
 #import <UIKit/UIKit.h>
 
+/// 该方法会把当前队列添加一个标识, 使用 JPDispatchSyncOnQueue 时, 实现当前队列可重入.
+UIKIT_EXTERN dispatch_queue_t JPNewSyncQueue(const char *_Nullable label);
+
+/// 该方法会把当前队列添加一个标识, 使用 JPDispatchSyncOnQueue 时, 实现当前队列可重入.
+UIKIT_EXTERN dispatch_queue_t JPNewAsyncQueue(const char *_Nullable label);
+
 UIKIT_EXTERN void JPDispatchSyncOnMainQueue(void (^block)(void));
 
 UIKIT_EXTERN void JPDispatchAsyncOnMainQueue(void (^block)(void));

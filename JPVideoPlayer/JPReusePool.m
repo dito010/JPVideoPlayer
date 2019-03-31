@@ -43,7 +43,7 @@
         _objectClass = cls;
         _internalReusableObjects = @[].mutableCopy;
         _internalOnUsingObjects = @[].mutableCopy;
-        _syncQueue = dispatch_queue_create("com.skyplan.reusepool.sync.queue.www", DISPATCH_QUEUE_SERIAL);
+        _syncQueue = JPNewSyncQueue("com.skyplan.reusepool.sync.queue.www");
         _preferDispatchAllTasksOnInternalQueue = YES;
         _reusableObjectsWarningThresholdValue = 1000;
     }

@@ -12,6 +12,28 @@
 #import "JPGCDExtensions.h"
 #import <pthread.h>
 
+static int kJPVideoPlayerGCDExtensionQueueSpecific;
+
+dispatch_queue_t JPNewSyncQueue(const char *_Nullable label) {
+    NSCParameterAssert(label);
+    if (!label) return nil;
+    dispatch_queue_t queue = dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL);
+    static CFStringRef queueSpecificValue;
+    queueSpecificValue = (__bridge CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
+    dispatch_queue_set_specific(queue, &kJPVideoPlayerGCDExtensionQueueSpecific, (void *)queueSpecificValue, (dispatch_function_t)CFRelease);
+    return queue;
+}
+
+dispatch_queue_t JPNewAsyncQueue(const char *_Nullable label) {
+    NSCParameterAssert(label);
+    if (!label) return nil;
+    dispatch_queue_t queue = dispatch_queue_create(label, DISPATCH_QUEUE_CONCURRENT);
+    static CFStringRef queueSpecificValue;
+    queueSpecificValue = (__bridge CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
+    dispatch_queue_set_specific(queue, &kJPVideoPlayerGCDExtensionQueueSpecific, (void *)queueSpecificValue, (dispatch_function_t)CFRelease);
+    return queue;
+}
+
 void JPDispatchSyncOnMainQueue(void (^block)(void)) {
     if (!block) {
         return;
@@ -44,7 +66,7 @@ void JPDispatchAsyncOnNextRunloop(void (^block)(void)) {
 
 void JPDispatchAsyncOnQueue(dispatch_queue_t queue, void (^block)(void)) {
     if (!queue) {
-        dispatch_async(dispatch_get_main_queue(), block);
+        JPDispatchAsyncOnMainQueue(block);
         return;
     }
     dispatch_async(queue, block);
@@ -52,12 +74,22 @@ void JPDispatchAsyncOnQueue(dispatch_queue_t queue, void (^block)(void)) {
 
 void JPDispatchSyncOnQueue(dispatch_queue_t queue, void (^block)(void)) {
     if (!queue) {
-        dispatch_sync(dispatch_get_main_queue(), block);
+        JPDispatchSyncOnMainQueue(block);
         return;
     }
+
+    static CFStringRef currentQueueSpecificValue, targetQueueSpecificValue;
+    currentQueueSpecificValue = dispatch_get_specific(&kJPVideoPlayerGCDExtensionQueueSpecific);
+    targetQueueSpecificValue = dispatch_queue_get_specific(queue, &kJPVideoPlayerGCDExtensionQueueSpecific);
+    if (currentQueueSpecificValue && targetQueueSpecificValue && [(__bridge NSString *)currentQueueSpecificValue isEqualToString:(__bridge NSString *)targetQueueSpecificValue]) {
+        block();
+        return;
+    }
+
     dispatch_sync(queue, block);
 }
 
 void JPDispatchAfterTimeIntervalInSecond(NSTimeInterval timeInterval, void (^block)(void)) {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_current_queue(), block);
+    ///  dispatch_get_current_queue 已被废弃, 这里只会派发到主线程.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), block);
 }

@@ -68,7 +68,7 @@
         pthread_mutexattr_init(&mutexattr);
         pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_lock, &mutexattr);
-        _ioQueue = dispatch_queue_create("com.NewPan.jpvideoplayer.resource.loader.www", DISPATCH_QUEUE_SERIAL);
+        _ioQueue = JPNewSyncQueue("com.NewPan.jpvideoplayer.resource.loader.www");
         _customURL = customURL;
         _loadingRequests = [@[] mutableCopy];
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
