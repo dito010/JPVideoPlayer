@@ -96,7 +96,9 @@ void JPDispatchSyncOnQueue(dispatch_queue_t queue, void (^block)(void)) {
         block();
         return;
     }
-
+    
+    currentQueueSpecificValue = nil;
+    targetQueueSpecificValue = nil;
     dispatch_sync(queue, block);
 }
 
