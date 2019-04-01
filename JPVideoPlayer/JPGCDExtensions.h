@@ -11,11 +11,13 @@
 
 #import <UIKit/UIKit.h>
 
-/// 该方法会把当前队列添加一个标识, 使用 JPDispatchSyncOnQueue 时, 实现当前队列可重入.
-UIKIT_EXTERN dispatch_queue_t JPNewSyncQueue(const char *_Nullable label);
+NS_ASSUME_NONNULL_BEGIN
 
 /// 该方法会把当前队列添加一个标识, 使用 JPDispatchSyncOnQueue 时, 实现当前队列可重入.
-UIKIT_EXTERN dispatch_queue_t JPNewAsyncQueue(const char *_Nullable label);
+UIKIT_EXTERN dispatch_queue_t JPNewSyncQueue(const char *label);
+
+/// 该方法会把当前队列添加一个标识, 使用 JPDispatchSyncOnQueue 时, 实现当前队列可重入.
+UIKIT_EXTERN dispatch_queue_t JPNewAsyncQueue(const char *label);
 
 UIKIT_EXTERN void JPDispatchSyncOnMainQueue(void (^block)(void));
 
@@ -29,6 +31,8 @@ UIKIT_EXTERN void JPDispatchAsyncOnNextRunloop(void (^block)(void));
 
 UIKIT_EXTERN void JPDispatchAfterTimeIntervalInSecond(NSTimeInterval timeInterval, void (^block)(void));
 
-#define JPAssertMainThread NSAssert([NSThread isMainThread], @"代码应该在主线程调用.")
+#define JPAssertMainThread NSCAssert([NSThread isMainThread], @"代码应该在主线程调用.")
 
-#define JPAssertNotMainThread NSAssert(![NSThread isMainThread], @"代码不应该在主线程调用.")
+#define JPAssertNotMainThread NSCAssert(![NSThread isMainThread], @"代码不应该在主线程调用.")
+
+NS_ASSUME_NONNULL_END
