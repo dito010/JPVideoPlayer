@@ -40,6 +40,11 @@ static const NSString *kJPVideoPlayerCacheFileSizeKey = @"com.newpan.size.key.ww
 static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.response.header.key.www";
 @implementation JPVideoPlayerCacheFile
 
+- (void)dealloc {
+    [self.readFileHandle closeFile];
+    [self.writeFileHandle closeFile];
+}
+
 + (instancetype)new {
     NSAssert(NO, @"Please use given initializer method");
     return nil;
@@ -80,7 +85,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                                                                               options:NSJSONReadingMutableContainers | NSJSONReadingAllowFragments
                                                                                 error:nil];
             if (!indexesDictionary) {
-                [self truncateFileWithFileLength:0];
+                [self _truncateFileToLength:0];
             }
             else {
                 NSNumber *fileSize = indexesDictionary[kJPVideoPlayerCacheFileSizeKey];
@@ -101,20 +106,23 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     return self;
 }
 
-- (void)dealloc {
-    [self.readFileHandle closeFile];
-    [self.writeFileHandle closeFile];
-}
-
 
 #pragma mark - Properties
 
 - (BOOL)isFileLengthValid {
-    return self.fileLength > 0;
+    __block BOOL valid = NO;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        valid = self.fileLength > 0;
+    });
+    return valid;
 }
 
 - (BOOL)hasCompleted {
-    return self.completed;
+    __block BOOL completed = NO;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        completed = self.completed;
+    });
+    return completed;
 }
 
 
@@ -170,20 +178,15 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     __block NSRange result;
     JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-        if (position >= self.fileLength) {
-            result = JPInvalidRange;
-        }
-        else {
+        if (position < self.fileLength) {
+            NSRange range;
             for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
-                NSRange range = [self.internalFragmentRanges[i] rangeValue];
+                range = [self.internalFragmentRanges[i] rangeValue];
                 if (NSLocationInRange(position, range)) {
-                    return range;
+                    result = range;
+                    break;
                 }
             }
-            if (!lock) {
-                pthread_mutex_unlock(&_lock);
-            }
-            return JPInvalidRange;
         }
 
     });
@@ -191,78 +194,67 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (NSRange)firstNotCachedRangeFromPosition:(NSUInteger)position {
-    if (position >= self.fileLength) return JPInvalidRange;
+   __block  NSRange result = JPInvalidRange;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-    int lock = pthread_mutex_trylock(&_lock);
-    NSRange targetRange = JPInvalidRange;
-    NSUInteger start = position;
-    NSRange range;
-    /// internalFragmentRanges 增序排列.
-    for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
-        @autoreleasepool {
-            range = [self.internalFragmentRanges[i] rangeValue];
-            /// * 代表区间, + 代表 position.
-            /// ----- * ------ + ------ * -----
-            /// 当前区间已缓存完成.
-            if (NSLocationInRange(start, range)) {
-                start = NSMaxRange(range);
-                continue;
+        if (position < self.fileLength) {
+            NSUInteger start = position;
+            NSRange range;
+            /// internalFragmentRanges 增序排列.
+            for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
+                @autoreleasepool {
+                    range = [self.internalFragmentRanges[i] rangeValue];
+                    /// * 代表区间, + 代表 position.
+                    /// ----- * ------ + ------ * -----
+                    /// 当前区间已缓存完成.
+                    if (NSLocationInRange(start, range)) {
+                        start = NSMaxRange(range);
+                        continue;
+                    }
+
+                    /// 在当前区间之后.
+                    /// ----- * ------ * ----- + -----
+                    if (start > NSMaxRange(range)) continue;
+
+                    /// 在当前区间之前, 就是目标
+                    /// ---- + ------ * ------ * -------
+                    result = NSMakeRange(start, range.location - start);
+                    break;
+                }
             }
 
-            /// 在当前区间之后.
-            /// ----- * ------ * ----- + -----
-            if (start >= NSMaxRange(range)) continue;
-
-            /// 在当前区间之前, 就是目标
-            /// ---- + ------ * ------ * -------
-            targetRange = NSMakeRange(start, range.location - start);
-            break;
+            /// 没找到合适的区间, 那就是文件还没开始下载.
+            if (!JPValidByteRange(result) && start < self.fileLength) {
+                result = NSMakeRange(start, self.fileLength - start);
+            }
         }
-    }
 
-    ///
-    if (!JPValidByteRange(targetRange) && start < self.fileLength) {
-        targetRange = NSMakeRange(start, self.fileLength - start);
-    }
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
-    return targetRange;
+    });
+
+    return result;
 }
 
 
 #pragma mark - File
 
-- (BOOL)truncateFileWithFileLength:(NSUInteger)fileLength {
-    NSParameterAssert(self.writeFileHandle);
-    if (!self.writeFileHandle) return NO;
-
-    JPDebugLog(@"Truncate file to length: %u", fileLength);
-    self.fileLength = fileLength;
-    @try {
-        [self.writeFileHandle truncateFileAtOffset:self.fileLength * sizeof(Byte)];
-        unsigned long long end = [self.writeFileHandle seekToEndOfFile];
-        if (end != self.fileLength) return NO;
-    }
-    @catch (NSException * e) {
-        JPErrorLog(@"Truncate file raise a exception: %@", e);
-        return NO;
-    }
-    return YES;
-}
-
 - (void)removeCache {
-    [[NSFileManager defaultManager] removeItemAtPath:self.cacheFilePath error:NULL];
-    [[NSFileManager defaultManager] removeItemAtPath:self.indexFilePath error:NULL];
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        [[NSFileManager defaultManager] removeItemAtPath:self.cacheFilePath error:NULL];
+        [[NSFileManager defaultManager] removeItemAtPath:self.indexFilePath error:NULL];
+    });
 }
 
 - (BOOL)storeResponse:(NSHTTPURLResponse *)response {
-    BOOL success = YES;
-    if (![self isFileLengthValid]) {
-        success = [self truncateFileWithFileLength:(NSUInteger)response.jp_fileLength];
-    }
-    self.responseHeaders = [[response allHeaderFields] copy];
-    success = success && [self synchronize];
+    __block BOOL success = YES;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        if (![self isFileLengthValid]) {
+            success = [self _truncateFileToLength:(NSUInteger)response.jp_fileLength];
+        }
+        self.responseHeaders = [[response allHeaderFields] copy];
+        success = success && [self synchronize];
+
+    });
     return success;
 }
 
@@ -270,120 +262,92 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
               atOffset:(NSUInteger)offset
            synchronize:(BOOL)synchronize
       storedCompletion:(dispatch_block_t)completion {
-    if (!self.writeFileHandle) {
-        JPErrorLog(@"self.writeFileHandle is nil");
-    }
-    @try {
-        [self.writeFileHandle seekToFileOffset:offset];
-        [self.writeFileHandle jp_safeWriteData:data];
-    }
-    @catch (NSException * e) {
-        JPErrorLog(@"Write file raise a exception: %@", e);
-    }
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-    [self _addRange:NSMaxRange(offset, data.length)];
-    if (synchronize) {
-        [self synchronize];
-    }
+        if (!self.writeFileHandle) JPErrorLog(@"self.writeFileHandle is nil");
+
+        @try {
+            [self.writeFileHandle seekToFileOffset:offset];
+            [self.writeFileHandle jp_safeWriteData:data];
+        }
+        @catch (NSException * e) {
+            JPErrorLog(@"Write file raise a exception: %@", e);
+        }
+
+        [self _addRange:NSMakeRange(offset, data.length)];
+        if (synchronize) {
+            [self synchronize];
+        }
+
+        if (completion) JPDispatchAsyncOnMainQueue(completion);
+
+    });
 }
 
 
 #pragma mark - read data
 
 - (NSData *)dataWithRange:(NSRange)range {
-    if (!JPValidFileRange(range)) {
-        return nil;
-    }
+    if (!JPValidFileRange(range)) return nil;
 
-    if (self.readOffset != range.location) {
-        [self seekToPosition:range.location];
-    }
+    __block NSData *data = nil;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-    return [self readDataWithLength:range.length];
+        if (self.readOffset != range.location) [self seekToPosition:range.location];
+        data = [self readDataWithLength:range.length];
+
+    });
+    return data;
 }
 
 - (NSData *)readDataWithLength:(NSUInteger)length {
-    NSRange range = [self cachedRangeForRange:NSMakeRange(self.readOffset, length)];
-    if (JPValidFileRange(range)) {
-        int lock = pthread_mutex_trylock(&_lock);
-        NSData *data = [self.readFileHandle readDataOfLength:range.length];
-        self.readOffset += [data length];
-        if (!lock) {
-            pthread_mutex_unlock(&_lock);
+    __block NSData *data = nil;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+        NSRange range = [self cachedRangeForRange:NSMakeRange(self.readOffset, length)];
+        if (JPValidFileRange(range)) {
+            data = [self.readFileHandle readDataOfLength:range.length];
+            self.readOffset += [data length];
         }
-        return data;
-    }
-    return nil;
+    });
+    return data;
 }
 
 
 #pragma mark - seek
 
 - (void)seekToPosition:(NSUInteger)position {
-    int lock = pthread_mutex_trylock(&_lock);
-    [self.readFileHandle seekToFileOffset:position];
-    self.readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        [self.readFileHandle seekToFileOffset:position];
+        self.readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
+
+    });
 }
 
 - (void)seekToEnd {
-    int lock = pthread_mutex_trylock(&_lock);
-    [self.readFileHandle seekToEndOfFile];
-    self.readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        [self.readFileHandle seekToEndOfFile];
+        self.readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
+
+    });
 }
 
 
 #pragma mark - Indexes
 
-- (NSString *)unserializeIndex {
-    int lock = pthread_mutex_trylock(&_lock);
-
-    NSMutableDictionary *dict = [@{
-            kJPVideoPlayerCacheFileSizeKey: @(self.fileLength),
-    } mutableCopy];
-
-    NSMutableArray *rangeArray = [[NSMutableArray alloc] init];
-    for (NSValue *range in self.internalFragmentRanges) {
-        [rangeArray addObject:NSStringFromRange([range rangeValue])];
-    }
-    if(rangeArray.count){
-        dict[kJPVideoPlayerCacheFileZoneKey] = rangeArray;
-    }
-
-    JPDebugLog(@"存储字典: %@", dict);
-
-    if (self.responseHeaders) {
-        dict[kJPVideoPlayerCacheFileResponseHeadersKey] = self.responseHeaders;
-    }
-
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-    if (data) {
-        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (!lock) {
-            pthread_mutex_unlock(&_lock);
-        }
-        return dataString;
-    }
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
-    return nil;
-}
-
 - (BOOL)synchronize {
-    NSString *indexString = [self unserializeIndex];
-    int lock = pthread_mutex_trylock(&_lock);
-    JPDebugLog(@"Did synchronize index file");
-    [self.writeFileHandle synchronizeFile];
-    BOOL synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
+    __block BOOL synchronize = NO;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        NSString *indexString = [self _unserializeIndex];
+        if (indexString.length) {
+            JPDebugLog(@"同步文件索引文件到磁盘: %@", indexString);
+            synchronize = [indexString writeToFile:self.indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+            [self.writeFileHandle synchronizeFile];
+        }
+
+    });
     return synchronize;
 }
 
@@ -410,6 +374,47 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             self.completed = YES;
         }
     }
+}
+
+- (BOOL)_truncateFileToLength:(NSUInteger)fileLength {
+    __block BOOL result = NO;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        NSParameterAssert(self.writeFileHandle);
+        if (self.writeFileHandle) {
+            JPDebugLog(@"Truncate file to length: %u", fileLength);
+            self.fileLength = fileLength;
+            @try {
+                [self.writeFileHandle truncateFileAtOffset:self.fileLength * sizeof(Byte)];
+                [self.writeFileHandle seekToEndOfFile];
+            }
+            @catch (NSException * e) {
+                JPErrorLog(@"Truncate file raise a exception: %@", e);
+            }
+            result = YES;
+        }
+
+    });
+    return result;
+}
+
+- (NSString *)_unserializeIndex {
+    NSMutableDictionary *dict = [@{
+            kJPVideoPlayerCacheFileSizeKey: @(self.fileLength),
+    } mutableCopy];
+
+    NSMutableArray *rangeArray = [[NSMutableArray alloc] init];
+    for (NSValue *range in self.internalFragmentRanges) {
+        [rangeArray addObject:NSStringFromRange([range rangeValue])];
+    }
+    if(rangeArray.count){
+        dict[kJPVideoPlayerCacheFileZoneKey] = rangeArray;
+    }
+
+    if (self.responseHeaders) {
+        dict[kJPVideoPlayerCacheFileResponseHeadersKey] = self.responseHeaders;
+    }
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
 @end

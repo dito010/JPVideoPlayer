@@ -35,13 +35,14 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     pthread_mutex_destroy(&_lock);
 }
 
++ (instancetype)new {
+    NSAssert(NO, @"Please use given initialize method.");
+    return nil;
+}
+
 - (instancetype)init {
     NSAssert(NO, @"Please use given initialize method.");
-    return [self initWithLoadingRequest:(AVAssetResourceLoadingRequest *)[NSURLRequest new]
-                           requestRange:JPInvalidRange
-                              cacheFile:[JPVideoPlayerCacheFile new]
-                              customURL:[NSURL new]
-                                 cached:NO];
+    return nil;
 }
 
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
@@ -414,11 +415,14 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 
         static BOOL _needLog = YES;
         if(_needLog) {
-            _needLog = NO;
+//            _needLog = NO;
             JPDebugLog(@"收到数据响应, 数据长度为: %u", data.length);
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                _needLog = YES;
+            JPDispatchAsyncOnMainQueue(^{
+                JPDispatchAfterTimeIntervalInSecond(1.5, ^{
+                    _needLog = YES;
+                });
             });
+
         }
         if (!lock) {
             pthread_mutex_unlock(&_plock);

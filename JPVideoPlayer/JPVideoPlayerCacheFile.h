@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return Data from the header to given length position.
  */
-- (NSData * _Nullable)readDataWithLength:(NSUInteger)length;
+- (NSData *_Nullable)readDataWithLength:(NSUInteger)length;
 
 /**
  * Fetch data in given range.
@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return Data in given range.
  */
-- (NSData *)dataWithRange:(NSRange)range;
+- (NSData *_Nullable)dataWithRange:(NSRange)range;
 
 
 #pragma mark - Remove Data

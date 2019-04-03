@@ -68,7 +68,7 @@
         pthread_mutexattr_init(&mutexattr);
         pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_lock, &mutexattr);
-        _ioQueue = JPNewSyncQueue("com.NewPan.jpvideoplayer.resource.loader.www");
+        _internalSyncQueue = JPNewSyncQueue("com.NewPan.jpvideoplayer.resource.loader.www");
         _customURL = customURL;
         _loadingRequests = [@[] mutableCopy];
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
@@ -194,7 +194,7 @@ didCompleteWithError:(NSError *)error {
                 if (!JPValidFileRange(firstNotCachedRange)) {
                     [self _addTaskWithLoadingRequest:loadingRequest
                                                range:dataRange
-                                              cached:self.cacheFile.cachedDataBound > 0];
+                                              cached:NO];
                     start = end;
                 }
                 /// start 之后未缓存完的区间已经超过当前请求的范围, 整个字节范围缓存完成.

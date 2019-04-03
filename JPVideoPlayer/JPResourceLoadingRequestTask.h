@@ -88,6 +88,10 @@ didCompleteWithError:(NSError *)error;
 
 @property (nonatomic, assign, readonly, getter = isCancelled) BOOL cancelled;
 
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)init NS_UNAVAILABLE;
+
 /**
  * Convenience method to fetch instance of this class.
  *
