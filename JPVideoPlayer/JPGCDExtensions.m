@@ -19,7 +19,7 @@ dispatch_queue_t JPNewSyncQueue(const char *label) {
     if (!label) return nil;
     dispatch_queue_t queue = dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL);
     static CFStringRef queueSpecificValue;
-    queueSpecificValue = (__bridge CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
+    queueSpecificValue = (__bridge_retained CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
     dispatch_queue_set_specific(queue, &kJPVideoPlayerGCDExtensionQueueSpecific, (void *)queueSpecificValue, (dispatch_function_t)CFRelease);
     queueSpecificValue = nil;
     return queue;
@@ -30,7 +30,7 @@ dispatch_queue_t JPNewAsyncQueue(const char *label) {
     if (!label) return nil;
     dispatch_queue_t queue = dispatch_queue_create(label, DISPATCH_QUEUE_CONCURRENT);
     static CFStringRef queueSpecificValue;
-    queueSpecificValue = (__bridge CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
+    queueSpecificValue = (__bridge_retained CFStringRef)([[NSString alloc] initWithCString:label encoding:NSUTF8StringEncoding]);
     dispatch_queue_set_specific(queue, &kJPVideoPlayerGCDExtensionQueueSpecific, (void *)queueSpecificValue, (dispatch_function_t)CFRelease);
     queueSpecificValue = nil;
     return queue;
