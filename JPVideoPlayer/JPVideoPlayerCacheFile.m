@@ -89,14 +89,15 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             }
             else {
                 NSNumber *fileSize = indexesDictionary[kJPVideoPlayerCacheFileSizeKey];
+                if (fileSize) self.fileLength = [fileSize unsignedIntegerValue];
                 self.responseHeaders = indexesDictionary[kJPVideoPlayerCacheFileResponseHeadersKey];
                 NSMutableArray<NSString *> *ranges = indexesDictionary[kJPVideoPlayerCacheFileZoneKey];
-                if (fileSize) self.fileLength = [fileSize unsignedIntegerValue];
-
-                NSRange range;
-                for (NSString *rangeString in ranges) {
-                    range = NSRangeFromString(rangeString);
-                    [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
+                if (ranges.count) {
+                    NSRange range;
+                    for (NSString *rangeString in ranges) {
+                        range = NSRangeFromString(rangeString);
+                        [self.internalFragmentRanges addObject:[NSValue valueWithRange:range]];
+                    }
                 }
             }
 
@@ -139,48 +140,24 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 - (void)mergeRangesIfNeed {
     JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-        BOOL hasMerge = NO;
-        NSRange currentRange, nextRange;
-        for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
-            if ((i + 1) < self.internalFragmentRanges.count) {
-                @autoreleasepool {
-                    currentRange = [self.internalFragmentRanges[i] rangeValue];
-                    nextRange = [self.internalFragmentRanges[i + 1] rangeValue];
-                    if (JPRangeCanMerge(currentRange, nextRange)) {
-                        [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
-                        [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
-                        i -= 1;
-                        hasMerge = YES;
-                    }
-                }
-            }
-        }
-//        if(hasMerge){
-//            NSString *string = @"";
-//            NSRange range;
-//            for(NSValue *rangeValue in self.internalFragmentRanges){
-//                @autoreleasepool {
-//                    range = [rangeValue rangeValue];
-//                    string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
-//                }
-//            }
-//            JPDebugLog(@"合并后已缓存区间: %@", string);
-//        }
+        [self _mergeRangesIfNeed];
 
     });
 }
 
 - (NSRange)cachedRangeForRange:(NSRange)range {
-    return NSIntersectionRange([self cachedRangeContainsPosition:range.location], range);
+    NSRange cachedRange = NSIntersectionRange([self cachedRangeContainsPosition:range.location], range);
+    if (cachedRange.length > 0) return cachedRange;
+    return JPInvalidRange;
 }
 
 - (NSRange)cachedRangeContainsPosition:(NSUInteger)position {
-    __block NSRange result;
+    __block NSRange result = JPInvalidRange;
     JPDispatchSyncOnQueue(self.syncQueue, ^{
 
         if (position < self.fileLength) {
             NSRange range;
-            for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+            for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
                 range = [self.internalFragmentRanges[i] rangeValue];
                 if (NSLocationInRange(position, range)) {
                     result = range;
@@ -214,17 +191,16 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
                     /// 在当前区间之后.
                     /// ----- * ------ * ----- + -----
-                    if (start > NSMaxRange(range)) continue;
+                    if (start >= NSMaxRange(range)) continue;
 
                     /// 在当前区间之前, 就是目标
                     /// ---- + ------ * ------ * -------
                     result = NSMakeRange(start, range.location - start);
-                    break;
                 }
             }
 
             /// 没找到合适的区间, 那就是文件还没开始下载.
-            if (!JPValidByteRange(result) && start < self.fileLength) {
+            if (start < self.fileLength) {
                 result = NSMakeRange(start, self.fileLength - start);
             }
         }
@@ -264,6 +240,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
       storedCompletion:(dispatch_block_t)completion {
     JPDispatchSyncOnQueue(self.syncQueue, ^{
 
+        NSCParameterAssert(self.writeFileHandle);
         if (!self.writeFileHandle) JPErrorLog(@"self.writeFileHandle is nil");
 
         @try {
@@ -274,12 +251,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
             JPErrorLog(@"Write file raise a exception: %@", e);
         }
 
-        [self _addRange:NSMakeRange(offset, data.length)];
-        if (synchronize) {
-            [self synchronize];
-        }
-
-        if (completion) JPDispatchAsyncOnMainQueue(completion);
+        if (synchronize) [self synchronize];
+        [self _addRange:NSMakeRange(offset, data.length) completion:completion];
 
     });
 }
@@ -354,7 +327,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 #pragma mark - Private
 
-- (void)_addRange:(NSRange)range {
+- (void)_addRange:(NSRange)range completion:(dispatch_block_t)completion {
     NSParameterAssert(NSMaxRange(range) <= self.fileLength);
     if (NSMaxRange(range) > self.fileLength) return;
 
@@ -362,7 +335,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     [self.internalFragmentRanges sortUsingComparator:^NSComparisonResult(NSValue *obj1, NSValue *obj2) {
         return obj1.rangeValue.location > obj2.rangeValue.location ? NSOrderedAscending : NSOrderedDescending;
     }];
-    [self mergeRangesIfNeed];
+    [self _mergeRangesIfNeed];
     [self _checkHasCompleted];
 }
 
@@ -415,6 +388,36 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         dict[kJPVideoPlayerCacheFileResponseHeadersKey] = self.responseHeaders;
     }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil] encoding:NSUTF8StringEncoding];
+}
+
+- (void)_mergeRangesIfNeed {
+    BOOL hasMerge = NO;
+    NSRange currentRange, nextRange;
+    for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
+        if ((i + 1) < self.internalFragmentRanges.count) {
+            @autoreleasepool {
+                currentRange = [self.internalFragmentRanges[i] rangeValue];
+                nextRange = [self.internalFragmentRanges[i + 1] rangeValue];
+                if (JPRangeCanMerge(currentRange, nextRange)) {
+                    [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
+                    [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
+                    i -= 1;
+                    hasMerge = YES;
+                }
+            }
+        }
+    }
+//        if(hasMerge){
+//            NSString *string = @"";
+//            NSRange range;
+//            for(NSValue *rangeValue in self.internalFragmentRanges){
+//                @autoreleasepool {
+//                    range = [rangeValue rangeValue];
+//                    string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
+//                }
+//            }
+//            JPDebugLog(@"合并后已缓存区间: %@", string);
+//        }
 }
 
 @end

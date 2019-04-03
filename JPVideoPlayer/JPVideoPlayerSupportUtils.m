@@ -231,7 +231,6 @@ NSString *kJPSwizzleErrorDomain = @"com.jpvideoplayer.swizzle.www";
 
 @end
 
-NSString *JPLogMessage = nil;
 NSString *JPLogThreadName = nil;
 @implementation JPLog
 
@@ -252,8 +251,7 @@ NSString *JPLogThreadName = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
 
-    JPLogMessage = message;
-    if (JPLogMessage.length) {
+    if (message.length) {
         NSString *flag;
         switch (logLevel) {
             case JPLogLevelDebug:
@@ -277,8 +275,8 @@ NSString *JPLogThreadName = nil;
         JPLogThreadName = [JPLogThreadName componentsSeparatedByString:@","].firstObject;
         JPLogThreadName = [JPLogThreadName stringByReplacingOccurrencesOfString:@"{number = " withString:@""];
         // message = [NSString stringWithFormat:@"[%@] [Thread: %@] %@ => [%@ + %ld]", flag, threadName, message, tempString, line];
-        JPLogMessage = [NSString stringWithFormat:@"[%@] [Thread: %02ld] [%@]", flag, (long)[JPLogThreadName integerValue], JPLogMessage];
-        NSLog(@"%@", JPLogMessage);
+        message = [NSString stringWithFormat:@"[%@] [Thread: %02ld] [%@]", flag, (long)[JPLogThreadName integerValue], message];
+        NSLog(@"%@", message);
     }
 }
 
