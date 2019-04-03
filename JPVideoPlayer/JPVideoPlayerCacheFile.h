@@ -17,60 +17,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-/**
- * The cache file path of video data.
- */
+/// The cache file path of video data.
 @property (nonatomic, copy, readonly) NSString *cacheFilePath;
 
-/**
- * The index file cache path. because the video datas cache in disk maybe are discontinuous like:
- * "01010101*********0101*****010101010101"(the 0 and 1 represent video data, and the  * represent no data).
- * So we need index to map this video data, and the index file is a colletion of indexes store in disk.
- */
+/// The index file cache path. because the video data cache in disk maybe are discontinuous like:
+/// "01010101*********0101*****010101010101"(the 0 and 1 represent video data, and the  * represent no data).
+/// So we need index to map this video data, and the index file is a collection of indexes store in disk.
 @property (nonatomic, copy, readonly, nullable) NSString *indexFilePath;
 
-/**
- * The video data expected length.
- * Note this value is not always equal to the cache video data length.
- */
+/// The video data expected length.
+/// Note this value is not always equal to the cache video data length.
 @property (nonatomic, assign, readonly) NSUInteger fileLength;
 
-/**
- * The fragment of video data that cached in disk.
- */
+/// The fragments of video data that cached in disk.
 @property (nonatomic, strong, readonly, nullable) NSArray<NSValue *> *fragmentRanges;
 
-/**
- * The offset of read postion.
- */
+/// The offset of read position.
 @property (nonatomic, assign, readonly) NSUInteger readOffset;
 
-/**
- * The response header from web.
- */
+/// The response header from web.
 @property (nonatomic, copy, readonly, nullable) NSDictionary *responseHeaders;
 
-/**
- * A flag represent the video data is cache finished or not.
- */
-@property (nonatomic, readonly) BOOL isCompleted;
+/// A flag represents the video data has caching finished or not.
+@property (nonatomic, readonly) BOOL hasCompleted;
 
-/**
- * A flag represent read offset is point to the end of video data file.
- */
-@property (nonatomic, readonly) BOOL isEOF;
-
-/**
- * A flag represent file length is greater than 0.
- */
+/// A flag represents file length is greater than 0.
 @property (nonatomic, readonly) BOOL isFileLengthValid;
 
-/**
- * The cached video data length.
- */
-@property (nonatomic, readonly) NSUInteger cachedDataBound;
++ (instancetype)new NS_UNAVAILABLE;
 
-#pragma mark - Methods
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  * Convenience method to fetch instance of this class.
@@ -96,7 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithFilePath:(NSString *)filePath
                    indexFilePath:(NSString *)indexFilePath NS_DESIGNATED_INITIALIZER;
 
-#pragma mark - Store
+
+#pragma mark - Store Data
 
 /**
  * Call this method to store video data to disk.
@@ -123,11 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Store index to index file synchronize.
  *
- * @return The result of store index to index file successed or failed.
+ * @return The result of store index to index file succeed or failed.
  */
 - (BOOL)synchronize;
 
-#pragma mark - Read
+
+#pragma mark - Read Data
 
 /**
  * Fetch data from the readOffset to given length position.
@@ -150,12 +128,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSData *)dataWithRange:(NSRange)range;
 
-#pragma mark - Remove
+
+#pragma mark - Remove Data
 
 /**
  * Remove the cached video data.
  */
 - (void)removeCache;
+
 
 #pragma mark - Range
 
@@ -178,15 +158,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSRange)cachedRangeContainsPosition:(NSUInteger)position;
 
 /**
- * Find the first range of video data not cached in given postion.
+ * Find the first range of video data not cached in given position.
  *
  * @param position A position point to a point of video file.
  *
- * @return The first range of video data not cached in given postion.
+ * @return The first range of video data not cached in given position.
  */
 - (NSRange)firstNotCachedRangeFromPosition:(NSUInteger)position;
 
-#pragma mark - Seek
+
+#pragma mark - Seek Position
 
 /**
  * Set the fileHandle seek to the given offset.
@@ -195,9 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)seekToPosition:(NSUInteger)position;
 
-/**
- * Set the fileHandle seek to end of file.
- */
+/// Set the fileHandle seek to end of file.
 - (void)seekToEnd;
 
 @end

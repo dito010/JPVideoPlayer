@@ -69,6 +69,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 /// The player progress observer.
 @property(nonatomic, strong) id playerPeriodicTimeObserver;
 
+@property(nonatomic, strong) dispatch_queue_t resourceLoaderDelegateSyncQueue;
+
 @end
 
 @implementation JPVideoPlayer
@@ -85,6 +87,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         _seekingToTime = NO;
         _playerModelReusePool = [[JPReusePool alloc] initWithReusableObjectClass:[JPVideoPlayerModel class]];
         _periodicTimeObserverInterval = CMTimeMake(1, 10);
+        _resourceLoaderDelegateSyncQueue = JPNewSyncQueue("com.jpvideoplayer.resourceloader.delegate.sync.queue.www");
     }
     return self;
 }
@@ -148,7 +151,8 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 
         // url instead of `[self _composeFakeVideoURL]`, otherwise some urls can not play normally
         AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self _composeFakeVideoURL] options:nil];
-        [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:dispatch_get_main_queue()]; // TODO: customize dispatch queue.
+        // use customize sync queue to avoid block main-thread.
+        [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:self.resourceLoaderDelegateSyncQueue];
 
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
         JPVideoPlayerModel *playerModel = [self _playVideoWithURL:url
