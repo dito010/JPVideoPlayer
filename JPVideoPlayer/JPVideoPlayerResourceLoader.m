@@ -194,10 +194,11 @@ didCompleteWithError:(NSError *)error {
                 if (!JPValidFileRange(firstNotCachedRange)) {
                     [self _addTaskWithLoadingRequest:loadingRequest
                                                range:dataRange
-                                              cached:NO];
+                                              cached:YES];
                     start = end;
                 }
                 /// start 之后未缓存完的区间已经超过当前请求的范围, 整个字节范围缓存完成.
+                /// ------ * -------- * ----
                 else if (firstNotCachedRange.location >= end) {
                     [self _addTaskWithLoadingRequest:loadingRequest
                                                range:dataRange

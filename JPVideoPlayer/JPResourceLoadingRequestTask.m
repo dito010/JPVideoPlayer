@@ -414,15 +414,17 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
         [self.loadingRequest.dataRequest respondWithData:data];
 
         static BOOL _needLog = YES;
+        static NSUInteger missLogDataLength = 0;
+        missLogDataLength += data.length;
         if(_needLog) {
-//            _needLog = NO;
-            JPDebugLog(@"收到数据响应, 数据长度为: %u", data.length);
+            _needLog = NO;
+            JPDebugLog(@"收到数据响应, 数据长度为: %u", missLogDataLength);
+            missLogDataLength = 0;
             JPDispatchAsyncOnMainQueue(^{
                 JPDispatchAfterTimeIntervalInSecond(1.5, ^{
                     _needLog = YES;
                 });
             });
-
         }
         if (!lock) {
             pthread_mutex_unlock(&_plock);

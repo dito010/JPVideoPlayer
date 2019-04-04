@@ -196,11 +196,12 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                     /// 在当前区间之前, 就是目标
                     /// ---- + ------ * ------ * -------
                     result = NSMakeRange(start, range.location - start);
+                    break;
                 }
             }
 
             /// 没找到合适的区间, 那就是文件还没开始下载.
-            if (start < self.fileLength) {
+            if (!JPValidByteRange(result) && start < self.fileLength) {
                 result = NSMakeRange(start, self.fileLength - start);
             }
         }
