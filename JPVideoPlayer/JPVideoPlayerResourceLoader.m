@@ -83,36 +83,40 @@
 
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
-    if (resourceLoader && loadingRequest){
-        [self.loadingRequests addObject:loadingRequest];
-        JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
-        [self _findAndStartNextLoadingRequestIfNeed];
-    }
+    JPDispatchSyncOnMainQueue(^{
+        if (resourceLoader && loadingRequest){
+            [self.loadingRequests addObject:loadingRequest];
+            JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
+            [self _findAndStartNextLoadingRequestIfNeed];
+        }
+    });
     return YES;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    if ([self.loadingRequests containsObject:loadingRequest]) {
-        if(loadingRequest == self.runningLoadingRequest){
-            JPDebugLog(@"取消了一个正在进行的请求");
-            if(self.runningLoadingRequest && self.runningRequestTask){
-                [self.runningRequestTask cancel];
+    JPDispatchSyncOnMainQueue(^{
+        if ([self.loadingRequests containsObject:loadingRequest]) {
+            if(loadingRequest == self.runningLoadingRequest){
+                JPDebugLog(@"取消了一个正在进行的请求");
+                if(self.runningLoadingRequest && self.runningRequestTask){
+                    [self.runningRequestTask cancel];
+                }
+                if([self.loadingRequests containsObject:self.runningLoadingRequest]){
+                    [self.loadingRequests removeObject:self.runningLoadingRequest];
+                }
+                [self removeCurrentRequestTaskAndResetAll];
+                [self _findAndStartNextLoadingRequestIfNeed];
             }
-            if([self.loadingRequests containsObject:self.runningLoadingRequest]){
-                [self.loadingRequests removeObject:self.runningLoadingRequest];
+            else {
+                JPDebugLog(@"取消了一个等待进行的请求");
+                [self.loadingRequests removeObject:loadingRequest];
             }
-            [self removeCurrentRequestTaskAndResetAll];
-            [self _findAndStartNextLoadingRequestIfNeed];
         }
         else {
-            JPDebugLog(@"取消了一个等待进行的请求");
-            [self.loadingRequests removeObject:loadingRequest];
+            JPDebugLog(@"要取消的请求已经完成了");
         }
-    }
-    else {
-        JPDebugLog(@"要取消的请求已经完成了");
-    }
+    });
 }
 
 
@@ -120,26 +124,29 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
 
 - (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
 didCompleteWithError:(NSError *)error {
-    if (error.code == NSURLErrorCancelled) {
-        return;
-    }
-    if (![self.requestTasks containsObject:requestTask]) {
-        JPDebugLog(@"完成的 task 不是正在进行的 task");
-        return;
-    }
+    JPDispatchSyncOnMainQueue(^{
+        if (error.code == NSURLErrorCancelled) {
+            return;
+        }
+        if (![self.requestTasks containsObject:requestTask]) {
+            JPDebugLog(@"完成的 task 不是正在进行的 task");
+            return;
+        }
 
-    if (error) {
-        [self finishCurrentRequestWithError:error];
-    }
-    else {
-        [self finishCurrentRequestWithError:nil];
-    }
+        if (error) {
+            [self finishCurrentRequestWithError:error];
+        }
+        else {
+            [self finishCurrentRequestWithError:nil];
+        }
+    });
 }
 
 
 #pragma mark - Finish Request
 
 - (void)finishCurrentRequestWithError:(NSError *)error {
+    JPAssertMainThread;
     if (error) {
         JPDebugLog(@"ResourceLoader 完成一个请求 error: %@", error);
         [self.runningRequestTask.loadingRequest finishLoadingWithError:error];
@@ -148,16 +155,17 @@ didCompleteWithError:(NSError *)error {
         [self _findAndStartNextLoadingRequestIfNeed];
     }
     else {
-        JPDebugLog(@"ResourceLoader 完成一个请求, 没有错误");
         // 要所有的请求都完成了才行.
         [self.requestTasks removeObject:self.runningRequestTask];
         if(!self.requestTasks.count){ // 全部完成.
+            JPDebugLog(@"ResourceLoader 当前 tasks 全部完成.");
             [self.runningRequestTask.loadingRequest finishLoading];
             [self.loadingRequests removeObject:self.runningLoadingRequest];
             [self removeCurrentRequestTaskAndResetAll];
             [self _findAndStartNextLoadingRequestIfNeed];
         }
         else { // 完成了一部分, 继续请求.
+            JPDebugLog(@"ResourceLoader 完成了一部分, 继续请求.");
             [self startNextTaskIfNeed];
         }
     }
@@ -168,66 +176,106 @@ didCompleteWithError:(NSError *)error {
 
 - (void)_findAndStartNextLoadingRequestIfNeed {
 //    JPAssertNotMainThread;
+    JPAssertMainThread;
     if (!self.loadingRequests.count || self.runningLoadingRequest || self.runningRequestTask) return;
     self.runningLoadingRequest = [self.loadingRequests firstObject];
-    [self _startLoadingRequest:self.runningLoadingRequest range:[self _fetchRequestRangeWithAVResourceLoadingRequest:self.runningLoadingRequest]];
+    [self _componentRequestDataRange:[self _fetchRequestRangeWithAVResourceLoadingRequest:self.runningLoadingRequest]
+                      loadingRequest:self.runningLoadingRequest];
 }
 
-- (void)_startLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
-                       range:(NSRange)dataRange {
-//    JPAssertNotMainThread;
-    /// 是否已经完全缓存完成.
-    JPDebugLog(@"ResourceLoader 处理新的请求, 数据范围是: %@, 是否已经缓存完成: %@", NSStringFromRange(dataRange), self.cacheFile.hasCompleted ? @"是" : @"否");
-    if (dataRange.length == NSUIntegerMax) {
+- (void)_componentRequestDataRange:(NSRange)dataRange
+                    loadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
+    NSUInteger start = dataRange.location;
+    NSUInteger end = dataRange.length == NSUIntegerMax ? self.cacheFile.isFileLengthValid ? self.cacheFile.fileLength : NSUIntegerMax : NSMaxRange(dataRange);
+    NSRange firstCachedRange;
+    NSRange targetRange;
+    JPDebugLog(@"开始分解 loadingRequest 致 tasks, dataRange: %@.", NSStringFromRange(dataRange));
+    if (end == NSUIntegerMax) {
         [self _addTaskWithLoadingRequest:loadingRequest
-                                   range:NSMakeRange(dataRange.location, NSUIntegerMax)
+                                   range:dataRange
                                   cached:NO];
+        start = end;
     }
-    else {
-        NSUInteger start = dataRange.location;
-        NSUInteger end = NSMaxRange(dataRange);
-        NSRange firstNotCachedRange;
-        while (start < end) {
-            @autoreleasepool {
-                firstNotCachedRange = [self.cacheFile firstNotCachedRangeFromPosition:start];
-                /// 没找到 start 以后有未缓存完的, 整个字节范围缓存完成.
-                if (!JPValidFileRange(firstNotCachedRange)) {
-                    [self _addTaskWithLoadingRequest:loadingRequest
-                                               range:dataRange
-                                              cached:YES];
+    while (start < end) {
+        firstCachedRange = [self.cacheFile firstCachedRangeInLocation:start];
+        /// 找得到就意味着有部分已经缓存完.
+        if (JPValidFileRange(firstCachedRange)) {
+            /// contain
+            /// ------ + ------- * ------- + ------
+            if (NSLocationInRange(start, firstCachedRange)) {
+                ///                start        end
+                /// ------ + ------- * --------- * --------- + ------
+                if (end < NSMaxRange(firstCachedRange)) {
+                    targetRange = NSMakeRange(start, end - start);
+                    if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                  range:targetRange
+                                                                                 cached:YES];
                     start = end;
                 }
-                /// start 之后未缓存完的区间已经超过当前请求的范围, 整个字节范围缓存完成.
-                /// ------ * -------- * ----
-                else if (firstNotCachedRange.location >= end) {
-                    [self _addTaskWithLoadingRequest:loadingRequest
-                                               range:dataRange
-                                              cached:YES];
-                    start = end;
+                    ///                start                    end
+                    /// ------ + ------- * -------- + ---------- * ---------
+                else {
+                    targetRange = NSMakeRange(start, NSMaxRange(firstCachedRange) - start);
+                    if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                  range:targetRange
+                                                                                 cached:YES];
+                    start = NSMaxRange(firstCachedRange);
                 }
-                ///
-                else if (firstNotCachedRange.location >= start) {
-                    if (firstNotCachedRange.location > start) {
-                        [self _addTaskWithLoadingRequest:loadingRequest
-                                                   range:NSMakeRange(start, firstNotCachedRange.location - start)
-                                                  cached:YES];
-                    }
-                    NSUInteger notCachedEnd = MIN(NSMaxRange(firstNotCachedRange), end);
-                    [self _addTaskWithLoadingRequest:loadingRequest
-                                               range:NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location)
-                                              cached:NO];
-                    start = notCachedEnd;
+            }
+                /// after.
+                /// ------ * ------- + ------- + ------
+            else {
+                ///      start                end
+                /// ------ * ------- + ------- * ------ + --------
+                if (NSLocationInRange(end, firstCachedRange)) {
+                    targetRange = NSMakeRange(start, firstCachedRange.location - start);
+                    if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                  range:targetRange
+                                                                                 cached:NO];
+                    targetRange = NSMakeRange(firstCachedRange.location, end - firstCachedRange.location);
+                    if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                  range:targetRange
+                                                                                 cached:YES];
+                    start = end;
                 }
                 else {
-                    [self _addTaskWithLoadingRequest:loadingRequest
-                                               range:dataRange
-                                              cached:YES];
-                    start = end;
+                    /// 这里不会出现 end == firstCachedRange.location
+                    NSParameterAssert(end != firstCachedRange.location);
+                    ///      start       end
+                    /// ------ * ------- * ------- + ------ + --------
+                    if (end < firstCachedRange.location) {
+                        targetRange = NSMakeRange(start, end - start);
+                        if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                      range:targetRange
+                                                                                     cached:NO];
+                        start = end;
+                    }
+                        ///      start                         end
+                        /// ------ * ------- + ------- + ------ * --------
+                    else {
+                        targetRange = NSMakeRange(start, firstCachedRange.location - start);
+                        if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                      range:targetRange
+                                                                                     cached:NO];
+                        if (JPValidFileRange(firstCachedRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                                           range:firstCachedRange
+                                                                                          cached:YES];
+                        start = NSMaxRange(firstCachedRange);
+                    }
                 }
             }
         }
+            /// 找不到就意味着, 完全没开始缓存.
+        else {
+            targetRange = NSMakeRange(start, end - start);
+            if (JPValidFileRange(targetRange)) [self _addTaskWithLoadingRequest:loadingRequest
+                                                                          range:targetRange
+                                                                         cached:NO];
+            start = end;
+        }
     }
 
+    NSParameterAssert(self.requestTasks.count);
     // 发起请求.
     [self startNextTaskIfNeed];
 }
@@ -237,20 +285,20 @@ didCompleteWithError:(NSError *)error {
                             cached:(BOOL)cached {
     JPResourceLoadingRequestTask *task;
     if(cached){
-        JPDebugLog(@"ResourceLoader 创建了一个本地请求");
+        JPDebugLog(@"ResourceLoader 创建了一个本地请求 range: %@", NSStringFromRange(range));
         task = [JPResourceLoadingRequestLocalTask requestTaskWithLoadingRequest:loadingRequest
                                                                    requestRange:range
                                                                       cacheFile:self.cacheFile
                                                                       customURL:self.customURL
-                                                                         cached:cached];
+                                                                         cached:YES];
     }
     else {
         task = [JPResourceLoadingRequestWebTask requestTaskWithLoadingRequest:loadingRequest
                                                                  requestRange:range
                                                                     cacheFile:self.cacheFile
                                                                     customURL:self.customURL
-                                                                       cached:cached];
-        JPDebugLog(@"ResourceLoader 创建一个网络请求: %@", task);
+                                                                       cached:NO];
+        JPDebugLog(@"ResourceLoader 创建一个网络请求 range: %@", NSStringFromRange(range));
         if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didReceiveLoadingRequestTask:)]) {
             [self.delegate resourceLoader:self didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)task];
         }

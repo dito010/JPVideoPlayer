@@ -42,6 +42,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self setNeedsStatusBarAppearanceUpdate];
+    [self calculateCacheMes];
 }
 
 #pragma mark - Click Events
@@ -80,8 +81,6 @@
     self.jianshuBtn.layer.cornerRadius =
     self.githubBtn.layer.cornerRadius =
     self.qqBtn.layer.cornerRadius = 5.0;
-    
-    [self calculateCacheMes];
 }
 
 #pragma mark - Private

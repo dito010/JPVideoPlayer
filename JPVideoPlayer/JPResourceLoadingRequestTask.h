@@ -47,39 +47,27 @@ NS_ASSUME_NONNULL_BEGIN
  * @param error       The request error, nil mean success.
  */
 - (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
-didCompleteWithError:(NSError *)error;
+didCompleteWithError:(NSError *_Nullable)error;
 
 @end
 
 @interface JPResourceLoadingRequestTask : NSObject
 
-@property (nonatomic, weak) id<JPResourceLoadingRequestTaskDelegate> delegate;
+@property (nonatomic, weak, nullable) id<JPResourceLoadingRequestTaskDelegate> delegate;
 
-/**
- * The loadingRequest passed in when this class initialize.
- */
+/// The loadingRequest passed in when this class initialize.
 @property (nonatomic, strong, readonly) AVAssetResourceLoadingRequest *loadingRequest;
 
-/**
- * The range passed in when this class initialize.
- */
+/// The range passed in when this class initialize.
 @property(nonatomic, assign, readonly) NSRange requestRange;
 
-/**
- * The cache file take responsibility for save video data to disk and read cached video from disk.
- *
- * @see `JPVideoPlayerCacheFile`.
- */
+/// The cache file take responsibility for save video data to disk and read cached video from disk.
 @property (nonatomic, strong, readonly) JPVideoPlayerCacheFile *cacheFile;
 
-/**
- * The url custom passed in.
- */
+/// The url custom passed in.
 @property (nonatomic, strong, readonly) NSURL *customURL;
 
-/**
- * A flag represent the video file of requestRange is cached on disk or not.
- */
+/// A flag represent the video file of requestRange is cached on disk or not.
 @property(nonatomic, assign, readonly, getter=isCached) BOOL cached;
 
 @property (nonatomic, assign, readonly, getter = isExecuting) BOOL executing;

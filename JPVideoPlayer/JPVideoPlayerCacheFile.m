@@ -170,44 +170,26 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
     return result;
 }
 
-- (NSRange)firstNotCachedRangeFromPosition:(NSUInteger)position {
-   __block  NSRange result = JPInvalidRange;
+- (NSRange)firstCachedRangeInLocation:(NSUInteger)location {
+    /// 找得到就意味着有部分已经缓存完.
+    /// 找不到就意味着 location 以后的数据完全没开始缓存.
+    __block NSRange result = JPInvalidRange;
     JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-        if (position < self.fileLength) {
-            NSUInteger start = position;
-            NSRange range;
-            /// internalFragmentRanges 增序排列.
-            for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
-                @autoreleasepool {
-                    range = [self.internalFragmentRanges[i] rangeValue];
-                    /// * 代表区间, + 代表 position.
-                    /// ----- * ------ + ------ * -----
-                    /// 当前区间已缓存完成.
-                    if (NSLocationInRange(start, range)) {
-                        start = NSMaxRange(range);
-                        continue;
-                    }
-
-                    /// 在当前区间之后.
-                    /// ----- * ------ * ----- + -----
-                    if (start >= NSMaxRange(range)) continue;
-
-                    /// 在当前区间之前, 就是目标
-                    /// ---- + ------ * ------ * -------
-                    result = NSMakeRange(start, range.location - start);
-                    break;
-                }
-            }
-
-            /// 没找到合适的区间, 那就是文件还没开始下载.
-            if (!JPValidByteRange(result) && start < self.fileLength) {
-                result = NSMakeRange(start, self.fileLength - start);
+        NSRange _range;
+        for (NSValue *v in self.internalFragmentRanges) {
+            _range = v.rangeValue;
+            /// contain
+            /// ------ + ------- * ------- + ------
+            /// after.
+            /// ------ * ------- + ------- + ------
+            if (NSLocationInRange(location, _range) || location < _range.location) {
+                result = _range;
+                break;
             }
         }
 
     });
-
     return result;
 }
 
@@ -262,7 +244,8 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 #pragma mark - read data
 
 - (NSData *)dataWithRange:(NSRange)range {
-    if (!JPValidFileRange(range)) return nil;
+    NSParameterAssert(NSMaxRange(range) <= self.fileLength);
+    if (!JPValidFileRange(range) || NSMaxRange(range) > self.fileLength) return nil;
 
     __block NSData *data = nil;
     JPDispatchSyncOnQueue(self.syncQueue, ^{
@@ -275,6 +258,9 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (NSData *)readDataWithLength:(NSUInteger)length {
+    NSParameterAssert(length <= self.fileLength);
+    if (length > self.fileLength) return nil;
+
     __block NSData *data = nil;
     JPDispatchSyncOnQueue(self.syncQueue, ^{
         NSRange range = [self cachedRangeForRange:NSMakeRange(self.readOffset, length)];

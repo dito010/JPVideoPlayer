@@ -158,13 +158,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSRange)cachedRangeContainsPosition:(NSUInteger)position;
 
 /**
- * Find the first range of video data not cached in given position.
+ * Find the first range of video data cached in given position.
  *
- * @param position A position point to a point of video file.
+ * @param location  A position point to a point of video file.
  *
- * @return The first range of video data not cached in given position.
+ * @return The first range of video data cached in given position.
  */
-- (NSRange)firstNotCachedRangeFromPosition:(NSUInteger)position;
+- (NSRange)firstCachedRangeInLocation:(NSUInteger)location;
 
 
 #pragma mark - Seek Position

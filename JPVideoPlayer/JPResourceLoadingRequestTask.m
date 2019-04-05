@@ -227,9 +227,11 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
         if ([self isCancelled]) {
             break;
         }
+        NSData *data = nil;
         @autoreleasepool {
             NSRange range = NSMakeRange(offset, MIN(NSMaxRange(self.requestRange) - offset, kJPVideoPlayerFileReadBufferSize));
-            NSData *data = [self.cacheFile dataWithRange:range];
+            data = [self.cacheFile dataWithRange:range];
+            NSParameterAssert(data.length == range.length);
             [self.loadingRequest.dataRequest respondWithData:data];
             offset = NSMaxRange(range);
         }
