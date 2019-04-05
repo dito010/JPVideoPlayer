@@ -61,7 +61,6 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
 @synthesize volume;
 @synthesize muted;
 @synthesize rate;
-// TODO: 使用 reusablePool 来优化 task 性能.
 // TODO: 弱网缓冲完加载指示器不消失.
 
 + (nonnull instancetype)sharedManager {

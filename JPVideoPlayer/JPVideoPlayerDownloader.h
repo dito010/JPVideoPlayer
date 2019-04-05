@@ -59,38 +59,25 @@ didCompleteWithError:(NSError *)error;
 
 @interface JPVideoPlayerDownloader : NSObject
 
-/**
- *  Set the default URL credential to be set for request operations.
- */
+/// Set the default URL credential to be set for request operations.
 @property (strong, nonatomic, nullable) NSURLCredential *urlCredential;
 
-/**
- * Set username
- */
+/// Set username.
 @property (strong, nonatomic, nullable) NSString *username;
 
-/**
- * Set password
- */
+/// Set password.
 @property (strong, nonatomic, nullable) NSString *password;
 
-/**
- *  The timeout value (in seconds) for the download operation. Default: 15.0s.
- */
+/// The timeout value (in seconds) for the download operation. Default: 15.0s.
 @property (assign, nonatomic) NSTimeInterval downloadTimeout;
 
-/**
- * The current url, may nil if no download operation.
- */
+/// The current url, may nil if no download operation.
 @property (nonatomic, weak, readonly, nullable) JPResourceLoadingRequestWebTask *runningTask;
 
-/**
- * The current downloaderOptions, may nil if no download operation.
- */
+/// The current downloaderOptions, may nil if no download operation.
 @property (nonatomic, assign, readonly) JPVideoPlayerDownloaderOptions downloaderOptions;
 
-@property (nonatomic, weak) id<JPVideoPlayerDownloaderDelegate> delegate;
-
+@property (nonatomic, weak, nullable) id<JPVideoPlayerDownloaderDelegate> delegate;
 
 /**
  * @brief Customize acceptable response MIMETypes.
@@ -105,6 +92,10 @@ didCompleteWithError:(NSError *)error;
  * The supported MIMETypes.
  */
 + (void)registerSupportedMIMETypes:(NSArray<NSString *> *)types;
+
+- (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)new NS_UNAVAILABLE;
 
 /**
  * Creates an instance of a downloader with specified session configuration.
@@ -128,9 +119,7 @@ didCompleteWithError:(NSError *)error;
 - (void)downloadVideoWithRequestTask:(JPResourceLoadingRequestWebTask *)requestTask
                      downloadOptions:(JPVideoPlayerDownloaderOptions)downloadOptions;
 
-/**
- * Cancel current download task.
- */
+/// Cancel current download task.
 - (void)cancel;
 
 @end
