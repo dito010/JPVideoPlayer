@@ -13,6 +13,8 @@
 #import "JPVideoPlayerResourceLoader.h"
 #import "UIView+WebVideoCache.h"
 #import "JPReusePool.h"
+#import "JPVideoPlayerCacheFile.h"
+#import "JPVideoPlayerCachePath.h"
 
 @interface JPVideoPlayerModel()<JPReusableObject>
 
@@ -69,7 +71,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 /// The player progress observer.
 @property(nonatomic, strong) id playerPeriodicTimeObserver;
 
-@property(nonatomic, strong) dispatch_queue_t resourceLoaderDelegateSyncQueue;
+@property(nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -87,7 +89,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         _seekingToTime = NO;
         _playerModelReusePool = [[JPReusePool alloc] initWithReusableObjectClass:[JPVideoPlayerModel class]];
         _periodicTimeObserverInterval = CMTimeMake(1, 10);
-        _resourceLoaderDelegateSyncQueue = JPNewSyncQueue("com.jpvideoplayer.resourceloader.delegate.sync.queue.www");
+        _syncQueue = JPNewSyncQueue("com.jpvideoplayer.resourceloader.delegate.sync.queue.www");
     }
     return self;
 }
@@ -146,13 +148,19 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     @autoreleasepool {
         // Re-create all all configuration again.
         // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
-        JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader resourceLoaderWithCustomURL:url];
+        NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:url];
+        JPVideoPlayerCacheFile *cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath createVideoFileIfNeedThenFetchItForKey:key]
+                                                                            indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]
+                                                                                syncQueue:self.syncQueue];
+        JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader resourceLoaderWithCustomURL:url
+                                                                                                     cacheFile:cacheFile
+                                                                                                     syncQueue:self.syncQueue];
         resourceLoader.delegate = self;
 
         // url instead of `[self _composeFakeVideoURL]`, otherwise some urls can not play normally
         AVURLAsset *videoURLAsset = [AVURLAsset URLAssetWithURL:[self _composeFakeVideoURL] options:nil];
         // use customize sync queue to avoid block main-thread.
-        [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:self.resourceLoaderDelegateSyncQueue];
+        [videoURLAsset.resourceLoader setDelegate:resourceLoader queue:self.syncQueue];
 
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:videoURLAsset];
         JPVideoPlayerModel *playerModel = [self _playVideoWithURL:url

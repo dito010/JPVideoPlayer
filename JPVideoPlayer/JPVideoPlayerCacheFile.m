@@ -56,15 +56,18 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath {
+                        indexFilePath:(NSString *)indexFilePath
+                            syncQueue:(dispatch_queue_t)syncQueue {
     return [[self alloc] initWithFilePath:filePath
-                            indexFilePath:indexFilePath];
+                            indexFilePath:indexFilePath
+                                syncQueue:syncQueue];
 }
 
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath {
-    if (!filePath.length || !indexFilePath.length) {
-        JPErrorLog(@"filePath and indexFilePath can not be nil.");
+                   indexFilePath:(NSString *)indexFilePath
+                       syncQueue:(dispatch_queue_t)syncQueue {
+    if (!filePath.length || !indexFilePath.length || !syncQueue) {
+        JPErrorLog(@"filePath, indexFilePath and syncQueue can not be nil.");
         return nil;
     }
 
@@ -73,11 +76,11 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         @autoreleasepool {
             _cacheFilePath = filePath;
             _indexFilePath = indexFilePath;
+            _syncQueue = syncQueue;
+
             _internalFragmentRanges = @[].mutableCopy;
             _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
             _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
-
-            _syncQueue = JPNewSyncQueue("com.jpvideoplayer.cachefile.sync.queue.www");
 
             NSString *indexStr = [NSString stringWithContentsOfFile:self.indexFilePath encoding:NSUTF8StringEncoding error:nil];
             NSData *data = [indexStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -378,7 +381,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 - (void)_mergeRangesIfNeed {
-    BOOL hasMerge = NO;
+//    BOOL hasMerge = NO;
     NSRange currentRange, nextRange;
     for (NSUInteger i = 0; i < self.internalFragmentRanges.count; ++i) {
         if ((i + 1) < self.internalFragmentRanges.count) {
@@ -389,7 +392,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
                     [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
                     [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
                     i -= 1;
-                    hasMerge = YES;
+//                    hasMerge = YES;
                 }
             }
         }

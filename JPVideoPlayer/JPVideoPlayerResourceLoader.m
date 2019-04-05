@@ -12,8 +12,6 @@
 #import "JPVideoPlayerResourceLoader.h"
 #import "JPVideoPlayerCompat.h"
 #import "JPVideoPlayerCacheFile.h"
-#import "JPVideoPlayerCachePath.h"
-#import "JPVideoPlayerManager.h"
 #import "JPResourceLoadingRequestTask.h"
 #import "JPVideoPlayerSupportUtils.h"
 #import <pthread.h>
@@ -48,17 +46,26 @@
 }
 
 - (instancetype)init {
-    NSAssert(NO, @"Please use given initialize method.");
-    return [self initWithCustomURL:[NSURL new]];
+    NSAssert(NO, @"请使用指定初始化方法");
+    return nil;
 }
 
-+ (instancetype)resourceLoaderWithCustomURL:(NSURL *)customURL {
-    return [[JPVideoPlayerResourceLoader alloc] initWithCustomURL:customURL];
++ (instancetype)new {
+    NSAssert(NO, @"请使用指定初始化方法");
+    return nil;
 }
 
-- (instancetype)initWithCustomURL:(NSURL *)customURL {
-    if(!customURL){
-        JPErrorLog(@"customURL can not be nil");
++ (instancetype)resourceLoaderWithCustomURL:(NSURL *)customURL
+                                  cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                                  syncQueue:(dispatch_queue_t)syncQueue {
+    return [[JPVideoPlayerResourceLoader alloc] initWithCustomURL:customURL cacheFile:cacheFile syncQueue:syncQueue];
+}
+
+- (instancetype)initWithCustomURL:(NSURL *)customURL
+                        cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                        syncQueue:(dispatch_queue_t)syncQueue {
+    if(!customURL ||!cacheFile || !syncQueue){
+        JPErrorLog(@"customURL, cacheFile and syncQueue can not be nil");
         return nil;
     }
 
@@ -70,10 +77,9 @@
         pthread_mutex_init(&_lock, &mutexattr);
         _internalSyncQueue = JPNewSyncQueue("com.NewPan.jpvideoplayer.resource.loader.www");
         _customURL = customURL;
-        _loadingRequests = [@[] mutableCopy];
-        NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:customURL];
-        _cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath createVideoFileIfNeedThenFetchItForKey:key]
-                                                     indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]];
+        _loadingRequests = @[].mutableCopy;
+        _cacheFile = cacheFile;
+        _syncQueue = syncQueue;
     }
     return self;
 }
@@ -83,40 +89,36 @@
 
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
-    JPDispatchSyncOnMainQueue(^{
-        if (resourceLoader && loadingRequest){
-            [self.loadingRequests addObject:loadingRequest];
-            JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
-            [self _findAndStartNextLoadingRequestIfNeed];
-        }
-    });
+    if (resourceLoader && loadingRequest){
+        [self.loadingRequests addObject:loadingRequest];
+        JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
+        [self _findAndStartNextLoadingRequestIfNeed];
+    }
     return YES;
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    JPDispatchSyncOnMainQueue(^{
-        if ([self.loadingRequests containsObject:loadingRequest]) {
-            if(loadingRequest == self.runningLoadingRequest){
-                JPDebugLog(@"取消了一个正在进行的请求");
-                if(self.runningLoadingRequest && self.runningRequestTask){
-                    [self.runningRequestTask cancel];
-                }
-                if([self.loadingRequests containsObject:self.runningLoadingRequest]){
-                    [self.loadingRequests removeObject:self.runningLoadingRequest];
-                }
-                [self removeCurrentRequestTaskAndResetAll];
-                [self _findAndStartNextLoadingRequestIfNeed];
+    if ([self.loadingRequests containsObject:loadingRequest]) {
+        if(loadingRequest == self.runningLoadingRequest){
+            JPDebugLog(@"取消了一个正在进行的请求");
+            if(self.runningLoadingRequest && self.runningRequestTask){
+                [self.runningRequestTask cancel];
             }
-            else {
-                JPDebugLog(@"取消了一个等待进行的请求");
-                [self.loadingRequests removeObject:loadingRequest];
+            if([self.loadingRequests containsObject:self.runningLoadingRequest]){
+                [self.loadingRequests removeObject:self.runningLoadingRequest];
             }
+            [self removeCurrentRequestTaskAndResetAll];
+            [self _findAndStartNextLoadingRequestIfNeed];
         }
         else {
-            JPDebugLog(@"要取消的请求已经完成了");
+            JPDebugLog(@"取消了一个等待进行的请求");
+            [self.loadingRequests removeObject:loadingRequest];
         }
-    });
+    }
+    else {
+        JPDebugLog(@"要取消的请求已经完成了");
+    }
 }
 
 
@@ -124,7 +126,7 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
 
 - (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
 didCompleteWithError:(NSError *)error {
-    JPDispatchSyncOnMainQueue(^{
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
         if (error.code == NSURLErrorCancelled) {
             return;
         }
@@ -134,10 +136,10 @@ didCompleteWithError:(NSError *)error {
         }
 
         if (error) {
-            [self finishCurrentRequestWithError:error];
+            [self _finishCurrentRequestWithError:error];
         }
         else {
-            [self finishCurrentRequestWithError:nil];
+            [self _finishCurrentRequestWithError:nil];
         }
     });
 }
@@ -145,8 +147,7 @@ didCompleteWithError:(NSError *)error {
 
 #pragma mark - Finish Request
 
-- (void)finishCurrentRequestWithError:(NSError *)error {
-    JPAssertMainThread;
+- (void)_finishCurrentRequestWithError:(NSError *)error {
     if (error) {
         JPDebugLog(@"ResourceLoader 完成一个请求 error: %@", error);
         [self.runningRequestTask.loadingRequest finishLoadingWithError:error];
@@ -175,8 +176,6 @@ didCompleteWithError:(NSError *)error {
 #pragma mark - Private
 
 - (void)_findAndStartNextLoadingRequestIfNeed {
-//    JPAssertNotMainThread;
-    JPAssertMainThread;
     if (!self.loadingRequests.count || self.runningLoadingRequest || self.runningRequestTask) return;
     self.runningLoadingRequest = [self.loadingRequests firstObject];
     [self _componentRequestDataRange:[self _fetchRequestRangeWithAVResourceLoadingRequest:self.runningLoadingRequest]
