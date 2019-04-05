@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) JPResourceLoadingRequestTask *runningRequestTask;
 
+@property(nonatomic, strong) dispatch_queue_t ioQueue;
+
 @end
 
 @implementation JPVideoPlayerResourceLoader
@@ -70,6 +72,7 @@
         _requestTasks = @[].mutableCopy;
         _cacheFile = cacheFile;
         _syncQueue = syncQueue;
+        _ioQueue = JPNewSyncQueue("com.jpvideoplayer.resourceloader.ioqueue.www");
     }
     return self;
 }
@@ -262,18 +265,19 @@ didCompleteWithError:(NSError *_Nullable)error {
     JPResourceLoadingRequestTask *task;
     if(cached){
         JPDebugLog(@"ResourceLoader 创建了一个本地请求 range: %@", NSStringFromRange(range));
-        task = [JPResourceLoadingRequestLocalTask requestTaskWithLoadingRequest:loadingRequest
-                                                                   requestRange:range
-                                                                      cacheFile:self.cacheFile
-                                                                      customURL:self.customURL
-                                                                         cached:YES];
+        task = [[JPResourceLoadingRequestLocalTask alloc] initWithLoadingRequest:loadingRequest
+                                                                    requestRange:range
+                                                                       cacheFile:self.cacheFile
+                                                                       customURL:self.customURL
+                                                                       syncQueue:self.syncQueue
+                                                                         ioQueue:self.ioQueue];
     }
     else {
-        task = [JPResourceLoadingRequestWebTask requestTaskWithLoadingRequest:loadingRequest
-                                                                 requestRange:range
-                                                                    cacheFile:self.cacheFile
-                                                                    customURL:self.customURL
-                                                                       cached:NO];
+        task = [[JPResourceLoadingRequestWebTask alloc] initWithLoadingRequest:loadingRequest
+                                                                  requestRange:range
+                                                                     cacheFile:self.cacheFile
+                                                                     customURL:self.customURL
+                                                                     syncQueue:self.syncQueue];
         JPDebugLog(@"ResourceLoader 创建一个网络请求 range: %@", NSStringFromRange(range));
         if (self.delegate && [self.delegate respondsToSelector:@selector(resourceLoader:didReceiveLoadingRequestTask:)]) {
             [self.delegate resourceLoader:self didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)task];
@@ -291,12 +295,7 @@ didCompleteWithError:(NSError *_Nullable)error {
 
 - (void)_startNextTaskIfNeed {
     self.runningRequestTask = self.requestTasks.firstObject;
-    if ([self.runningRequestTask isKindOfClass:[JPResourceLoadingRequestLocalTask class]]) {
-        [self.runningRequestTask startOnQueue:self.syncQueue];
-    }
-    else {
-        [self.runningRequestTask start];
-    }
+    [self.runningRequestTask start];
 }
 
 - (NSRange)_fetchRequestRangeWithAVResourceLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {

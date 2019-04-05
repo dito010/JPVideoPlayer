@@ -76,26 +76,12 @@ didCompleteWithError:(NSError *_Nullable)error;
 
 @property (nonatomic, assign, readonly, getter = isCancelled) BOOL cancelled;
 
+/// A queue internal task dispatch on.
+@property(nonatomic, strong, readonly) dispatch_queue_t syncQueue;
+
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)init NS_UNAVAILABLE;
-
-/**
- * Convenience method to fetch instance of this class.
- *
- * @param loadingRequest The loadingRequest from `AVPlayer`.
- * @param requestRange   The range need request from web.
- * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
- * @param customURL      The url custom passed in.
- * @param cached         A flag represent the video file of requestRange is cached on disk or not.
- *
- * @return A instance of this class.
- */
-+ (instancetype)requestTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
-                                 requestRange:(NSRange)requestRange
-                                    cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-                                    customURL:(NSURL *)customURL
-                                       cached:(BOOL)cached;
 
 /**
  * Designated initializer method.
@@ -104,6 +90,7 @@ didCompleteWithError:(NSError *_Nullable)error;
  * @param requestRange   The range need request from web.
  * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
  * @param customURL      The url custom passed in.
+ * @param syncQueue      A queue internal task dispatch on.
  * @param cached         A flag represent the video file of requestRange is cached on disk or not.
  *
  * @return A instance of this class.
@@ -112,7 +99,97 @@ didCompleteWithError:(NSError *_Nullable)error;
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
                              customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
                                 cached:(BOOL)cached NS_DESIGNATED_INITIALIZER;
+
+/// Begins the execution of the task, execute on main queue.
+- (void)start NS_REQUIRES_SUPER;
+
+/// Advises the task object that it should stop executing its task.
+- (void)cancel NS_REQUIRES_SUPER;
+
+/**
+ * The request did finish.
+ *
+ * @param error The request error, if nil mean success.
+ */
+- (void)taskDidCompleteWithError:(NSError *_Nullable)error NS_REQUIRES_SUPER;
+
+@end
+
+@interface JPResourceLoadingRequestLocalTask: JPResourceLoadingRequestTask
+
+@property(nonatomic, strong, readonly) dispatch_queue_t ioQueue;
+
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
+                                cached:(BOOL)cached NS_UNAVAILABLE;
+
+/**
+ * Designated initializer method.
+ *
+ * @param loadingRequest The loadingRequest from `AVPlayer`.
+ * @param requestRange   The range need request from web.
+ * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
+ * @param customURL      The url custom passed in.
+ * @param syncQueue      A queue internal task dispatch on.
+ * @param ioQueue        A queue responds data actions dispatch on.
+ *
+ * @return A instance of this class.
+ */
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
+                               ioQueue:(dispatch_queue_t)ioQueue NS_DESIGNATED_INITIALIZER;
+
+@end
+
+@interface JPResourceLoadingRequestWebTask: JPResourceLoadingRequestTask
+
+/// The operation's task.
+@property (strong, nonatomic, readonly) NSURLSessionDataTask *dataTask;
+
+/// The request used by the operation's task.
+@property (strong, nonatomic, nullable) NSURLRequest *request;
+
+/// The JPVideoPlayerDownloaderOptions for the receiver.
+@property (assign, nonatomic) JPVideoPlayerDownloaderOptions options;
+
+/**
+ * This is weak because it is injected by whoever manages this session.
+ * If this gets nil-ed out, we won't be able to run.
+ * the task associated with this operation.
+ */
+@property (weak, nonatomic, nullable) NSURLSession *unownedSession;
+
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
+                                cached:(BOOL)cached NS_UNAVAILABLE;
+
+/**
+ * Designated initializer method.
+ *
+ * @param loadingRequest The loadingRequest from `AVPlayer`.
+ * @param requestRange   The range need request from web.
+ * @param cacheFile      The cache file take responsibility for save video data to disk and read cached video from disk.
+ * @param customURL      The url custom passed in.
+ * @param syncQueue      A queue internal task dispatch on.
+ *
+ * @return A instance of this class.
+ */
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue NS_DESIGNATED_INITIALIZER;
 
 /**
  * The request did receive response.
@@ -129,60 +206,6 @@ didCompleteWithError:(NSError *_Nullable)error;
  */
 - (void)requestDidReceiveData:(NSData *)data
              storedCompletion:(dispatch_block_t)completion;
-
-/**
- * The request did finish.
- *
- * @param error The request error, if nil mean success.
- */
-- (void)requestDidCompleteWithError:(NSError *_Nullable)error NS_REQUIRES_SUPER;
-
-/**
- * Begins the execution of the task, execute on main queue.
- */
-- (void)start NS_REQUIRES_SUPER;
-
-/**
- * Begins the execution of the task on given queue.
- *
- * @param queue A dispatch queue.
- */
-- (void)startOnQueue:(dispatch_queue_t)queue NS_REQUIRES_SUPER;
-
-/**
- * Advises the task object that it should stop executing its task.
- */
-- (void)cancel NS_REQUIRES_SUPER;
-
-@end
-
-@interface JPResourceLoadingRequestLocalTask: JPResourceLoadingRequestTask
-
-@end
-
-@interface JPResourceLoadingRequestWebTask: JPResourceLoadingRequestTask
-
-/**
- * The operation's task.
- */
-@property (strong, nonatomic, readonly) NSURLSessionDataTask *dataTask;
-
-/**
- * The request used by the operation's task.
- */
-@property (strong, nonatomic, nullable) NSURLRequest *request;
-
-/**
- * The JPVideoPlayerDownloaderOptions for the receiver.
- */
-@property (assign, nonatomic) JPVideoPlayerDownloaderOptions options;
-
-/**
- * This is weak because it is injected by whoever manages this session.
- * If this gets nil-ed out, we won't be able to run.
- * the task associated with this operation.
- */
-@property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 
 @end
 

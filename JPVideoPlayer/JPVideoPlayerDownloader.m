@@ -293,7 +293,7 @@ didCompleteWithError:(NSError *)error {
             return;
         }
 
-        [self.runningTask requestDidCompleteWithError:error];
+        [self.runningTask taskDidCompleteWithError:error];
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadFinishNotification object:self];
         }

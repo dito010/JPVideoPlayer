@@ -12,8 +12,6 @@
 #import "JPResourceLoadingRequestTask.h"
 #import "JPVideoPlayerCacheFile.h"
 #import "JPVideoPlayerSupportUtils.h"
-#import <pthread.h>
-#import "JPVideoPlayerCompat.h"
 
 @interface JPResourceLoadingRequestTask()
 
@@ -23,17 +21,11 @@
 
 @property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
 
-@property (nonatomic) pthread_mutex_t lock;
-
 @end
 
 static NSUInteger kJPVideoPlayerFileReadBufferSize = 1024 * 32;
 static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 @implementation JPResourceLoadingRequestTask
-
-- (void)dealloc {
-    pthread_mutex_destroy(&_lock);
-}
 
 + (instancetype)new {
     NSAssert(NO, @"Please use given initialize method.");
@@ -49,10 +41,9 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
                              customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
                                 cached:(BOOL)cached {
-    if(!loadingRequest || !JPValidByteRange(requestRange) || !cacheFile || !customURL){
-        return nil;
-    }
+    if(!loadingRequest || !JPValidByteRange(requestRange) || !cacheFile || !customURL || !syncQueue) return nil;
 
     self = [super init];
     if(self){
@@ -64,71 +55,44 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
         _executing = NO;
         _cancelled = NO;
         _finished = NO;
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_lock, &mutexattr);
+        _syncQueue = syncQueue;
     }
     return self;
 }
 
-+ (instancetype)requestTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
-        requestRange:(NSRange)requestRange
-        cacheFile:(JPVideoPlayerCacheFile *)cacheFile
-        customURL:(NSURL *)customURL
-        cached:(BOOL)cached {
-    return [[self.class alloc] initWithLoadingRequest:loadingRequest
-                                         requestRange:requestRange
-                                            cacheFile:cacheFile
-                                            customURL:customURL
-                                               cached:cached];
-}
+- (void)taskDidCompleteWithError:(NSError *_Nullable)error {
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-- (void)requestDidReceiveResponse:(NSURLResponse *)response {
-    NSAssert(NO, @"You must subclass this class and override this method");
-}
-
-- (void)requestDidReceiveData:(NSData *)data
-             storedCompletion:(dispatch_block_t)completion {
-    NSAssert(NO, @"You must subclass this class and override this method");
-}
-
-- (void)requestDidCompleteWithError:(NSError *_Nullable)error {
-    JPDispatchSyncOnMainQueue(^{
         self.executing = NO;
         self.finished = YES;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(requestTask:didCompleteWithError:)]) {
-            [self.delegate requestTask:self didCompleteWithError:error];
-        }
+
+        JPDispatchAsyncOnMainQueue(^{
+
+            if (self.delegate && [self.delegate respondsToSelector:@selector(requestTask:didCompleteWithError:)]) {
+                [self.delegate requestTask:self didCompleteWithError:error];
+            }
+
+        });
+
     });
 }
 
 - (void)start {
-    int lock = pthread_mutex_trylock(&_lock);;
-    self.executing = YES;
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
-}
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
 
-- (void)startOnQueue:(dispatch_queue_t)queue {
-    dispatch_async(queue, ^{
-        int lock = pthread_mutex_trylock(&_lock);;
         self.executing = YES;
-        if (!lock) {
-            pthread_mutex_unlock(&_lock);
-        }
+
     });
 }
 
 - (void)cancel {
-    JPDebugLog(@"调用了 RequestTask 的取消方法");
-    int lock = pthread_mutex_trylock(&_lock);;
-    self.executing = NO;
-    self.cancelled = YES;
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        JPDebugLog(@"调用了 RequestTask 的取消方法");
+        self.executing = NO;
+        self.cancelled = YES;
+
+    });
 }
 
 
@@ -152,119 +116,98 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
     [self didChangeValueForKey:@"isExecuting"];
 }
 
-- (NSString *)internalFetchUUID {
-    CFUUIDRef uuidRef = CFUUIDCreate(NULL);
-    CFStringRef uuidStringRef = CFUUIDCreateString(NULL, uuidRef);
-    CFRelease(uuidRef);
-
-    NSString *uuidValue = (__bridge_transfer NSString *)uuidStringRef;
-    uuidValue = [uuidValue lowercaseString];
-    uuidValue = [uuidValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    return uuidValue;
-}
-
 @end
 
 @interface JPResourceLoadingRequestLocalTask()
-
-@property (nonatomic) pthread_mutex_t plock;
 
 @end
 
 @implementation JPResourceLoadingRequestLocalTask
 
-- (void)dealloc {
-    JPDebugLog(@"Local task dealloc");
-    pthread_mutex_destroy(&_plock);
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue
+                                cached:(BOOL)cached {
+    NSAssert(NO, @"请使用指定的初始化方法");
+    return nil;
 }
 
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
                              customURL:(NSURL *)customURL
-                                cached:(BOOL)cached {
+                             syncQueue:(dispatch_queue_t)syncQueue
+                               ioQueue:(dispatch_queue_t)ioQueue {
+    if (!ioQueue) return nil;
     self = [super initWithLoadingRequest:loadingRequest
                             requestRange:requestRange
                                cacheFile:cacheFile
                                customURL:customURL
-                                  cached:cached];
+                               syncQueue:syncQueue
+                                  cached:YES];
     if(self){
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_plock, &mutexattr);
+        _ioQueue = ioQueue;
         if(cacheFile.responseHeaders && !loadingRequest.contentInformationRequest.contentType){
-            [self fillContentInformation];
+            [self _fillContentInformation];
         }
     }
     return self;
 }
 
-- (void)startOnQueue:(dispatch_queue_t)queue {
-    [super startOnQueue:queue];
-    dispatch_async(queue, ^{
-        [self internalStart];
+- (void)start {
+    JPDispatchAsyncOnQueue(self.ioQueue, ^{
+
+        [super start];
+        [self _internalStart];
+
     });
 }
 
-- (void)start {
-    NSAssert(![NSThread isMainThread], @"Do not use main thread when start a local task");
-    [super start];
-    [self internalStart];
-}
-
-- (void)internalStart {
-    if ([self isCancelled]) {
-        [self requestDidCompleteWithError:nil];
-        return;
-    }
-
-    JPDebugLog(@"开始响应本地请求");
-    // task fetch data from disk.
-    int lock = pthread_mutex_trylock(&_plock);
-    NSUInteger offset = self.requestRange.location;
-    while (offset < NSMaxRange(self.requestRange)) {
-        if ([self isCancelled]) {
-            break;
-        }
+- (void)_internalStart {
+    if (!self.isCancelled) {
+        JPDebugLog(@"开始响应本地请求");
+        // task fetch data from disk.
+        NSUInteger offset = self.requestRange.location;
         NSData *data = nil;
-        @autoreleasepool {
-            NSRange range = NSMakeRange(offset, MIN(NSMaxRange(self.requestRange) - offset, kJPVideoPlayerFileReadBufferSize));
-            data = [self.cacheFile dataWithRange:range];
-            NSParameterAssert(data.length == range.length);
-            [self.loadingRequest.dataRequest respondWithData:data];
-            offset = NSMaxRange(range);
+        NSRange range;
+        while (offset < NSMaxRange(self.requestRange)) {
+            @autoreleasepool {
+                if ([self isCancelled]) break;
+                range = NSMakeRange(offset, MIN(NSMaxRange(self.requestRange) - offset, kJPVideoPlayerFileReadBufferSize));
+                data = [self.cacheFile dataWithRange:range];
+                NSParameterAssert(data.length == range.length);
+                [self.loadingRequest.dataRequest respondWithData:data];
+                offset = NSMaxRange(range);
+                data = nil;
+            }
         }
+        JPDebugLog(@"完成本地请求");
     }
-    JPDebugLog(@"完成本地请求");
-    if (!lock) {
-        pthread_mutex_unlock(&_plock);
-    }
-    [self requestDidCompleteWithError:nil];
+    [self taskDidCompleteWithError:nil];
 }
 
-- (void)fillContentInformation {
-    int lock = pthread_mutex_trylock(&_plock);
-    NSMutableDictionary *responseHeaders = [self.cacheFile.responseHeaders mutableCopy];
-    BOOL supportRange = responseHeaders[kJPVideoPlayerContentRangeKey] != nil;
-    if (supportRange && JPValidByteRange(self.requestRange)) {
-        NSUInteger fileLength = [self.cacheFile fileLength];
-        NSString *contentRange = [NSString stringWithFormat:@"bytes %tu-%tu/%tu", self.requestRange.location, fileLength, fileLength];
-        responseHeaders[kJPVideoPlayerContentRangeKey] = contentRange;
-    }
-    else {
-        [responseHeaders removeObjectForKey:kJPVideoPlayerContentRangeKey];
-    }
-    NSUInteger contentLength = self.requestRange.length != NSUIntegerMax ? self.requestRange.length : self.cacheFile.fileLength - self.requestRange.location;
-    responseHeaders[@"Content-Length"] = [NSString stringWithFormat:@"%tu", contentLength];
-    NSInteger statusCode = supportRange ? 206 : 200;
-    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.loadingRequest.request.URL
-                                                              statusCode:statusCode
-                                                             HTTPVersion:@"HTTP/1.1"
-                                                            headerFields:responseHeaders];
-    [self.loadingRequest jp_fillContentInformationWithResponse:response];
-    if (!lock) {
-        pthread_mutex_unlock(&_plock);
+- (void)_fillContentInformation {
+    @autoreleasepool {
+        NSMutableDictionary *responseHeaders = [self.cacheFile.responseHeaders mutableCopy];
+        BOOL supportRange = responseHeaders[kJPVideoPlayerContentRangeKey] != nil;
+        if (supportRange && JPValidByteRange(self.requestRange)) {
+            NSUInteger fileLength = [self.cacheFile fileLength];
+            NSString *contentRange = [NSString stringWithFormat:@"bytes %tu-%tu/%tu", self.requestRange.location, fileLength, fileLength];
+            responseHeaders[kJPVideoPlayerContentRangeKey] = contentRange;
+        }
+        else {
+            [responseHeaders removeObjectForKey:kJPVideoPlayerContentRangeKey];
+        }
+        NSUInteger contentLength = self.requestRange.length != NSUIntegerMax ? self.requestRange.length : self.cacheFile.fileLength - self.requestRange.location;
+        responseHeaders[@"Content-Length"] = [NSString stringWithFormat:@"%tu", contentLength];
+        NSInteger statusCode = supportRange ? 206 : 200;
+        NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.loadingRequest.request.URL
+                                                                  statusCode:statusCode
+                                                                 HTTPVersion:@"HTTP/1.1"
+                                                                headerFields:responseHeaders];
+        [self.loadingRequest jp_fillContentInformationWithResponse:response];
     }
 }
 
@@ -282,32 +225,31 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 
 @property(nonatomic, assign) BOOL haveDataSaved;
 
-@property (nonatomic) pthread_mutex_t plock;
-
 @end
 
 @implementation JPResourceLoadingRequestWebTask
-
-- (void)dealloc {
-    JPDebugLog(@"Web task dealloc: %@", self);
-    pthread_mutex_destroy(&_plock);
-}
 
 - (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
                           requestRange:(NSRange)requestRange
                              cacheFile:(JPVideoPlayerCacheFile *)cacheFile
                              customURL:(NSURL *)customURL
                                 cached:(BOOL)cached {
+    NSAssert(NO, @"请使用指定的初始化方法");
+    return nil;
+}
+
+- (instancetype)initWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
+                          requestRange:(NSRange)requestRange
+                             cacheFile:(JPVideoPlayerCacheFile *)cacheFile
+                             customURL:(NSURL *)customURL
+                             syncQueue:(dispatch_queue_t)syncQueue {
     self = [super initWithLoadingRequest:loadingRequest
                             requestRange:requestRange
                                cacheFile:cacheFile
                                customURL:customURL
-                                  cached:cached];
-    if(self){
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_plock, &mutexattr);
+                               syncQueue:syncQueue
+                                  cached:NO];
+    if (self) {
         _haveDataSaved = NO;
         _offset = requestRange.location;
         _requestLength = requestRange.length;
@@ -316,101 +258,58 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
 }
 
 - (void)start {
-    [super start];
-    JPDispatchSyncOnMainQueue(^{
-        [self internalStart];
-    });
-}
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
 
-- (void)startOnQueue:(dispatch_queue_t)queue {
-    [super startOnQueue:queue];
-    dispatch_async(queue, ^{
-        [self internalStart];
+        [super start];
+        [self _internalStart];
+
     });
 }
 
 - (void)cancel {
-    if (self.isCancelled || self.isFinished) {
-        return;
-    }
-    
-    [super cancel];
-    [self synchronizeCacheFileIfNeeded];
-    if (self.dataTask) {
-        // cancel web request.
-        JPDebugLog(@"取消了一个网络请求, id 是: %d", self.dataTask.taskIdentifier);
-        [self.dataTask cancel];
-        JPDispatchSyncOnMainQueue(^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
-        });
-    }
-}
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
 
-- (BOOL)shouldContinueWhenAppEntersBackground {
-    return self.options & JPVideoPlayerDownloaderContinueInBackground;
-}
+        if (self.isCancelled || self.isFinished) return;
+        [super cancel];
+        [self _synchronizeCacheFileIfNeeded];
+        if (self.dataTask) {
+            // cancel web request.
+            JPDebugLog(@"取消了一个网络请求, id 是: %d", self.dataTask.taskIdentifier);
+            [self.dataTask cancel];
 
-- (void)internalStart {
-    // task request data from web.
-    if(!self.unownedSession || !self.request){
-        [self requestDidCompleteWithError:JPErrorWithDescription(@"unownedSession or request can not be nil")];
-        return;
-    }
-    
-    if ([self isCancelled]) {
-        [self requestDidCompleteWithError:nil];
-        return;
-    }
+            JPDispatchAsyncOnMainQueue(^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStopNotification object:self];
+            });
+        }
 
-    __weak __typeof__ (self) wself = self;
-    Class UIApplicationClass = NSClassFromString(@"UIApplication");
-    BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
-    if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
-        UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
-        self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
-            __strong __typeof (wself) sself = wself;
-            if(!sself) return;
-            
-            [sself cancel];
-            [app endBackgroundTask:sself.backgroundTaskId];
-            sself.backgroundTaskId = UIBackgroundTaskInvalid;
-        }];
-    }
-    
-    NSURLSession *session = self.unownedSession;
-    self.dataTask = [session dataTaskWithRequest:self.request];
-    JPDebugLog(@"开始网络请求, 网络请求创建一个 dataTask, id 是: %d", self.dataTask.taskIdentifier);
-    [self.dataTask resume];
-    if (self.dataTask) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStartNotification object:self];
-    }
-    
-    if (self.backgroundTaskId != UIBackgroundTaskInvalid) {
-        UIApplication * app = [UIApplication performSelector:@selector(sharedApplication)];
-        [app endBackgroundTask:self.backgroundTaskId];
-        self.backgroundTaskId = UIBackgroundTaskInvalid;
-    }
+    });
 }
 
 - (void)requestDidReceiveResponse:(NSURLResponse *)response {
-    if ([response isKindOfClass:[NSHTTPURLResponse class]] && !self.loadingRequest.contentInformationRequest.contentType) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        [self.cacheFile storeResponse:httpResponse];
-        [self.loadingRequest jp_fillContentInformationWithResponse:httpResponse];
-        if (![(NSHTTPURLResponse *)response jp_supportRange]) {
-            self.offset = 0;
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        if ([response isKindOfClass:[NSHTTPURLResponse class]] && !self.loadingRequest.contentInformationRequest.contentType) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            [self.cacheFile storeResponse:httpResponse];
+            [self.loadingRequest jp_fillContentInformationWithResponse:httpResponse];
+            if (![(NSHTTPURLResponse *)response jp_supportRange]) {
+                self.offset = 0;
+            }
         }
-    }
+
+    });
 }
 
 - (void)requestDidReceiveData:(NSData *)data
              storedCompletion:(dispatch_block_t)completion {
-    if (data.bytes) {
+    if (!data.bytes) return;
+
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
+
         [self.cacheFile storeVideoData:data
                               atOffset:self.offset
                            synchronize:NO
                       storedCompletion:completion];
-        int lock = pthread_mutex_trylock(&_plock);
         self.haveDataSaved = YES;
         self.offset += [data length];
         [self.loadingRequest.dataRequest respondWithData:data];
@@ -428,18 +327,73 @@ static const NSString *const kJPVideoPlayerContentRangeKey = @"Content-Range";
                 });
             });
         }
-        if (!lock) {
-            pthread_mutex_unlock(&_plock);
+
+    });
+}
+
+- (void)taskDidCompleteWithError:(NSError *_Nullable)error {
+    JPDispatchSyncOnMainQueue(^{
+        if (self.backgroundTaskId != UIBackgroundTaskInvalid) {
+            UIApplication * app = [UIApplication performSelector:@selector(sharedApplication)];
+            [app endBackgroundTask:self.backgroundTaskId];
+            self.backgroundTaskId = UIBackgroundTaskInvalid;
         }
+    });
+    JPDispatchSyncOnQueue(self.syncQueue, ^{
+
+        [self _synchronizeCacheFileIfNeeded];
+        [super taskDidCompleteWithError:error];
+
+    });
+}
+
+- (BOOL)_shouldContinueWhenAppEntersBackground {
+    return self.options & JPVideoPlayerDownloaderContinueInBackground;
+}
+
+- (void)_internalStart {
+    // task request data from web.
+    if(!self.unownedSession || !self.request){
+        [self taskDidCompleteWithError:JPErrorWithDescription(@"unownedSession or request can not be nil")];
+        return;
+    }
+
+    if ([self isCancelled]) {
+        [self taskDidCompleteWithError:nil];
+        return;
+    }
+
+    JPDispatchSyncOnMainQueue(^{
+        __weak __typeof__ (self) wself = self;
+        Class UIApplicationClass = NSClassFromString(@"UIApplication");
+        BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
+        if (hasApplication && [self _shouldContinueWhenAppEntersBackground]) {
+            UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
+            self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
+                __strong __typeof (wself) sself = wself;
+                if(!sself) return;
+
+                [sself cancel];
+                [app endBackgroundTask:sself.backgroundTaskId];
+                sself.backgroundTaskId = UIBackgroundTaskInvalid;
+            }];
+        }
+    });
+
+    NSURLSession *session = self.unownedSession;
+    self.dataTask = [session dataTaskWithRequest:self.request];
+    JPDebugLog(@"开始网络请求, 网络请求创建一个 dataTask, id 是: %d", self.dataTask.taskIdentifier);
+    [self.dataTask resume];
+    if (self.dataTask) {
+        JPDispatchAsyncOnMainQueue(^{
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:JPVideoPlayerDownloadStartNotification object:self];
+
+        });
     }
 }
 
-- (void)requestDidCompleteWithError:(NSError *_Nullable)error {
-    [self synchronizeCacheFileIfNeeded];
-    [super requestDidCompleteWithError:error];
-}
-
-- (void)synchronizeCacheFileIfNeeded {
+- (void)_synchronizeCacheFileIfNeeded {
     if (self.haveDataSaved) {
         [self.cacheFile synchronize];
     }
