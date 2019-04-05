@@ -17,11 +17,11 @@
 
 @interface JPVideoPlayerResourceLoader()<JPResourceLoadingRequestTaskDelegate>
 
+@property (nonatomic, strong) JPVideoPlayerCacheFile *cacheFile;
+
 @property (nonatomic, strong)NSMutableArray<AVAssetResourceLoadingRequest *> *loadingRequests;
 
 @property (nonatomic, strong) AVAssetResourceLoadingRequest *runningLoadingRequest;
-
-@property (nonatomic, strong) JPVideoPlayerCacheFile *cacheFile;
 
 @property (nonatomic, strong) NSMutableArray<JPResourceLoadingRequestTask *> *requestTasks;
 
@@ -34,7 +34,7 @@
 - (void)dealloc {
     if(self.runningRequestTask){
         [self.runningRequestTask cancel];
-        [self removeCurrentRequestTaskAndResetAll];
+        [self _removeCurrentRequestTaskAndResetAll];
     }
     self.loadingRequests = nil;
 }
@@ -67,6 +67,7 @@
     if(self){
         _customURL = customURL;
         _loadingRequests = @[].mutableCopy;
+        _requestTasks = @[].mutableCopy;
         _cacheFile = cacheFile;
         _syncQueue = syncQueue;
     }
@@ -79,8 +80,8 @@
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
     if (resourceLoader && loadingRequest){
-        [self.loadingRequests addObject:loadingRequest];
         JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
+        [self.loadingRequests addObject:loadingRequest];
         [self _findAndStartNextLoadingRequestIfNeed];
     }
     return YES;
@@ -89,80 +90,67 @@ shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loading
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
     if ([self.loadingRequests containsObject:loadingRequest]) {
-        if(loadingRequest == self.runningLoadingRequest){
-            JPDebugLog(@"取消了一个正在进行的请求");
-            if(self.runningLoadingRequest && self.runningRequestTask){
-                [self.runningRequestTask cancel];
-            }
-            if([self.loadingRequests containsObject:self.runningLoadingRequest]){
-                [self.loadingRequests removeObject:self.runningLoadingRequest];
-            }
-            [self removeCurrentRequestTaskAndResetAll];
-            [self _findAndStartNextLoadingRequestIfNeed];
-        }
-        else {
-            JPDebugLog(@"取消了一个等待进行的请求");
-            [self.loadingRequests removeObject:loadingRequest];
-        }
-    }
-    else {
         JPDebugLog(@"要取消的请求已经完成了");
+        return;
     }
+    if (loadingRequest != self.runningLoadingRequest) {
+        JPDebugLog(@"取消了一个等待进行的请求");
+        [self.loadingRequests removeObject:loadingRequest];
+        return;
+    }
+
+    JPDebugLog(@"取消了一个正在进行的请求");
+    if(self.runningLoadingRequest && self.runningRequestTask){
+        [self.runningRequestTask cancel];
+    }
+    if([self.loadingRequests containsObject:self.runningLoadingRequest]){
+        [self.loadingRequests removeObject:self.runningLoadingRequest];
+    }
+    [self _removeCurrentRequestTaskAndResetAll];
+    [self _findAndStartNextLoadingRequestIfNeed];
 }
 
 
 #pragma mark - JPResourceLoadingRequestTaskDelegate
 
 - (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
-didCompleteWithError:(NSError *)error {
+didCompleteWithError:(NSError *_Nullable)error {
     JPDispatchAsyncOnQueue(self.syncQueue, ^{
-        if (error.code == NSURLErrorCancelled) {
-            return;
-        }
+        if (error.code == NSURLErrorCancelled) return;
         if (![self.requestTasks containsObject:requestTask]) {
             JPDebugLog(@"完成的 task 不是正在进行的 task");
             return;
         }
-
-        if (error) {
-            [self _finishCurrentRequestWithError:error];
-        }
-        else {
-            [self _finishCurrentRequestWithError:nil];
-        }
+        [self _finishCurrentRequestWithError:error];
     });
 }
 
 
-#pragma mark - Finish Request
+#pragma mark - Private
 
 - (void)_finishCurrentRequestWithError:(NSError *)error {
     if (error) {
         JPDebugLog(@"ResourceLoader 完成一个请求 error: %@", error);
         [self.runningRequestTask.loadingRequest finishLoadingWithError:error];
         [self.loadingRequests removeObject:self.runningLoadingRequest];
-        [self removeCurrentRequestTaskAndResetAll];
+        [self _removeCurrentRequestTaskAndResetAll];
         [self _findAndStartNextLoadingRequestIfNeed];
     }
     else {
-        // 要所有的请求都完成了才行.
         [self.requestTasks removeObject:self.runningRequestTask];
         if(!self.requestTasks.count){ // 全部完成.
             JPDebugLog(@"ResourceLoader 当前 tasks 全部完成.");
             [self.runningRequestTask.loadingRequest finishLoading];
             [self.loadingRequests removeObject:self.runningLoadingRequest];
-            [self removeCurrentRequestTaskAndResetAll];
+            [self _removeCurrentRequestTaskAndResetAll];
             [self _findAndStartNextLoadingRequestIfNeed];
         }
         else { // 完成了一部分, 继续请求.
             JPDebugLog(@"ResourceLoader 完成了一部分, 继续请求.");
-            [self startNextTaskIfNeed];
+            [self _startNextTaskIfNeed];
         }
     }
 }
-
-
-#pragma mark - Private
 
 - (void)_findAndStartNextLoadingRequestIfNeed {
     if (!self.loadingRequests.count || self.runningLoadingRequest || self.runningRequestTask) return;
@@ -265,7 +253,7 @@ didCompleteWithError:(NSError *)error {
 
     NSParameterAssert(self.requestTasks.count);
     // 发起请求.
-    [self startNextTaskIfNeed];
+    [self _startNextTaskIfNeed];
 }
 
 - (void)_addTaskWithLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
@@ -292,19 +280,16 @@ didCompleteWithError:(NSError *)error {
         }
     }
     task.delegate = self;
-    if (!self.requestTasks) {
-        self.requestTasks = [@[] mutableCopy];
-    }
     [self.requestTasks addObject:task];
 }
 
-- (void)removeCurrentRequestTaskAndResetAll {
+- (void)_removeCurrentRequestTaskAndResetAll {
+    [self.requestTasks removeAllObjects];
     self.runningLoadingRequest = nil;
-    self.requestTasks = [@[] mutableCopy];
     self.runningRequestTask = nil;
 }
 
-- (void)startNextTaskIfNeed {
+- (void)_startNextTaskIfNeed {
     self.runningRequestTask = self.requestTasks.firstObject;
     if ([self.runningRequestTask isKindOfClass:[JPResourceLoadingRequestLocalTask class]]) {
         [self.runningRequestTask startOnQueue:self.syncQueue];
@@ -315,8 +300,9 @@ didCompleteWithError:(NSError *)error {
 }
 
 - (NSRange)_fetchRequestRangeWithAVResourceLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    NSUInteger location = (NSUInteger)loadingRequest.dataRequest.requestedOffset;
-    NSUInteger length = (NSUInteger)loadingRequest.dataRequest.requestedLength;;
+    static NSUInteger location, length;
+    location = (NSUInteger)loadingRequest.dataRequest.requestedOffset;
+    length = (NSUInteger)loadingRequest.dataRequest.requestedLength;;
     if ([loadingRequest.dataRequest respondsToSelector:@selector(requestsAllDataToEndOfResource)] && loadingRequest.dataRequest.requestsAllDataToEndOfResource) length = NSUIntegerMax;
     if(loadingRequest.dataRequest.currentOffset > 0) location = (NSUInteger)loadingRequest.dataRequest.currentOffset;
     return NSMakeRange(location, length);
