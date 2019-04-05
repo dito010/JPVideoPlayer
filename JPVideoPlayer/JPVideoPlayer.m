@@ -150,8 +150,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         // Make the `resourceLoader` become the delegate of 'videoURLAsset', and provide data to the player.
         NSString *key = [JPVideoPlayerManager.sharedManager cacheKeyForURL:url];
         JPVideoPlayerCacheFile *cacheFile = [JPVideoPlayerCacheFile cacheFileWithFilePath:[JPVideoPlayerCachePath createVideoFileIfNeedThenFetchItForKey:key]
-                                                                            indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]
-                                                                                syncQueue:self.syncQueue];
+                                                                            indexFilePath:[JPVideoPlayerCachePath createVideoIndexFileIfNeedThenFetchItForKey:key]];
         JPVideoPlayerResourceLoader *resourceLoader = [JPVideoPlayerResourceLoader resourceLoaderWithCustomURL:url
                                                                                                      cacheFile:cacheFile
                                                                                                      syncQueue:self.syncQueue];

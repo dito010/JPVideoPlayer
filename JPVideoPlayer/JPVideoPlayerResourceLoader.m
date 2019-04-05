@@ -14,7 +14,6 @@
 #import "JPVideoPlayerCacheFile.h"
 #import "JPResourceLoadingRequestTask.h"
 #import "JPVideoPlayerSupportUtils.h"
-#import <pthread.h>
 
 @interface JPVideoPlayerResourceLoader()<JPResourceLoadingRequestTaskDelegate>
 
@@ -28,10 +27,6 @@
 
 @property (nonatomic, strong) JPResourceLoadingRequestTask *runningRequestTask;
 
-@property (nonatomic) pthread_mutex_t lock;
-
-@property (nonatomic, strong) dispatch_queue_t internalSyncQueue;
-
 @end
 
 @implementation JPVideoPlayerResourceLoader
@@ -42,7 +37,6 @@
         [self removeCurrentRequestTaskAndResetAll];
     }
     self.loadingRequests = nil;
-    pthread_mutex_destroy(&_lock);
 }
 
 - (instancetype)init {
@@ -71,11 +65,6 @@
 
     self = [super init];
     if(self){
-        pthread_mutexattr_t mutexattr;
-        pthread_mutexattr_init(&mutexattr);
-        pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_lock, &mutexattr);
-        _internalSyncQueue = JPNewSyncQueue("com.NewPan.jpvideoplayer.resource.loader.www");
         _customURL = customURL;
         _loadingRequests = @[].mutableCopy;
         _cacheFile = cacheFile;
@@ -126,7 +115,7 @@ didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
 
 - (void)requestTask:(JPResourceLoadingRequestTask *)requestTask
 didCompleteWithError:(NSError *)error {
-    JPDispatchSyncOnQueue(self.syncQueue, ^{
+    JPDispatchAsyncOnQueue(self.syncQueue, ^{
         if (error.code == NSURLErrorCancelled) {
             return;
         }
@@ -302,15 +291,11 @@ didCompleteWithError:(NSError *)error {
             [self.delegate resourceLoader:self didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)task];
         }
     }
-    int lock = pthread_mutex_trylock(&_lock);
     task.delegate = self;
     if (!self.requestTasks) {
         self.requestTasks = [@[] mutableCopy];
     }
     [self.requestTasks addObject:task];
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
-    }
 }
 
 - (void)removeCurrentRequestTaskAndResetAll {
@@ -320,16 +305,12 @@ didCompleteWithError:(NSError *)error {
 }
 
 - (void)startNextTaskIfNeed {
-    int lock = pthread_mutex_trylock(&_lock);;
     self.runningRequestTask = self.requestTasks.firstObject;
     if ([self.runningRequestTask isKindOfClass:[JPResourceLoadingRequestLocalTask class]]) {
-        [self.runningRequestTask startOnQueue:self.internalSyncQueue];
+        [self.runningRequestTask startOnQueue:self.syncQueue];
     }
     else {
         [self.runningRequestTask start];
-    }
-    if (!lock) {
-        pthread_mutex_unlock(&_lock);
     }
 }
 

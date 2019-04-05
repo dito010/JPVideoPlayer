@@ -25,9 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// So we need index to map this video data, and the index file is a collection of indexes store in disk.
 @property (nonatomic, copy, readonly) NSString *indexFilePath;
 
-/// The sync queue to dispatch all internal tasks.
-@property(nonatomic, strong, readonly) dispatch_queue_t syncQueue;
-
 /// The video data expected length.
 /// Note this value is not always equal to the cache video data length.
 @property (nonatomic, assign, readonly) NSUInteger fileLength;
@@ -57,13 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
- * @param syncQueue     The sync queue to dispatch all internal tasks.
  *
  * @return A instance of this class.
  */
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath
-                            syncQueue:(dispatch_queue_t)syncQueue;
+                        indexFilePath:(NSString *)indexFilePath;
 
 /**
  * Designated initializer method.
@@ -71,13 +66,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath      The video data cache path.
  * @param indexFilePath The index file cache path.
- * @param syncQueue     The sync queue to dispatch all internal tasks.
  *
  * @return A instance of this class.
  */
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath
-                       syncQueue:(dispatch_queue_t)syncQueue NS_DESIGNATED_INITIALIZER;
+                   indexFilePath:(NSString *)indexFilePath NS_DESIGNATED_INITIALIZER;
 
 
 #pragma mark - Store Data

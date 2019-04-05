@@ -56,18 +56,15 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 }
 
 + (instancetype)cacheFileWithFilePath:(NSString *)filePath
-                        indexFilePath:(NSString *)indexFilePath
-                            syncQueue:(dispatch_queue_t)syncQueue {
+                        indexFilePath:(NSString *)indexFilePath {
     return [[self alloc] initWithFilePath:filePath
-                            indexFilePath:indexFilePath
-                                syncQueue:syncQueue];
+                            indexFilePath:indexFilePath];
 }
 
 - (instancetype)initWithFilePath:(NSString *)filePath
-                   indexFilePath:(NSString *)indexFilePath
-                       syncQueue:(dispatch_queue_t)syncQueue {
-    if (!filePath.length || !indexFilePath.length || !syncQueue) {
-        JPErrorLog(@"filePath, indexFilePath and syncQueue can not be nil.");
+                   indexFilePath:(NSString *)indexFilePath {
+    if (!filePath.length || !indexFilePath.length) {
+        JPErrorLog(@"filePath, indexFilePath can not be nil.");
         return nil;
     }
 
@@ -76,7 +73,7 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
         @autoreleasepool {
             _cacheFilePath = filePath;
             _indexFilePath = indexFilePath;
-            _syncQueue = syncQueue;
+            _syncQueue = JPNewSyncQueue("com.jpvideoplayer.cachefile.sync.queue.www");
 
             _internalFragmentRanges = @[].mutableCopy;
             _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
