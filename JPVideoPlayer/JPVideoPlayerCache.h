@@ -16,9 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JPVideoPlayerCacheConfiguration : NSObject
 
-/**
- * The maximum length of time to keep an video in the cache, in seconds
- */
+/// The maximum length of time to keep an video in the cache, in seconds
 @property (assign, nonatomic) NSInteger maxCacheAge;
 
 /**
@@ -27,28 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic) NSUInteger maxCacheSize;
 
-/**
- *  disable iCloud backup [defaults to YES]
- */
+///  disable iCloud backup [defaults to YES]
 @property (assign, nonatomic) BOOL shouldDisableiCloud;
 
 @end
 
 typedef NS_ENUM(NSInteger, JPVideoPlayerCacheType)   {
-    
-    /**
-     * The video wasn't available the JPVideoPlayer caches.
-     */
+    /// The video wasn't available the JPVideoPlayer caches.
     JPVideoPlayerCacheTypeNone,
 
-    /**
-     * The video was obtained on the disk cache.
-     */
+    /// The video was obtained on the disk cache.
     JPVideoPlayerCacheTypeExisted,
 
-    /**
-     * A location source.
-     */
+    /// A location source.
     JPVideoPlayerCacheTypeLocation
 };
 
@@ -66,10 +55,12 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 
 #pragma mark - Singleton and initialization
 
-/**
- *  Cache Config object - storing all kind of settings.
- */
+/// Cache Config object - storing all kind of settings.
 @property (nonatomic, readonly) JPVideoPlayerCacheConfiguration *cacheConfiguration;
+
+- (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)new NS_UNAVAILABLE;
 
 /**
  * Init with given cacheConfig.
@@ -164,19 +155,13 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
  */
 - (unsigned long long)getDiskFreeSize;
 
-/**
- * Get the size used by the disk cache, synchronously.
- */
+/// Get the size used by the disk cache, synchronously.
 - (unsigned long long)getSize;
 
-/**
- * Get the number of images in the disk cache, synchronously.
- */
+/// Get the number of images in the disk cache, synchronously.
 - (NSUInteger)getDiskCount;
 
-/**
- * Calculate the disk cache's size, asynchronously .
- */
+/// Calculate the disk cache's size, asynchronously .
 - (void)calculateSizeOnCompletion:(JPVideoPlayerCalculateSizeCompletion _Nullable)completion;
 
 # pragma mark - File Name
