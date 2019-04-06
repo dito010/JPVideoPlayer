@@ -32,7 +32,6 @@
 		C17C2503B08D7F7B463EFE34 /* JPMethodInjecting.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C298067C7DD5554017120 /* JPMethodInjecting.m */; };
 		C17C254465F1D316B354C913 /* JPGCDExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C2389009C59C4BB70F651 /* JPGCDExtensions.m */; };
 		C17C2679EA81BFA756E969DE /* JPVideoPlayerScrollViewProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C2946DF5CC2B174FB79AF /* JPVideoPlayerScrollViewProtocol.m */; };
-		C17C296BEF262CFF4873DD44 /* JPReusePool.m in Sources */ = {isa = PBXBuildFile; fileRef = C17C29827DA3972C798B334D /* JPReusePool.m */; };
 		C3D50D2EF7B7EB2F36B72E2D /* libPods-JPVideoPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */; };
 		CF45AA1220B8571C00E07B8E /* JPVideoPlayerAudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF45AA1020B8571C00E07B8E /* JPVideoPlayerAudioViewController.m */; };
 		CF45AA1320B8571C00E07B8E /* JPVideoPlayerAudioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF45AA1120B8571C00E07B8E /* JPVideoPlayerAudioViewController.xib */; };
@@ -116,12 +115,10 @@
 		8EBFC49659DDED5EA35F2A91 /* libPods-JPVideoPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JPVideoPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FB27241208F0C510025FF63 /* JPVideoPlayerKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerKit.h; sourceTree = "<group>"; };
 		C17C23205D757D2C73E7D7E2 /* JPGCDExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPGCDExtensions.h; sourceTree = "<group>"; };
-		C17C23233721F3BC801A321B /* JPReusePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPReusePool.h; sourceTree = "<group>"; };
 		C17C2389009C59C4BB70F651 /* JPGCDExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPGCDExtensions.m; sourceTree = "<group>"; };
 		C17C25652F7DEA4BDA84091E /* JPMethodInjecting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPMethodInjecting.h; sourceTree = "<group>"; };
 		C17C2946DF5CC2B174FB79AF /* JPVideoPlayerScrollViewProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerScrollViewProtocol.m; sourceTree = "<group>"; };
 		C17C298067C7DD5554017120 /* JPMethodInjecting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPMethodInjecting.m; sourceTree = "<group>"; };
-		C17C29827DA3972C798B334D /* JPReusePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPReusePool.m; sourceTree = "<group>"; };
 		C17C2B74EDC4D301437330F6 /* JPVideoPlayerScrollViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerScrollViewProtocol.h; sourceTree = "<group>"; };
 		C17C2B7A80CF9CBB666A32F0 /* JPVideoPlayerCellProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPVideoPlayerCellProtocol.m; sourceTree = "<group>"; };
 		C17C2CF3183FA03074E8CC94 /* JPVideoPlayerCellProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPVideoPlayerCellProtocol.h; sourceTree = "<group>"; };
@@ -362,8 +359,6 @@
 				C17C2CF3183FA03074E8CC94 /* JPVideoPlayerCellProtocol.h */,
 				C17C2946DF5CC2B174FB79AF /* JPVideoPlayerScrollViewProtocol.m */,
 				C17C2B74EDC4D301437330F6 /* JPVideoPlayerScrollViewProtocol.h */,
-				C17C23233721F3BC801A321B /* JPReusePool.h */,
-				C17C29827DA3972C798B334D /* JPReusePool.m */,
 			);
 			name = JPVideoPlayer;
 			path = ../../JPVideoPlayer;
@@ -541,7 +536,6 @@
 				C17C22D3B9AF091A6D0B4E9C /* JPVideoPlayerCellProtocol.m in Sources */,
 				48C3346C223E6189001E5A88 /* JPVideoPlayerCustomizedVideoViewController.m in Sources */,
 				C17C2679EA81BFA756E969DE /* JPVideoPlayerScrollViewProtocol.m in Sources */,
-				C17C296BEF262CFF4873DD44 /* JPReusePool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

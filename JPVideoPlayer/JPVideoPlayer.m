@@ -12,11 +12,10 @@
 #import "JPVideoPlayer.h"
 #import "JPVideoPlayerResourceLoader.h"
 #import "UIView+WebVideoCache.h"
-#import "JPReusePool.h"
 #import "JPVideoPlayerCacheFile.h"
 #import "JPVideoPlayerCachePath.h"
 
-@interface JPVideoPlayerModel()<JPReusableObject>
+@interface JPVideoPlayerModel()
 
 @property(nonatomic, strong, nullable)NSURL *url;
 
@@ -32,14 +31,15 @@
 /// The resourceLoader for the videoPlayer.
 @property(nonatomic, strong, nullable)JPVideoPlayerResourceLoader *resourceLoader;
 
+- (void)reset;
+
 @end
 
 static NSString *JPVideoPlayerURLScheme = @"com.jpvideoplayer.system.cannot.recognition.scheme.www";
 static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @implementation JPVideoPlayerModel
 
-- (void)prepareToReuse {
-    self.onUsing = NO;
+- (void)reset {
     self.unownedShowLayer = nil;
     self.playerItem = nil;
     self.videoURLAsset = nil;
@@ -57,8 +57,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
 @property(nonatomic, assign) JPVideoPlayerStatus playerStatus;
 
 @property(nonatomic, assign) BOOL seekingToTime;
-
-@property(nonatomic, strong) JPReusePool<JPVideoPlayerModel *> *playerModelReusePool;
 
 @property(nonatomic, strong, nullable)AVPlayer *player;
 
@@ -87,7 +85,6 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     if (self) {
         _playerStatus = JPVideoPlayerStatusUnknown;
         _seekingToTime = NO;
-        _playerModelReusePool = [[JPReusePool alloc] initWithReusableObjectClass:[JPVideoPlayerModel class]];
         _periodicTimeObserverInterval = CMTimeMake(1, 10);
         _syncQueue = JPNewSyncQueue("com.jpvideoplayer.resourceloader.delegate.sync.queue.www");
     }
@@ -470,7 +467,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                                     options:(JPVideoPlayerOptions)options
                                 showOnLayer:(CALayer *)showLayer {
     @autoreleasepool {
-        JPVideoPlayerModel *model = [self.playerModelReusePool retrieveReusableObject];
+        JPVideoPlayerModel *model = [JPVideoPlayerModel new];
         model.unownedShowLayer = showLayer;
         model.url = url;
         model.playerOptions = options;
@@ -586,7 +583,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
         [self.playerModel.videoURLAsset.resourceLoader setDelegate:nil queue:nil];
     }
 
-    [self.playerModelReusePool objectPerformReuse:self.playerModel];
+    [self.playerModel reset];
     self.playerModel = nil;
 }
 

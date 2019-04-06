@@ -83,8 +83,6 @@ playFailedWithError:(NSError *)error;
 /// options
 @property (nonatomic, assign, readonly) JPVideoPlayerOptions playerOptions;
 
-@property(nonatomic, assign) BOOL onUsing;
-
 @end
 
 @interface JPVideoPlayer : NSObject<JPVideoPlayerPlaybackProtocol>

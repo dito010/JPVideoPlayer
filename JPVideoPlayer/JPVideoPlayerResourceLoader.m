@@ -32,6 +32,7 @@
 @end
 
 @implementation JPVideoPlayerResourceLoader
+// TODO: 当拖动进度条时, 一定要全部下载完才开始播放.
 
 - (void)dealloc {
     if(self.runningRequestTask){
