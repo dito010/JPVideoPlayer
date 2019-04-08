@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) NSMutableArray<JPResourceLoadingRequestTask *> *requestTasks;
 
-@property (nonatomic, strong) JPResourceLoadingRequestTask *runningRequestTask;
+@property (nonatomic, strong) __kindof JPResourceLoadingRequestTask *runningRequestTask;
 
 @property(nonatomic, strong) dispatch_queue_t ioQueue;
 
@@ -84,8 +84,8 @@
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
     if (resourceLoader && loadingRequest){
-        JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
         [self.loadingRequests addObject:loadingRequest];
+        JPDebugLog(@"ResourceLoader 接收到新的请求, 当前请求数: %ld <<<<<<<<<<<<<<", self.loadingRequests.count);
         [self _findAndStartNextLoadingRequestIfNeed];
     }
     return YES;
@@ -93,7 +93,7 @@ shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loading
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader
 didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    if ([self.loadingRequests containsObject:loadingRequest]) {
+    if (![self.loadingRequests containsObject:loadingRequest]) {
         JPDebugLog(@"要取消的请求已经完成了");
         return;
     }

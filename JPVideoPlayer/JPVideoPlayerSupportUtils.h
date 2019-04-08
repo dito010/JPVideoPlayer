@@ -265,4 +265,20 @@ typedef NS_ENUM(NSInteger, JPApplicationState) {
 
 @end
 
+/// All code of this class from https://github.com/ibireme/YYAsyncLayer/blob/master/YYAsyncLayer/YYSentinel.h
+/// Thanks to [ibireme](https://github.com/ibireme).
+@interface JPSentinel : NSObject
+
+/// Returns the current value of the counter.
+@property (readonly) int32_t value;
+
+/// Increase the value atomically.
+/// @return The new value.
+- (int32_t)increase;
+
+/// Generate a block to check the sentinel has received increase or not.
+- (BOOL(^)(void))hasReceivedNewSignalHandler;
+
+@end
+
 NS_ASSUME_NONNULL_END

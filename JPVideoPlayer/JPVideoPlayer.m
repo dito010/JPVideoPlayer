@@ -183,7 +183,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
         [self.playerLayer removeFromSuperlayer];
         self.playerModel.unownedShowLayer = showLayer;
         [self _setVideoGravityWithOptions:options playerModel:self.playerModel];
-        [self displayVideoPicturesOnShowLayer];
+        [self _displayVideoPicturesOnShowLayer];
     }
 
     self.player.muted = options & JPVideoPlayerMutedPlay;
@@ -245,6 +245,7 @@ static NSString *JPVideoPlayerURL = @"www.newpan.com";
     [self _internalPauseWithNeedCallDelegate:NO];
     self.seekingToTime = YES;
     __weak typeof(self) wself = self;
+    JPDebugLog(@"进度拖动至 time : %ld", time.value / time.timescale);
     [self.player seekToTime:time completionHandler:^(BOOL finished) {
 
         __strong typeof(wself) sself = wself;
@@ -360,7 +361,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
                     if (!self.playerModel) return;
                     [self _invokePlayerStatusDidChangeDelegateMethod];
                     [self.player play];
-                    [self displayVideoPicturesOnShowLayer];
+                    [self _displayVideoPicturesOnShowLayer];
                     break;
                 }
 
@@ -518,7 +519,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     return [components URL];
 }
 
-- (void)displayVideoPicturesOnShowLayer {
+- (void)_displayVideoPicturesOnShowLayer {
     if (!self.playerModel || !self.playerLayer) return;
     // fixed #26.
     self.playerLayer.frame = self.playerModel.unownedShowLayer.bounds;

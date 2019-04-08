@@ -14,7 +14,7 @@
 #import "UIView+WebVideoCache.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JPGCDExtensions.h"
-#import <CoreMotion/CoreMotion.h>
+#import <libkern/OSAtomic.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -860,6 +860,27 @@ static NSString * const JPMigrationLastSDKVersionKey = @"com.jpvideoplayer.last.
 
     }];
 }
+
+@end
+
+@implementation JPSentinel {
+    int32_t _value;
+}
+
+- (int32_t)value {
+    return _value;
+}
+
+- (int32_t)increase {
+    return OSAtomicIncrement32(&_value);
+}
+
+- (BOOL(^)(void))hasReceivedNewSignalHandler {
+    int32_t value = self.value;
+    return [^BOOL() {
+        return value != self.value;
+    } copy];
+};
 
 @end
 
