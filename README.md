@@ -14,7 +14,7 @@ This library provides an video player with cache support in `UITableView` base o
 </p>
 
 ## Note
-This project abandoned maintenance due to personal reason.
+This project has abandoned maintenance due to personal reason.
 
 由于日常工作比较忙，没有精力继续维护该项目，抱歉。
 
