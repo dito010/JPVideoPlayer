@@ -13,6 +13,12 @@ This library provides an video player with cache support in `UITableView` base o
 <img src="Images/demo.gif" title="demo" float=left>
 </p>
 
+## Note
+This project abandoned maintenance due to personal reason.
+
+由于日常工作比较忙，没有精力继续维护该项目，抱歉。
+
+
 ## Features
 - [x] Cache video data at playing.
 - [x] Seek time support(new).
@@ -185,17 +191,4 @@ All source code is licensed under the [MIT License](https://github.com/Chris-Pan
 ## Architecture
 <p align="left" >
 <img src="Images/JPVideoPlayerSequenceDiagram.png" title="JPVideoPlayerSequenceDiagram" float=left>
-</p>
-
-## 赞助
-你这一赞助，我写的就更来劲了！
-
-#### 微信赞助扫码
-<p align="left" >
-<img src="Images/wechat.png" title="Wechat" height="250" width="250" float=left>
-</p>
-
-#### 支付宝赞助扫码
-<p align="left" >
-<img src="Images/zhifubao.png" title="Zhifubao" height="250" width="250" float=left>
 </p>
