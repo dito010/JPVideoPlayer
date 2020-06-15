@@ -601,7 +601,7 @@ didReceiveLoadingRequestTask:(JPResourceLoadingRequestWebTask *)requestTask {
     // add observer for video playing progress.
     __weak typeof(model) wItem = model;
     __weak typeof(self) wself = self;
-    [model.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+    self.timeObserver = [model.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         __strong typeof(wItem) sItem = wItem;
         __strong typeof(wself) sself = wself;
         if (!sItem || !sself) return;
