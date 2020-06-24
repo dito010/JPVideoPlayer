@@ -127,26 +127,28 @@ static const NSString *kJPVideoPlayerCacheFileResponseHeadersKey = @"com.newpan.
 
 - (void)mergeRangesIfNeed {
     JPMainThreadAssert;
-    BOOL isMerge = NO;
-    for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
-        if ((i + 1) < self.internalFragmentRanges.count) {
-            NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
-            NSRange nextRange = [self.internalFragmentRanges[i + 1] rangeValue];
-            if (JPRangeCanMerge(currentRange, nextRange)) {
-                [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
-                [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
-                i -= 1;
-                isMerge = YES;
+    @synchronized (self.internalFragmentRanges) {
+        BOOL isMerge = NO;
+        for (int i = 0; i < self.internalFragmentRanges.count; ++i) {
+            if ((i + 1) < self.internalFragmentRanges.count) {
+                NSRange currentRange = [self.internalFragmentRanges[i] rangeValue];
+                NSRange nextRange = [self.internalFragmentRanges[i + 1] rangeValue];
+                if (JPRangeCanMerge(currentRange, nextRange)) {
+                    [self.internalFragmentRanges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
+                    [self.internalFragmentRanges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
+                    i -= 1;
+                    isMerge = YES;
+                }
             }
         }
+        if(isMerge){
+           NSString *string = @"";
+           for(NSValue *rangeValue in self.internalFragmentRanges){
+               NSRange range = [rangeValue rangeValue];
+               string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
+           }
+            /// JPDebugLog(@"合并后已缓存区间: %@", string);
     }
-    if(isMerge){
-       NSString *string = @"";
-       for(NSValue *rangeValue in self.internalFragmentRanges){
-           NSRange range = [rangeValue rangeValue];
-           string = [string stringByAppendingString:[NSString stringWithFormat:@"%@; ", NSStringFromRange(range)]];
-       }
-        /// JPDebugLog(@"合并后已缓存区间: %@", string);
     }
 }
 
