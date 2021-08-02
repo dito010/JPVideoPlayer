@@ -149,6 +149,7 @@ static NSArray<NSString *> *JPVideoPlayerDownloaderSupportedMIMETypes;
 
     request.HTTPShouldHandleCookies = (options & JPVideoPlayerDownloaderHandleCookies);
     request.HTTPShouldUsePipelining = YES;
+    [request addValue:@"https://ll100.com" forHTTPHeaderField:@"Referer"];
     if (!self.urlCredential && self.username && self.password) {
         self.urlCredential = [NSURLCredential credentialWithUser:self.username
                                                         password:self.password
